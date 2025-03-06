@@ -16,22 +16,22 @@ const Navbar = () => {
   return (
     <>
       {/* Top Bar */}
-      <div className="hidden lg:block border-b border-[#DDDDDD7D]">
+      <div className="hidden bg-[#FFFFFF] lg:block border-b border-[#DDDDDD7D]">
         <div className="container flex justify-between mx-auto px-10">
           <div className="flex gap-3 py-3 text-[#334141]">
             <p className="text-[#334141]">EN</p>
-            <p>Call us toll free: +1-541-754-3010</p>
+            <p>Call us toll free: 0-000-000-000</p>
             <p>Send us an email: support@example.com</p>
           </div>
-          <div className="py-3 flex items-center gap-2">
+          <div className="py-3 text-black flex items-center gap-2">
             <CiHeart className="mt-1" /> Wishlist
           </div>
         </div>
       </div>
 
       {/* Navbar */}
-      <div className="">
-        <nav className="container mx-auto md:px-10 px-4 py-2 flex justify-between items-center">
+      <div className="bg-[#FFFFFF]">
+        <nav className="container  mx-auto md:px-10 px-4 py-2 flex justify-between items-center">
 
           <Link href="/" className="w-32">
             <Image src={logo} alt="Logo" width={120} height={50} />
@@ -78,7 +78,7 @@ const Navbar = () => {
           </ul>
 
 
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden text-black lg:flex items-center space-x-4">
 
             <div className="flex flex-col items-center">
               <button className="px-4 flex items-center gap-2">

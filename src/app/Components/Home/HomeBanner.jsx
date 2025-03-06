@@ -8,14 +8,14 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 // Import images
-import banner1 from "../../Assets/banner.png";
+import banner1 from "../../Assets/banner1.jpg";
 
 
 const HomeBanner = () => {
   const images = [banner1, banner1, banner1]; 
 
   return (
-    <div className="w-full lg:h-[77vh] h-[50vh] overflow-hidden">
+    <div className="w-full lg:h-[100vh] h-[50vh] overflow-hidden">
       <Swiper
         spaceBetween={0}
         slidesPerView={1}
@@ -32,7 +32,7 @@ const HomeBanner = () => {
                 alt={`Banner ${index + 1}`}
                 layout="fill" // Ensures the image covers the div
                 objectFit="cover" // Prevents cropping issues
-                objectPosition="center" // Ensures the bottom part is visible
+                objectPosition="top" // Ensures the bottom part is visible
                 priority
               />
             </div>
