@@ -27,7 +27,7 @@ const auctions2 = [
 export default function AuctionSection() {
   return (
   <>
-   <div className="container mx-auto flex justify-center p-6  gap-6">
+   <div className="container  mx-auto flex justify-center p-6  gap-6">
       {/* Left Sidebar */}
       <div 
         className="relative w-1/7 text-white p-6 flex flex-col justify-between rounded-lg shadow-lg bg-cover bg-center"

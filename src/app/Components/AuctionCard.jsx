@@ -14,7 +14,7 @@ const auctionData = [
 
 export default function AuctionList() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-20 container mx-auto p-6">
+    <div className=" bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-20 container mx-auto p-6">
       
       {auctionData.map((item) => (
         <div key={item.id} className="relative  shadow-lg  bg-white ">
