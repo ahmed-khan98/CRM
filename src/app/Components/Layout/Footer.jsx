@@ -1,6 +1,7 @@
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram, FaTiktok, FaSearch } from "react-icons/fa";
 import logo from '../../Assets/logo.png'
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -30,10 +31,10 @@ const Footer = () => {
           {/* Logo & Contact Info */}
           <div>
             <Image src={logo} alt="logo" className="md:m-0 m-auto" />
-            <a href="mailto:email@example.com" className="text-red-500 block mt-2">
-              [email protected]
+            <a href="#" className="text-red-500 block mt-2">
+              [support@example.com]
             </a>
-            <p className="text-gray-500 mt-1 montserrat">+1 541-754-3010</p>
+            <p className="text-gray-500 mt-1 montserrat">0-000-000-000</p>
           </div>
 
           {/* Footer Links */}
@@ -98,8 +99,8 @@ const Footer = () => {
 
       {/* Bottom Copyright */}
       <div className="bg-gray-100 text-gray-600 text-center text-sm py-7 flex justify-center flex-wrap  gap-[50%]">
-        <p className="montserrat">Copyright by AUCTION. All Rights Reserved.</p>
-        <p className="montserrat">HNH Soft Tech Solutions</p>
+        <p className="montserrat">Copyright by <Link href="https://hnhsofttechsolutions.com/">HNH Soft Tech Solutions</Link> . All Rights Reserved.</p>
+        {/* <p className="montserrat">HNH Soft Tech Solutions</p> */}
       </div>
     </footer>
   );

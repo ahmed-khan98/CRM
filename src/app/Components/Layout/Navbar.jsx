@@ -20,7 +20,7 @@ const Navbar = () => {
         <div className="container flex justify-between mx-auto px-10">
           <div className="flex gap-3 py-3 text-[#334141]">
             <p className="text-[#334141]">EN</p>
-            <p>Call us toll free: +1-541-754-3010</p>
+            <p>Call us toll free: 0-000-000-000</p>
             <p>Send us an email: support@example.com</p>
           </div>
           <div className="py-3 flex items-center gap-2">
