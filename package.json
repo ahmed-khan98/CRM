@@ -9,12 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.6.0",
+    "formik": "^2.4.6",
+    "jodit-react": "^5.2.15",
+    "js-cookie": "^3.0.5",
+    "lucide-react": "^0.479.0",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
-    "swiper": "^11.2.5"
+    "swiper": "^11.2.5",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
