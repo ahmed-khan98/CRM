@@ -1,8 +1,8 @@
 import React from 'react'
-import Brand from '../Components/Brand'
-import AuctionCard from '../Components/AuctionCard'
-import AuctionSection from '../Components/Home/AuctionSection'
-import CarCategories from '../Components/Home/CarCategory'
+import Brand from '../_Components/Brand'
+import AuctionCard from '../_Components/AuctionCard'
+import AuctionSection from '../_Components/Home/AuctionSection'
+import CarCategories from '../_Components/Home/CarCategory'
 const page = () => {
   return (
     <>

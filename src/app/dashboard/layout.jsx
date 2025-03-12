@@ -1,7 +1,7 @@
 import React from 'react'
-import LeftNav from '../Components/Dashboard/LeftNav'
-import HeadingDashboard from '../Components/Dashboard/HeadingDashboard'
-import OfferBar from '../Components/Dashboard/OfferBar'
+import LeftNav from '../_Components/Dashboard/LeftNav'
+import HeadingDashboard from '../_Components/Dashboard/HeadingDashboard'
+import OfferBar from '../_Components/Dashboard/OfferBar'
 
  const layout = ({children}) => {
   return (
