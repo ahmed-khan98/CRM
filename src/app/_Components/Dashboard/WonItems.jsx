@@ -1,53 +1,10 @@
 "use client"
-import { useWonItemsQuery } from '@/app/_Services/products/page';
-import Image from 'next/image';
+import { useWonItemsQuery } from '@/app/_Services/wonProduct/page';
 import React from 'react'
 
 const WonItems = () => {
 
-    // const auctionData = [
-    //     {
-    //       title: "#780359189403010600",
-    //       price: "$5400",
-    //       buyerPremium: "Buyer Premium",
-    //       totalCosts: "Total Costs",
-    //       dimension: "Dimension",
-    //       localDelivery: "N/A",
-    //       requestShipping: "N/A",
-    //       shippingLabel: "N/A",
-    //     },
-    //     {
-    //       title: "#780359189403010600",
-    //       price: "$2423",
-    //       buyerPremium: "Buyer Premium",
-    //       totalCosts: "Total Costs",
-    //       dimension: "Dimension",
-    //       localDelivery: "$12500",
-    //       requestShipping: "$12500",
-    //       shippingLabel: "$12500",
-    //     },
-    //     {
-    //       title: "#780359189403010600",
-    //       price: "$5400",
-    //       buyerPremium: "Buyer Premium",
-    //       totalCosts: "Total Costs",
-    //       dimension: "Dimension",
-    //       localDelivery: "N/A",
-    //       requestShipping: "N/A",
-    //       shippingLabel: "N/A",
-    //     },
-    //     {
-    //       title: "#780359189403010600",
-    //       price: "$2423",
-    //       buyerPremium: "Buyer Premium",
-    //       totalCosts: "Total Costs",
-    //       dimension: "Dimension",
-    //       localDelivery: "$3500",
-    //       requestShipping: "$3500",
-    //       shippingLabel: "$3500",
-    //     },
-    //   ];
-
+   
     const { data, error: isError, isLoading } = useWonItemsQuery();
     console.log(data,"data1");
        
@@ -56,7 +13,7 @@ const WonItems = () => {
     <>
     
     
-    <div className="w-2/2 px-3">
+    <div className="w-2/2 px-3 pb-4">
      <div>
     
       <div className="overflow-x-auto">

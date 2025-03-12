@@ -26,24 +26,6 @@ export default function LoginForm() {
     initialValues: loginInitialValue,
     enableReinitialize: true,
     validationSchema: loginSchema,
-    // onSubmit: async (values) => {
-    //   try {
-    //     const response = await loginForm(values).unwrap();
-    //     console.log("Form submitted successfully:", response);
-    //     if (response.statusCode === 200) {
-    //       const { accessToken } = response?.data;
-    //       const user = response?.data?.user;
-    //       localStorage.setItem("token", accessToken);
-    //       localStorage.setItem("currentuser", JSON.stringify(user));
-    //       toast.success(response.message);
-    //       navigation.push("/")
-    //     }
-
-
-    //   } catch (error) {
-    //     toast.error(error.data.message);
-    //   }
-    // }
     onSubmit: async (values) => {
       try {
         const response = await loginForm(values).unwrap();

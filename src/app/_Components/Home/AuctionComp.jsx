@@ -7,8 +7,8 @@ import { CiHeart, CiSearch, CiShare2 } from 'react-icons/ci';
 import { ImHammer2 } from 'react-icons/im';
 
 const AuctionComp = ({ item }) => {
-    const router = useRouter();
 
+    const router = useRouter();
     const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
     const [bidValue, setBidValue] = useState(item.highestBid + 1);
     const [timeLeft, setTimeLeft] = useState({});
@@ -61,12 +61,14 @@ const AuctionComp = ({ item }) => {
         }
     };
 
-
+    const addtoWishlist = (id)=>{
+        console.log(id,"hhhhhh");
+    }
 
     return (
         <div className="relative shadow-lg bg-white">
             {/* Image and Icons */}
-            <div className="relative">
+            <div className="relative h-[300px]">
                 <img
                     onClick={() => router.push(`/detailproduct/${item._id}`)}
                     src={item?.images?.[0]}
@@ -84,7 +86,7 @@ const AuctionComp = ({ item }) => {
                 <div className="absolute top-2 left-3 h-[30px] w-[30px] bg-[#F33E0A] shadow-2xl rounded-full flex items-center justify-center">
                     <CiShare2 className="text-white text-lg" />
                 </div>
-                <div className="absolute top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center">
+                <div onClick={()=>{addtoWishlist(item._id)}} className="absolute cursor-pointer top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center">
                     <CiHeart className="text-black text-lg" />
                 </div>
                 <div className="absolute top-22 left-3 h-[30px] w-[30px] bg-white shadow-2xl rounded-full flex items-center justify-center">
@@ -120,8 +122,10 @@ const AuctionComp = ({ item }) => {
                     <p>{item?.highestBid}</p>
                 </div>
             </div>
-
-            <p className="text-center text-gray-500 text-xs mt-2 montserrat">{item?.description}</p>
+            <p
+                    dangerouslySetInnerHTML={{ __html: item?.description }}
+                    className="text-center text-gray-500 text-xs mt-2 montserrat"
+                />
 
             <div className="bg-gray-200 text-center text-sm py-2 mt-2 montserrat">
                 Current Bid: <strong> $ {item?.highestBid}</strong>

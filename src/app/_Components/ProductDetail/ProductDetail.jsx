@@ -115,9 +115,11 @@ function App(id) {
                 <h2 className="text-xl font-semibold text-gray-900 4 hover:text-gray-700 transition-colors duration-300">
                   Description
                 </h2>
-                <p className="text-gray-600 leading-relaxed hover:text-gray-800 transition-colors duration-300">
-                  {data?.data?.description}
-                </p>
+               
+                <p
+                    dangerouslySetInnerHTML={{ __html: data?.data?.description }}
+                   className="text-gray-600 leading-relaxed hover:text-gray-800 transition-colors duration-300"
+                />
               </div>
 
               <div className="border-t border-gray-200 ">
