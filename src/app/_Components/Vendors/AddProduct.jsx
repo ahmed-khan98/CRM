@@ -6,8 +6,9 @@ const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 import React, { useState, useRef, useMemo } from 'react';
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { useAddProductMutation, useGetCategoriesQuery, useGetSubCategoriesQuery } from "@/app/_Services/products/page";
 import toast from "react-hot-toast";
+import { useAddProductMutation } from "@/app/_Services/vendorproduct/page";
+import { useGetCategoriesQuery, useGetSubCategoriesQuery } from "@/app/_Services/categories/page";
 
 const AddProduct = () => {
 
@@ -396,8 +397,7 @@ const AddProduct = () => {
 
                     {/* Submit Button */}
                     <div className="flex  justify-end">
-
-                        <button type="submit" className="w-[200px] cursor-pointer bg-[#F33E0A] font-semibold text-white p-3 rounded-lg mt-4 hover:bg-[#d6300b]">{isLoading ? "Loadings" : "Save Product"}</button>
+                        <button type="submit" className="w-[200px] cursor-pointer bg-[#F33E0A] font-semibold text-white p-3 rounded-lg mt-4 hover:bg-[#d6300b]">{isSubmitting ? "Loading..." : "Save Product"}</button>
                     </div>
                 </div>
             </form>

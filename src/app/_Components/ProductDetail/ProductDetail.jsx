@@ -1,40 +1,7 @@
 "use client"
-// import { useProductDetailQuery } from '@/app/Services/products/page';
-// import React from 'react'
-
-// const ProductDetail = (id) => {
-//     console.log(id?.id,'fffff')
-//     const { data, error: isError, isLoading } = useProductDetailQuery(id.id);
-//     console.log(data,"data");
-
-//   return (
-
-
-//     <>
-//     {/* <div>{data.id}</div> */}
-//     </>
-//   )
-// }
-
-// export default ProductDetail
-
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Clock, Calendar, ImageIcon, Heart } from 'lucide-react';
-import { useAddWatchQuery, useProductDetailQuery } from '@/app/_Services/products/page';
-
-// Mock data - replace with your actual data
-const auctionData = {
-  name: "Vintage Collection Artwork",
-  description: "A rare collection of vintage artwork from the early 20th century. This unique piece showcases exceptional craftsmanship and historical significance.",
-  startTime: "2024-03-20T10:00:00",
-  endTime: "2024-03-25T18:00:00",
-  images: [
-    "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=800",
-    "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?auto=format&fit=crop&q=80&w=800",
-    "https://images.unsplash.com/photo-1579783928621-7a13d66a62d1?auto=format&fit=crop&q=80&w=800"
-  ]
-};
+import { useAddWatchQuery, useGetTodayyAuctionsProductQuery, useProductDetailQuery } from '@/app/_Services/products/page';
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString('en-US', {
@@ -45,12 +12,9 @@ function formatDate(dateString) {
 
 function App(id) {
   const [selectedImage, setSelectedImage] = React.useState(0);
-  const [isWatched, setIsWatched] = React.useState(false);
-
   const { data: addWatcher, error, isLoading:loding } = useAddWatchQuery(id.id);
-
   const { data, error: isError, isLoading } = useProductDetailQuery(id.id);
-
+  const { data: auction,  } = useGetTodayyAuctionsProductQuery();
 
 
   return (
@@ -115,9 +79,11 @@ function App(id) {
                 <h2 className="text-xl font-semibold text-gray-900 4 hover:text-gray-700 transition-colors duration-300">
                   Description
                 </h2>
-                <p className="text-gray-600 leading-relaxed hover:text-gray-800 transition-colors duration-300">
-                  {data?.data?.description}
-                </p>
+               
+                <p
+                    dangerouslySetInnerHTML={{ __html: data?.data?.description }}
+                   className="text-gray-600 leading-relaxed hover:text-gray-800 transition-colors duration-300"
+                />
               </div>
 
               <div className="border-t border-gray-200 ">

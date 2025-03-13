@@ -48,7 +48,7 @@ export default function RegisterForm() {
         console.log(response.message,"response meaage");
         
         toast.success(response?.message);
-        navigation.push("/")
+        navigation.push("/login")
       } catch (error) {
         toast.error(error.data.message);
       }
@@ -171,7 +171,7 @@ export default function RegisterForm() {
           </button>
           <div className="mt-4 text-center">
             <p className=" hover:underline cursor-pointer">
-              Already have an account ? <Link className="text-[#F33E0A]" href={"/"}>Login</Link>
+              Already have an account ? <Link className="text-[#F33E0A]" href={"/login"}>Login</Link>
             </p>
           </div>
         </form>

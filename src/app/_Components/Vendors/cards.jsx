@@ -1,10 +1,8 @@
 "use client"
-import { CiHeart, CiSearch, CiShare2 } from "react-icons/ci";
 import { FaBoxOpen } from "react-icons/fa";
-import { useGetMyProductQuery } from "@/app/_Services/products/page";
-import { useCallback, useEffect, useRef, useState } from "react";
 import CardsComponents from "./CardsComponents";
 import AuctionCardSkeleton from "../Skeleton/CardSkeleton";
+import { useGetMyProductQuery } from "@/app/_Services/vendorproduct/page";
 
 
 export default function Cards() {

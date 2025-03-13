@@ -1,3 +1,4 @@
+"use client"
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useState } from "react";
@@ -10,18 +11,21 @@ const NavbarCat = () => {
   const user = userCookie ? JSON.parse(userCookie) : null;
   const role = user?.role; 
   const navItems = [
-      { name: "Home", path: "/home" },
-      role === "USER"
-          ? { name: "Dashboard", path: "/dashboard" }
-          : { name: "Vendors", path: "/vendors" },
-      { name: "Shop", path: "/home1" },
-      { name: "Shortcodes", path: "/home1" },
-      { name: "Blog", path: "/home1" },
-      { name: "Media", path: "/home1" },
-      { name: "About", path: "/home1" },
-      { name: "Contact", path: "/home1" },
-      { name: "Pages", path: "/home1" },
-  ];
+    { name: "Home", path: "/home" },
+    token
+      ? role === "USER"
+        ? { name: "Dashboard", path: "/dashboard" }
+        : { name: "Dashboard", path: "/vendors" }
+      : null,
+    { name: "Shop", path: "/home1" },
+    { name: "Shortcodes", path: "/home1" },
+    { name: "Blog", path: "/home1" },
+    { name: "Media", path: "/home1" },
+    { name: "About", path: "/home1" },
+    { name: "Contact", path: "/home1" },
+    { name: "Pages", path: "/home1" },
+  ].filter(Boolean); 
+  
 
   return (
     <nav className="bg-[#F33E0A] py-3.5 relative">
@@ -65,33 +69,34 @@ const NavbarCat = () => {
 
             {/* Mobile Menu */}
             <ul className="absolute top-full left-0 w-full bg-[#F33E0A] flex flex-col items-start py-3 space-y-2 text-white text-sm font-medium md:hidden z-20 shadow-lg">
-              {["Home", "Shop", "Vendors", "Shortcodes", "Blog", "Media", "About", "Contact", "Pages"].map((item) => (
-                <li key={item} className="pl-4 w-full">
-                  <a href="#" className="block w-full py-2 hover:bg-[#d12b06]">{item}</a>
+            {navItems.map((item) => (
+                <li className="pl-4 w-full" key={item.name}>
+                    <Link onClick={() => setMenuOpen(!menuOpen)} href={item.path} className=" block w-full py-2 hover:border-b-2 ">
+                        {item.name}
+                    </Link>
                 </li>
-              ))}
-            </ul>
+            ))}
+        </ul>
           </>
         )}
 
         {/* Right Section (Sign In) */}
         <div>
             {token ? (
-              <Link href={"/"}>
-                <button 
-                    onClick={() => {
-                        Cookies.remove("token");
-                        Cookies.remove("currentuser");
-                    }} 
-                    className="text-white text-sm font-medium hover:underline cursor-pointer"
-                >
-                    Logout
-                </button>
-              </Link>
+              <Link 
+              href="/login" 
+              onClick={() => {
+                Cookies.remove("token");
+                Cookies.remove("currentuser");
+              }} 
+              className="text-white text-sm font-medium hover:underline cursor-pointer"
+            >
+              Logout
+            </Link>
             ) : (
-                <Link href="/" className="text-white text-sm font-medium hover:underline">
-                    Sign In
-                </Link>
+              <Link href="/login" className="text-white text-sm font-medium hover:underline">
+              Sign In
+            </Link>
             )}
         </div>
       </div>
