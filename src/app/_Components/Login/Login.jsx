@@ -37,7 +37,7 @@ export default function LoginForm() {
           Cookies.set("token", accessToken, { expires: 7, secure: true });
           Cookies.set("currentuser", JSON.stringify(user), { expires: 7, secure: true });
           toast.success(response.message);
-          navigation.push("/home1");
+          navigation.push("/");
         }
       } catch (error) {
         toast.error(error.data.message);

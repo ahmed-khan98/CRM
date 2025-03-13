@@ -1,18 +1,19 @@
 import { createApiAuction } from "@/redux/createApi"
 
 const wishlistApi = createApiAuction.injectEndpoints({
-  endpoints: (builder) => ({
-    addWishlist: builder.mutation({
-        query: (formData) => ({
-          url: 'userLogin',
+    overrideExisting: true,  
+    endpoints: (builder) => ({
+      addWishlist: builder.mutation({
+        query: (id) => ({
+          url: `user/wishlist/${id}`,
           method: 'POST',
-          body: formData,
+          // body: {id}  
         }),
       }),
       getAllWishlist: builder.query({
-        query: () => '',
+        query: () => 'user/wishlist',
       }),
-  }),
-})
+    }),
+  });
 
 export const {useAddWishlistMutation,useGetAllWishlistQuery} = wishlistApi

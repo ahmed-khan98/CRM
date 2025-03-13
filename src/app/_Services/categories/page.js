@@ -6,7 +6,7 @@ const categoriesApi = createApiAuction.injectEndpoints({
       query: () => 'user/category',
     }),
     getSubCategories: builder.query({
-      query: (categoryId) => `user/subcategory/getAllSubCategoriesByCategoryId/${categoryId}`,
+      query: (categoryId) => `user/subcategory/subCatByCatId/${categoryId}`,
     }),
   }),
 })

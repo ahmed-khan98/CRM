@@ -1,10 +1,13 @@
 "use client";
-import { useWonItemsQuery } from '@/app/_Services/wonProduct/page';
 
-const WonItems = () => {
-    const { data, error: isError, isLoading } = useWonItemsQuery();
-    const wonItems = data?.data || [];
-    const skeletonRows = wonItems.length || 5;
+import { useGetAllWishlistQuery } from "@/app/_Services/wishlist/page";
+
+const Wishlist = () => {
+    const { data, error: isError, isLoading } = useGetAllWishlistQuery();
+    const wishlistItems = data?.data?.products || [];
+
+    const skeletonRows = wishlistItems?.length || 5;
+
 
     return (
         <>
@@ -16,6 +19,7 @@ const WonItems = () => {
                                 <th className="p-3 border border-[#E9EFF4]">IMG</th>
                                 <th className="p-3 border border-[#E9EFF4]"> Product Title </th>
                                 <th className="p-3 border border-[#E9EFF4]">Price ⬍</th>
+                                <th className="p-3 border border-[#E9EFF4]">Status </th>
                                 <th className="p-3 border border-[#E9EFF4]">Quantity ⬍</th>
                                 <th className="p-3 border border-[#E9EFF4]">Highest Bids</th>
                                 <th className="p-3 border border-[#E9EFF4]">Start Date</th>
@@ -49,27 +53,33 @@ const WonItems = () => {
                                         </td>
                                     </tr>
                                 ))
-                            ) : wonItems.length === 0 ? (
-                                // Show message if won items are empty
+                            ) : wishlistItems?.length === 0 ? (
                                 <tr>
                                     <td colSpan="7" className="p-6 text-center text-gray-500 text-lg">
-                                        You have not won any items yet.
+                                        Your wishlist is empty.
                                     </td>
                                 </tr>
                             ) : (
-                                wonItems.map((item, index) => (
+                                wishlistItems?.map((item, index) => (
                                     <tr key={index} className="text-center text-sm text-[#3A3A49]">
                                         <td className="p-3 border flex justify-center border-[#E9EFF4]">
-                                            <img src={item?.product?.images?.[0]} width="50px" height="50px" />
+                                            <img src={item?.images?.[0]} width="50px" height="50px" />
                                         </td>
                                         <td className="p-3 border border-[#E9EFF4] text-[#DD9A19]">
-                                            {item?.product?.name}
+                                            {item?.name}
                                         </td>
-                                        <td className="p-3 border border-[#E9EFF4] ">$ {item?.product?.price}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.product?.quantity}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.product?.highestBid}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.product?.biddingStartTime}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.product?.biddingEndTime}</td>
+                                        <td className="p-3 border border-[#E9EFF4] ">$ {item?.price}</td>
+                                        <td
+                                            className={`p-3 border border-[#E9EFF4] font-medium ${item?.isSold ? "text-[green]" : "text-red-500"
+                                                }`}
+                                        >
+                                            {item?.isSold ? "Sold" : "Pending"}
+                                        </td>
+
+                                        <td className="p-3 border border-[#E9EFF4] ">{item?.quantity}</td>
+                                        <td className="p-3 border border-[#E9EFF4] ">{item?.highestBid}</td>
+                                        <td className="p-3 border border-[#E9EFF4] ">{item?.biddingStartTime}</td>
+                                        <td className="p-3 border border-[#E9EFF4] ">{item?.biddingEndTime}</td>
                                     </tr>
                                 ))
                             )}
@@ -81,4 +91,4 @@ const WonItems = () => {
     );
 };
 
-export default WonItems;
+export default Wishlist;

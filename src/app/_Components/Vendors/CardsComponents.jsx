@@ -41,7 +41,7 @@ const CardsComponents = ({ item }) => {
 
             <div key={item.id} className="relative shadow-lg bg-white">
                 {/* Image and Icons */}
-                <div className="relative border h-[300px] border-black">
+                <div className="relative  h-[300px] ">
                     <img
                         src={item?.images?.[0]}
                         alt="Product"
@@ -50,7 +50,7 @@ const CardsComponents = ({ item }) => {
                     {/* Watcher */}
                     {
                         item.watchers.length === 0 ? null :
-                            <div className="absolute text-white p-2 top-2 left-[65%] h-[25px] bg-[#F33E0A] shadow-2xl text-sm flex items-center justify-center">
+                            <div className="absolute text-white p-2 top-2 left-[68%] h-[25px] bg-[#F33E0A] shadow-2xl text-sm flex items-center justify-center">
                                 Watcher <span className="ml-1">{item?.watchers.length}</span>
                             </div>
                     }

@@ -1,14 +1,17 @@
 'use client'
 import { useAddBidMutation } from '@/app/_Services/products/page';
+import { useAddWishlistMutation } from '@/app/_Services/wishlist/page';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useRef, useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import { CiHeart, CiSearch, CiShare2 } from 'react-icons/ci';
+import { FaHeart } from 'react-icons/fa';
 import { ImHammer2 } from 'react-icons/im';
 
 const AuctionComp = ({ item }) => {
 
     const router = useRouter();
+    const [addWishlist, { isLoading: isWatchlist, isError: isWatchlistError }] = useAddWishlistMutation();
     const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
     const [bidValue, setBidValue] = useState(item.highestBid + 1);
     const [timeLeft, setTimeLeft] = useState({});
@@ -54,15 +57,20 @@ const AuctionComp = ({ item }) => {
         try {
             const response = await addBid({ id: item._id, bidAmount: bidValue }).unwrap();
             toast.success(response?.message);
-            setBidValue(bidValue+1)
-            router.replace(router.asPath); 
+            setBidValue(bidValue + 1)
+            router.replace(router.asPath);
         } catch (error) {
             toast.error(error.data?.message || "Failed to place bid");
         }
     };
 
-    const addtoWishlist = (id)=>{
-        console.log(id,"hhhhhh");
+    const addtoWishlist = async (id) => {
+        console.log(id, "id");
+        addWishlist(id).unwrap().then((response) => {
+            toast.success(response.message);
+        }).catch((error) => {
+            toast.error(error.data.message);
+        });
     }
 
     return (
@@ -77,17 +85,22 @@ const AuctionComp = ({ item }) => {
                 />
                 {/* Watchers */}
                 {
-                    item?.watchers?.length === 0 ? "": 
-                    <div className="absolute text-white p-2 top-2 left-[70%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
-                    Watcher <span className="ml-1">{item?.watchers?.length}</span>
-                </div>
+                    item?.watchers?.length === 0 ? "" :
+                        <div className="absolute text-white p-2 top-2 left-[70%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
+                            Watcher <span className="ml-1">{item?.watchers?.length}</span>
+                        </div>
                 }
                 {/* Icons */}
                 <div className="absolute top-2 left-3 h-[30px] w-[30px] bg-[#F33E0A] shadow-2xl rounded-full flex items-center justify-center">
                     <CiShare2 className="text-white text-lg" />
                 </div>
-                <div onClick={()=>{addtoWishlist(item._id)}} className="absolute cursor-pointer top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center">
-                    <CiHeart className="text-black text-lg" />
+                <div onClick={() => { addtoWishlist(item._id) }} className="absolute cursor-pointer top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center">
+                    {item?.isWishlisted ? (
+                        <FaHeart className="text-red-500 text-lg" />
+                    ) : (
+                        <CiHeart className="text-black text-lg" />
+                    )}
+
                 </div>
                 <div className="absolute top-22 left-3 h-[30px] w-[30px] bg-white shadow-2xl rounded-full flex items-center justify-center">
                     <CiSearch className="text-black text-lg" />
@@ -123,9 +136,9 @@ const AuctionComp = ({ item }) => {
                 </div>
             </div>
             <p
-                    dangerouslySetInnerHTML={{ __html: item?.description }}
-                    className="text-center text-gray-500 text-xs mt-2 montserrat"
-                />
+                dangerouslySetInnerHTML={{ __html: item?.description }}
+                className="text-center text-gray-500 text-xs mt-2 montserrat"
+            />
 
             <div className="bg-gray-200 text-center text-sm py-2 mt-2 montserrat">
                 Current Bid: <strong> $ {item?.highestBid}</strong>

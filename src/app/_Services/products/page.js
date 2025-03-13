@@ -4,7 +4,8 @@ const productApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({
     getTodayyAuctionsProduct: builder.query({
       query: () => 'user/product/auctionProducts',
-      providesTags: ['auction']
+      providesTags: ['auction'],
+      
     }),
     productDetail: builder.query({
       query: (id) => `user/product/${id}`,
@@ -17,7 +18,7 @@ const productApi = createApiAuction.injectEndpoints({
           body: { bidAmount: formData?.bidAmount },
         }
       },
-      invalidatesTags: ["auction"]
+      invalidatesTags: ['auction']
     }
     ),
     addWatch: builder.query({

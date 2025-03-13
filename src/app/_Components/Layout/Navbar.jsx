@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-// import { FaBagShopping, FaSearch } from "react-icons/fa";
 import { ImHammer2 } from "react-icons/im";
 import { CiHeart } from "react-icons/ci";
 import Image from "next/image";
@@ -10,9 +9,12 @@ import { FaSearch } from "react-icons/fa";
 import { FaBagShopping } from "react-icons/fa6";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { useGetCategoriesQuery } from "@/app/_Services/categories/page";
 
 const Navbar = () => {
+  const { data: categories, isLoading, error } = useGetCategoriesQuery()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const token = Cookies.get("token");
   const userCookie = Cookies.get("currentuser");
   const user = userCookie ? JSON.parse(userCookie) : null;
   const role = user?.role;
@@ -37,7 +39,7 @@ const Navbar = () => {
       <div className="bg-[#FFFFFF]">
         <nav className="container  mx-auto md:px-10 px-4 py-2 flex justify-between items-center">
 
-          <Link href="/home1" className="w-32">
+          <Link href="/" className="w-32">
             <Image src={logo} alt="Logo" width={120} height={50} />
           </Link>
 
@@ -62,10 +64,13 @@ const Navbar = () => {
               <div className="flex items-center bg-white border border-[#E9EFF4] rounded-full overflow-hidden">
 
                 <select className="px-4 py-2 bg-white border-r border-[#DDDDDD] text-gray-700 outline-none">
-                  <option>Category</option>
-                  <option>Electronics</option>
-                  <option>Fashion</option>
-                  <option>Home & Living</option>
+                  <option value="">Categories</option>
+
+                  {categories?.data?.map((category) => (
+                    <option value={category?._id} key={category?._id} >
+                      {category.name}
+                    </option>
+                  ))}
                 </select>
 
                 <input
@@ -91,15 +96,15 @@ const Navbar = () => {
               <span className="text-sm">0 items - $0.00</span>
             </div>
 
-            {
-              role === "USER" ? null :
-                <Link
-                  className="py-2.5 px-4 flex items-center gap-2 bg-[#F33E0A] text-white "
-                  href="/vendors/addproducts"
-                >
-                  Sell Your Stuff <ImHammer2 className="transform rotate-80" />
-                </Link>
-            }
+            {token && role !== "USER" && (
+              <Link
+                className="py-2.5 px-4 flex items-center gap-2 bg-[#F33E0A] text-white"
+                href="/vendors/addproducts"
+              >
+                Sell Your Stuff <ImHammer2 className="transform rotate-80" />
+              </Link>
+            )}
+
           </div>
         </nav>
       </div>
@@ -136,10 +141,10 @@ const Navbar = () => {
             {/* Category Dropdown */}
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full">
               <select className=" py-2 w-full text-gray-700 outline-none bg-white">
-                <option>Category</option>
-                <option>Electronics</option>
-                <option>Fashion</option>
-                <option>Home & Living</option>
+                <option className="text-gray-700">Category</option>
+                <option className="text-gray-700">Electronics</option>
+                <option className="text-gray-700">Fashion</option>
+                <option className="text-gray-700">Home & Living</option>
               </select>
             </div>
 
@@ -148,7 +153,7 @@ const Navbar = () => {
               <input
                 type="text"
                 placeholder="Search..."
-                className="flex-1  py-2 outline-none bg-white text-gray-700"
+                className="flex-1 pl-2 py-2 outline-none bg-white text-gray-700"
               />
               <button className="  text-black ">
                 <FaSearch className="w-4 h-5" />
@@ -170,13 +175,17 @@ const Navbar = () => {
               </button>
             </div>
 
-            <a
-              href="#"
-              className="flex items-center justify-center gap-2 py-2 mt-3 bg-[#F33E0A] text-white rounded-md"
-            >
-              Sell Your Stuff <ImHammer2 className="transform rotate-80" />
-            </a>
 
+
+            {
+              role === "USER" ? null :
+                <Link
+                  className="flex items-center justify-center gap-2 py-2 mt-3 bg-[#F33E0A] text-white rounded-md"
+                  href="/vendors/addproducts"
+                >
+                  Sell Your Stuff <ImHammer2 className="transform rotate-80" />
+                </Link>
+            }
 
           </div>
         </nav>
