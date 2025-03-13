@@ -6,12 +6,12 @@ import CardSkeleton from "./Skeleton/CardSkeleton";
 
 export default function AuctionList() {
   const { data, error: isError, isLoading ,refetch } = useGetTodayyAuctionsProductQuery(undefined,{
-    refetchOnMountOrArgChange: true, // ✅ Page load hone par fresh data fetch hoga
-    refetchOnFocus: true, // ✅ Jab bhi user tab ko dubara active kare, refetch ho
+    refetchOnMountOrArgChange: true, 
+    refetchOnFocus: true, 
   });
 
   useEffect(() => {
-    refetch(); // ✅ Page load hone par force refetch
+    refetch(); 
   }, []);  
   const skeletonCount = data?.data?.length || 4; 
 

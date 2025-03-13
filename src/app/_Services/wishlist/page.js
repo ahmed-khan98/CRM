@@ -7,8 +7,15 @@ const wishlistApi = createApiAuction.injectEndpoints({
         query: (id) => ({
           url: `user/wishlist/${id}`,
           method: 'POST',
-          // body: {id}  
         }),
+      invalidatesTags: ['auction']
+      }),
+      deleteWishlist: builder.mutation({
+        query: (id) => ({
+          url: `user/wishlist/${id}`,
+          method: 'DELETE',
+        }),
+      invalidatesTags: ['auction']
       }),
       getAllWishlist: builder.query({
         query: () => 'user/wishlist',
@@ -16,4 +23,4 @@ const wishlistApi = createApiAuction.injectEndpoints({
     }),
   });
 
-export const {useAddWishlistMutation,useGetAllWishlistQuery} = wishlistApi
+export const {useAddWishlistMutation,useGetAllWishlistQuery,useDeleteWishlistMutation} = wishlistApi

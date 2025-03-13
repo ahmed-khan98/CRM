@@ -1,17 +1,20 @@
 'use client'
 import { useAddBidMutation } from '@/app/_Services/products/page';
-import { useAddWishlistMutation } from '@/app/_Services/wishlist/page';
+import { useAddWishlistMutation, useDeleteWishlistMutation } from '@/app/_Services/wishlist/page';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useRef, useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import { CiHeart, CiSearch, CiShare2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { ImHammer2 } from 'react-icons/im';
+import Loader from '../Loader';
 
 const AuctionComp = ({ item }) => {
 
     const router = useRouter();
-    const [addWishlist, { isLoading: isWatchlist, isError: isWatchlistError }] = useAddWishlistMutation();
+    const [addWishlist] = useAddWishlistMutation();
+    const [deleteWishlist] = useDeleteWishlistMutation();
+    const [loading, setLoading] = useState(false);
     const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
     const [bidValue, setBidValue] = useState(item.highestBid + 1);
     const [timeLeft, setTimeLeft] = useState({});
@@ -64,14 +67,21 @@ const AuctionComp = ({ item }) => {
         }
     };
 
-    const addtoWishlist = async (id) => {
-        console.log(id, "id");
-        addWishlist(id).unwrap().then((response) => {
-            toast.success(response.message);
-        }).catch((error) => {
-            toast.error(error.data.message);
-        });
-    }
+    const toggleWishlist = async (id, isWishlisted) => {
+        setLoading(true);
+        try {
+            if (isWishlisted) {
+                const response = await deleteWishlist(id).unwrap();
+                toast.success(response.message);
+            } else {
+                const response = await addWishlist(id).unwrap();
+                toast.success(response.message);
+            }
+        } catch (error) {
+            toast.error(error?.data?.message || "Something went wrong");
+        }
+        setLoading(false);
+    };
 
     return (
         <div className="relative shadow-lg bg-white">
@@ -94,13 +104,17 @@ const AuctionComp = ({ item }) => {
                 <div className="absolute top-2 left-3 h-[30px] w-[30px] bg-[#F33E0A] shadow-2xl rounded-full flex items-center justify-center">
                     <CiShare2 className="text-white text-lg" />
                 </div>
-                <div onClick={() => { addtoWishlist(item._id) }} className="absolute cursor-pointer top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center">
-                    {item?.isWishlisted ? (
+                <div
+                    onClick={() => toggleWishlist(item._id, item?.isWishlisted)}
+                    className="absolute cursor-pointer top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center"
+                >
+                    {loading ? (
+                        <Loader />
+                    ) : item?.isWishlisted ? (
                         <FaHeart className="text-red-500 text-lg" />
                     ) : (
                         <CiHeart className="text-black text-lg" />
                     )}
-
                 </div>
                 <div className="absolute top-22 left-3 h-[30px] w-[30px] bg-white shadow-2xl rounded-full flex items-center justify-center">
                     <CiSearch className="text-black text-lg" />
