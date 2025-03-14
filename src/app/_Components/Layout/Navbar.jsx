@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { ImHammer2 } from "react-icons/im";
 import { CiHeart } from "react-icons/ci";
 import Image from "next/image";
 import logo from "../../../app/Assets/logo.png";
@@ -8,16 +7,15 @@ import NavbarCat from "../NavbarCategorys";
 import { FaSearch } from "react-icons/fa";
 import { FaBagShopping } from "react-icons/fa6";
 import Link from "next/link";
-import Cookies from "js-cookie";
 import { useGetCategoriesQuery } from "@/app/_Services/categories/page";
 
 const Navbar = () => {
   const { data: categories, isLoading, error } = useGetCategoriesQuery()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const token = Cookies.get("token");
-  const userCookie = Cookies.get("currentuser");
-  const user = userCookie ? JSON.parse(userCookie) : null;
-  const role = user?.role;
+  // const token = Cookies.get("token");
+  // const userCookie = Cookies.get("currentuser");
+  // const user = userCookie ? JSON.parse(userCookie) : null;
+  // const role = user?.role;
 
   return (
     <>
@@ -96,14 +94,14 @@ const Navbar = () => {
               <span className="text-sm">0 items - $0.00</span>
             </div>
 
-            {token && role !== "USER" && (
+            {/* {token && role !== "USER" && (
               <Link
                 className="py-2.5 px-4 flex items-center gap-2 bg-[#F33E0A] text-white"
                 href="/vendors/addproducts"
               >
                 Sell Your Stuff <ImHammer2 className="transform rotate-80" />
               </Link>
-            )}
+            )} */}
 
           </div>
         </nav>
@@ -141,10 +139,12 @@ const Navbar = () => {
             {/* Category Dropdown */}
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full">
               <select className=" py-2 w-full text-gray-700 outline-none bg-white">
-                <option className="text-gray-700">Category</option>
-                <option className="text-gray-700">Electronics</option>
-                <option className="text-gray-700">Fashion</option>
-                <option className="text-gray-700">Home & Living</option>
+                <option value="">Categories</option>
+                {categories?.data?.map((category) => (
+                  <option value={category?._id} key={category?._id} >
+                    {category.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -176,16 +176,15 @@ const Navbar = () => {
             </div>
 
 
-
-            {
-              role === "USER" ? null :
-                <Link
+            {/* {token && role !== "USER" && (
+              <Link
                   className="flex items-center justify-center gap-2 py-2 mt-3 bg-[#F33E0A] text-white rounded-md"
                   href="/vendors/addproducts"
                 >
                   Sell Your Stuff <ImHammer2 className="transform rotate-80" />
                 </Link>
-            }
+            )} */}
+
 
           </div>
         </nav>

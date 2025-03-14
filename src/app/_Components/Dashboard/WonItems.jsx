@@ -1,5 +1,6 @@
 "use client";
 import { useWonItemsQuery } from '@/app/_Services/wonProduct/page';
+import Link from 'next/link';
 
 const WonItems = () => {
     const { data, error: isError, isLoading } = useWonItemsQuery();
@@ -20,6 +21,7 @@ const WonItems = () => {
                                 <th className="p-3 border border-[#E9EFF4]">Highest Bids</th>
                                 <th className="p-3 border border-[#E9EFF4]">Start Date</th>
                                 <th className="p-3 border border-[#E9EFF4]">End Date</th>
+                                <th className="p-3 border border-[#E9EFF4]">Payment</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,10 +49,12 @@ const WonItems = () => {
                                         <td className="p-3 border border-[#E9EFF4]">
                                             <div className="h-4 bg-gray-200 rounded animate-pulse w-20 mx-auto"></div>
                                         </td>
+                                        <td className="p-3 border border-[#E9EFF4]">
+                                            <div className="h-4 bg-gray-200 rounded animate-pulse w-20 mx-auto"></div>
+                                        </td>
                                     </tr>
                                 ))
                             ) : wonItems.length === 0 ? (
-                                // Show message if won items are empty
                                 <tr>
                                     <td colSpan="7" className="p-6 text-center text-gray-500 text-lg">
                                         You have not won any items yet.
@@ -70,6 +74,16 @@ const WonItems = () => {
                                         <td className="p-3 border border-[#E9EFF4] ">{item?.product?.highestBid}</td>
                                         <td className="p-3 border border-[#E9EFF4] ">{item?.product?.biddingStartTime}</td>
                                         <td className="p-3 border border-[#E9EFF4] ">{item?.product?.biddingEndTime}</td>
+                                        <td className="p-3 border border-[#E9EFF4] ">
+                                            <Link
+                                                href="/dashboard/wallet"
+                                                className="bg-green-600 cursor-pointer text-white px-4 py-2 rounded hover:bg-green-500"
+                                            >
+                                                Pay Now
+                                            </Link>
+
+                                        </td>
+
                                     </tr>
                                 ))
                             )}

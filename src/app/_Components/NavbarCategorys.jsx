@@ -12,11 +12,12 @@ const NavbarCat = () => {
   const role = user?.role; 
   const navItems = [
     { name: "Home", path: "/home" },
-    token
-      ? role === "USER"
-        ? { name: "Dashboard", path: "/dashboard" }
-        : { name: "Dashboard", path: "/vendors" }
-      : null,
+    // token
+    //   ? role === "USER"
+    //     ? { name: "Dashboard", path: "/dashboard" }
+    //     : { name: "Dashboard", path: "/vendors" }
+    //   : null,
+    { name: "Dashboard", path: "/dashboard" },
     { name: "Shop", path: "/home1" },
     { name: "Shortcodes", path: "/home1" },
     { name: "Blog", path: "/home1" },

@@ -84,8 +84,9 @@ const AuctionComp = ({ item }) => {
     };
 
     return (
-        <div className="relative shadow-lg bg-white">
+        <div className="relative  shadow-lg bg-white">
             {/* Image and Icons */}
+
             <div className="relative h-[300px]">
                 <img
                     onClick={() => router.push(`/detailproduct/${item._id}`)}
@@ -151,8 +152,11 @@ const AuctionComp = ({ item }) => {
             </div>
             <p
                 dangerouslySetInnerHTML={{ __html: item?.description }}
-                className="text-center text-gray-500 text-xs mt-2 montserrat"
+                className="text-center text-gray-800 text-xs mt-2 montserrat"
             />
+            <p className="text-center text-gray-800 text-xs mt-2 montserrat">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem, sapiente dolore! Inventore voluptates aut nihil maiores, a vitae?
+            </p>
 
             <div className="bg-gray-200 text-center text-sm py-2 mt-2 montserrat">
                 Current Bid: <strong> $ {item?.highestBid}</strong>

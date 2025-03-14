@@ -1,7 +1,11 @@
 "use client";
-
 import { useGetAllWishlistQuery } from "@/app/_Services/wishlist/page";
-
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleString('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+  }
 const Wishlist = () => {
     const { data, error: isError, isLoading } = useGetAllWishlistQuery();
     const wishlistItems = data?.data?.products || [];
@@ -51,6 +55,9 @@ const Wishlist = () => {
                                         <td className="p-3 border border-[#E9EFF4]">
                                             <div className="h-4 bg-gray-200 rounded animate-pulse w-20 mx-auto"></div>
                                         </td>
+                                        <td className="p-3 border border-[#E9EFF4]">
+                                            <div className="h-4 bg-gray-200 rounded animate-pulse w-20 mx-auto"></div>
+                                        </td>
                                     </tr>
                                 ))
                             ) : wishlistItems?.length === 0 ? (
@@ -78,8 +85,8 @@ const Wishlist = () => {
 
                                         <td className="p-3 border border-[#E9EFF4] ">{item?.quantity}</td>
                                         <td className="p-3 border border-[#E9EFF4] ">{item?.highestBid}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.biddingStartTime}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.biddingEndTime}</td>
+                                        <td className="p-3 border border-[#E9EFF4] ">{formatDate(item?.biddingStartTime)}</td>
+                                        <td className="p-3 border border-[#E9EFF4] ">{formatDate(item?.biddingEndTime)}</td>
                                     </tr>
                                 ))
                             )}

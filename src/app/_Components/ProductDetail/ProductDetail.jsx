@@ -1,7 +1,7 @@
 "use client"
-import React, { useEffect } from 'react';
-import { Clock, Calendar, ImageIcon, Heart } from 'lucide-react';
-import { useAddWatchQuery, useGetTodayyAuctionsProductQuery, useProductDetailQuery } from '@/app/_Services/products/page';
+import React from 'react';
+import { Clock, Calendar, } from 'lucide-react';
+import { useAddWatchQuery, useProductDetailQuery } from '@/app/_Services/products/page';
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString('en-US', {
@@ -14,8 +14,6 @@ function App(id) {
   const [selectedImage, setSelectedImage] = React.useState(0);
   const { data: addWatcher, error, isLoading:loding } = useAddWatchQuery(id.id);
   const { data, error: isError, isLoading } = useProductDetailQuery(id.id);
-  const { data: auction,  } = useGetTodayyAuctionsProductQuery();
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">

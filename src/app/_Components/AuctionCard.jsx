@@ -3,16 +3,12 @@ import { useEffect, useState } from "react";
 import { useGetTodayyAuctionsProductQuery } from "../_Services/products/page";
 import AuctionComp from "./Home/AuctionComp";
 import CardSkeleton from "./Skeleton/CardSkeleton";
+import { useRouter } from "next/navigation";
 
 export default function AuctionList() {
-  const { data, error: isError, isLoading ,refetch } = useGetTodayyAuctionsProductQuery(undefined,{
-    refetchOnMountOrArgChange: true, 
-    refetchOnFocus: true, 
-  });
+  const router = useRouter();
+  const { data, error: isError, isLoading  } = useGetTodayyAuctionsProductQuery(); 
 
-  useEffect(() => {
-    refetch(); 
-  }, []);  
   const skeletonCount = data?.data?.length || 4; 
 
   
