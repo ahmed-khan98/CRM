@@ -9,6 +9,7 @@ const productApi = createApiAuction.injectEndpoints({
     }),
     productDetail: builder.query({
       query: (id) => `user/product/${id}`,
+      providesTags:['detailproduct']
     }),
     addBid: builder.mutation({
       query: (formData) => {
@@ -18,7 +19,7 @@ const productApi = createApiAuction.injectEndpoints({
           body: { bidAmount: formData?.bidAmount },
         }
       },
-      invalidatesTags: ['auction']
+      invalidatesTags: ['auction','detailproduct']
     }
     ),
     addWatch: builder.query({

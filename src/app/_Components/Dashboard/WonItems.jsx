@@ -1,11 +1,32 @@
 "use client";
+import { useAddPaymentMutation } from '@/app/_Services/payment/page';
 import { useWonItemsQuery } from '@/app/_Services/wonProduct/page';
 import Link from 'next/link';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const WonItems = () => {
+    const [loadingStates, setLoadingStates] = useState({});
     const { data, error: isError, isLoading } = useWonItemsQuery();
     const wonItems = data?.data || [];
     const skeletonRows = wonItems.length || 5;
+    const [addPayment] = useAddPaymentMutation();
+
+    const addPayments = async (id) => {
+        try {
+            setLoadingStates((prev) => ({ ...prev, [id]: true }));
+            const response = await addPayment({ "productId": id }).unwrap();
+            console.log(response, 'sadaf');
+    
+            if (response?.data?.url) {
+                window.location.href = response?.data?.url;
+            }
+        } catch (error) {
+            toast.error(error?.data?.message || "Something went wrong");
+        } finally {
+            setLoadingStates((prev) => ({ ...prev, [id]: false })); 
+        }
+    };
 
     return (
         <>
@@ -63,28 +84,33 @@ const WonItems = () => {
                             ) : (
                                 wonItems.map((item, index) => (
                                     <tr key={index} className="text-center text-sm text-[#3A3A49]">
-                                        <td className="p-3 border flex justify-center border-[#E9EFF4]">
-                                            <img src={item?.product?.images?.[0]} width="50px" height="50px" />
-                                        </td>
-                                        <td className="p-3 border border-[#E9EFF4] text-[#DD9A19]">
-                                            {item?.product?.name}
-                                        </td>
-                                        <td className="p-3 border border-[#E9EFF4] ">$ {item?.product?.price}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.product?.quantity}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.product?.highestBid}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.product?.biddingStartTime}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">{item?.product?.biddingEndTime}</td>
-                                        <td className="p-3 border border-[#E9EFF4] ">
-                                            <Link
-                                                href="/dashboard/wallet"
-                                                className="bg-green-600 cursor-pointer text-white px-4 py-2 rounded hover:bg-green-500"
-                                            >
-                                                Pay Now
-                                            </Link>
-
-                                        </td>
-
-                                    </tr>
+                                    <td className="p-3 border flex justify-center border-[#E9EFF4]">
+                                        <img src={item?.product?.images?.[0]} width="50px" height="50px" />
+                                    </td>
+                                    <td className="p-3 border border-[#E9EFF4] text-[#DD9A19]">
+                                        {item?.product?.name}
+                                    </td>
+                                    <td className="p-3 border border-[#E9EFF4] ">$ {item?.product?.price}</td>
+                                    <td className="p-3 border border-[#E9EFF4] ">{item?.product?.quantity}</td>
+                                    <td className="p-3 border border-[#E9EFF4] ">{item?.product?.highestBid}</td>
+                                    <td className="p-3 border border-[#E9EFF4] ">{item?.product?.biddingStartTime}</td>
+                                    <td className="p-3 border border-[#E9EFF4] ">{item?.product?.biddingEndTime}</td>
+                                    <td className="p-3 border border-[#E9EFF4] ">
+                                        <button
+                                            onClick={() => addPayments(item?.product?._id)}
+                                            disabled={loadingStates[item?.product?._id]} // Sirf clicked button disable hoga
+                                            className={`bg-green-600 cursor-pointer text-white px-4 py-2 rounded hover:bg-green-500 flex items-center justify-center ${
+                                                loadingStates[item?.product?._id] ? "opacity-50 cursor-not-allowed" : ""
+                                            }`}
+                                        >
+                                            {loadingStates[item?.product?._id] ? (
+                                               "Loading..."
+                                            ) : (
+                                                "Pay Now"
+                                            )}
+                                        </button>
+                                    </td>
+                                </tr>
                                 ))
                             )}
                         </tbody>

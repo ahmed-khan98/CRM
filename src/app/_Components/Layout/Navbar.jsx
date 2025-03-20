@@ -3,16 +3,15 @@ import React, { useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import Image from "next/image";
 import logo from "../../../app/Assets/logo.png";
-import NavbarCat from "../NavbarCategorys";
 import { FaSearch } from "react-icons/fa";
-import { FaBagShopping } from "react-icons/fa6";
 import Link from "next/link";
 import { useGetCategoriesQuery } from "@/app/_Services/categories/page";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const { data: categories, isLoading, error } = useGetCategoriesQuery()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const token = Cookies.get("token");
+  const token = Cookies.get("token");
   // const userCookie = Cookies.get("currentuser");
   // const user = userCookie ? JSON.parse(userCookie) : null;
   // const role = user?.role;
@@ -34,7 +33,7 @@ const Navbar = () => {
       </div>
 
       {/* Navbar */}
-      <div className="bg-[#FFFFFF]">
+      <div className="bg-[#FFFFFF] border-b border-[#DDDDDD7D]">
         <nav className="container  mx-auto md:px-10 px-4 py-2 flex justify-between items-center">
 
           <Link href="/" className="w-32">
@@ -87,14 +86,14 @@ const Navbar = () => {
 
           <div className="hidden text-black lg:flex items-center space-x-4">
 
-            <div className="flex flex-col items-center">
+            {/* <div className="flex flex-col items-center">
               <button className=" flex items-center gap-2">
                 My Cart <FaBagShopping className="text-[#F33E0A]" />
               </button>
               <span className="text-sm">0 items - $0.00</span>
             </div>
 
-            {/* {token && role !== "USER" && (
+            {token && role !== "USER" && (
               <Link
                 className="py-2.5 px-4 flex items-center gap-2 bg-[#F33E0A] text-white"
                 href="/vendors/addproducts"
@@ -102,6 +101,39 @@ const Navbar = () => {
                 Sell Your Stuff <ImHammer2 className="transform rotate-80" />
               </Link>
             )} */}
+
+            <div className="flex flex-col items-center">
+              <div
+                className="py-2.5 px-4 flex items-center gap-2 bg-[#F33E0A] text-white"
+
+              >
+                {token ? (
+                  <Link
+                    href="/login"
+                    onClick={() => {
+                      Cookies.remove("token");
+                      Cookies.remove("currentuser");
+                    }}
+                    className="text-white text-sm font-medium  cursor-pointer"
+                  >
+                    Logout
+                  </Link>
+                ) : (
+                  <Link href="/login" className="text-white text-sm font-medium ">
+                    Sign In
+                  </Link>
+                )}
+              </div>
+
+            </div>
+            <Link
+              className="py-2.5 px-4 flex items-center gap-2 bg-[#F33E0A] text-white"
+              href="/dashboard/wonitem"
+            >
+              Dashboard
+            </Link>
+
+
 
           </div>
         </nav>
@@ -166,14 +198,14 @@ const Navbar = () => {
 
           {/* Cart & Sell Buttons */}
           <div className="mt-6">
-            <div className="flex flex-col items-center text-center">
+            {/* <div className="flex flex-col items-center text-center">
               <button className="px-4 flex flex-col items-center gap-1">
                 <div className="flex items-center gap-2">
                   My Cart <FaBagShopping className="text-[#F33E0A]" />
                 </div>
                 <span className="text-sm">0 items - $0.00</span>
               </button>
-            </div>
+            </div> */}
 
 
             {/* {token && role !== "USER" && (
@@ -186,12 +218,40 @@ const Navbar = () => {
             )} */}
 
 
+            <Link
+              className="flex items-center justify-center gap-2 py-2 mt-3 bg-[#F33E0A] text-white rounded-md"
+              href="/dashboard"
+            >
+              Dashboard
+            </Link>
+            <div
+              className="flex items-center justify-center gap-2 py-2 mt-3 bg-[#F33E0A] text-white rounded-md"
+            >
+             {token ? (
+              <Link 
+              href="/login" 
+              onClick={() => {
+                Cookies.remove("token");
+                Cookies.remove("currentuser");
+              }} 
+              className="text-white text-sm font-medium  cursor-pointer"
+            >
+              Logout
+            </Link>
+            ) : (
+              <Link href="/login" className="text-white text-sm font-medium ">
+              Sign In
+            </Link>
+            )}
+            </div>
+
+
           </div>
         </nav>
       </div>
 
       {/* Navbar Categories */}
-      <NavbarCat />
+      {/* <NavbarCat /> */}
     </>
   );
 };

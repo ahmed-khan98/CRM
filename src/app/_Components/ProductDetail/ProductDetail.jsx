@@ -1,7 +1,9 @@
 "use client"
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Clock, Calendar, } from 'lucide-react';
-import { useAddWatchQuery, useProductDetailQuery } from '@/app/_Services/products/page';
+import { useAddBidMutation, useAddWatchQuery, useProductDetailQuery } from '@/app/_Services/products/page';
+import { ImHammer2 } from 'react-icons/im';
+import toast from 'react-hot-toast';
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString('en-US', {
@@ -12,9 +14,36 @@ function formatDate(dateString) {
 
 function App(id) {
   const [selectedImage, setSelectedImage] = React.useState(0);
-  const { data: addWatcher, error, isLoading:loding } = useAddWatchQuery(id.id);
+  const { data: addWatcher, error, isLoading: loding } = useAddWatchQuery(id.id);
   const { data, error: isError, isLoading } = useProductDetailQuery(id.id);
+  const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
+  const [bidValue, setBidValue] = useState(0);
 
+  console.log(bidValue,"bidValue");
+  useEffect(()=>{
+    setBidValue(data?.data?.highestBid+1)
+  },[data])
+  
+  // Handle bid input change
+  const handleBidChange = (id, value) => {
+    setBidValue(Number(value));
+  };
+
+  // Submit bid function
+  const submitBid = async () => {
+    if (bidValue <= data?.data?.highestBid) {
+      toast.error("Bid amount must be greater than the highest bid!");
+      return;
+    }
+    try {
+      const response = await addBid({ id: data?.data?._id, bidAmount: bidValue }).unwrap();
+      toast.success(response?.message);
+      setBidValue(bidValue + 1)
+      // router.replace(router.asPath);
+    } catch (error) {
+      toast.error(error.data?.message || "Failed to place bid");
+    }
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -35,8 +64,8 @@ function App(id) {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`flex-shrink-0 transform transition-all duration-300 ${selectedImage === index
-                        ? 'ring-2 ring-blue-500 scale-105'
-                        : 'hover:scale-105 hover:shadow-md'
+                      ? 'ring-2 ring-blue-500 scale-105'
+                      : 'hover:scale-105 hover:shadow-md'
                       }`}
                   >
                     <img
@@ -77,10 +106,10 @@ function App(id) {
                 <h2 className="text-xl font-semibold text-gray-900 4 hover:text-gray-700 transition-colors duration-300">
                   Description
                 </h2>
-               
+
                 <p
-                    dangerouslySetInnerHTML={{ __html: data?.data?.description }}
-                   className="text-gray-600 leading-relaxed hover:text-gray-800 transition-colors duration-300"
+                  dangerouslySetInnerHTML={{ __html: data?.data?.description }}
+                  className="text-gray-600 leading-relaxed hover:text-gray-800 transition-colors duration-300"
                 />
               </div>
 
@@ -100,7 +129,27 @@ function App(id) {
                   {data?.data?.quantity}
                 </p>
               </div>
-            
+              <div className="mt-3 flex">
+                <input
+                  type="text"                 
+                  className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center montserrat outline-none 
+                             appearance-none [&::-webkit-outer-spin-button]:appearance-none 
+                             [&::-webkit-inner-spin-button]:appearance-none"
+                  onChange={(e) => handleBidChange(data?.data?._id, e.target.value)}
+                  value={bidValue}
+                />
+                <button
+                  disabled={bidValue <= data?.data?.highestBid || isSubmitting}
+                  onClick={() => submitBid(data?.data?._id)}
+                  className={`w-1/2 cursor-pointer  montserrat text-white py-2 flex items-center justify-center space-x-2
+                                      ${Number(bidValue) > Number(data?.data?.highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}
+                                  `}
+                >
+                  <ImHammer2 className="transform rotate-80" />
+                  <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
+                </button>
+              </div>
+
             </div>
           </div>
         </div>
