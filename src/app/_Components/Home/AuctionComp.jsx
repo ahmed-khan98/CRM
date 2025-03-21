@@ -85,10 +85,9 @@ const AuctionComp = ({ item }) => {
 
     return (
         <div className="relative  shadow-lg bg-white">
-            <p className="text-center text-black text-xs mt-2 montserrat line-clamp-2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem, sapiente dolore! Inventore voluptates aut nihil maiores, a vitae?
+            <p className="text-center text-[#242424] text-[18px] font-semibold py-1 mt-2 montserrat line-clamp-2">
+                {item?.name.length > 50 ? `${item.name.slice(0, 50)}...` : item.name}
             </p>
-            {/* Image and Icons */}
             <div className="relative h-[300px]">
                 <img
                     onClick={() => router.push(`/detailproduct/${item._id}`)}
@@ -96,7 +95,6 @@ const AuctionComp = ({ item }) => {
                     alt="Product"
                     className="w-full h-full object-cover cursor-pointer"
                 />
-                {/* Watchers */}
                 {
                     item?.watchers?.length === 0 ? "" :
                         <div className="absolute text-white p-2 top-2 left-[70%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
@@ -152,10 +150,10 @@ const AuctionComp = ({ item }) => {
                     <p>{item?.highestBid}</p>
                 </div>
             </div>
-            <p
+            {/* <p
                 dangerouslySetInnerHTML={{ __html: item?.description }}
                 className="text-center text-gray-800 text-xs mt-2 montserrat"
-            />
+            /> */}
 
 
             <div className="bg-gray-200 text-center text-sm py-2 mt-2 montserrat">
@@ -165,8 +163,7 @@ const AuctionComp = ({ item }) => {
             {/* Bidding Input and Button */}
             <div className="mt-3 flex">
                 <input
-                    type="number"
-                    min={bidValue + 1}
+                    type="text"
                     className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center montserrat outline-none 
                appearance-none [&::-webkit-outer-spin-button]:appearance-none 
                [&::-webkit-inner-spin-button]:appearance-none"

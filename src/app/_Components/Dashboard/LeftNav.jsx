@@ -31,7 +31,7 @@ const LeftNav = () => {
   };
 
   return (
-    <div className="w-1/4 text-white bg-[#F33E0A]">
+    <div className="w-1/5 text-white bg-[#F33E0A]">
       {menuItems.map((item, index) => {
         const isActive = pathname === item.path;
 

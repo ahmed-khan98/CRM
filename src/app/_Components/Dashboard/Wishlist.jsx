@@ -1,14 +1,18 @@
 "use client";
 import { useGetAllWishlistQuery } from "@/app/_Services/wishlist/page";
+import { useRouter } from 'next/navigation';
+
 function formatDate(dateString) {
     return new Date(dateString).toLocaleString('en-US', {
-      dateStyle: 'medium',
-      timeStyle: 'short'
+        dateStyle: 'medium',
+        timeStyle: 'short'
     });
-  }
+}
+
 const Wishlist = () => {
     const { data, error: isError, isLoading } = useGetAllWishlistQuery();
     const wishlistItems = data?.data?.products || [];
+    const router = useRouter();
 
     const skeletonRows = wishlistItems?.length || 5;
 
@@ -68,19 +72,19 @@ const Wishlist = () => {
                                 </tr>
                             ) : (
                                 wishlistItems?.map((item, index) => (
-                                    <tr key={index} className="text-center text-sm text-[#3A3A49]">
+                                    <tr key={index} className="text-center text-sm text-[#3A3A49]" >
                                         <td className="p-3 border flex justify-center border-[#E9EFF4]">
-                                            <img src={item?.images?.[0]} width="50px" height="50px" />
+                                            <img src={item?.images?.[0]} width="50px" height="50px" className="rounded cursor-pointer" onClick={() => router.push(`/detailproduct/${item._id}`)} />
                                         </td>
-                                        <td className="p-3 border border-[#E9EFF4] text-[#DD9A19]">
+                                        <td className="p-3 border border-[#E9EFF4] text-[#DD9A19] cursor-pointer" onClick={() => router.push(`/detailproduct/${item._id}`)}>
                                             {item?.name}
                                         </td>
                                         <td className="p-3 border border-[#E9EFF4] ">$ {item?.price}</td>
                                         <td
-                                            className={`p-3 border border-[#E9EFF4] font-medium ${item?.isSold ? "text-[green]" : "text-red-500"
+                                            className={`p-3 border border-[#E9EFF4] font-medium ${item?.isSold ? "text-[green]" : "text-yellow-500"
                                                 }`}
                                         >
-                                            {item?.isSold ? "Sold" : "Pending"}
+                                            {item?.isSold ? "Sold" : "Unsold"}
                                         </td>
 
                                         <td className="p-3 border border-[#E9EFF4] ">{item?.quantity}</td>
