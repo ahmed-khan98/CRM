@@ -28,14 +28,14 @@ const AuctionComp = ({ item }) => {
 
         if (diff > 0) {
             setTimeLeft({
-                days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+                // days: Math.floor(diff / (1000 * 60 * 60 * 24)),
                 hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
                 minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
                 seconds: Math.floor((diff % (1000 * 60)) / 1000),
             });
         } else {
             clearInterval(timerRef.current);
-            setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
         }
     }, [item?.biddingEndTime]);
 
@@ -84,8 +84,10 @@ const AuctionComp = ({ item }) => {
     };
 
     return (
-        <div className="relative shadow-lg bg-white">
-            {/* Image and Icons */}
+        <div className="relative  shadow-lg bg-white">
+            <p className="text-center text-[#242424] text-[18px] font-semibold py-1 mt-2 montserrat line-clamp-2">
+                {item?.name.length > 50 ? `${item.name.slice(0, 50)}...` : item.name}
+            </p>
             <div className="relative h-[300px]">
                 <img
                     onClick={() => router.push(`/detailproduct/${item._id}`)}
@@ -93,7 +95,6 @@ const AuctionComp = ({ item }) => {
                     alt="Product"
                     className="w-full h-full object-cover cursor-pointer"
                 />
-                {/* Watchers */}
                 {
                     item?.watchers?.length === 0 ? "" :
                         <div className="absolute text-white p-2 top-2 left-[70%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
@@ -125,7 +126,7 @@ const AuctionComp = ({ item }) => {
             <div className="bg-white shadow-xl w-[90%] mx-auto text-center py-2 rounded -mt-[60px] relative z-1">
                 <p className="text-sm font-semibold montserrat">Time left:</p>
                 <div className="flex justify-center space-x-4 text-lg font-bold">
-                    {["days", "hours", "minutes", "seconds"].map((unit) => (
+                    {["hours", "minutes", "seconds"].map((unit) => (
                         <div key={unit} className="flex flex-col items-center">
                             <span>{timeLeft[unit] ?? 0}</span>
                             <span className="text-xs font-normal montserrat">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
@@ -149,28 +150,30 @@ const AuctionComp = ({ item }) => {
                     <p>{item?.highestBid}</p>
                 </div>
             </div>
-            <p
+            {/* <p
                 dangerouslySetInnerHTML={{ __html: item?.description }}
-                className="text-center text-gray-500 text-xs mt-2 montserrat"
-            />
+                className="text-center text-gray-800 text-xs mt-2 montserrat"
+            /> */}
+
 
             <div className="bg-gray-200 text-center text-sm py-2 mt-2 montserrat">
                 Current Bid: <strong> $ {item?.highestBid}</strong>
             </div>
+
             {/* Bidding Input and Button */}
             <div className="mt-3 flex">
                 <input
-                    type="number"
-                    min={bidValue + 1}
-                    className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center montserrat outline-none"
+                    type="text"
+                    className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center montserrat outline-none 
+               appearance-none [&::-webkit-outer-spin-button]:appearance-none 
+               [&::-webkit-inner-spin-button]:appearance-none"
                     onChange={(e) => handleBidChange(item._id, e.target.value)}
                     value={bidValue}
                 />
-
                 <button
                     disabled={bidValue <= item?.highestBid || isSubmitting}
                     onClick={() => submitBid(item._id)}
-                    className={`w-1/2  montserrat text-white py-2 flex items-center justify-center space-x-2
+                    className={`w-1/2 cursor-pointer  montserrat text-white py-2 flex items-center justify-center space-x-2
                         ${Number(bidValue) > Number(item?.highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}
                     `}
                 >

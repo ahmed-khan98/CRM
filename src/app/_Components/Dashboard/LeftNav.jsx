@@ -8,20 +8,20 @@ const LeftNav = () => {
   const router = useRouter(); 
 
   const menuItems = [
-    { name: "APPOINTMENTS", path: "/dashboard" },
+    // { name: "APPOINTMENTS", path: "/dashboard" },
     { name: "WON ITEMS ", path: "/dashboard/wonitem" },
     { name: "WISHTLIST", path: "/dashboard/wishlist" },
-    { name: "MY INVENTORY", path: "/dashboard/inventory" },
-    { name: "PURCHASES HISTORY", path: "/purchases" },
-    { name: "MY EARNINGS ($0)", path: "/dashboard/earnings" },
-    { name: "WALLET", path: "/dashboard/wallet" },
-    { name: "NOTIFICATIONS", path: "/notifications" },
-    { name: "FEES & OPEN INVOICES (0)", path: "/fees" },
-    { name: "SAVED SEARCHES", path: "/saved-searches" },
-    { name: "RECEIPTS", path: "/receipts" },
-    { name: "MY ACCOUNT", path: "/dashboard/account" },
-    { name: "ACCOUNT", path: "/dashboard/account2" },
-    { name: "LOG OUT", path: "/" },
+    // { name: "MY INVENTORY", path: "/dashboard/inventory" },
+    // { name: "PURCHASES HISTORY", path: "/purchases" },
+    // { name: "MY EARNINGS ($0)", path: "/dashboard/earnings" },
+    // { name: "WALLET", path: "/dashboard/wallet" },
+    // { name: "NOTIFICATIONS", path: "/notifications" },
+    // { name: "FEES & OPEN INVOICES (0)", path: "/fees" },
+    // { name: "SAVED SEARCHES", path: "/saved-searches" },
+    // { name: "RECEIPTS", path: "/receipts" },
+    // { name: "MY ACCOUNT", path: "/dashboard/account" },
+    // { name: "ACCOUNT", path: "/dashboard/account2" },
+    // { name: "LOG OUT", path: "/" },
   ];
 
   const handleLogout = () => {
@@ -31,7 +31,7 @@ const LeftNav = () => {
   };
 
   return (
-    <div className="w-1/4 text-white bg-[#F33E0A]">
+    <div className="w-1/5 text-white bg-[#F33E0A]">
       {menuItems.map((item, index) => {
         const isActive = pathname === item.path;
 

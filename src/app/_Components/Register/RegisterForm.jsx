@@ -16,7 +16,6 @@ export default function RegisterForm() {
     email: Yup.string().email().required("Email is required"),
     password: Yup.string().required("Password is required"),
     avatar: Yup.mixed().required("Profile Image is required"),
-    role: Yup.string().required("Select a role"),
   })
 
   const registerInitialValue = {
@@ -24,7 +23,6 @@ export default function RegisterForm() {
     email: "",
     password: "",
     avatar: '',
-    role: "",
   }
 
   const formik = useFormik({
@@ -37,7 +35,6 @@ export default function RegisterForm() {
       formData.append("username", values.username);
       formData.append("email", values.email);
       formData.append("password", values.password);
-      formData.append("role", values.role);
       formData.append("avatar", values.avatar);
 
       console.log(formData, "formData");
@@ -131,7 +128,7 @@ export default function RegisterForm() {
           </div>
 
           {/* Role Selection */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">Role</label>
             <div className="items-center space-x-4">
               <label className="flex items-center space-x-2">
@@ -161,7 +158,7 @@ export default function RegisterForm() {
                   : null
               }
             </div>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <button

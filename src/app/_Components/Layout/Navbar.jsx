@@ -1,23 +1,27 @@
 "use client";
 import React, { useState } from "react";
-import { ImHammer2 } from "react-icons/im";
 import { CiHeart } from "react-icons/ci";
 import Image from "next/image";
 import logo from "../../../app/Assets/logo.png";
-import NavbarCat from "../NavbarCategorys";
 import { FaSearch } from "react-icons/fa";
-import { FaBagShopping } from "react-icons/fa6";
 import Link from "next/link";
+import { useGetallsubCategoriesQuery, useGetCategoriesQuery } from "@/app/_Services/categories/page";
 import Cookies from "js-cookie";
-import { useGetCategoriesQuery } from "@/app/_Services/categories/page";
+import { useDispatch } from "react-redux";
+import { clearFilteredProducts, filterByCategory, filterBySearch, filterBySubCategory } from "@/redux/filterSlice";
 
 const Navbar = () => {
   const { data: categories, isLoading, error } = useGetCategoriesQuery()
+  const { data: subcategories, isLoading: loading, error: erros } = useGetallsubCategoriesQuery()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const token = Cookies.get("token");
-  const userCookie = Cookies.get("currentuser");
-  const user = userCookie ? JSON.parse(userCookie) : null;
-  const role = user?.role;
+  // const userCookie = Cookies.get("currentuser");
+  // const user = userCookie ? JSON.parse(userCookie) : null;
+  // const role = user?.role;
+
+
+  const dispatch = useDispatch();
+
 
   return (
     <>
@@ -36,7 +40,7 @@ const Navbar = () => {
       </div>
 
       {/* Navbar */}
-      <div className="bg-[#FFFFFF]">
+      <div className="bg-[#FFFFFF] border-b border-[#DDDDDD7D]">
         <nav className="container  mx-auto md:px-10 px-4 py-2 flex justify-between items-center">
 
           <Link href="/" className="w-32">
@@ -63,24 +67,61 @@ const Navbar = () => {
             <li>
               <div className="flex items-center bg-white border border-[#E9EFF4] rounded-full overflow-hidden">
 
-                <select className="px-4 py-2 bg-white border-r border-[#DDDDDD] text-gray-700 outline-none">
+                <select
+                  onChange={(e) => {
+                    const selectedValue = e.target.value;
+                    console.log("Selected Category ID:", selectedValue); // Debugging
+                    if (selectedValue === "") {
+                      dispatch(clearFilteredProducts()); // Reset filter
+                    } else {
+                      dispatch(filterByCategory(selectedValue));
+                    }
+                  }}
+                  className="px-4 py-2 bg-white border-r border-[#DDDDDD] text-gray-700 outline-none">
                   <option value="">Categories</option>
 
                   {categories?.data?.map((category) => (
-                    <option value={category?._id} key={category?._id} >
+                    <option value={category?._id} key={category?._id}>
                       {category.name}
                     </option>
                   ))}
                 </select>
 
+
+
+                <div className="flex items-center  rounded-lg px-2  overflow-hidden w-full">
+                  <select onChange={(e) => {
+                    const selectedValue = e.target.value;
+                    console.log("Selected Category ID:", selectedValue); // Debugging
+                    if (selectedValue === "") {
+                      dispatch(clearFilteredProducts()); // Reset filter
+                    } else {
+                      dispatch(filterBySubCategory(selectedValue));
+                    }
+                  }} className=" py-2 w-full text-gray-700 outline-none bg-white">
+                    <option value="">Sub Categories</option>
+                    {subcategories?.data?.map((category) => (
+                      <option value={category?._id} key={category?._id} >
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+
+                </div>
+
                 <input
                   type="text"
                   placeholder="Search products..."
                   className="flex-1 px-4 py-2 outline-none text-gray-700"
+                  onChange={(e)=>dispatch(filterBySearch(e.target.value))}
                 />
 
                 <button className="p-3 bg-gray-800 text-white rounded-full hover:bg-gray-900">
                   <FaSearch />
+                </button>
+
+                <button onClick={() => dispatch(clearFilteredProducts())} className="py-2 px-2 pl-2 bg-gray-800 text-white rounded-full  mx-1 hover:bg-gray-900">
+                  Clear
                 </button>
               </div>
             </li>
@@ -89,7 +130,7 @@ const Navbar = () => {
 
           <div className="hidden text-black lg:flex items-center space-x-4">
 
-            <div className="flex flex-col items-center">
+            {/* <div className="flex flex-col items-center">
               <button className=" flex items-center gap-2">
                 My Cart <FaBagShopping className="text-[#F33E0A]" />
               </button>
@@ -103,7 +144,40 @@ const Navbar = () => {
               >
                 Sell Your Stuff <ImHammer2 className="transform rotate-80" />
               </Link>
-            )}
+            )} */}
+
+            <div className="flex flex-col items-center">
+              <div
+                className="py-2.5 px-4 flex items-center gap-2 bg-[#F33E0A] text-white"
+
+              >
+                {token ? (
+                  <Link
+                    href="/login"
+                    onClick={() => {
+                      Cookies.remove("token");
+                      Cookies.remove("currentuser");
+                    }}
+                    className="text-white text-sm font-medium  cursor-pointer"
+                  >
+                    Logout
+                  </Link>
+                ) : (
+                  <Link href="/login" className="text-white text-sm font-medium ">
+                    Sign In
+                  </Link>
+                )}
+              </div>
+
+            </div>
+            <Link
+              className="py-2.5 px-4 flex items-center gap-2 bg-[#F33E0A] text-white"
+              href="/dashboard/wonitem"
+            >
+              Dashboard
+            </Link>
+
+
 
           </div>
         </nav>
@@ -141,11 +215,18 @@ const Navbar = () => {
             {/* Category Dropdown */}
             <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full">
               <select className=" py-2 w-full text-gray-700 outline-none bg-white">
-                <option className="text-gray-700">Category</option>
-                <option className="text-gray-700">Electronics</option>
-                <option className="text-gray-700">Fashion</option>
-                <option className="text-gray-700">Home & Living</option>
+                <option value="">Categories</option>
+                {categories?.data?.map((category) => (
+                  <option value={category?._id} key={category?._id} >
+                    {category.name}
+                  </option>
+                ))}
               </select>
+
+            </div>
+
+            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full">
+
             </div>
 
             {/* Search Input */}
@@ -166,33 +247,60 @@ const Navbar = () => {
 
           {/* Cart & Sell Buttons */}
           <div className="mt-6">
-            <div className="flex flex-col items-center text-center">
+            {/* <div className="flex flex-col items-center text-center">
               <button className="px-4 flex flex-col items-center gap-1">
                 <div className="flex items-center gap-2">
                   My Cart <FaBagShopping className="text-[#F33E0A]" />
                 </div>
                 <span className="text-sm">0 items - $0.00</span>
               </button>
-            </div>
+            </div> */}
 
 
-
-            {
-              role === "USER" ? null :
-                <Link
+            {/* {token && role !== "USER" && (
+              <Link
                   className="flex items-center justify-center gap-2 py-2 mt-3 bg-[#F33E0A] text-white rounded-md"
                   href="/vendors/addproducts"
                 >
                   Sell Your Stuff <ImHammer2 className="transform rotate-80" />
                 </Link>
-            }
+            )} */}
+
+
+            <Link
+              className="flex items-center justify-center gap-2 py-2 mt-3 bg-[#F33E0A] text-white rounded-md"
+              href="/dashboard"
+            >
+              Dashboard
+            </Link>
+            <div
+              className="flex items-center justify-center gap-2 py-2 mt-3 bg-[#F33E0A] text-white rounded-md"
+            >
+              {token ? (
+                <Link
+                  href="/login"
+                  onClick={() => {
+                    Cookies.remove("token");
+                    Cookies.remove("currentuser");
+                  }}
+                  className="text-white text-sm font-medium  cursor-pointer"
+                >
+                  Logout
+                </Link>
+              ) : (
+                <Link href="/login" className="text-white text-sm font-medium ">
+                  Sign In
+                </Link>
+              )}
+            </div>
+
 
           </div>
         </nav>
       </div>
 
       {/* Navbar Categories */}
-      <NavbarCat />
+      {/* <NavbarCat /> */}
     </>
   );
 };
