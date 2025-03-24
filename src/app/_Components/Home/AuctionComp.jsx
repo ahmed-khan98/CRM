@@ -8,6 +8,8 @@ import { CiHeart, CiSearch, CiShare2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import { ImHammer2 } from 'react-icons/im';
 import Loader from '../Loader';
+import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 const AuctionComp = ({ item }) => {
 
@@ -19,6 +21,8 @@ const AuctionComp = ({ item }) => {
     const [bidValue, setBidValue] = useState(item.highestBid + 1);
     const [timeLeft, setTimeLeft] = useState({});
     const timerRef = useRef(null);
+    const token = Cookies.get("token");
+
 
     // Function to calculate time left
     const calculateTimeLeft = useCallback(() => {
@@ -97,7 +101,7 @@ const AuctionComp = ({ item }) => {
                 />
                 {
                     item?.watchers?.length === 0 ? "" :
-                        <div className="absolute text-white p-2 top-2 left-[70%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
+                        <div className="absolute text-white p-2 top-2 md:left-[70%] left-[65%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
                             Watcher <span className="ml-1">{item?.watchers?.length}</span>
                         </div>
                 }
@@ -155,32 +159,50 @@ const AuctionComp = ({ item }) => {
                 className="text-center text-gray-800 text-xs mt-2 montserrat"
             /> */}
 
-
             <div className="bg-gray-200 text-center text-sm py-2 mt-2 montserrat">
                 Current Bid: <strong> $ {item?.highestBid}</strong>
             </div>
 
             {/* Bidding Input and Button */}
             <div className="mt-3 flex">
-                <input
-                    type="text"
-                    className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center montserrat outline-none 
-               appearance-none [&::-webkit-outer-spin-button]:appearance-none 
-               [&::-webkit-inner-spin-button]:appearance-none"
-                    onChange={(e) => handleBidChange(item._id, e.target.value)}
-                    value={bidValue}
-                />
-                <button
-                    disabled={bidValue <= item?.highestBid || isSubmitting}
-                    onClick={() => submitBid(item._id)}
-                    className={`w-1/2 cursor-pointer  montserrat text-white py-2 flex items-center justify-center space-x-2
-                        ${Number(bidValue) > Number(item?.highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}
-                    `}
-                >
-                    <ImHammer2 className="transform rotate-80" />
-                    <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
-                </button>
-            </div>
+  {item?.isSold ? (
+    <button className="w-full cursor-pointer montserrat text-white bg-green-600 hover:bg-green-500 py-2 flex items-center justify-center space-x-2">
+      <span>Sold</span>
+    </button>
+  ) : token ? (
+    <>
+      <input
+        type="text"
+        className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center montserrat outline-none 
+        appearance-none [&::-webkit-outer-spin-button]:appearance-none 
+        [&::-webkit-inner-spin-button]:appearance-none"
+        onChange={(e) => handleBidChange(item._id, e.target.value)}
+        value={bidValue}
+      />
+      <button
+        disabled={bidValue <= item?.highestBid || isSubmitting}
+        onClick={() => submitBid(item._id)}
+        className={`w-1/2 cursor-pointer montserrat text-white py-2 flex items-center justify-center space-x-2
+            ${Number(bidValue) > Number(item?.highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}
+        `}
+      >
+        <ImHammer2 className="transform rotate-80" />
+        <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
+      </button>
+    </>
+  ) : (
+    
+    
+      <button
+        className="w-full cursor-pointer montserrat text-white bg-[#F33E0A] hover:bg-[#d63006] py-2 flex items-center justify-center space-x-2"
+      >
+        <Link href="/login">
+        Login to Bid
+        </Link>
+      </button>
+  )}
+</div>
+
         </div>
     );
 }

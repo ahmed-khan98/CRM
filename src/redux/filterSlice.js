@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    allProducts: [],  // Store all products initially
-    filteredProducts: [], // Store filtered products
+    allProducts: [],  
+    filteredProducts: [], 
 };
 
 const filterSlice = createSlice({

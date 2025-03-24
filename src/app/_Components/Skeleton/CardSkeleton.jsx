@@ -1,7 +1,7 @@
 // "use client"
 export default function AuctionCardSkeleton() {
     return (
-      <div className="animate-pulse bg-gray-200 rounded-lg p-4 shadow-md">
+      <div className="animate-pulse  p-4 ">
         {/* Image Skeleton */}
         <div className="w-full h-48 bg-gray-300 rounded-md mb-4"></div>
   
@@ -9,7 +9,7 @@ export default function AuctionCardSkeleton() {
         <div className="absolute top-2 right-2 w-16 h-6 bg-gray-400 rounded"></div>
   
         {/* Timer Skeleton */}
-        <div className=" p-3 rounded-md shadow-md text-center mb-2">
+        <div className=" p-3 rounded-md  text-center mb-2">
           <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto"></div>
         </div>
   
