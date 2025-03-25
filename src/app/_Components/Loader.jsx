@@ -1,11 +1,8 @@
-"use client"
-import React from 'react'
-import { ClipLoader } from 'react-spinners'
 
-const Loader = () => {
-  return (
-<ClipLoader color='red' size={25} speedMultiplier={1} />
-  )
-}
+import ClipLoader from "react-spinners/ClipLoader";
 
-export default Loader
+const Loader = ({ color = "#F33E0A", size = 25, speedMultiplier = 1 }) => {
+    return <ClipLoader color={color} size={size} speedMultiplier={speedMultiplier} />;
+};
+
+export default Loader;

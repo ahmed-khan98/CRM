@@ -109,14 +109,14 @@ const WonItems = () => {
                                         <td className="p-3 border center border-[#E9EFF4] ">
                                             {item?.paymentStatus === 'Completed' ?
                                                 <button
-                                                    className={`bg-green-600 cursor-pointer text-white px-3 py-2 hover:bg-green-500 flex items-center justify-center `}
+                                                    className={`bg-green-600 mx-auto w-[100px] cursor-pointer text-white px-3 py-2 hover:bg-green-500 flex items-center justify-center `}
                                                 >Paid
                                                 </button>
                                                 :
                                                 <button
                                                     onClick={() => addPayments(item?.product?._id)}
-                                                    disabled={loadingStates[item?.product?._id]} // Sirf clicked button disable hoga
-                                                    className={`bg-green-600 cursor-pointer text-white px-3 py-2  hover:bg-green-500 flex items-center justify-center ${loadingStates[item?.product?._id] ? "opacity-50 cursor-not-allowed" : ""
+                                                    disabled={loadingStates[item?.product?._id]} 
+                                                    className={`bg-green-600 w-[100px] mx-auto cursor-pointer text-white px-3 py-2  hover:bg-green-500 flex items-center justify-center ${loadingStates[item?.product?._id] ? "opacity-50 cursor-not-allowed" : ""
                                                         }`}
                                                 >
                                                     {loadingStates[item?.product?._id] ? (
