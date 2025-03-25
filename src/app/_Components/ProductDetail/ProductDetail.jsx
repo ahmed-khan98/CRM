@@ -211,29 +211,22 @@ const ProductDetail = (id) => {
                 )}
 
 
-                {/* <div>
+                <div>
                   <p className="text-left montserrat font-bold uppercase mb-1 text-title-xs">
                     Item Details
                   </p>
                   <div className="flex flex-col gap-2.5">
-                    <div className="grid grid-cols-2 lg:grid-cols-[minmax(0,_0.5fr)_minmax(0,_1fr)] justify-items-start gap-2.5">
+                    {data?.data?.details && data?.data?.details?.map((e,i)=>(<div key={i} className="grid grid-cols-2 lg:grid-cols-[minmax(0,_0.5fr)_minmax(0,_1fr)] justify-items-start gap-2.5">
                       <p className="uppercase montserrat font-semibold text-left">
-                        Suggested Retail Price:
+                        {e?.name}
                       </p>
-                      <p className="text-left montserrat">$788.58</p>
-                    </div>
-                    <div className="grid montserrat grid-cols-2 lg:grid-cols-[minmax(0,_0.5fr)_minmax(0,_1fr)] justify-items-start gap-2.5">
-                      <p className="uppercase montserrat font-semibold text-left">Buyers Premium:</p>
-                      <p className="text-left">15%</p>
-                    </div>
-                    <div className="grid grid-cols-2 lg:grid-cols-[minmax(0,_0.5fr)_minmax(0,_1fr)] justify-items-start gap-2.5">
-                      <p className="uppercase montserrat font-semibold text-left">
-                        Inventory Number:
-                      </p>
-                      <p className="text-left montserrat">1037451294</p>
-                    </div>
+                      <p className="text-left montserrat">{e?.value}</p>
+                    </div>)
+                    )}
+                    
+                   
                   </div>
-                </div> */}
+                </div>
               </div>
 
               <div className="bg-white shadow-lg rounded-md sm:p-4 sm:mr-4 xl:mr-0">
