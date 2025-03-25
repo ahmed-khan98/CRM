@@ -30,9 +30,9 @@ export default function AuctionCard() {
     {isLoading ? (
       [...Array(4)].map((_, index) => <CardSkeleton key={index} />)
     ) : showNoProductMessage ? (
-      <p className="text-center col-span-4 py-16 font-semibold montserrat text-3xl text-gray-500">
-        No Product Found
-      </p>
+      <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold montserrat text-3xl text-gray-500">
+      No Product Found
+    </p>    
     ) : (
       filteredProducts.map((item, index) => (
         <AuctionComp key={item.id ?? `auction-${index}`} item={item} />

@@ -114,7 +114,7 @@ import { FaInstagram, FaFacebook, FaTimesCircle, FaYoutube, FaLinkedin } from "r
 const Footer = () => {
   return (
    <>
-    <footer className=" container mx-auto w-full py-4 border-t border-gray-300">
+    <footer className=" container mx-auto w-full mt-4 py-4 border-t border-gray-300">
       {/* Top Links with Social Icons */}
       <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
         <div className="space-x-2">

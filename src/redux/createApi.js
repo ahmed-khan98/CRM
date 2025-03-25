@@ -7,7 +7,7 @@ export const createApiAuction = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BaseUrl,
     prepareHeaders: (headers) => {
-      const token = Cookies.get("token"); 
+      const token = Cookies.get("token");
       console.log("Token inside prepareHeaders:", token);
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
@@ -15,5 +15,6 @@ export const createApiAuction = createApi({
       return headers;
     }
   }),
+  tagTypes: ['watch'],
   endpoints: () => ({}),
 });

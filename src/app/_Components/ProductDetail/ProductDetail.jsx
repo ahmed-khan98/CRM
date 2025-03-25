@@ -73,15 +73,15 @@ const ProductDetail = (id) => {
     if (!data?.data?.isSold) {
       const highestBidderId = data?.data?.highestBidder; // String ID
       const biddingHistory = data?.data?.biddingHistory; // Array of objects
-  
+
       if (highestBidderId && Array.isArray(biddingHistory)) {
         const matchedBidder = biddingHistory.find(bid => bid.bidder._id === highestBidderId);
-  
+
         console.log("highestBidderId", highestBidderId);
       }
     }
   }, [data]);
-  
+
 
 
   return (
@@ -188,47 +188,29 @@ const ProductDetail = (id) => {
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center justify-start gap-2 flex-wrap">
-                    <div className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-emerald-100 text-gray-800 rounded-lg">
-                      <span className="px-3 montserrat whitespace-nowrap overflow-hidden text-ellipsis">
-                        New
-                      </span>
+                  {data?.data?.tag?.length > 0 && (
+                    <div className="flex items-center justify-start gap-2 flex-wrap">
+                      {data?.data?.tag.map((tag, index) => (
+                        <div key={index} className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-emerald-100 text-gray-800 rounded-lg">
+                          <span className="px-3 montserrat whitespace-nowrap overflow-hidden text-ellipsis">
+                            {tag}
+                          </span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-emerald-100 text-gray-800 rounded-lg">
-                      <span className="px-3 montserrat whitespace-nowrap overflow-hidden text-ellipsis">
-                        Functional
-                      </span>
-                    </div>
-                    <div className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-emerald-100 text-gray-800 rounded-lg">
-                      <span className="px-3 montserrat whitespace-nowrap overflow-hidden text-ellipsis">
-                        No Damage
-                      </span>
-                    </div>
-                    <div className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-sincity-red-100 text-gray-800 rounded-lg">
-                      <span className="px-3 montserrat whitespace-nowrap overflow-hidden text-ellipsis">
-                        Assembly Required
-                      </span>
-                    </div>
-                    <div className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-emerald-100 text-gray-800 rounded-lg">
-                      <span className="px-3 montserrat whitespace-nowrap overflow-hidden text-ellipsis">
-                        In Package
-                      </span>
-                    </div>
-                    <div className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-emerald-100 text-gray-800 rounded-lg">
-                      <span className="px-3 montserrat whitespace-nowrap overflow-hidden text-ellipsis">
-                        No Missing Parts
-                      </span>
-                    </div>
+                  )}
+                </div>
+
+                {(data?.data?.address1 || data?.data?.address2) && (
+                  <div>
+                    <p className="text-left montserrat font-bold uppercase mb-1 text-title-xs">
+                    {data?.data?.address1}
+                    </p>
+                    {data?.data?.address2 && <p className="text-left montserrat">{data?.data?.address2}</p>}
                   </div>
-                </div>
-                <div>
-                  <p className="text-left montserrat font-bold uppercase mb-1 text-title-xs">
-                    Local Pickup
-                  </p>
-                  <p className="text-left montserrat">
-                    7440 Dean Martin Dr Suite 204, Las Vegas, NV, 89139
-                  </p>
-                </div>
+                )}
+
+
                 {/* <div>
                   <p className="text-left montserrat font-bold uppercase mb-1 text-title-xs">
                     Item Details
@@ -265,11 +247,11 @@ const ProductDetail = (id) => {
                 {/* Bid History Detail */}
                 <div>
                   {visibleBidsHistory?.map((e, i) => (
-                    <div 
-  key={e._id} 
-  className={`py-2 border-b border-b-gray-400 
-    ${i == '0' &&  data?.data?.isSold ? 'bg-emerald-100' : ''}`}
->
+                    <div
+                      key={e._id}
+                      className={`py-2 border-b border-b-gray-400 
+    ${i == '0' && data?.data?.isSold ? 'bg-emerald-100' : ''}`}
+                    >
                       <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_0.5fr)] md:grid-cols-5 justify-items-start items-center px-4 sm:px-3 py-1 rounded ">
                         <p className="text-label-md text-left montserrat">Bidder no {i + 1}</p>
                         <p className="text-label-md montserrat text-left md:justify-self-center">
