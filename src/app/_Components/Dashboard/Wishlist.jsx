@@ -1,26 +1,21 @@
 "use client";
 import { useGetAllWishlistQuery } from "@/app/_Services/wishlist/page";
 import { useRouter } from 'next/navigation';
-
-function formatDate(dateString) {
-    return new Date(dateString).toLocaleString('en-US', {
-        dateStyle: 'medium',
-        timeStyle: 'short'
-    });
-}
+import AuctionCardSkeleton from "../Skeleton/CardSkeleton";
+import AuctionComp from "../Home/AuctionComp";
 
 const Wishlist = () => {
     const { data, error: isError, isLoading } = useGetAllWishlistQuery();
     const wishlistItems = data?.data?.products || [];
     const router = useRouter();
 
-    const skeletonRows = wishlistItems?.length || 5;
+    const skeletonRows = wishlistItems?.length || 8;
 
 
     return (
         <>
-            <div className="w-2/2 px-3 pb-4">
-                <div className="overflow-x-auto">
+     <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto p-6">
+     {/* <div className="overflow-x-auto">
                     <table className="min-w-full bg-white border border-[#E9EFF4]">
                         <thead className="text-xs">
                             <tr className="text-center text-[#878790]">
@@ -96,7 +91,40 @@ const Wishlist = () => {
                             )}
                         </tbody>
                     </table>
-                </div>
+                </div> */}
+                 {isLoading ? (
+                                [...Array(skeletonRows)].map((_, index) => (
+                                    <AuctionCardSkeleton key={index} />
+                                ))
+                            ) : wishlistItems?.length === 0 ? (
+                                <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold montserrat text-3xl text-gray-500">
+                                        Your wishlist is empty.
+                                </p>
+                            ) : (
+                                wishlistItems?.map((item, index) => (
+                                    <AuctionComp key={item.id ?? `auction-${index}`} item={item} />
+                                    // <tr key={index} className="text-center text-sm text-[#3A3A49]" >
+                                    //     <td className="p-3 border flex justify-center border-[#E9EFF4]">
+                                    //         <img src={item?.images?.[0]} width="50px" height="50px" className="rounded cursor-pointer" onClick={() => router.push(`/detailproduct/${item._id}`)} />
+                                    //     </td>
+                                    //     <td className="p-3 border border-[#E9EFF4] text-[#DD9A19] cursor-pointer" onClick={() => router.push(`/detailproduct/${item._id}`)}>
+                                    //         {item?.name}
+                                    //     </td>
+                                    //     <td className="p-3 border border-[#E9EFF4] ">$ {item?.price}</td>
+                                    //     <td
+                                    //         className={`p-3 border border-[#E9EFF4] font-medium ${item?.isSold ? "text-[green]" : "text-yellow-500"
+                                    //             }`}
+                                    //     >
+                                    //         {item?.isSold ? "Sold" : "Unsold"}
+                                    //     </td>
+
+                                    //     <td className="p-3 border border-[#E9EFF4] ">{item?.quantity}</td>
+                                    //     <td className="p-3 border border-[#E9EFF4] ">{item?.highestBid}</td>
+                                    //     <td className="p-3 border border-[#E9EFF4] ">{formatDate(item?.biddingStartTime)}</td>
+                                    //     <td className="p-3 border border-[#E9EFF4] ">{formatDate(item?.biddingEndTime)}</td>
+                                    // </tr>
+                                ))
+                            )}
             </div>
         </>
     );

@@ -28,7 +28,7 @@ export default function AuctionCard() {
   return (
      <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto p-6">
     {isLoading ? (
-      [...Array(4)].map((_, index) => <CardSkeleton key={index} />)
+      [...Array(8)].map((_, index) => <CardSkeleton key={index} />)
     ) : showNoProductMessage ? (
       <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold montserrat text-3xl text-gray-500">
       No Product Found

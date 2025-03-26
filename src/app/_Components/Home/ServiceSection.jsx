@@ -45,7 +45,7 @@ const ServicesSection = () => {
       {/* Browse Auction Button */}
       <div className="mt-12">
         <Link href="/auction-product">
-          <button className="bg-[#F33E0A] cursor-pointer text-white text-lg font-bold py-3 px-6 rounded-full transition-all hover:bg-orange-700">
+          <button className="bg-[#F33E0A] cursor-pointer md:w-[35%] text-white text-lg font-bold py-3 px-6 rounded-full transition-all hover:bg-orange-700">
             BROWSE AUCTION
           </button>
         </Link>

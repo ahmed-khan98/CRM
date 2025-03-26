@@ -89,7 +89,7 @@ const ProductDetail = (id) => {
 
       {
         isDetailLoading ? <DetailLoader /> :
-          <div className="grid grid-cols-1 my-4 sm:grid-cols-[minmax(0,_0.75fr)_minmax(0,_1fr)] sm:gap-6 max-w-full sm:max-w-screen-xl mx-auto">
+          <div className="pt-[80px] grid grid-cols-1 my-4 sm:grid-cols-[minmax(0,_0.75fr)_minmax(0,_1fr)] sm:gap-6 max-w-full sm:max-w-screen-xl mx-auto">
 
             <div className="max-w-full my-6 px-6 sm:px-2.5 xl:px-0 h-[45vh] lg:h-[60vh] relative">
               <Swiper
@@ -204,7 +204,7 @@ const ProductDetail = (id) => {
                 {(data?.data?.address1 || data?.data?.address2) && (
                   <div>
                     <p className="text-left montserrat font-bold uppercase mb-1 text-title-xs">
-                    {data?.data?.address1}
+                      {data?.data?.address1}
                     </p>
                     {data?.data?.address2 && <p className="text-left montserrat">{data?.data?.address2}</p>}
                   </div>
@@ -216,34 +216,30 @@ const ProductDetail = (id) => {
                     Item Details
                   </p>
                   <div className="flex flex-col gap-2.5">
-                    {data?.data?.details && data?.data?.details?.map((e,i)=>(<div key={i} className="grid grid-cols-2 lg:grid-cols-[minmax(0,_0.5fr)_minmax(0,_1fr)] justify-items-start gap-2.5">
+                    {data?.data?.details && data?.data?.details?.map((e, i) => (<div key={i} className="grid grid-cols-2 lg:grid-cols-[minmax(0,_0.5fr)_minmax(0,_1fr)] justify-items-start gap-2.5">
                       <p className="uppercase montserrat font-semibold text-left">
                         {e?.name}
                       </p>
                       <p className="text-left montserrat">{e?.value}</p>
                     </div>)
                     )}
-                    
-                   
+
+
                   </div>
                 </div>
               </div>
-
+              { data?.data?.biddingHistory?.length > 0 &&
               <div className="bg-white shadow-lg rounded-md sm:p-4 sm:mr-4 xl:mr-0">
-
-                {/* Bid History Heading */}
                 <div className="flex justify-between px-4 sm:px-0 pt-4 sm:pt-0">
                   <p className=" montserrat text-left font-bold uppercase mb-1 text-title-xs">
                     Bid History
                   </p>
                 </div>
-                {/* Bid History Detail */}
                 <div>
-                  {visibleBidsHistory?.map((e, i) => (
+                 {visibleBidsHistory?.map((e, i) => (
                     <div
                       key={e._id}
-                      className={`py-2 border-b border-b-gray-400 
-    ${i == '0' && data?.data?.isSold ? 'bg-emerald-100' : ''}`}
+                      className={`py-2 border-b border-b-gray-400 ${i == '0' && data?.data?.isSold ? 'bg-emerald-100' : ''}`}
                     >
                       <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_0.5fr)] md:grid-cols-5 justify-items-start items-center px-4 sm:px-3 py-1 rounded ">
                         <p className="text-label-md text-left montserrat">Bidder no {i + 1}</p>
@@ -326,7 +322,7 @@ const ProductDetail = (id) => {
                     <p className="text-label-sm montserrat">Time Extended</p>
                   </span>
                 </div> */}
-              </div>
+              </div>}
             </div>
           </div>
       }

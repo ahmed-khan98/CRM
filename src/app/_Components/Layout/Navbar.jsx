@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import logo from "../../../app/Assets/logo.png";
+import Main from "../../../app/Assets/Main.png";
 import { FaHeart, FaSearch } from "react-icons/fa";
 import Link from "next/link";
 import { useGetallsubCategoriesQuery, useGetCategoriesQuery } from "@/app/_Services/categories/page";
@@ -38,11 +38,11 @@ const Navbar = () => {
       </div> */}
 
       {/* Navbar */}
-      <div className="bg-[#FFFFFF] border-b border-[#DDDDDD7D]">
+      <div className="bg-[#FFFFFF] border-b border-[#DDDDDD7D] fixed top-0 left-0 w-full z-50">
         <nav className="container  mx-auto md:px-10 px-4 py-2 flex justify-between items-center">
 
-          <Link href="/" className="w-32">
-            <Image src={logo} alt="Logo" width={120} height={50} />
+          <Link href="/" className="w-45">
+            <Image src={Main} alt="Logo" height={50} />
           </Link>
 
 
@@ -150,7 +150,6 @@ const Navbar = () => {
               ) : (
                 <div
                   className="py-2.5 px-4 flex items-center rounded-lg gap-2 bg-[#F33E0A] text-white"
-
                 >
                   <Link
                     href="/register"
@@ -165,11 +164,11 @@ const Navbar = () => {
             </div>
 
             <div className="flex flex-col items-center">
-              <div
-                className="py-2.5 px-4 flex items-center rounded-lg gap-2  bg-[green] text-white"
-
-              >
+             
                 {token ? (
+                   <div
+                   className="py-2.5 px-4 flex items-center rounded-lg gap-2  bg-[#F33E0A] text-white"
+                 >
                   <Link
                     href="/login"
                     onClick={() => {
@@ -180,12 +179,16 @@ const Navbar = () => {
                   >
                     Logout
                   </Link>
+              </div>
                 ) : (
+                  <div
+                  className="py-2.5 px-4 flex items-center rounded-lg gap-2  bg-[#2F318B] text-white"
+                >
                   <Link href="/login" className="text-white text-sm font-medium ">
                     Log In
                   </Link>
+                  </div>
                 )}
-              </div>
 
             </div>
 
@@ -203,6 +206,13 @@ const Navbar = () => {
                 ""
               )}
             </div>
+            <div
+                  className="py-2.5 px-4 flex items-center rounded-lg gap-2  bg-[#007E38] text-white"
+                >
+                  <Link href="/login" className="text-white text-sm font-medium ">
+                    Sell Your Staff
+                  </Link>
+                  </div>
 
 
           </div>
@@ -216,7 +226,7 @@ const Navbar = () => {
       >
         <nav className="fixed top-0 left-0 h-full w-80 bg-white p-2 shadow-md">
           <div className="flex justify-between items-center mb-5">
-            <Image src={logo} alt="Logo" width={120} height={50} />
+            <Image src={Main} alt="Logo" width={120} height={50} />
             <button
               className="text-gray-500"
               onClick={() => setIsMenuOpen(false)}

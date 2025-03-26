@@ -6,28 +6,37 @@ import React, { useCallback, useRef, useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import { CiHeart, CiSearch, CiShare2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
-import { ImHammer2 } from 'react-icons/im';
 import Loader from '../Loader';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import { useAddPaymentMutation } from '@/app/_Services/payment/page';
 
-const AuctionComp = ({ item }) => {
+const MyWonProduct = ({ item }) => {
 
     const router = useRouter();
     const [addWishlist] = useAddWishlistMutation();
     const [deleteWishlist] = useDeleteWishlistMutation();
     const [loading, setLoading] = useState(false);
     const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
-    const [bidValue, setBidValue] = useState(item.highestBid + 1);
+    const [bidValue, setBidValue] = useState(item.product?.highestBid + 1);
     const [timeLeft, setTimeLeft] = useState({});
+    const [loadingStates, setLoadingStates] = useState({});
     const timerRef = useRef(null);
     const token = Cookies.get("token");
 
 
+
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleString('en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+        });
+    }
+
     // Function to calculate time left
     const calculateTimeLeft = useCallback(() => {
         const now = Date.now();
-        const endTime = new Date(item?.biddingEndTime).getTime();
+        const endTime = new Date(item?.product?.biddingEndTime).getTime();
         const diff = endTime - now;
 
         if (diff > 0) {
@@ -41,7 +50,7 @@ const AuctionComp = ({ item }) => {
             clearInterval(timerRef.current);
             setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
         }
-    }, [item?.biddingEndTime]);
+    }, [item?.product?.biddingEndTime]);
 
     // Set interval for countdown
     useEffect(() => {
@@ -50,26 +59,6 @@ const AuctionComp = ({ item }) => {
         return () => clearInterval(timerRef.current);
     }, [calculateTimeLeft]);
 
-    // Handle bid input change
-    const handleBidChange = (id, value) => {
-        setBidValue(Number(value));
-    };
-
-    // Submit bid function
-    const submitBid = async () => {
-        if (bidValue <= item?.highestBid) {
-            toast.error("Bid amount must be greater than the highest bid!");
-            return;
-        }
-        try {
-            const response = await addBid({ id: item._id, bidAmount: bidValue }).unwrap();
-            toast.success(response?.message);
-            setBidValue(bidValue + 1)
-            router.replace(router.asPath);
-        } catch (error) {
-            toast.error(error.data?.message || "Failed to place bid");
-        }
-    };
 
     const toggleWishlist = async (id, isWishlisted) => {
         setLoading(true);
@@ -87,22 +76,41 @@ const AuctionComp = ({ item }) => {
         setLoading(false);
     };
 
+    const [addPayment] = useAddPaymentMutation();
+
+
+    const addPayments = async (id) => {
+        try {
+            setLoadingStates((prev) => ({ ...prev, [id]: true }));
+            const response = await addPayment({ "productId": id }).unwrap();
+            console.log(response, 'sadaf');
+
+            if (response?.data?.url) {
+                window.location.href = response?.data?.url;
+            }
+        } catch (error) {
+            toast.error(error?.data?.message || "Something went wrong");
+        } finally {
+            setLoadingStates((prev) => ({ ...prev, [id]: false }));
+        }
+    };
+
     return (
         <div className="relative  shadow-lg bg-white  border-[3px] border-gray-300 rounded-3xl my-3">
             <p className="text-[#242424] pl-2 text-[16px] font-semibold py-2 mt-2 roboto line-clamp-2">
-                {item?.name.length > 50 ? `${item.name.slice(0, 50)}...` : item.name}
+                {item?.product?.name.length > 50 ? `${item.product?.name.slice(0, 50)}...` : item.product?.name}
             </p>
             <div className="relative h-[300px]">
                 <img
-                    onClick={() => router.push(`/detailproduct/${item._id}`)}
-                    src={item?.images?.[0]}
+                    onClick={() => router.push(`/detailproduct/${item.product?._id}`)}
+                    src={item?.product?.images?.[0]}
                     alt="Product"
                     className="w-full h-full object-cover cursor-pointer"
                 />
                 {
-                    item?.watchers?.length === 0 ? "" :
+                    item?.product?.watchers?.length === 0 ? "" :
                         <div className="absolute text-white p-2 top-2 md:left-[70%] left-[65%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
-                            Watcher <span className="ml-1">{item?.watchers?.length}</span>
+                            Watcher <span className="ml-1">{item?.product?.watchers?.length}</span>
                         </div>
                 }
                 {/* Icons */}
@@ -110,12 +118,12 @@ const AuctionComp = ({ item }) => {
                     <CiShare2 className="text-white text-lg" />
                 </div>
                 <div
-                    onClick={() => toggleWishlist(item._id, item?.isWishlisted)}
+                    onClick={() => toggleWishlist(item.product?._id, item?.product?.isWishlisted)}
                     className="absolute cursor-pointer top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center"
                 >
                     {loading ? (
                         <Loader />
-                    ) : item?.isWishlisted ? (
+                    ) : item?.product?.isWishlisted ? (
                         <FaHeart className="text-red-500 text-lg" />
                     ) : (
                         <CiHeart className="text-black text-lg" />
@@ -128,14 +136,15 @@ const AuctionComp = ({ item }) => {
 
             {/* Countdown Timer */}
             <div className="bg-white shadow-xl w-[90%] mx-auto text-center py-2 rounded -mt-[60px] relative z-1">
-                <p className="text-sm font-semibold roboto">Time left:</p>
+                <p className="text-sm font-semibold roboto">End Date:</p>
                 <div className="flex justify-center space-x-4 text-lg font-bold">
-                    {["hours", "minutes", "seconds"].map((unit) => (
+                    {formatDate(item?.product?.biddingStartTime)}
+                    {/* {["hours", "minutes", "seconds"].map((unit) => (
                         <div key={unit} className="flex flex-col items-center">
                             <span>{timeLeft[unit] ?? 0}</span>
                             <span className="text-xs font-normal roboto">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
                         </div>
-                    ))}
+                    ))} */}
                 </div>
             </div>
 
@@ -143,70 +152,46 @@ const AuctionComp = ({ item }) => {
             <div className="mt-3 text-sm px-6">
                 <div className="flex justify-between roboto">
                     <p><strong>Qty:</strong></p>
-                    <p>{item?.quantity}</p>
+                    <p>{item?.product?.quantity}</p>
                 </div>
                 <div className="flex justify-between roboto">
                     <p><strong>Est Retail:</strong></p>
-                    <p className="text-gray-600">${item?.price}</p>
+                    <p className="text-gray-600">${item?.product?.price}</p>
                 </div>
                 <div className="flex justify-between roboto">
                     <p><strong>#Bids:</strong></p>
-                    <p>{item?.highestBid}</p>
+                    <p>{item?.product?.highestBid}</p>
                 </div>
             </div>
             {/* <p
-                dangerouslySetInnerHTML={{ __html: item?.description }}
+                dangerouslySetInnerHTML={{ __html: item?.product?.description }}
                 className="text-center text-gray-800 text-xs mt-2 roboto"
             /> */}
 
             <div className="bg-gray-200 text-center text-sm py-2 mt-2 roboto">
-                Current Bid: <strong> $ {item?.highestBid}</strong>
+                Winning Bid: <strong> $ {item?.product?.highestBid}</strong>
             </div>
 
             {/* Bidding Input and Button */}
-            <div className="mt-3 flex">
-  {item?.isSold ? (
-    <button className="w-full cursor-pointer roboto text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 hover:from-green-700 hover:to-emerald-500  py-3 flex items-center justify-center rounded-b-3xl">
-      <span>Sold</span>
-    </button>
-  ) : token ? (
-    <>
-    <input
-        type="text"
-        className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center roboto outline-none rounded-bl-3xl
-        appearance-none [&::-webkit-outer-spin-button]:appearance-none 
-        [&::-webkit-inner-spin-button]:appearance-none"
-        onChange={(e) => handleBidChange(item._id, e.target.value)}
-        value={bidValue}
-      />
-<button
-  disabled={bidValue <= item?.highestBid || isSubmitting}
-  onClick={() => submitBid(item._id)}
-  className={`w-1/2 cursor-pointer roboto text-white py-3 flex items-center justify-center space-x-2
-    ${Number(bidValue) > Number(item?.highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}
-    rounded-br-3xl
-  `}
->
-  <ImHammer2 className="transform rotate-80" />
-  <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
-</button>
+            <div className="mt-3 flex flex-row">
 
-    </>
-  ) : (
-    
-    
-      <button
-        className="w-full cursor-pointer roboto text-white bg-[#F33E0A] hover:bg-[#d63006] py-3 flex items-center justify-center rounded-b-3xl"
-      >
-        <Link href="/login">
-        Login to Bid
-        </Link>
-      </button>
-  )}
-</div>
+                <button className=" rounded-bl-3xl w-full cursor-pointer roboto text-white bg-gradient-to-r from-emerald-500 to-green-700 hover:from-green-700 hover:to-emerald-500 py-3 flex items-center justify-center ">
+                    <span>Won</span>
+                </button>
+
+                <button onClick={() => addPayments(item?.product?._id)}
+                    disabled={loadingStates[item?.product?._id]}
+                    className="rounded-br-3xl w-full cursor-pointer roboto text-white bg-blue-500 hover:bg-blue-600 py-3 flex items-center justify-center ">
+                    {loadingStates[item?.product?._id] ? (
+                        "Loading..."
+                    ) : (
+                        "Pay Now"
+                    )}                </button>
+
+            </div>
 
         </div>
     );
 }
 
-export default AuctionComp;
+export default MyWonProduct;

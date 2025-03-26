@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import AuctionCardSkeleton from '../Skeleton/CardSkeleton';
+import AuctionComp from '../Home/AuctionComp';
+import MyWonProduct from '../Home/MyWonProduct';
 
 
 function formatDate(dateString) {
@@ -18,7 +21,7 @@ const WonItems = () => {
     const [loadingStates, setLoadingStates] = useState({});
     const { data, error: isError, isLoading } = useWonItemsQuery();
     const wonItems = data?.data || [];
-    const skeletonRows = wonItems.length || 5;
+    const skeletonRows = wonItems.length || 8;
     const [addPayment] = useAddPaymentMutation();
     const router = useRouter();
 
@@ -41,7 +44,7 @@ const WonItems = () => {
 
     return (
         <>
-            <div className="w-2/2 px-3 pb-4">
+            {/* <div className="w-2/2 px-3 pb-4">
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white border border-[#E9EFF4]">
                         <thead className="text-xs">
@@ -132,6 +135,22 @@ const WonItems = () => {
                         </tbody>
                     </table>
                 </div>
+            </div> */}
+                 <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto p-6">
+                 {isLoading ? (
+                                [...Array(skeletonRows)].map((_, index) => (
+                                    <AuctionCardSkeleton key={index} />
+                                ))
+                            ) : wonItems?.length === 0 ? (
+                                <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold montserrat text-3xl text-gray-500">
+                                        You have not won any items yet.
+                                </p>
+                            ) : (
+                                 wonItems?.map((item, index) => (
+                                    <MyWonProduct key={item.id ?? `auction-${index}`} item={item} />
+                                  
+                                ))
+                            )}
             </div>
         </>
     );
