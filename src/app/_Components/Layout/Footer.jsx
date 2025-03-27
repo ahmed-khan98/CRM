@@ -108,57 +108,82 @@
 
 // export default Footer;
 
-
-import { FaInstagram, FaFacebook, FaTimesCircle, FaYoutube, FaLinkedin } from "react-icons/fa";
+import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+import { useEffect } from "react";
+import Script from "next/script";
 
 const Footer = () => {
+  useEffect(() => {
+    if (window.adsbygoogle) {
+      try {
+        window.adsbygoogle.push({});
+      } catch (e) {
+        console.log("AdSense Error:", e);
+      }
+    }
+  }, []);
+
   return (
-   <>
-    <footer className=" container mx-auto w-full mt-4 py-4 border-t border-gray-300">
-      {/* Top Links with Social Icons */}
-      <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
-        <div className="space-x-2">
-          <a href="#" className="hover:underline montserrat">About</a> |
-          <a href="#" className="hover:underline montserrat"> FAQ’s</a> |
-          <a href="#" className="hover:underline montserrat"> Contact Us</a> |
-          <a href="#" className="text-red-600 font-bold hover:underline montserrat"> Resources</a> |
-          <a href="#" className="text-green-600 font-bold hover:underline montserrat"> SELL YOUR STUFF</a>
+    <>
+      {/* Google AdSense Script */}
+      <Script
+        async
+        strategy="afterInteractive"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6648219347495285"
+        crossOrigin="anonymous"
+      />
+      <footer className="container mx-auto w-full mt-4 py-4 border-t border-gray-300">
+        {/* Top Links with Social Icons */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
+          <div className="space-x-2">
+            <a href="#" className="hover:underline montserrat">About</a> |
+            <a href="#" className="hover:underline montserrat"> FAQ’s</a> |
+            <a href="#" className="hover:underline montserrat"> Contact Us</a> |
+            <a href="#" className="text-red-600 font-bold hover:underline montserrat"> Resources</a> |
+            <a href="#" className="text-green-600 font-bold hover:underline montserrat"> SELL YOUR STUFF</a>
+          </div>
+
+          {/* Social Icons */}
+          <div className="flex space-x-3 text-xl">
+            <a href="#" className="text-pink-500 hover:text-pink-600"><FaInstagram /></a>
+            <a href="#" className="text-blue-600 hover:text-blue-700"><FaFacebook /></a>
+            <a href="#" className="text-gray-500 hover:text-gray-600"><FaXTwitter /></a>
+            <a href="#" className="text-red-600 hover:text-red-700"><FaYoutube /></a>
+            <a href="#" className="text-blue-500 hover:text-blue-600"><FaLinkedin /></a>
+          </div>
         </div>
 
-        {/* Social Icons */}
-        <div className="flex space-x-3 text-xl">
-          <a href="#" className="text-pink-500 hover:text-pink-600"><FaInstagram /></a>
-          <a href="#" className="text-blue-600 hover:text-blue-700"><FaFacebook /></a>
-          <a href="#" className="text-gray-500 hover:text-gray-600"><FaTimesCircle /></a>
-          <a href="#" className="text-red-600 hover:text-red-700"><FaYoutube /></a>
-          <a href="#" className="text-blue-500 hover:text-blue-600"><FaLinkedin /></a>
-        </div>
-      </div>
-
-      {/* Google Adsense Placeholder */}
-      <div className="bg-gray-300 cursor-pointer montserrat text-black text-xl font-bold py-6 px-4 my-4 mx-auto w-full text-center">
-        Google Adsense/Monetize go here
-      </div>
-
-      {/* Terms & Copyright in One Line */}
-      <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
-        <div className="space-x-2">
-          <a href="#" className="hover:underline montserrat">Terms & Conditions</a> |
-          <a href="#" className="hover:underline montserrat"> Privacy Policy</a> |
-          <a href="#" className="hover:underline montserrat"> Affiliate Policy</a>
+        {/* Google AdSense Ad Slot */}
+        <div className="flex justify-center my-4">
+          <ins
+            className="adsbygoogle"
+            style={{ display: "block" }}
+            data-ad-client="ca-pub-6648219347495285"
+            data-ad-slot="YOUR_AD_SLOT_ID"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          ></ins>
         </div>
 
-        <p className="montserrat text-sm">
-          © Copyright 2025 <a href="#" className="text-blue-600 hover:underline">ArthurNicolas.com</a>
-        </p>
-      </div>
-    </footer>
-          {/* Bottom Red Bar */}
-          <div className="bg-[#F33E0A] h-6 mt-4 w-full"></div>
-   </>
+        {/* Terms & Copyright */}
+        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
+          <div className="space-x-2">
+            <a href="#" className="hover:underline montserrat">Terms & Conditions</a> |
+            <a href="#" className="hover:underline montserrat"> Privacy Policy</a> |
+            <a href="#" className="hover:underline montserrat"> Affiliate Policy</a>
+          </div>
+
+          <p className="montserrat text-sm">
+            © Copyright 2025 <a href="#" className="text-blue-600 hover:underline">ArthurNicolas.com</a>
+          </p>
+        </div>
+      </footer>
+
+      {/* Bottom Red Bar */}
+      <div className="bg-[#F33E0A] h-6 mt-4 w-full"></div>
+    </>
   );
 };
 
 export default Footer;
-
-

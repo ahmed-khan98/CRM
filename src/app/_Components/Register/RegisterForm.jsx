@@ -1,10 +1,14 @@
 "use client"
 import { useRegisterMutation } from "@/app/_Services/authentication/page";
 import { useFormik } from "formik";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
+import Main from "../../../app/Assets/Main.png";
+
+
 export default function RegisterForm() {
   const navigation = useRouter()
 
@@ -12,14 +16,16 @@ export default function RegisterForm() {
 
 
   const registerSchema = Yup.object({
-    username: Yup.string().required("Username is required "),
+    fname: Yup.string().required("fisrt name is required "),
+    lname: Yup.string().required("last name is required "),
     email: Yup.string().email().required("Email is required"),
     password: Yup.string().required("Password is required"),
-    avatar: Yup.mixed().required("Profile Image is required"),
+    // avatar: Yup.mixed().required("Profile Image is required"),
   })
 
   const registerInitialValue = {
-    username: "",
+    fname: "",
+    lname: "",
     email: "",
     password: "",
     avatar: '',
@@ -31,13 +37,22 @@ export default function RegisterForm() {
     validationSchema: registerSchema,
 
     onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append("username", values.username);
-      formData.append("email", values.email);
-      formData.append("password", values.password);
-      formData.append("avatar", values.avatar);
-
-      console.log(formData, "formData");
+    
+      let formData
+      if(values?.avatar){
+        formData = new FormData();
+        formData.append("fname", values.fname);
+        formData.append("lname", values.lname);
+        formData.append("email", values.email);
+        formData.append("password", values.password);
+        formData.append("avatar", values.avatar);
+      }else{
+        formData={
+        "fname":values.fname,
+        "lname": values.lname,
+        "email": values.email,
+        "password": values.password}
+      }
 
       try {
         const response = await registerForm(formData).unwrap();
@@ -55,21 +70,42 @@ export default function RegisterForm() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white shadow-md rounded-lg">
+      <div className="flex py-6">
+          <Link href="/" className="mx-auto">
+            <Image src={Main} alt="Logo" height={50} />
+          </Link>
+        </div>
         <h2 className="text-2xl font-semibold mb-4 text-center">Register</h2>
         <form onSubmit={formik.handleSubmit}>
-          {/* Username */}
+          {/* fname */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-1">Username *</label>
+            <label className="block text-gray-700 font-medium mb-1">first name *</label>
             <input
               type="text"
-              name="username"
+              name="fname"
               onChange={formik.handleChange}
-              value={formik.values.username}
+              value={formik.values.fname}
               className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
             {
-              formik.errors.username && formik.touched.username ?
-                <span className="text-red-500 text-sm pl-2">{formik.errors.username}</span>
+              formik.errors.fname && formik.touched.fname ?
+                <span className="text-red-500 text-sm pl-2">{formik.errors.fname}</span>
+                : null
+            }
+
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-1">Last name *</label>
+            <input
+              type="text"
+              name="lname"
+              onChange={formik.handleChange}
+              value={formik.values.lname}
+              className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {
+              formik.errors.lname && formik.touched.lname ?
+                <span className="text-red-500 text-sm pl-2">{formik.errors.lname}</span>
                 : null
             }
 

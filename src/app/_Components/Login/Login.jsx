@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
+import Main from "../../../app/Assets/Main.png";
+import Image from "next/image";
+
 
 export default function LoginForm() {
   const navigation = useRouter()
@@ -30,7 +33,7 @@ export default function LoginForm() {
       try {
         const response = await loginForm(values).unwrap();
         console.log("Form submitted successfully:", response);
-    
+
         if (response.statusCode === 200) {
           const { accessToken } = response?.data;
           const user = response?.data?.user;
@@ -48,11 +51,16 @@ export default function LoginForm() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white shadow-md rounded-lg">
+        <div className="flex py-6">
+          <Link href="/" className="mx-auto">
+            <Image src={Main} alt="Logo" height={50} />
+          </Link>
+        </div>
         <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-1">
-              Username or email address *
+              Email address *
             </label>
             <input
               type="text"
@@ -87,7 +95,7 @@ export default function LoginForm() {
           </div>
 
           <button className="w-full cursor-pointer bg-[#F33E0A] text-white font-semibold py-2 rounded-full">
-           {isSubmitting? "Loading...." : "LOG IN"} 
+            {isSubmitting ? "Loading...." : "LOG IN"}
           </button>
         </form>
 
