@@ -149,11 +149,11 @@ const Navbar = () => {
                 ""
               ) : (
                 <div
-                  className="py-2.5 px-4 flex items-center rounded-lg gap-2 bg-[#F33E0A] text-white"
+                  className="py-2.5 px-3 flex items-center rounded-lg gap-2 bg-[#F33E0A] text-white"
                 >
                   <Link
                     href="/register"
-                    className="text-white text-sm font-medium  cursor-pointer"
+                    className="text-white text-sm font-medium  cursor-pointer whitespace-nowrap"
                   >
                     Register
                   </Link>
@@ -167,7 +167,7 @@ const Navbar = () => {
              
                 {token ? (
                    <div
-                   className="py-2.5 px-4 flex items-center rounded-lg gap-2  bg-[#F33E0A] text-white"
+                   className="py-2.5 px-3 flex items-center rounded-lg gap-2  bg-[#F33E0A] text-white"
                  >
                   <Link
                     href="/login"
@@ -182,9 +182,9 @@ const Navbar = () => {
               </div>
                 ) : (
                   <div
-                  className="py-2.5 px-4 flex items-center rounded-lg gap-2  bg-[#2F318B] text-white"
+                  className="py-2.5 px-3 flex items-center rounded-lg gap-2  bg-[#2F318B] text-white"
                 >
-                  <Link href="/login" className="text-white text-sm font-medium ">
+                  <Link href="/login" className="text-white text-sm font-medium whitespace-nowrap">
                     Log In
                   </Link>
                   </div>
@@ -195,10 +195,10 @@ const Navbar = () => {
             <div className="flex flex-col items-center">
               {token ? (
                 <div
-                  className="py-2.5 px-4 flex items-center rounded-lg gap-2  bg-[#F33E0A] text-white"
+                  className="py-2.5 px-3 flex items-center rounded-lg gap-2  bg-[#F33E0A] text-white"
 
                 >
-                  <Link href="/dashboard/wonitem" className="text-white text-sm font-medium ">
+                  <Link href="/dashboard/wonitem" className="text-white text-sm font-medium whitespace-nowrap">
                     Dashboard
                   </Link>
                 </div>
@@ -206,11 +206,10 @@ const Navbar = () => {
                 ""
               )}
             </div>
-            <div
-                  className="py-2.5 px-4 flex items-center rounded-lg gap-2  bg-[#007E38] text-white"
+            <div className="py-2.5 px-3 flex items-center rounded-lg gap-2  bg-[#007E38] text-white"
                 >
-                  <Link href="/login" className="text-white text-sm font-medium ">
-                    Sell Your Staff
+                  <Link href="/login" className="text-white text-sm font-medium whitespace-nowrap">
+                    Sell Your Stuff
                   </Link>
                   </div>
 
