@@ -1,32 +1,46 @@
-import Link from "next/link";
+"use client";
 import React from "react";
-import MainImages from "../../../app/Assets/MainImages.png";
-import Image from "next/image";
+import { useGetBannerQuery } from "@/app/_Services/banner/page";
+import "react-quill/dist/quill.snow.css";
 
 const HomeBanner = () => {
+  const { data, isLoading, error } = useGetBannerQuery();
+  const banner = data?.data?.[0];
+
   return (
     <div className="container mx-auto pt-[50px] md:my-12 my-5 px-4 md:px-6">
       <div className="flex flex-col lg:flex-row gap-1 md:min-h-[50vh]">
-        
-        <div className="w-full lg:w-[40%] bg-[#D8D8D8] p-6 md:p-10 lg:p-12 flex flex-col gap-4 text-left justify-center rounded-lg">
-          <h1 className="roboto font-semibold text-center md:text-4xl text-2xl text-title-md tracking-tight text-[#0E0E0E]">
-            Browse, Shop & Save At Our Online Auction
-          </h1>
-          <p className="roboto text-body-md md:text-lg text-center text-[#7d7d7d]">
-            Welcome to our site! Each week, we offer an exciting range of products, including restaurant equipment, home goods, groceries, electronics, and beauty items.
-            <br />
-            All products are sold as-is with no reserves, giving you a unique opportunity to save big. Don't let these incredible deals slip away—check out our live auction listings!
-          </p>
-        </div>
 
-        <div className="w-full lg:w-[60%] rounded-lg overflow-hidden">
-          <Image
-            src={MainImages}
-            alt="Home Banner"
-            className="w-full h-auto object-cover"
-          />
-        </div>
+        {isLoading ? (
+          <div className="w-full flex justify-center items-center h-[50vh]">
+            <div className="animate-pulse w-full lg:w-[35%] bg-gray-200 h-[250px] mx-4 rounded-lg"></div>
+            <div className="animate-pulse w-full lg:w-[60%] bg-gray-200 h-[250px] rounded-lg"></div>
+          </div>
+        ) : banner ? (
+          <>
+            <div className="w-full lg:w-[40%] bg-[#D8D8D8] p-4 md:p-8 lg:p-10 flex flex-col gap-4 rounded-lg">
+              <h1 className="roboto font-semibold text-center md:text-4xl text-2xl text-title-md tracking-tight text-[#0E0E0E]">
+                {banner.title}
+              </h1>
+              <div
+                dangerouslySetInnerHTML={{ __html: banner.description }}
+                className="text-center"
+              />
+            </div>
 
+            <div className="w-full lg:w-[60%] rounded-lg overflow-hidden">
+              <img
+                src={banner.image}
+                alt="Home Banner"
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          </>
+        ) : (
+          <div className="w-full flex justify-center items-center h-[50vh]">
+            <p className="text-gray-500 text-lg font-semibold">Banner Not Found</p>
+          </div>
+        )}
       </div>
     </div>
   );

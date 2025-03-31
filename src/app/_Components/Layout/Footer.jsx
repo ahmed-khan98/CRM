@@ -112,6 +112,7 @@ import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { useEffect } from "react";
 import Script from "next/script";
+import Link from "next/link";
 
 const Footer = () => {
   useEffect(() => {
@@ -137,11 +138,11 @@ const Footer = () => {
         {/* Top Links with Social Icons */}
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
           <div className="space-x-2">
-            <a href="#" className="hover:underline montserrat">About</a> |
-            <a href="#" className="hover:underline montserrat"> FAQ’s</a> |
-            <a href="#" className="hover:underline montserrat"> Contact Us</a> |
-            <a href="#" className="text-red-600 font-bold hover:underline montserrat"> Resources</a> |
-            <a href="#" className="text-green-600 font-bold hover:underline montserrat"> SELL YOUR STUFF</a>
+            <Link href="/about" className="hover:underline montserrat">About</Link> |
+            <Link href="/faq" className="hover:underline montserrat"> FAQ’s</Link> |
+            <Link href="/contact" className="hover:underline montserrat"> Contact Us</Link> |
+            <Link href="/resource" className="text-red-600 font-bold hover:underline montserrat"> Resources</Link> |
+            <Link href="/sell" className="text-green-600 font-bold hover:underline montserrat"> SELL YOUR STUFF</Link>
           </div>
 
           {/* Social Icons */}
@@ -169,9 +170,9 @@ const Footer = () => {
         {/* Terms & Copyright */}
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
           <div className="space-x-2">
-            <a href="#" className="hover:underline montserrat">Terms & Conditions</a> |
-            <a href="#" className="hover:underline montserrat"> Privacy Policy</a> |
-            <a href="#" className="hover:underline montserrat"> Affiliate Policy</a>
+            <Link href="/term" className="hover:underline montserrat">Terms & Conditions</Link> |
+            <Link href="/privacy" className="hover:underline montserrat"> Privacy Policy</Link> |
+            <Link href="/affiliate" className="hover:underline montserrat"> Affiliate Policy</Link>
           </div>
 
           <p className="montserrat text-sm">
