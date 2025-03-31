@@ -61,7 +61,7 @@ const Navbar = () => {
           </button>
 
 
-          <ul className="hidden lg:flex items-center space-x-6">
+          <ul className="hidden lg:flex items-center space-x-6 list-none">
             <li>
               <div className="flex w-[600px] items-center bg-white border border-[#E9EFF4] rounded-full overflow-hidden">
                 {/* <select

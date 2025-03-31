@@ -20,6 +20,10 @@
     --foreground: black;
   }
 }
+.ql-align-center {
+  text-align: center !important;
+}
+
 
 body {
   background: var(--background);
@@ -54,7 +58,8 @@ html{
 body{
   background-color: white;
 }
-
-
+ol, ul, menu {
+  list-style: disc;
+}
 
 
