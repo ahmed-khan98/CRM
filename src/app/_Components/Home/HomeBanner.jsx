@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { useGetBannerQuery } from "@/app/_Services/banner/page";
-import "react-quill/dist/quill.snow.css";
 
 const HomeBanner = () => {
   const { data, isLoading, error } = useGetBannerQuery();
