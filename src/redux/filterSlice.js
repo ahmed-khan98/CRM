@@ -46,8 +46,28 @@ const filterSlice = createSlice({
         clearFilteredProducts: (state) => {
             state.filteredProducts = state.allProducts;
         },
+        sortProducts: (state, action) => {
+            const sortType = action.payload;
+            console.log(sortType,'sortType')
+            switch (sortType) {
+                case 'low-to-high':
+                    state.filteredProducts = [...state.filteredProducts].sort((a, b) => a.price - b.price);
+                    break;
+                case 'high-to-low':
+                    state.filteredProducts = [...state.filteredProducts].sort((a, b) => b.price - a.price);
+                    break;
+                case 'oldest-to-newest':
+                    state.filteredProducts = [...state.filteredProducts].sort((a, b) => new Date(a.biddingStartTime) - new Date(b.biddingStartTime));
+                    break;
+                case 'newest-to-oldest':
+                    state.filteredProducts = [...state.filteredProducts].sort((a, b) => new Date(b.biddingStartTime) - new Date(a.biddingStartTime));
+                    break;
+                default:
+                    break;
+            }
+        }
     },
 });
 
-export const { setAllProducts, filterBySearch, setFilteredProducts, filterBySubCategory, filterByCategory, clearFilteredProducts } = filterSlice.actions;
+export const { setAllProducts,sortProducts, filterBySearch, setFilteredProducts, filterBySubCategory, filterByCategory, clearFilteredProducts } = filterSlice.actions;
 export default filterSlice.reducer;
