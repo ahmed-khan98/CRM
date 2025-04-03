@@ -2,12 +2,12 @@
 import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { clearFilteredProducts, filterByCategory, filterBySubCategory } from "@/redux/filterSlice";
+import { clearFilteredProducts, filterByCategory, filterBySubCategory, sortProducts } from "@/redux/filterSlice";
 import { useGetallsubCategoriesQuery, useGetCategoriesQuery } from "@/app/_Services/categories/page";
 
 const SortMenu = ({ title, options, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("Featured");
+  const [selected, setSelected] = useState("");
 
   const handleSelect = (label, value) => {
     setSelected(label);
@@ -18,14 +18,14 @@ const SortMenu = ({ title, options, onSelect }) => {
   return (
     <div className="relative text-left">
       <button
-        className="flex items-center justify-between min-w-[200px] border border-solid border-gray-400 rounded-xl px-3 py-2 bg-white hover:border-gray-700 focus:outline-secondary"
+        className="flex items-center cursor-pointer justify-between min-w-[200px] border border-solid border-gray-400 rounded-xl px-3 py-2 bg-white hover:border-gray-700 focus:outline-secondary"
         onClick={() => setIsOpen(!isOpen)}
         type="button"
         aria-haspopup="menu"
         aria-expanded={isOpen}
       >
-        <div className="flex flex-col text-left">
-          <p className="cursor-pointer text-label-sm">{title}</p>
+        <div className="flex flex-col text-left ">
+          <p className="cursor-pointer text-label-sm">{selected ? selected : title}</p>
           {/* <p className="font-semibold text-title-xs pr-2">{selected}</p> */}
         </div>
         <FaChevronDown className="text-orange-500" size={20} />
@@ -33,7 +33,7 @@ const SortMenu = ({ title, options, onSelect }) => {
 
       {isOpen && (
         <div
-          className="absolute left-0 w-full mt-1 bg-white rounded-xl ring-2 ring-neutral-400 shadow-lg focus:outline-none z-50 overflow-hidden"
+          className="absolute left-0 cursor-pointer w-full mt-1 bg-white rounded-xl ring-2 ring-neutral-400 shadow-lg focus:outline-none z-50 overflow-hidden"
           role="menu"
           tabIndex="0"
         >
@@ -41,7 +41,9 @@ const SortMenu = ({ title, options, onSelect }) => {
             <p
               key={value}
               className="block cursor-pointer py-2 px-3 hover:bg-gray-200 focus-visible:bg-gray-200 focus-visible:outline-none"
-              onClick={() => handleSelect(label, value)}
+              onClick={() =>{
+                dispatch(sortProducts(value));
+               handleSelect(label, value)}}
             >
               {label}
             </p>
@@ -68,8 +70,8 @@ const SortDropdowns = () => {
   })) || [];
 
   const sortOptions = [
-    { label: "Current Price (Low - High)", value: "current_price_asc" },
-    { label: "Current Price (High - Low)", value: "current_price_desc" },
+    { label: "Current Price (Low - High)", value: "low-to-high" },
+    { label: "Current Price (High - Low)", value: "high-to-low" },
     { label: "Ending (Earliest - Latest)", value: "time_remaining_asc" },
     { label: "Ending (Latest - Earliest)", value: "time_remaining_desc" },
     { label: "Est. Retail (Low - High)", value: "retail_price_asc" },
@@ -93,12 +95,16 @@ const SortDropdowns = () => {
       dispatch(filterBySubCategory(value));
     }
   };
+  
 
   return (
-    <div className="flex gap-3 flex-wrap justify-start ml-18 my-3 container mx-auto">
+    <div className="flex gap-3 flex-wrap justify-start ml-18 my-3 container mx-auto pt-[60px]">
       <SortMenu title="Sort By" options={sortOptions} />
       <SortMenu title="Category" options={categoryOptions} onSelect={handleCategoryChange} />
       <SortMenu title="Subcategory" options={subcategoryOptions} onSelect={handleSubcategoryChange} />
+      <button className="px-3 py-2 cursor-pointer bg-gray-800 text-white rounded-lg hover:bg-gray-900" onClick={()=> dispatch(clearFilteredProducts())}>
+        Clear Filter
+      </button>
     </div>
   );
 };
