@@ -12,7 +12,7 @@ const ServicesSection = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 max-w-6xl mx-auto">
         
         {/* Auctions */}
-        <div className="relative bg-white p-6 pt-14 rounded-lg shadow-lg">
+        <div className="relative bg-white p-6 pt-5 rounded-lg shadow-lg">
           <h3 className="absolute montserrat top-[-18px] left-1/2 -translate-x-1/2 bg-white text-red-800 font-bold text-lg py-2 px-4 ">
             AUCTIONS
           </h3>
@@ -22,7 +22,7 @@ const ServicesSection = () => {
         </div>
 
         {/* Consignments */}
-        <div className="relative bg-white p-6 pt-14 rounded-lg shadow-lg">
+        <div className="relative bg-white p-6 pt-5 rounded-lg shadow-lg">
           <h3 className="absolute montserrat top-[-18px] left-1/2 -translate-x-1/2 bg-white text-blue-400 font-bold text-lg py-2 px-4 ">
             CONSIGNMENTS
           </h3>
@@ -32,7 +32,7 @@ const ServicesSection = () => {
         </div>
 
         {/* Liquidations */}
-        <div className="relative bg-white p-6 pt-14 rounded-lg shadow-lg">
+        <div className="relative bg-white p-6 pt-5 rounded-lg shadow-lg">
           <h3 className="absolute montserrat top-[-18px] left-1/2 -translate-x-1/2 bg-white text-green-400 font-bold text-lg py-2 px-4 ">
             LIQUIDATIONS
           </h3>

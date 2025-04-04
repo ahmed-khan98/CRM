@@ -8,8 +8,10 @@ import { useGetallsubCategoriesQuery, useGetCategoriesQuery } from "@/app/_Servi
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { clearFilteredProducts, filterByCategory, filterBySearch, filterBySubCategory } from "@/redux/filterSlice";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const Router=useRouter()
   const dispatch = useDispatch();
   const token = Cookies.get("token");
   // const userCookie = Cookies.get("currentuser");
@@ -61,7 +63,7 @@ const Navbar = () => {
           </button>
 
 
-          <ul className="hidden lg:flex items-center space-x-6 list-none">
+          <ul className="hidden lg:flex items-center space-x-6 !list-none ">
             <li>
               <div className="flex w-[600px] items-center bg-white border border-[#E9EFF4] rounded-full overflow-hidden">
                 {/* <select
@@ -113,7 +115,7 @@ const Navbar = () => {
                   onChange={(e) => dispatch(filterBySearch(e.target.value))}
                 />
 
-                <button className="p-3 bg-gray-800 text-white rounded-r-full w-[100px]  hover:bg-gray-900">
+                <button onClick={()=>Router.push('/auction-product')} className="p-3 bg-gray-800 text-white rounded-r-full w-[100px]  hover:bg-gray-900">
                   {/* <FaSearch /> */}
                   Explore
                 </button>
@@ -191,9 +193,9 @@ const Navbar = () => {
                 )}
 
             </div>
-
+            {token ? (
             <div className="flex flex-col items-center">
-              {token ? (
+           
                 <div
                   className="py-2.5 px-3 flex items-center rounded-lg gap-2  bg-[#F33E0A] text-white"
 
@@ -202,10 +204,11 @@ const Navbar = () => {
                     Dashboard
                   </Link>
                 </div>
-              ) : (
-                ""
-              )}
             </div>
+              )
+             : (
+              ""
+            )}
             <div className="py-2.5 px-3 flex items-center rounded-lg gap-2  bg-[#007E38] text-white"
                 >
                   <Link href="/login" className="text-white text-sm font-medium whitespace-nowrap">

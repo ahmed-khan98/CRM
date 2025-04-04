@@ -16,16 +16,20 @@ export default function RegisterForm() {
 
 
   const registerSchema = Yup.object({
-    fname: Yup.string().required("fisrt name is required "),
-    lname: Yup.string().required("last name is required "),
+    // fname: Yup.string().required("fisrt name is required "),
+    // lname: Yup.string().required("last name is required "),
+    username: Yup.string().required("User Name name is required "),
+
     email: Yup.string().email().required("Email is required"),
     password: Yup.string().required("Password is required"),
     // avatar: Yup.mixed().required("Profile Image is required"),
   })
 
   const registerInitialValue = {
-    fname: "",
-    lname: "",
+    // fname: "",
+    // lname: "",
+    username: "",
+
     email: "",
     password: "",
     avatar: '',
@@ -41,15 +45,20 @@ export default function RegisterForm() {
       let formData
       if(values?.avatar){
         formData = new FormData();
-        formData.append("fname", values.fname);
-        formData.append("lname", values.lname);
+        // formData.append("fname", values.fname);
+        // formData.append("lname", values.lname);
+        formData.append("username", values.username);
+
         formData.append("email", values.email);
         formData.append("password", values.password);
         formData.append("avatar", values.avatar);
       }else{
         formData={
-        "fname":values.fname,
-        "lname": values.lname,
+          
+        // "fname":values.fname,
+        // "lname": values.lname,
+        "username": values.username,
+
         "email": values.email,
         "password": values.password}
       }
@@ -78,7 +87,7 @@ export default function RegisterForm() {
         <h2 className="text-2xl font-semibold mb-4 text-center">Register</h2>
         <form onSubmit={formik.handleSubmit}>
           {/* fname */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-1">first name *</label>
             <input
               type="text"
@@ -93,19 +102,19 @@ export default function RegisterForm() {
                 : null
             }
 
-          </div>
+          </div> */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-1">Last name *</label>
+            <label className="block text-gray-700 font-medium mb-1">User name *</label>
             <input
               type="text"
-              name="lname"
+              name="username"
               onChange={formik.handleChange}
-              value={formik.values.lname}
+              value={formik.values.username}
               className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
             {
-              formik.errors.lname && formik.touched.lname ?
-                <span className="text-red-500 text-sm pl-2">{formik.errors.lname}</span>
+              formik.errors.username && formik.touched.username ?
+                <span className="text-red-500 text-sm pl-2">{formik.errors.username}</span>
                 : null
             }
 

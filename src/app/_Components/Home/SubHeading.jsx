@@ -4,8 +4,8 @@ import { FaGavel } from 'react-icons/fa6'
 const SubHeading = ({heading}) => {
   return (
     <>
-   <div className="my-4">
-   <h1 className="text-center text- [20px] font-bold pt-6 uppercase text-[#242424] montserrat"> {heading}</h1>
+   <div className={`my-4`}>
+   <h1 className={`text-center text-[20px] font-bold pt-6 uppercase text-[#242424] montserrat`}> {heading}</h1>
      <div className="flex items-center justify-center gap-2 w-full my-3">
       
       <div className="w-1/9 h-[1px] bg-gray-300"></div>

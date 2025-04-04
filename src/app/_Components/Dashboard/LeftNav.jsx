@@ -9,8 +9,8 @@ const LeftNav = () => {
 
   const menuItems = [
     // { name: "APPOINTMENTS", path: "/dashboard" },
-    { name: "WON ITEMS ", path: "/dashboard/wonitem" },
     { name: "WISHTLIST", path: "/dashboard/wishlist" },
+    { name: "WON ITEMS ", path: "/dashboard/wonitem" },
     // { name: "MY INVENTORY", path: "/dashboard/inventory" },
     // { name: "PURCHASES HISTORY", path: "/purchases" },
     // { name: "MY EARNINGS ($0)", path: "/dashboard/earnings" },

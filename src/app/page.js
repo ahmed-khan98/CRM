@@ -10,7 +10,10 @@ export default function Home() {
   return (
     <>
     <SortMenu />
+    <div className='md:pt-14'>
+    
       <HomeBanner />
+      </div>
       <ServicesSection/>
       {/* <div className="md:mt-14">  <SubHeading heading={"DAILY AUCTIONS"} /></div>
       <DailyAuction/> */}

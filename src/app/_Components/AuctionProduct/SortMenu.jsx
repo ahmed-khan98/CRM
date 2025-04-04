@@ -1,24 +1,41 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { clearFilteredProducts, filterByCategory, filterBySubCategory, sortProducts } from "@/redux/filterSlice";
 import { useGetallsubCategoriesQuery, useGetCategoriesQuery } from "@/app/_Services/categories/page";
 
-const SortMenu = ({ title, options, onSelect }) => {
+const SortMenu = ({ title, options, onSelect,width=120 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("");
-
+  const dispatch=useDispatch()
   const handleSelect = (label, value) => {
     setSelected(label);
     setIsOpen(false);
     if (onSelect) onSelect(value);
   };
 
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false); 
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    // return () => {
+    //   document.removeEventListener('mousedown', handleClickOutside);  // Cleanup on component unmount
+    // };
+  }, []);
+  
   return (
     <div className="relative text-left">
       <button
-        className="flex items-center cursor-pointer justify-between min-w-[200px] border border-solid border-gray-400 rounded-xl px-3 py-2 bg-white hover:border-gray-700 focus:outline-secondary"
+       style={{ minWidth: `${width}px` }}  // Apply width using inline styles
+        className='flex items-center cursor-pointer justify-between  border border-solid border-gray-400 rounded-xl px-2 py-2 bg-white hover:border-gray-700 focus:outline-secondary'
         onClick={() => setIsOpen(!isOpen)}
         type="button"
         aria-haspopup="menu"
@@ -33,6 +50,7 @@ const SortMenu = ({ title, options, onSelect }) => {
 
       {isOpen && (
         <div
+        ref={dropdownRef}
           className="absolute left-0 cursor-pointer w-full mt-1 bg-white rounded-xl ring-2 ring-neutral-400 shadow-lg focus:outline-none z-50 overflow-hidden"
           role="menu"
           tabIndex="0"
@@ -98,13 +116,15 @@ const SortDropdowns = () => {
   
 
   return (
-    <div className="flex gap-3 flex-wrap justify-start ml-18 my-3 container mx-auto pt-[60px]">
-      <SortMenu title="Sort By" options={sortOptions} />
-      <SortMenu title="Category" options={categoryOptions} onSelect={handleCategoryChange} />
-      <SortMenu title="Subcategory" options={subcategoryOptions} onSelect={handleSubcategoryChange} />
+    <div className=" md:mt-[54px] mt-[30px] w-full bg-white">
+    <div className="flex   gap-3 flex-wrap justify-center   pl-20 ml-4 my-3 container mx-auto  fixed z-50 bg-white  py-2">
+      <SortMenu  width={170} title="Sort By" options={sortOptions} />
+      <SortMenu  width={140} title="Category" options={categoryOptions} onSelect={handleCategoryChange} />
+      <SortMenu   width={140} title="Subcategory" options={subcategoryOptions} onSelect={handleSubcategoryChange} />
       <button className="px-3 py-2 cursor-pointer bg-gray-800 text-white rounded-lg hover:bg-gray-900" onClick={()=> dispatch(clearFilteredProducts())}>
         Clear Filter
       </button>
+    </div>
     </div>
   );
 };

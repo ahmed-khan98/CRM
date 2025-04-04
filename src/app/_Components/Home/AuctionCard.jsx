@@ -34,9 +34,10 @@ export default function AuctionCard() {
       No Product Found
     </p>    
     ) : (
-      filteredProducts.map((item, index) => (
+      filteredProducts?.filter((item, index) => !item?.isSold).map((item, index) => (
         <AuctionComp key={item.id ?? `auction-${index}`} item={item} />
       ))
+      
     )}
   </div>
   );
