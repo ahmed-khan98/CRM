@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import Main from "../../../app/Assets/Main.png";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 function VerifyEmailForm() {
     const navigation = useRouter();
     const searchParams = useSearchParams();
