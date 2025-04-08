@@ -7,8 +7,7 @@ import * as Yup from "yup";
 import Main from "../../../app/Assets/Main.png";
 import Image from "next/image";
 import Link from "next/link";
-
-export default function VerifyEmailForm() {
+function VerifyEmailForm() {
     const navigation = useRouter();
     const searchParams = useSearchParams();
     const email = searchParams.get("email");
@@ -96,7 +95,7 @@ export default function VerifyEmailForm() {
         </div>
     );
 }
-export default function Verify() {
+export default function VerifyForm() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <VerifyEmailForm />
