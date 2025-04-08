@@ -96,3 +96,11 @@ export default function VerifyEmailForm() {
         </div>
     );
 }
+export default function Verify() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailForm />
+    </Suspense>
+  );
+}
+
