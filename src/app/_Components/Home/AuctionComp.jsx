@@ -128,12 +128,12 @@ const AuctionComp = ({ item }) => {
 
             {/* Countdown Timer */}
             <div className="bg-white shadow-xl w-[90%] mx-auto text-center py-2 rounded -mt-[60px] relative z-1">
-                <p className="text-sm font-semibold roboto">Time left:</p>
-                <div className="flex justify-center space-x-4 text-lg font-bold">
-                    {["hours", "minutes", "seconds"].map((unit) => (
-                        <div key={unit} className="flex flex-col items-center">
-                            <span>{timeLeft[unit] ?? 0}</span>
-                            <span className="text-xs font-normal roboto">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
+                <div className="flex justify-center space-x-2 text-lg font-bold py-3">
+                    <p className="font-semibold roboto">Time left:</p>
+                    {["hours"].map((unit) => (
+                        <div key={unit} className="flex">
+                            <span >{timeLeft[unit] ?? 0}</span>{' '}
+                            <span >{unit}</span>
                         </div>
                     ))}
                 </div>
@@ -165,45 +165,45 @@ const AuctionComp = ({ item }) => {
 
             {/* Bidding Input and Button */}
             <div className="mt-3 flex">
-  {item?.isSold ? (
-    <button className="w-full cursor-pointer roboto text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 hover:from-green-700 hover:to-emerald-500  py-3 flex items-center justify-center rounded-b-3xl">
-      <span>Sold</span>
-    </button>
-  ) : token ? (
-    <>
-    <input
-        type="text"
-        className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center roboto outline-none rounded-bl-3xl
+                {item?.isSold ? (
+                    <button className="w-full cursor-pointer roboto text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 hover:from-green-700 hover:to-emerald-500  py-3 flex items-center justify-center rounded-b-3xl">
+                        <span>Sold</span>
+                    </button>
+                ) : token ? (
+                    <>
+                        <input
+                            type="text"
+                            className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center roboto outline-none rounded-bl-3xl
         appearance-none [&::-webkit-outer-spin-button]:appearance-none 
         [&::-webkit-inner-spin-button]:appearance-none"
-        onChange={(e) => handleBidChange(item._id, e.target.value)}
-        value={bidValue}
-      />
-<button
-  disabled={bidValue <= item?.highestBid || isSubmitting}
-  onClick={() => submitBid(item._id)}
-  className={`w-1/2 cursor-pointer roboto text-white py-3 flex items-center justify-center space-x-2
+                            onChange={(e) => handleBidChange(item._id, e.target.value)}
+                            value={bidValue}
+                        />
+                        <button
+                            disabled={bidValue <= item?.highestBid || isSubmitting}
+                            onClick={() => submitBid(item._id)}
+                            className={`w-1/2 cursor-pointer roboto text-white py-3 flex items-center justify-center space-x-2
     ${Number(bidValue) > Number(item?.highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}
     rounded-br-3xl
   `}
->
-  <ImHammer2 className="transform rotate-80" />
-  <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
-</button>
+                        >
+                            {/* <ImHammer2 className="transform rotate-80" /> */}
+                            <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
+                        </button>
 
-    </>
-  ) : (
-    
-    
-      <button
-        className="w-full cursor-pointer roboto text-white bg-[#F33E0A] hover:bg-[#d63006] py-3 flex items-center justify-center rounded-b-3xl"
-      >
-        <Link href="/login">
-        Login to Bid
-        </Link>
-      </button>
-  )}
-</div>
+                    </>
+                ) : (
+
+
+                    <button
+                        className="w-full cursor-pointer roboto text-white bg-[#F33E0A] hover:bg-[#d63006] py-3 flex items-center justify-center rounded-b-3xl"
+                    >
+                        <Link href="/login">
+                            Login to Bid
+                        </Link>
+                    </button>
+                )}
+            </div>
 
         </div>
     );

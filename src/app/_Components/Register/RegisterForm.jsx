@@ -16,23 +16,26 @@ export default function RegisterForm() {
 
 
   const registerSchema = Yup.object({
-    // fname: Yup.string().required("fisrt name is required "),
-    // lname: Yup.string().required("last name is required "),
-    username: Yup.string().required("User Name name is required "),
-
-    email: Yup.string().email().required("Email is required"),
-    password: Yup.string().required("Password is required"),
-    // avatar: Yup.mixed().required("Profile Image is required"),
-  })
+    email: Yup.string()
+      .email("Invalid email")
+      .required("Email is required"),
+      
+    password: Yup.string()
+      .min(8, "Password must be at least 8 characters")
+      .required("Password is required"),
+  
+    cpassword: Yup.string()
+      .min(8, "Confirm Password must be at least 8 characters")
+      .oneOf([Yup.ref("password")], "Confirm Password  must match")
+      .required("Confirm Password is required"),
+  });
 
   const registerInitialValue = {
     // fname: "",
     // lname: "",
-    username: "",
-
     email: "",
     password: "",
-    avatar: '',
+    cpassword: "",
   }
 
   const formik = useFormik({
@@ -54,11 +57,6 @@ export default function RegisterForm() {
         formData.append("avatar", values.avatar);
       }else{
         formData={
-          
-        // "fname":values.fname,
-        // "lname": values.lname,
-        "username": values.username,
-
         "email": values.email,
         "password": values.password}
       }
@@ -69,7 +67,7 @@ export default function RegisterForm() {
         console.log(response.message,"response meaage");
         
         toast.success(response?.message);
-        navigation.push("/login")
+        navigation.push(`/verifyemail?email=${values?.email}`)
       } catch (error) {
         toast.error(error.data.message);
       }
@@ -103,22 +101,6 @@ export default function RegisterForm() {
             }
 
           </div> */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-1">User name *</label>
-            <input
-              type="text"
-              name="username"
-              onChange={formik.handleChange}
-              value={formik.values.username}
-              className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-            {
-              formik.errors.username && formik.touched.username ?
-                <span className="text-red-500 text-sm pl-2">{formik.errors.username}</span>
-                : null
-            }
-
-          </div>
 
           {/* Email */}
           <div className="mb-4">
@@ -153,11 +135,26 @@ export default function RegisterForm() {
                 : null
             }
           </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-1">Confirm Password *</label>
+            <input
+              type="password"
+              name="cpassword"
+              onChange={formik.handleChange}
+              value={formik.values.cpassword}
+              className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {
+              formik.errors.cpassword && formik.touched.cpassword ?
+                <span className="text-red-500 text-sm pl-2">{formik.errors.cpassword}</span>
+                : null
+            }
+          </div>
 
 
 
           {/* Image Upload */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-1">Upload Profile Image</label>
             <input
               type="file"
@@ -170,7 +167,7 @@ export default function RegisterForm() {
                 <span className="text-red-500 text-sm pl-2">{formik.errors.avatar}</span>
                 : null
             }
-          </div>
+          </div> */}
 
           {/* Role Selection */}
           {/* <div className="mb-4">

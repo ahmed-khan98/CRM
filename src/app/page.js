@@ -9,7 +9,7 @@ import SortMenu from './_Components/AuctionProduct/SortMenu'
 export default function Home() {
   return (
     <>
-    <SortMenu />
+    {/* <SortMenu /> */}
     <div className='md:pt-14'>
     
       <HomeBanner />

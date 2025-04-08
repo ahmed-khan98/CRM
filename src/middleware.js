@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export function middleware(req) {
+    console.log(req,'------------req')
     const url = req.nextUrl.clone();
     
     const token = req.cookies.get("token")?.value; 

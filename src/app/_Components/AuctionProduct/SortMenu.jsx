@@ -1,56 +1,59 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { clearFilteredProducts, filterByCategory, filterBySubCategory, sortProducts } from "@/redux/filterSlice";
-import { useGetallsubCategoriesQuery, useGetCategoriesQuery } from "@/app/_Services/categories/page";
+import {
+  clearFilteredProducts,
+  filterByCategory,
+  filterBySubCategory,
+  sortProducts,
+} from "@/redux/filterSlice";
+import {
+  useGetCategoriesQuery,
+  useGetSubCategoriesQuery,
+} from "@/app/_Services/categories/page";
 
-const SortMenu = ({ title, options, onSelect,width=120 }) => {
+const SortMenu = ({ title, options, onSelect, width = 120 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("");
-  const dispatch=useDispatch()
+  const dropdownRef = useRef(null);
+
   const handleSelect = (label, value) => {
     setSelected(label);
     setIsOpen(false);
     if (onSelect) onSelect(value);
   };
 
-
-  const dropdownRef = useRef(null);
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false); 
+        setIsOpen(false);
       }
     };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    // return () => {
-    //   document.removeEventListener('mousedown', handleClickOutside);  // Cleanup on component unmount
-    // };
+    document.addEventListener("mousedown", handleClickOutside);
   }, []);
-  
+
   return (
     <div className="relative text-left">
       <button
-       style={{ minWidth: `${width}px` }}  // Apply width using inline styles
-        className='flex items-center cursor-pointer justify-between  border border-solid border-gray-400 rounded-xl px-2 py-2 bg-white hover:border-gray-700 focus:outline-secondary'
+        style={{ minWidth: `${width}px` }}
+        className="flex items-center cursor-pointer justify-between border border-solid border-gray-400 rounded-xl px-2 py-2 bg-white hover:border-gray-700 focus:outline-secondary"
         onClick={() => setIsOpen(!isOpen)}
         type="button"
         aria-haspopup="menu"
         aria-expanded={isOpen}
       >
-        <div className="flex flex-col text-left ">
-          <p className="cursor-pointer text-label-sm">{selected ? selected : title}</p>
-          {/* <p className="font-semibold text-title-xs pr-2">{selected}</p> */}
+        <div className="flex flex-col text-left">
+          <p className="cursor-pointer text-label-sm">
+            {selected ? selected : title}
+          </p>
         </div>
         <FaChevronDown className="text-orange-500" size={20} />
       </button>
 
       {isOpen && (
         <div
-        ref={dropdownRef}
+          ref={dropdownRef}
           className="absolute left-0 cursor-pointer w-full mt-1 bg-white rounded-xl ring-2 ring-neutral-400 shadow-lg focus:outline-none z-50 overflow-hidden"
           role="menu"
           tabIndex="0"
@@ -59,9 +62,7 @@ const SortMenu = ({ title, options, onSelect,width=120 }) => {
             <p
               key={value}
               className="block cursor-pointer py-2 px-3 hover:bg-gray-200 focus-visible:bg-gray-200 focus-visible:outline-none"
-              onClick={() =>{
-                dispatch(sortProducts(value));
-               handleSelect(label, value)}}
+              onClick={() => handleSelect(label, value)}
             >
               {label}
             </p>
@@ -75,17 +76,28 @@ const SortMenu = ({ title, options, onSelect,width=120 }) => {
 const SortDropdowns = () => {
   const dispatch = useDispatch();
   const { data: categories } = useGetCategoriesQuery();
-  const { data: subcategories } = useGetallsubCategoriesQuery();
 
-  const categoryOptions = categories?.data?.map((category) => ({
-    label: category.name,
-    value: category._id,
-  })) || [];
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
-  const subcategoryOptions = subcategories?.data?.map((subcategory) => ({
-    label: subcategory.name,
-    value: subcategory._id,
-  })) || [];
+  const {
+    data: subcategories,
+    refetch,
+    isFetching,
+  } = useGetSubCategoriesQuery(selectedCategoryId, {
+    skip: !selectedCategoryId,
+  });
+
+  const categoryOptions =
+    categories?.data?.map((category) => ({
+      label: category.name,
+      value: category._id,
+    })) || [];
+
+  const subcategoryOptions =
+    subcategories?.data?.map((subcategory) => ({
+      label: subcategory.name,
+      value: subcategory._id,
+    })) || [];
 
   const sortOptions = [
     { label: "Current Price (Low - High)", value: "low-to-high" },
@@ -98,33 +110,52 @@ const SortDropdowns = () => {
     { label: "Bid Count (High - Low)", value: "bids_desc" },
   ];
 
-  const handleCategoryChange = (value) => {
-    if (value === "") {
-      dispatch(clearFilteredProducts());
-    } else {
-      dispatch(filterByCategory(value));
-    }
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategoryId(categoryId);
+    dispatch(filterByCategory(categoryId));
   };
 
-  const handleSubcategoryChange = (value) => {
-    if (value === "") {
-      dispatch(clearFilteredProducts());
-    } else {
-      dispatch(filterBySubCategory(value));
-    }
+  const handleSubcategoryChange = (subCategoryId) => {
+    dispatch(filterBySubCategory(subCategoryId));
   };
-  
 
   return (
-    <div className=" md:mt-[54px] mt-[30px] w-full bg-white">
-    <div className="flex   gap-3 flex-wrap justify-center   pl-20 ml-4 my-3 container mx-auto  fixed z-50 bg-white  py-2">
-      <SortMenu  width={170} title="Sort By" options={sortOptions} />
-      <SortMenu  width={140} title="Category" options={categoryOptions} onSelect={handleCategoryChange} />
-      <SortMenu   width={140} title="Subcategory" options={subcategoryOptions} onSelect={handleSubcategoryChange} />
-      <button className="px-3 py-2 cursor-pointer bg-gray-800 text-white rounded-lg hover:bg-gray-900" onClick={()=> dispatch(clearFilteredProducts())}>
-        Clear Filter
-      </button>
-    </div>
+    <div className="md:mt-[54px] mt-[30px] w-full bg-white">
+      <div className="flex gap-3 flex-wrap justify-center pl-20 my-3 container mx-auto fixed z-50 bg-white py-2 shadow-lg">
+        <SortMenu
+          width={170}
+          title="Sort By"
+          options={sortOptions}
+          onSelect={(value) => dispatch(sortProducts(value))}
+        />
+
+        <SortMenu
+          width={140}
+          title="Category"
+          options={categoryOptions}
+          onSelect={handleCategoryChange}
+        />
+
+        {selectedCategoryId && subcategoryOptions.length > 0 && (
+          <SortMenu
+            width={140}
+            title="Subcategory"
+            options={subcategoryOptions}
+            onSelect={handleSubcategoryChange}
+          />
+        )}
+
+        {/* <button
+          className="px-3 py-2 cursor-pointer bg-gray-800 text-white rounded-lg hover:bg-gray-900"
+          onClick={() => {
+            dispatch(clearFilteredProducts());
+            setSelectedCategoryId("");
+            
+          }}
+        >
+          Clear Filter
+        </button> */}
+      </div>
     </div>
   );
 };

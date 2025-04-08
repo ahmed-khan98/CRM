@@ -12,8 +12,6 @@ export default function AuctionCard() {
   const filteredProducts = useSelector((state) => state.filter.filteredProducts);
   const { data, error, isLoading } = useGetTodayyAuctionsProductQuery();
 
-  console.log("All Products:", allProducts);
-  console.log("Filtered Products:", filteredProducts);
 
   useEffect(() => {
     if (data?.data) {
@@ -26,7 +24,7 @@ export default function AuctionCard() {
   filteredProducts.length === 0 && allProducts.length > 0 && !isLoading;
 
   return (
-     <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto p-6">
+     <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto p-6 md:pt-20 ">
     {isLoading ? (
       [...Array(8)].map((_, index) => <CardSkeleton key={index} />)
     ) : showNoProductMessage ? (

@@ -40,9 +40,13 @@ export default function LoginForm() {
           Cookies.set("token", accessToken, { expires: 7, secure: true });
           Cookies.set("currentuser", JSON.stringify(user), { expires: 7, secure: true });
           toast.success(response.message);
-          navigation.push("/dashboard/wishlist");
+          navigation.push("/auction-product");
         }
       } catch (error) {
+        console.log(error,'verify-error')
+        if (error?.data.statusCode === 403 && error?.data?.data?.email) {
+          navigation.push(`/verifyemail?email=${values?.email}`)
+        }
         toast.error(error.data.message);
       }
     },
@@ -102,6 +106,11 @@ export default function LoginForm() {
         <div className="mt-4 text-center">
           <p className=" hover:underline cursor-pointer">
             Don't have an account ? <Link className="text-[#F33E0A]" href={"/register"}>Register</Link>
+          </p>
+        </div>
+        <div className="mt-4 text-center">
+          <p className=" hover:underline cursor-pointer">
+           <Link className="text-[#F33E0A]" href={"/forget"}>Forget Password</Link>
           </p>
         </div>
       </div>

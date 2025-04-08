@@ -17,7 +17,35 @@ const authenticationsApi = createApiAuction.injectEndpoints({
         body: formData,
       }),
     }),
+    verify: builder.mutation({
+      query: (formData) => ({
+        url: 'verify-email',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    resend: builder.mutation({
+      query: (formData) => ({
+        url: 'resend-code',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    forget: builder.mutation({
+      query: (formData) => ({
+        url: 'forget-password',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    reset: builder.mutation({
+      query: (formData) => ({
+        url: 'reset-password',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
   }),
 })
 
-export const { useRegisterMutation, useLoginMutation } = authenticationsApi
+export const { useRegisterMutation,useLoginMutation,useVerifyMutation,useResendMutation,useForgetMutation,useResetMutation } = authenticationsApi
