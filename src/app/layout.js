@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script"; 
 import "./globals.css";
 import LayoutWrapper from "./_Components/LayoutWrapper"; 
 import ReduxProvider from "./_Services/reduxprovider/reduxprovider";
@@ -29,6 +30,13 @@ export default function RootLayout({ children }) {
           </LayoutWrapper>
         </ReduxProvider>
       </body>
+      <Script
+          id="adsense-script"
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6648219347495285"
+          crossOrigin="anonymous"
+        />
     </html>
   );
 }

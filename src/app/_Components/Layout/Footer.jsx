@@ -116,26 +116,17 @@ import Link from "next/link";
 
 const Footer = () => {
   useEffect(() => {
-    if (window.adsbygoogle) {
-      try {
-        window.adsbygoogle.push({});
-      } catch (e) {
-        console.log("AdSense Error:", e);
-      }
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.error("Adsbygoogle push error:", e);
     }
   }, []);
 
   return (
     <>
-      {/* Google AdSense Script */}
-      <Script
-        async
-        strategy="afterInteractive"
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6648219347495285"
-        crossOrigin="anonymous"
-      />
+
       <footer className="container mx-auto w-full mt-4 py-4 border-t border-gray-300">
-        {/* Top Links with Social Icons */}
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
           <div className="space-x-2">
             <Link href="/about" className="hover:underline montserrat">About</Link> |
@@ -155,19 +146,29 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Google AdSense Ad Slot */}
-        <div className="flex justify-center my-4">
-          <ins
-            className="adsbygoogle"
-            style={{ display: "block" }}
-            data-ad-client="ca-pub-6648219347495285"
-            data-ad-slot="YOUR_AD_SLOT_ID"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          ></ins>
-        </div>
+        <Script
+        id="adsense-script"
+        async
+        strategy="afterInteractive"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6648219347495285"
+        crossOrigin="anonymous"
+      />
+      <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+        <ins
+          className="adsbygoogle"
+          style={{
+            display: "block",
+            width: "100%",
+            maxWidth: "320px",
+            height: "200px",
+          }}
+          data-ad-client="ca-pub-6648219347495285"
+          data-ad-slot="8021679285"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </div>
 
-        {/* Terms & Copyright */}
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
           <div className="space-x-2">
             <Link href="/term" className="hover:underline montserrat">Terms & Conditions</Link> |
@@ -181,7 +182,6 @@ const Footer = () => {
         </div>
       </footer>
 
-      {/* Bottom Red Bar */}
       <div className="bg-[#F33E0A] h-6 mt-4 w-full"></div>
     </>
   );
