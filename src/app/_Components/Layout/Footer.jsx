@@ -123,7 +123,7 @@ const Footer = () => {
     }
   }, []);
 
-  return (
+return (
     <>
 
       <footer className="container mx-auto w-full mt-4 py-4 border-t border-gray-300">
