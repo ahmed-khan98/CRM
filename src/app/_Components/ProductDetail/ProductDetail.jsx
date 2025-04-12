@@ -16,6 +16,8 @@ import Link from 'next/link';
 import { useAddWishlistMutation, useDeleteWishlistMutation } from '@/app/_Services/wishlist/page';
 import { CiHeart } from 'react-icons/ci';
 import Loader from '../Loader';
+import { Check, Copy } from 'lucide-react'; // Optional: if you use icons
+
 
 function formatDate(dateString) {
   return new Date(dateString).toLocaleString('en-US', {
@@ -40,6 +42,15 @@ const ProductDetail = (id) => {
   const [deleteWishlist] = useDeleteWishlistMutation();
   const [loading, setLoading] = useState(false);
   const maxLength = 300;
+  const [copiedIndex, setCopiedIndex] = useState(null);
+
+  const handleCopy = (value, index) => {
+    navigator.clipboard.writeText(value || '').then(() => {
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 1500);
+    });
+  };
+
   const isLong = data?.data?.shortDescription?.length > maxLength;
   const displayedText = showFull ? data?.data?.shortDescription : data?.data?.shortDescription?.slice(0, maxLength);
   const [activeTab, setActiveTab] = useState("item_spec");
@@ -91,7 +102,7 @@ const ProductDetail = (id) => {
 
   useEffect(() => {
     if (!data?.data?.isSold) {
-      const highestBidderId = data?.data?.highestBidder; 
+      const highestBidderId = data?.data?.highestBidder;
       const biddingHistory = data?.data?.biddingHistory;
 
       if (highestBidderId && Array.isArray(biddingHistory)) {
@@ -216,23 +227,40 @@ const ProductDetail = (id) => {
 
                 {/* Tab Content */}
                 <div className="flex flex-col gap-1">
-                <div className="flex flex-col gap-1">
-  {data?.data?.[activeTab]?.map((e, i) => {
-    const displayValue = e?.name === 'ASIN' ? e?.code : e?.value;
+                  {data?.data?.[activeTab]?.map((e, i) => {
+                    const isASIN = e?.name === 'ASIN';
+                    const displayValue = isASIN ? e?.code : e?.value;
 
-    return (
-      <div className="flex gap-2" key={i}>
-        <div className="w-[35%] bg-[#a6a6a6] p-3 flex items-center">
-          <p className="uppercase font-semibold roboto text-sm">{e?.name}</p>
-        </div>
-        <div className="w-[65%] bg-[#d9d9d9] p-3 flex items-center">
-          <p className="font-semibold montserrat break-words">{displayValue}</p>
-        </div>
-      </div>
-    );
-  })}
-</div>
+                    return (
+                      <div className="flex gap-2" key={i}>
+                        <div className="w-[35%] bg-[#a6a6a6] p-3 flex items-center">
+                          <p className="uppercase font-semibold roboto text-sm">{e?.name}</p>
+                        </div>
+                        <div className="w-[65%] bg-[#d9d9d9] p-3 flex items-center justify-between">
+                          <p className="font-semibold montserrat break-words">{displayValue}</p>
 
+                          {isASIN && (
+                            <button
+                              onClick={() => handleCopy(e?.value, i)}
+                              className={`ml-2 flex items-center gap-1 text-xs px-2 py-1 rounded transition-all 
+                    ${copiedIndex === i ? 'bg-green-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-900'}
+                  `}
+                            >
+                              {copiedIndex === i ? (
+                                <>
+                                  <Check size={14} /> Copied
+                                </>
+                              ) : (
+                                <>
+                                  <Copy size={14} /> Copy
+                                </>
+                              )}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
               </div>
