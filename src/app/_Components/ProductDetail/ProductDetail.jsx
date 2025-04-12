@@ -216,33 +216,23 @@ const ProductDetail = (id) => {
 
                 {/* Tab Content */}
                 <div className="flex flex-col gap-1">
-                  {data?.data?.[activeTab]?.map((e, i) => {
-                    const isLink =
-                      typeof e?.value === 'string' &&
-                      (e.value.startsWith('http://') || e.value.startsWith('https://'));
+                <div className="flex flex-col gap-1">
+  {data?.data?.[activeTab]?.map((e, i) => {
+    const displayValue = e?.name === 'ASIN' ? e?.code : e?.value;
 
-                    return (
-                      <div className="flex gap-2" key={i}>
-                        <div className="w-[35%] bg-[#a6a6a6] p-3 flex items-center">
-                          <p className="uppercase font-semibold roboto text-sm">{e?.name}</p>
-                        </div>
-                        <div className="w-[65%] bg-[#d9d9d9] p-3 flex items-center">
-                          {isLink ? (
-                            <a
-                              href={e.value}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 underline font-semibold montserrat break-all"
-                            >
-                              {e?.value}
-                            </a>
-                          ) : (
-                            <p className="font-semibold montserrat break-words">{e?.value}</p>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
+    return (
+      <div className="flex gap-2" key={i}>
+        <div className="w-[35%] bg-[#a6a6a6] p-3 flex items-center">
+          <p className="uppercase font-semibold roboto text-sm">{e?.name}</p>
+        </div>
+        <div className="w-[65%] bg-[#d9d9d9] p-3 flex items-center">
+          <p className="font-semibold montserrat break-words">{displayValue}</p>
+        </div>
+      </div>
+    );
+  })}
+</div>
+
                 </div>
 
               </div>
