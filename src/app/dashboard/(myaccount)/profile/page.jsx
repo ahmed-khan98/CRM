@@ -3,23 +3,25 @@ import React, { useEffect, useState } from "react"
 import Cookies from "js-cookie";
 import { useUpdateProfileMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import MyAccountTab from "@/app/_Components/Tab/MyAccountTab";
 
 const page = () => {
 
-  const user = JSON.parse(Cookies.get("currentuser"))
-  const router = useRouter();
-
+  
   useEffect(() => {
-    setFormData({
-      firstName: user?.firstName,
-      lastName: user?.lastName,
-      email: user?.email,
-      phone: user?.phone,
-      address: user?.address,
-    })
-  }, [])
+    const data=Cookies.get("currentuser")
+    const user = JSON.parse(data)
+    if (user) {
+      setFormData({
+        firstName: user?.firstName || "",
+        lastName: user?.lastName || "",
+        email: user?.email || "",
+        phone: user?.phone || "",
+        address: user?.address || "",
+      });
+    }
+  }, []);
+  
 
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const [isEditable, setIsEditable] = useState(false);
