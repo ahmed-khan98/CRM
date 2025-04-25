@@ -7,9 +7,10 @@ import OfferBar from '../_Components/Dashboard/OfferBar'
   return (
       <>
       <OfferBar/>
+      {/* <OfferBar/> */}
           <HeadingDashboard/>
 
-        <div className="flex  mt-5">
+        <div className="flex">
       <LeftNav /> 
         {children}
     </div>

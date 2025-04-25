@@ -26,7 +26,6 @@ const CardsComponents = ({ item }) => {
         }
     }, [item?.biddingEndTime]);
 
-    // Set interval for countdown
     useEffect(() => {
         calculateTimeLeft();
         timerRef.current = setInterval(calculateTimeLeft, 1000);
@@ -40,7 +39,6 @@ const CardsComponents = ({ item }) => {
 
 
             <div key={item.id} className="relative shadow-lg bg-white">
-                {/* Image and Icons */}
                 <div className="relative  h-[300px] ">
                     <img
                         src={item?.images?.[0]}
@@ -69,12 +67,12 @@ const CardsComponents = ({ item }) => {
 
                 {/* Timer */}
                 <div className="bg-white shadow-xl w-[90%] mx-auto text-center py-2 rounded -mt-[60px] relative z-1">
-                    <p className="text-sm font-semibold montserrat">Time left:</p>
+                    <p className="text-sm font-semibold ">Time left:</p>
                     <div className="flex justify-center space-x-4 text-lg font-bold">
                         {["days", "hours", "minutes", "seconds"].map((unit) => (
                             <div key={unit} className="flex flex-col items-center">
                                 <span>{timeLeft[unit] ?? 0}</span>
-                                <span className="text-xs font-normal montserrat">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
+                                <span className="text-xs font-normal ">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
                             </div>
                         ))}
                     </div>
@@ -82,27 +80,27 @@ const CardsComponents = ({ item }) => {
 
                 {/* Details */}
                 <div className="mt-3 text-sm px-6">
-                    <div className="flex justify-between montserrat">
+                    <div className="flex justify-between ">
                         <p><strong>Qty:</strong></p>
                         <p>{item.quantity}</p>
                     </div>
-                    <div className="flex justify-between montserrat">
+                    <div className="flex justify-between ">
                         <p><strong>Est Retail:</strong></p>
                         <p className="text-gray-600">${item.price}</p>
                     </div>
-                    <div className="flex justify-between montserrat">
+                    <div className="flex justify-between ">
                         <p><strong>#Bids:</strong></p>
                         <p>{item.highestBid}</p>
                     </div>
                 </div>
 
                 {/* Current Bid */}
-                <div className="bg-gray-200 text-center text-sm py-2 mt-2 montserrat">
+                <div className="bg-gray-200 text-center text-sm py-2 mt-2 ">
                     Current Bid: <strong>${item.highestBid}</strong>
                 </div>
                 <p
                     dangerouslySetInnerHTML={{ __html: item?.description }}
-                    className="text-center text-gray-500 text-xs mt-2 p-4 montserrat"
+                    className="text-center text-gray-500 text-xs mt-2 p-4 "
                 />
             </div>
 

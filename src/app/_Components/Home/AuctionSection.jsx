@@ -45,9 +45,9 @@ export default function AuctionSection() {
             
             {/* Details */}
             <div className="flex flex-col justify-between">
-              <h3 className="text-lg font-bold montserrat">{item.title}</h3>
-              <p className="text-gray-600 text-sm montserrat">{item.status}</p>
-              {item.price && <p className="text-red-600 font-semibold montserrat">{item.price}</p>}
+              <h3 className="text-lg font-bold">{item.title}</h3>
+              <p className="text-gray-600 text-sm">{item.status}</p>
+              {item.price && <p className="text-red-600 font-semibold">{item.price}</p>}
               <div className="flex items-center space-x-2 mt-2">
               <button className="bg-[#F33E0A] p-2 rounded-full text-white"><FaGavel /></button>
               <button className="bg-gray-200 p-2 rounded-full"><CiSearch /></button>
@@ -80,9 +80,9 @@ export default function AuctionSection() {
             
             {/* Details */}
             <div className="flex flex-col justify-between">
-              <h3 className="text-lg font-bold montserrat">{item.title}</h3>
-              <p className="text-gray-600 text-sm montserrat">{item.status}</p>
-              {item.price && <p className="text-red-600 font-semibold montserrat">{item.price}</p>}
+              <h3 className="text-lg font-bold">{item.title}</h3>
+              <p className="text-gray-600 text-sm">{item.status}</p>
+              {item.price && <p className="text-red-600 font-semibold">{item.price}</p>}
               <div className="flex items-center space-x-2 mt-2">
               <button className="bg-[#F33E0A] p-2 rounded-full text-white"><FaGavel /></button>
               <button className="bg-gray-200 p-2 rounded-full"><CiSearch /></button>

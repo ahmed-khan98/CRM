@@ -120,17 +120,17 @@ const SortDropdowns = () => {
   };
 
   return (
-    <div className="md:mt-[54px] mt-[30px] w-full bg-white">
-      <div className="flex gap-3 flex-wrap justify-center pl-20 my-3 container mx-auto fixed z-50 bg-white py-2 shadow-lg">
+    <div className="md:mt-[54px] mt-[50px] w-full bg-white">
+      <div className="flex gap-3 flex-wrap justify-center my-2 container fixed z-20 bg-white py-2 shadow-lg">
         <SortMenu
-          width={170}
+          width={220}
           title="Sort By"
           options={sortOptions}
           onSelect={(value) => dispatch(sortProducts(value))}
         />
 
         <SortMenu
-          width={140}
+          width={220}
           title="Category"
           options={categoryOptions}
           onSelect={handleCategoryChange}
@@ -138,7 +138,7 @@ const SortDropdowns = () => {
 
         {selectedCategoryId && subcategoryOptions.length > 0 && (
           <SortMenu
-            width={140}
+            width={220}
             title="Subcategory"
             options={subcategoryOptions}
             onSelect={handleSubcategoryChange}

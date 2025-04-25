@@ -8,7 +8,7 @@
 //     <footer className="w-full bg-white ">
 //       {/* Top Bar */}
 //       <div className="flex justify-between items-center flex-wrap py-3 px-16   bg-[#F33E0A] md:m-0 m-auto mx-auto">
-//         <div className=" text-white md:m-0 m-auto text-center py-3 font-medium montserrat ">
+//         <div className=" text-white md:m-0 m-auto text-center py-3 font-medium  ">
 //           Browse through our products library!
 //         </div>
 
@@ -34,15 +34,15 @@
 //             <a href="#" className="text-red-500 block mt-2">
 //               [support@example.com]
 //             </a>
-//             <p className="text-gray-500 mt-1 montserrat">0-000-000-000</p>
+//             <p className="text-gray-500 mt-1 ">0-000-000-000</p>
 //           </div>
 
 //           {/* Footer Links */}
 //           <div>
-//             <h3 className="font-bold text-lg text-gray-700 montserrat">About Us</h3>
+//             <h3 className="font-bold text-lg text-gray-700 ">About Us</h3>
 //             <ul className="mt-2 text-gray-500">
 //               <li>
-//                 <a href="#" className="hover:text-gray-700 montserrat">
+//                 <a href="#" className="hover:text-gray-700 ">
 //                   How To's
 //                 </a>
 //               </li>
@@ -50,10 +50,10 @@
 //           </div>
 
 //           <div>
-//             <h3 className="font-bold text-lg text-gray-700 montserrat">How To's</h3>
+//             <h3 className="font-bold text-lg text-gray-700 ">How To's</h3>
 //             <ul className="mt-2 text-gray-500">
 //               <li>
-//                 <a href="#" className="hover:text-gray-700 montserrat">
+//                 <a href="#" className="hover:text-gray-700 ">
 //                   Terms
 //                 </a>
 //               </li>
@@ -73,7 +73,7 @@
 
 //           {/* Social Links */}
 //           <div>
-//             <h3 className="font-bold text-lg text-gray-700 montserrat">Follow Us</h3>
+//             <h3 className="font-bold text-lg text-gray-700 ">Follow Us</h3>
 //             <div className="flex justify-center md:justify-start gap-3 mt-2">
 //               <a href="#" className="text-[#F33E0A] ">
 //                 <FaFacebookF />
@@ -99,8 +99,8 @@
 
 //       {/* Bottom Copyright */}
 //       <div className="bg-gray-100 text-gray-600 text-center text-sm py-7 flex justify-center flex-wrap  gap-[50%]">
-//         <p className="montserrat">Copyright by <Link href="https://hnhsofttechsolutions.com/">HNH Soft Tech Solutions</Link> . All Rights Reserved.</p>
-//         {/* <p className="montserrat">HNH Soft Tech Solutions</p> */}
+//         <p className="">Copyright by <Link href="https://hnhsofttechsolutions.com/">HNH Soft Tech Solutions</Link> . All Rights Reserved.</p>
+//         {/* <p className="">HNH Soft Tech Solutions</p> */}
 //       </div>
 //     </footer>
 //   );
@@ -129,11 +129,11 @@ return (
       <footer className="container mx-auto w-full mt-4 py-4 border-t border-gray-300">
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
           <div className="space-x-2">
-            <Link href="/about" className="hover:underline montserrat">About</Link> |
-            <Link href="/faq" className="hover:underline montserrat"> FAQ’s</Link> |
-            <Link href="/contact" className="hover:underline montserrat"> Contact Us</Link> |
-            <Link href="/resource" className="text-red-600 font-bold hover:underline montserrat"> Resources</Link> |
-            <Link href="/sell" className="text-green-600 font-bold hover:underline montserrat"> SELL YOUR STUFF</Link>
+            <Link href="/about" className="hover:underline ">About</Link> |
+            <Link href="/faq" className="hover:underline "> FAQ’s</Link> |
+            <Link href="/contact" className="hover:underline "> Contact Us</Link> |
+            <Link href="/resource" className="text-red-600 font-bold hover:underline "> Resources</Link> |
+            <Link href="/sell" className="text-green-600 font-bold hover:underline "> SELL YOUR STUFF</Link>
           </div>
 
           {/* Social Icons */}
@@ -171,12 +171,12 @@ return (
 
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
           <div className="space-x-2">
-            <Link href="/term" className="hover:underline montserrat">Terms & Conditions</Link> |
-            <Link href="/privacy" className="hover:underline montserrat"> Privacy Policy</Link> |
-            <Link href="/affiliate" className="hover:underline montserrat"> Affiliate Policy</Link>
+            <Link href="/term" className="hover:underline ">Terms & Conditions</Link> |
+            <Link href="/privacy" className="hover:underline "> Privacy Policy</Link> |
+            <Link href="/affiliate" className="hover:underline "> Affiliate Policy</Link>
           </div>
 
-          <p className="montserrat text-sm">
+          <p className=" text-sm">
             © Copyright 2025 <a href="#" className="text-blue-600 hover:underline">ArthurNicolas.com</a>
           </p>
         </div>

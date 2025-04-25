@@ -33,7 +33,7 @@ const filterSlice = createSlice({
         },
         filterBySearch: (state, action) => {
             const searchQuery = action.payload.toLowerCase();
-            if (searchQuery?.length > 2) {
+            if (searchQuery?.length >= 2) {
 
                 state.filteredProducts = state.allProducts.filter((product) =>
                     product.name.toLowerCase().includes(searchQuery)

@@ -98,7 +98,7 @@ export default function LoginForm() {
             }
           </div>
 
-          <button className="w-full cursor-pointer bg-[#F33E0A] text-white font-semibold py-2 rounded-full">
+          <button className="w-full cursor-pointer orange-bg text-white font-semibold py-2 rounded-full">
             {isSubmitting ? "Loading...." : "LOG IN"}
           </button>
         </form>

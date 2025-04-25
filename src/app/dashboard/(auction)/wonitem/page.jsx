@@ -5,7 +5,7 @@ const page = () => {
  
 
   return (
-<WonItems/>
+<WonItems text='You are not won any active auctions'/>
   );
 };
 

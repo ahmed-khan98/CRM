@@ -7,9 +7,6 @@ const page = () => {
   return (
   <>
         <SortMenu/>
-        {/* <div className=' md:pt-14'>
-        <SubHeading heading={"Latest Auctions"} />
-        </div> */}
       <AuctionCard />
   
   </>

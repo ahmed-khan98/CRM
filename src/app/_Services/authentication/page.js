@@ -52,7 +52,21 @@ const authenticationsApi = createApiAuction.injectEndpoints({
         body: formData,
       }),
     }),
+    updateProfile: builder.mutation({
+      query: (formData) => ({
+        url: '/update-profile',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
+    changePassword: builder.mutation({
+      query: (formData) => ({
+        url: '/change-password',
+        method: 'POST',
+        body: formData,
+      }),
+    }),
   }),
 })
 
-export const { useRegisterMutation,useEmailVerificationCodeMutation,useLoginMutation,useVerifyMutation,useResendMutation,useForgetMutation,useResetMutation } = authenticationsApi
+export const { useRegisterMutation,useEmailVerificationCodeMutation,useLoginMutation,useVerifyMutation,useResendMutation,useForgetMutation,useResetMutation ,useUpdateProfileMutation,useChangePasswordMutation} = authenticationsApi

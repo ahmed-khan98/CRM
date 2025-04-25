@@ -5,7 +5,14 @@ const productApi = createApiAuction.injectEndpoints({
     getTodayyAuctionsProduct: builder.query({
       query: () => 'user/product',
       providesTags: ['auction'],
-      
+      keepUnusedDataFor: 1800, 
+      refetchOnMountOrArgChange: false,
+    }),
+    getMissedProduct: builder.query({
+      query: () => 'user/product/missedProducts',
+      providesTags: ['auction'],
+      keepUnusedDataFor: 1800, 
+      refetchOnMountOrArgChange: false,
     }),
     productDetail: builder.query({
       query: (id) => `user/product/${id}`,
@@ -30,4 +37,4 @@ const productApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const { useGetTodayyAuctionsProductQuery,useAddWatchQuery, useProductDetailQuery,useAddBidMutation } = productApi
+export const { useGetTodayyAuctionsProductQuery,useAddWatchQuery, useProductDetailQuery,useAddBidMutation ,useGetMissedProductQuery} = productApi

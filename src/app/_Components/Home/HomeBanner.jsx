@@ -1,10 +1,22 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useGetBannerQuery } from "@/app/_Services/banner/page";
+import { useGetTodayyAuctionsProductQuery } from "@/app/_Services/products/page";
+import { useDispatch } from "react-redux";
+import { setAllProducts } from "@/redux/filterSlice";
 
 const HomeBanner = () => {
+  const dispatch = useDispatch();
   const { data, isLoading, error } = useGetBannerQuery();
   const banner = data?.data?.[0];
+
+  const { data:product} = useGetTodayyAuctionsProductQuery();
+
+  useEffect(() => {
+    if (product?.data) {
+      dispatch(setAllProducts(product.data));
+    }
+  }, [product, dispatch]);
 
   return (
     <div className="container mx-auto pt-[50px] md:my-12 my-5 px-4 md:px-6">

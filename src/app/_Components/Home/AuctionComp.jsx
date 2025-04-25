@@ -88,30 +88,30 @@ const AuctionComp = ({ item }) => {
     };
 
     return (
-        <div className="relative  shadow-lg bg-white  border-[3px] border-gray-300 rounded-3xl my-3">
-            <p className="text-[#242424] pl-2 text-[16px] font-semibold py-2 mt-2 roboto line-clamp-2">
-                {item?.name.length > 50 ? `${item.name.slice(0, 50)}...` : item.name}
+        <div className="relative  shadow-lg bg-white  border-[1px] border-gray-300 rounded-2xl my-3">
+            <p className="text-[#242424] text-[16px] font-semibold py-2 px-3 h-11">
+                {item?.name.length > 70 ? `${item.name.slice(0, 70)}...` : item.name}
             </p>
-            <div className="relative h-[300px]">
+            <div className="relative h-[250px]">
                 <img
                     onClick={() => router.push(`/detailproduct/${item._id}`)}
                     src={item?.images?.[0]}
                     alt="Product"
-                    className="w-full h-full object-cover cursor-pointer"
+                    className="w-full h-[250px] object-contain cursor-pointer"
                 />
                 {
                     item?.watchers?.length === 0 ? "" :
-                        <div className="absolute text-white p-2 top-2 md:left-[70%] left-[65%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
+                        <div className="absolute text-white p-2 top-4 md:left-[70%] left-[65%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
                             Watcher <span className="ml-1">{item?.watchers?.length}</span>
                         </div>
                 }
                 {/* Icons */}
-                <div className="absolute top-2 left-3 h-[30px] w-[30px] bg-[#F33E0A] shadow-2xl rounded-full flex items-center justify-center">
+                <div className="absolute top-4 left-3 h-[30px] w-[30px] bg-[#F33E0A] shadow-2xl rounded-full flex items-center justify-center">
                     <CiShare2 className="text-white text-lg" />
                 </div>
                 <div
                     onClick={() => toggleWishlist(item._id, item?.isWishlisted)}
-                    className="absolute cursor-pointer top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center"
+                    className="absolute cursor-pointer top-14 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center"
                 >
                     {loading ? (
                         <Loader />
@@ -121,59 +121,57 @@ const AuctionComp = ({ item }) => {
                         <CiHeart className="text-black text-lg" />
                     )}
                 </div>
-                <div className="absolute top-22 left-3 h-[30px] w-[30px] bg-white shadow-2xl rounded-full flex items-center justify-center">
+                <div className="absolute top-24 left-3 h-[30px] w-[30px] bg-white shadow-2xl rounded-full flex items-center justify-center">
                     <CiSearch className="text-black text-lg" />
                 </div>
             </div>
 
             {/* Countdown Timer */}
-            <div className="bg-white shadow-xl w-[90%] mx-auto text-center py-2 rounded -mt-[60px] relative z-1">
-                <div className="flex justify-center space-x-2 text-lg font-bold py-3">
-                    <p className="font-semibold roboto">Time left:</p>
+            {/* -mt-[60px] relative z-1" */}
+            <div className="bg-gray-200 mx-auto text-center py-3 flex justify-center"
+            >
+                <div className="mx-2 w-[42%] bg-white rounded-xl py-1">
+                    <p className=" text-sm">Time left</p>
                     {["hours"].map((unit) => (
-                        <div key={unit} className="flex">
-                            <span >{timeLeft[unit] ?? 0}</span>{' '}
-                            <span >{unit}</span>
-                        </div>
+                        <p className="font-semibold  text-lg">{timeLeft[unit] ?? 0} {unit}</p>
                     ))}
+                </div>
+                <div className="mx-2 w-[42%] bg-white rounded-xl py-1">
+                    <p className="text-sm">Current Price</p>
+                    <p className="font-semibold text-lg">{item?.price}</p>
                 </div>
             </div>
 
-            {/* Auction Details */}
-            <div className="mt-3 text-sm px-6">
-                <div className="flex justify-between roboto">
+            <div className="my-2 text-sm px-6">
+                <div className="flex justify-between ">
                     <p><strong>Qty:</strong></p>
                     <p>{item?.quantity}</p>
                 </div>
-                <div className="flex justify-between roboto">
+                <div className="flex justify-between ">
                     <p><strong>Est Retail:</strong></p>
                     <p className="text-gray-600">${item?.price}</p>
                 </div>
-                <div className="flex justify-between roboto">
+                <div className="flex justify-between ">
                     <p><strong>#Bids:</strong></p>
                     <p>{item?.highestBid}</p>
                 </div>
             </div>
-            {/* <p
-                dangerouslySetInnerHTML={{ __html: item?.description }}
-                className="text-center text-gray-800 text-xs mt-2 roboto"
-            /> */}
 
-            <div className="bg-gray-200 text-center text-sm py-2 mt-2 roboto">
+            <div className="text-center text-sm py-2 border-t-2 border-gray-300">
                 Current Bid: <strong> $ {item?.highestBid}</strong>
             </div>
 
-            {/* Bidding Input and Button */}
+
             <div className="mt-3 flex">
                 {item?.isSold ? (
-                    <button className="w-full cursor-pointer roboto text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 hover:from-green-700 hover:to-emerald-500  py-3 flex items-center justify-center rounded-b-3xl">
+                    <button className="w-full cursor-pointer  text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 hover:from-green-700 hover:to-emerald-500  py-3 flex items-center justify-center rounded-b-2xl">
                         <span>Sold</span>
                     </button>
                 ) : token ? (
                     <>
                         <input
                             type="text"
-                            className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center roboto outline-none rounded-bl-3xl
+                            className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center  outline-none rounded-bl-2xl
         appearance-none [&::-webkit-outer-spin-button]:appearance-none 
         [&::-webkit-inner-spin-button]:appearance-none"
                             onChange={(e) => handleBidChange(item._id, e.target.value)}
@@ -182,9 +180,9 @@ const AuctionComp = ({ item }) => {
                         <button
                             disabled={bidValue <= item?.highestBid || isSubmitting}
                             onClick={() => submitBid(item._id)}
-                            className={`w-1/2 cursor-pointer roboto text-white py-3 flex items-center justify-center space-x-2
-    ${Number(bidValue) > Number(item?.highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}
-    rounded-br-3xl
+                            className={`w-1/2 cursor-pointer  text-white py-3 flex items-center justify-center space-x-2
+    ${Number(bidValue) > Number(item?.highestBid) ? 'orange-bg hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}
+    rounded-br-2xl
   `}
                         >
                             {/* <ImHammer2 className="transform rotate-80" /> */}
@@ -193,10 +191,8 @@ const AuctionComp = ({ item }) => {
 
                     </>
                 ) : (
-
-
                     <button
-                        className="w-full cursor-pointer roboto text-white bg-[#F33E0A] hover:bg-[#d63006] py-3 flex items-center justify-center rounded-b-3xl"
+                        className="w-full cursor-pointer  text-white orange-bg hover:bg-[#d63006] py-3 flex items-center justify-center rounded-b-2xl"
                     >
                         <Link href="/login">
                             Login to Bid

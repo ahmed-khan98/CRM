@@ -14,17 +14,7 @@ import { useAddPaymentMutation } from '@/app/_Services/payment/page';
 const MyWonProduct = ({ item }) => {
 
     const router = useRouter();
-    const [addWishlist] = useAddWishlistMutation();
-    const [deleteWishlist] = useDeleteWishlistMutation();
-    const [loading, setLoading] = useState(false);
-    const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
-    const [bidValue, setBidValue] = useState(item.product?.highestBid + 1);
-    const [timeLeft, setTimeLeft] = useState({});
     const [loadingStates, setLoadingStates] = useState({});
-    const timerRef = useRef(null);
-    const token = Cookies.get("token");
-
-
 
     function formatDate(dateString) {
         return new Date(dateString).toLocaleString('en-US', {
@@ -33,48 +23,6 @@ const MyWonProduct = ({ item }) => {
         });
     }
 
-    // Function to calculate time left
-    const calculateTimeLeft = useCallback(() => {
-        const now = Date.now();
-        const endTime = new Date(item?.product?.biddingEndTime).getTime();
-        const diff = endTime - now;
-
-        if (diff > 0) {
-            setTimeLeft({
-                // days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-                hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-                seconds: Math.floor((diff % (1000 * 60)) / 1000),
-            });
-        } else {
-            clearInterval(timerRef.current);
-            setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
-        }
-    }, [item?.product?.biddingEndTime]);
-
-    // Set interval for countdown
-    useEffect(() => {
-        calculateTimeLeft();
-        timerRef.current = setInterval(calculateTimeLeft, 1000);
-        return () => clearInterval(timerRef.current);
-    }, [calculateTimeLeft]);
-
-
-    const toggleWishlist = async (id, isWishlisted) => {
-        setLoading(true);
-        try {
-            if (isWishlisted) {
-                const response = await deleteWishlist(id).unwrap();
-                toast.success(response.message);
-            } else {
-                const response = await addWishlist(id).unwrap();
-                toast.success(response.message);
-            }
-        } catch (error) {
-            toast.error(error?.data?.message || "Something went wrong");
-        }
-        setLoading(false);
-    };
 
     const [addPayment] = useAddPaymentMutation();
 
@@ -96,16 +44,21 @@ const MyWonProduct = ({ item }) => {
     };
 
     return (
-        <div className="relative  shadow-lg bg-white  border-[3px] border-gray-300 rounded-3xl my-3">
-            <p className="text-[#242424] pl-2 text-[16px] font-semibold py-2 mt-2 roboto line-clamp-2">
+        <div className="relative  shadow-lg bg-white  border-[1px] rounded-3xl  border-gray-300 my-3">
+            <Link
+      href={`/detailproduct/${item?.product?._id}`}
+      className="text-[#242424] text-[16px] font-semibold py-1 px-2 h-14 bg-white rounded-t-3xl  cursor-pointer block"
+    >
+            <p className="text-[#242424] pl-2 text-[16px] font-semibold py-1 mt-2  line-clamp-2 underline">
                 {item?.product?.name.length > 50 ? `${item.product?.name.slice(0, 50)}...` : item.product?.name}
             </p>
-            <div className="relative h-[300px]">
+            </Link>
+            <div className="relative h-[290px]">
                 <img
                     onClick={() => router.push(`/detailproduct/${item.product?._id}`)}
                     src={item?.product?.images?.[0]}
                     alt="Product"
-                    className="w-full h-full object-cover cursor-pointer"
+        className="w-full h-[290px] object-contain cursor-pointer"
                 />
                 {
                     item?.product?.watchers?.length === 0 ? "" :
@@ -121,9 +74,7 @@ const MyWonProduct = ({ item }) => {
                     onClick={() => toggleWishlist(item.product?._id, item?.product?.isWishlisted)}
                     className="absolute cursor-pointer top-12 left-3 h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center"
                 >
-                    {loading ? (
-                        <Loader />
-                    ) : item?.product?.isWishlisted ? (
+                    {item?.product?.isWishlisted ? (
                         <FaHeart className="text-red-500 text-lg" />
                     ) : (
                         <CiHeart className="text-black text-lg" />
@@ -134,60 +85,70 @@ const MyWonProduct = ({ item }) => {
                 </div>
             </div>
 
-            {/* Countdown Timer */}
-            <div className="bg-white shadow-xl w-[90%] mx-auto text-center py-2 rounded -mt-[60px] relative z-1">
-                <p className="text-sm font-semibold roboto">End Date:</p>
-                <div className="flex justify-center space-x-4 text-lg font-bold">
+            <div className="bg-white shadow-xl w-[80%] mx-auto text-center py-2 px-2 rounded -mt-[60px] relative z-1">
+                <div className='flex justify-between py-1'>
+                <p className="text-sm ">Start Date:</p>
+                <div className="flex justify-center space-x-4 font-semibold">
                     {formatDate(item?.product?.biddingStartTime)}
+                </div>
+                    </div>
+                <div className='flex justify-between py-1'>
+                <p className="text-sm ">End Date:</p>
+                <div className="flex justify-center space-x-4 font-semibold">
+                    {formatDate(item?.product?.biddingEndTime)}
+                </div>
+                    </div>
+            </div>
                     {/* {["hours", "minutes", "seconds"].map((unit) => (
                         <div key={unit} className="flex flex-col items-center">
                             <span>{timeLeft[unit] ?? 0}</span>
-                            <span className="text-xs font-normal roboto">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
+                            <span className="text-xs font-normal ">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
                         </div>
                     ))} */}
-                </div>
-            </div>
 
             {/* Auction Details */}
-            <div className="mt-3 text-sm px-6">
-                <div className="flex justify-between roboto">
+            <div className="py-4 text-sm px-6 ">
+                <div className="flex justify-between ">
                     <p><strong>Qty:</strong></p>
                     <p>{item?.product?.quantity}</p>
                 </div>
-                <div className="flex justify-between roboto">
+                <div className="flex justify-between ">
                     <p><strong>Est Retail:</strong></p>
-                    <p className="text-gray-600">${item?.product?.price}</p>
+                    <p className="text-gray-600">${item?.product?.retail}</p>
                 </div>
-                <div className="flex justify-between roboto">
+                <div className="flex justify-between ">
                     <p><strong>#Bids:</strong></p>
-                    <p>{item?.product?.highestBid}</p>
+                    <p>{item?.product?.biddingCount}</p>
+                </div>
+                <div className="flex justify-between ">
+                    <p><strong>Current Price:</strong></p>
+                    <p>{item?.product?.price}</p>
                 </div>
             </div>
-            {/* <p
-                dangerouslySetInnerHTML={{ __html: item?.product?.description }}
-                className="text-center text-gray-800 text-xs mt-2 roboto"
-            /> */}
+        
 
-            <div className="bg-gray-200 text-center text-sm py-2 mt-2 roboto">
+            <div className="bg-gray-200 text-center text-sm py-2 ">
                 Winning Bid: <strong> $ {item?.product?.highestBid}</strong>
             </div>
 
-            {/* Bidding Input and Button */}
-            <div className="mt-3 flex flex-row">
+            <div className="flex flex-row">
 
-                <button className=" rounded-bl-3xl w-full cursor-pointer roboto text-white bg-gradient-to-r from-emerald-500 to-green-700 hover:from-green-700 hover:to-emerald-500 py-3 flex items-center justify-center ">
-                    <span>Won</span>
+                <button className=" rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-emerald-400 to-green-300 hover:from-green-030 hover:to-emerald-400 py-3 flex items-center justify-center ">
+                    <span>WON</span>
                 </button>
-
-                <button onClick={() => addPayments(item?.product?._id)}
-                    disabled={loadingStates[item?.product?._id]}
-                    className="rounded-br-3xl w-full cursor-pointer roboto text-white bg-blue-500 hover:bg-blue-600 py-3 flex items-center justify-center ">
-                    {loadingStates[item?.product?._id] ? (
-                        "Loading..."
-                    ) : (
-                        "Pay Now"
-                    )}                </button>
-
+                {
+                    item?.paymentStatus === 'Completed' ?
+                        <button
+                            className="rounded-br-3xl w-full font-bold  text-white bg-gradient-to-r from-blue-300 to-blue-400 py-3 flex items-center justify-center ">
+                            Paid
+                        </button> : <button onClick={() => addPayments(item?.product?._id)}
+                            disabled={loadingStates[item?.product?._id]}
+                            className="rounded-br-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-blue-500 to-blue-400  hover:from-blue-400 hover:to-blue-500 py-3 flex items-center justify-center ">
+                            {loadingStates[item?.product?._id] ? (
+                                "Loading..."
+                            ) : (
+                                "Pay Now"
+                            )}                </button> }
             </div>
 
         </div>

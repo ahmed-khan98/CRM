@@ -95,7 +95,7 @@ const AddProduct = () => {
                         <div className="col-span-2 space-y-4">
 
 
-                            <label className="font-bold text-[#242424] montserrat " >Product Name</label>
+                            <label className="font-bold text-[#242424]  " >Product Name</label>
                             <div>
                                 {
                                     formik.errors.name && formik.touched.name ?
@@ -108,7 +108,7 @@ const AddProduct = () => {
                                 value={formik.values.name}
                                 type="text" name="name" className="w-full  p-2 border border-[#DDDDDD] rounded-full" placeholder="Product Name" />
 
-                            <label className="font-bold text-[#242424] montserrat " >Product type</label>
+                            <label className="font-bold text-[#242424]  " >Product type</label>
                             <input type="text" name="producttype" className="w-full  p-2 border border-[#DDDDDD] rounded-full" placeholder="Product type" />
 
                             <div className="flex flex-col space-y-3">
@@ -169,7 +169,7 @@ const AddProduct = () => {
 
                             {/* Category */}
                             <div className="flex flex-col space-y-2">
-                                <label className="font-bold text-[#242424] montserrat">Category</label>
+                                <label className="font-bold text-[#242424] ">Category</label>
                                 <div>
                                     {
                                         formik.errors.categoryId && formik.touched.categoryId ?
@@ -193,7 +193,7 @@ const AddProduct = () => {
                             </div>
 
                             <div className="flex flex-col space-y-2 mt-4">
-                                <label className="font-bold text-[#242424] montserrat">Sub-Category</label>
+                                <label className="font-bold text-[#242424] ">Sub-Category</label>
                                 <div>
                                     {
                                         formik.errors.subcategoryId && formik.touched.subcategoryId ?
@@ -216,7 +216,7 @@ const AddProduct = () => {
                             </div>
 
 
-                            <label className="font-bold text-[#242424] montserrat " >Tags</label>
+                            <label className="font-bold text-[#242424]  " >Tags</label>
                             <input
                                 type="text" name="tags" className="w-full  p-2 border border-[#DDDDDD] rounded-full" placeholder="Select product tags" />
                         </div>
@@ -254,7 +254,7 @@ const AddProduct = () => {
 
                     {/* Jodit */}
                     <div className=" w-full  mt-3">
-                        <label className="font-bold text-[#242424] montserrat" >Short Description</label>
+                        <label className="font-bold text-[#242424] " >Short Description</label>
                         {
                             formik.errors.shortDescription && formik.touched.shortDescription ?
                                 <span className="text-red-500 text-sm pl-4">{formik.errors.shortDescription}</span>
@@ -270,7 +270,7 @@ const AddProduct = () => {
                     </div>
 
                     <div className=" w-full  mt-3">
-                        <label className="font-bold text-[#242424] montserrat" >Description</label>
+                        <label className="font-bold text-[#242424] " >Description</label>
                         {
                             formik.errors.description && formik.touched.description ?
                                 <span className="text-red-500 text-sm pl-4">{formik.errors.description}</span>
@@ -288,7 +288,7 @@ const AddProduct = () => {
                     {/* Inventory Section */}
                     <div className="border border-[#EBEBEB] rounded-lg p-4 mt-3">
                         {/* Header */}
-                        <div className="flex items-center gap-2 border-b-2 border-[#EBEBEB] pb-2 montserrat">
+                        <div className="flex items-center gap-2 border-b-2 border-[#EBEBEB] pb-2 ">
                             <span className="text-lg font-bold text-[#242424]"> Inventory</span>
                             <span className="text-[#888888] text-sm italic">Manage inventory for this product.</span>
                         </div>
@@ -297,7 +297,7 @@ const AddProduct = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             {/* SKU Input */}
                             <div>
-                                <label className="block text-sm font-semibold text-[#242424] montserrat">SKU (Stock Keeping Unit)</label>
+                                <label className="block text-sm font-semibold text-[#242424] ">SKU (Stock Keeping Unit)</label>
                                 <input
                                     type="text"
                                     name="sku"
@@ -307,7 +307,7 @@ const AddProduct = () => {
 
                             {/* Stock Status Input */}
                             <div>
-                                <label className="block text-sm font-semibold text-[#242424] montserrat">Stock Status</label>
+                                <label className="block text-sm font-semibold text-[#242424] ">Stock Status</label>
                                 <input
                                     type="text"
                                     name="stockstatus"
@@ -319,7 +319,7 @@ const AddProduct = () => {
 
                         {/* Checkboxes */}
                         <div className="mt-4 space-y-2">
-                            <label className="flex items-center gap-2 text-sm text-[#242424] montserrat">
+                            <label className="flex items-center gap-2 text-sm text-[#242424] ">
                                 <input
                                     type="checkbox"
                                     name="enalbleproduct"
@@ -328,7 +328,7 @@ const AddProduct = () => {
                                 Enable product stock management
                             </label>
 
-                            {/* <label className="flex items-center gap-2 text-sm mt-4 text-[#242424] montserrat">
+                            {/* <label className="flex items-center gap-2 text-sm mt-4 text-[#242424] ">
                                 <input
                                     type="checkbox"
                                     onChange={ formik.values.}
@@ -342,16 +342,16 @@ const AddProduct = () => {
                     {/* Other Options */}
                     <div className="border border-[#EBEBEB] rounded-lg p-4 mt-3">
                         {/* Header */}
-                        <div className="flex items-center gap-2 border-b-2 border-[#EBEBEB] pb-2 montserrat">
-                            <span className="text-lg font-extrabold text-[#242424] montserrat">  Other Options</span>
-                            <span className="text-[#888888] text-sm montserrat italic">Set your extra product options</span>
+                        <div className="flex items-center gap-2 border-b-2 border-[#EBEBEB] pb-2 ">
+                            <span className="text-lg font-extrabold text-[#242424] ">  Other Options</span>
+                            <span className="text-[#888888] text-sm  italic">Set your extra product options</span>
                         </div>
 
                         {/* Form Fields */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             {/* SKU Input */}
                             <div>
-                                <label className="block text-sm font-semibold text-[#242424] montserrat">Product status</label>
+                                <label className="block text-sm font-semibold text-[#242424] ">Product status</label>
                                 <input
                                     placeholder="pending review"
                                     type="text"
@@ -362,7 +362,7 @@ const AddProduct = () => {
 
                             {/* Stock Status Input */}
                             <div>
-                                <label className="block text-sm font-semibold montserrat text-[#242424]">Visibility</label>
+                                <label className="block text-sm font-semibold  text-[#242424]">Visibility</label>
                                 <input
                                     type="text"
                                     name="visibility"
@@ -373,7 +373,7 @@ const AddProduct = () => {
                         </div>
 
                         <div className="mt-4">
-                            <label className="block text-sm font-semibold text-[#242424] montserrat">Purchase Note</label>
+                            <label className="block text-sm font-semibold text-[#242424] ">Purchase Note</label>
                             <textarea
                                 type="text"
                                 name="purchasenote"
@@ -384,7 +384,7 @@ const AddProduct = () => {
 
                         {/* Checkboxes */}
                         <div className="mt-4 space-y-2">
-                            <label className="flex items-center gap-2 text-sm montserrat">
+                            <label className="flex items-center gap-2 text-sm ">
                                 <input
                                     type="checkbox"
                                     name="enableproductrevies"

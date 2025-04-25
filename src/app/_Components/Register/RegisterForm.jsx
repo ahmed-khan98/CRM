@@ -415,7 +415,7 @@ export default function RegisterForm() {
           </div>
 
           <button
-            className="w-full cursor-pointer bg-[#F33E0A] text-white font-semibold py-2 rounded-full"
+            className="w-full cursor-pointer orange-bg text-white font-semibold py-2 rounded-full"
           >
             {isSubmitting ? "Loading...." : "REGISTER"}
           </button>
