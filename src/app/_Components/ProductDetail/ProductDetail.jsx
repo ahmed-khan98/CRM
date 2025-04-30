@@ -361,7 +361,9 @@ const ProductDetail = (id) => {
                       <p className="uppercase font-semibold roboto text-sm">Buyers Premium</p>
                     </div>
                     <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between">
-                      <p className="font-semibold ">{data?.data?.buyerPremium.includes('%') ? data?.data?.buyerPremium : `${data?.data?.buyerPremium}%`   } </p>
+                    <p className="font-semibold ">
+  {`${data?.data?.buyerPremium}${data?.data?.buyerPremium?.includes('%') ? '' : '%'}`}
+</p>
                     </div>
                   </div>
                 </div>
