@@ -140,8 +140,8 @@ export default function Home() {
             product.append(`shipping[1][value]`, values?.['handling fee']);
             product.append(`shipping[2][name]`, 'LOCATION');
             product.append(`shipping[2][value]`, values?.location);
-            product.append(`shipping[2][name]`, 'DIMENSION');
-            product.append(`shipping[2][value]`, values?.dimension);
+            product.append(`shipping[3][name]`, 'DIMENSION');
+            product.append(`shipping[3][value]`, values?.dimension);
 
             values?.tags.forEach((t, index) => {
                 product.append(`tag[${index}]`, t);
