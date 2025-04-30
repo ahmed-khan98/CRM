@@ -63,7 +63,7 @@ const PaidUnPaidCard = ({ item, status }) => {
             />
             <div className="flex flex-row">
                 {
-                    status === 'paid' ?
+                    status === 'Completed' ?
                         <button
                             className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-gradient-to-r from-blue-300 to-blue-400 py-3 flex items-center justify-center ">
                             Paid

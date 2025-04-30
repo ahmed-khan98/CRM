@@ -19,6 +19,17 @@ const productApi = createApiAuction.injectEndpoints({
       providesTags:['detailproduct'],
       invalidatesTags: ['watch'],
     }),
+    addListing: builder.mutation({
+      query: (formData) => {
+        return {
+          url: 'user/product/add/user',
+          method: 'POST',
+          body: formData ,
+        }
+      },
+      invalidatesTags: ['auction','detailproduct']
+    }
+    ),
     addBid: builder.mutation({
       query: (formData) => {
         return {
@@ -37,4 +48,4 @@ const productApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const { useGetTodayyAuctionsProductQuery,useAddWatchQuery, useProductDetailQuery,useAddBidMutation ,useGetMissedProductQuery} = productApi
+export const { useAddListingMutation,useGetTodayyAuctionsProductQuery,useAddWatchQuery, useProductDetailQuery,useAddBidMutation ,useGetMissedProductQuery} = productApi

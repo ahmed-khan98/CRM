@@ -42,7 +42,7 @@ const ProductBidding = ({ id,isSold, highestBid }) => {
   if (!token) {
     return (
       <Link href="/login" className="w-full">
-        <button className="w-full text-white orange-bg hover:bg-[#d63006] py-3 flex items-center justify-center rounded-b-23l cursor-pointer">
+        <button className="w-full rounded-br-3xl rounded-bl-3xl text-white orange-bg hover:bg-[#d63006] py-3 flex items-center justify-center rounded-b-23l cursor-pointer">
           Login to Bid
         </button>
       </Link>

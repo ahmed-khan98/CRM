@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import MyAccountTab from "@/app/_Components/Tab/MyAccountTab";
 
 const page = () => {
-
   
   useEffect(() => {
     const data=Cookies.get("currentuser")
@@ -21,7 +20,7 @@ const page = () => {
       });
     }
   }, []);
-  
+
 
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const [isEditable, setIsEditable] = useState(false);
