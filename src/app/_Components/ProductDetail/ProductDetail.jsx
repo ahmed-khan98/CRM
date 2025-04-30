@@ -17,6 +17,7 @@ import { useAddWishlistMutation, useDeleteWishlistMutation } from '@/app/_Servic
 import { CiHeart } from 'react-icons/ci';
 import Loader from '../Loader';
 import { Check, Copy } from 'lucide-react'; // Optional: if you use icons
+import { Rating } from 'react-simple-star-rating';
 
 
 function formatDate(dateString) {
@@ -284,10 +285,13 @@ const ProductDetail = (id) => {
                     </p>
                   </div>
                   <div className="flex items-center justify-center gap-2 my-3">
-                    <div className="flex gap-1 text-[#7ed957]">
-                      {[...Array(5)].map((_, index) => (
-                        <FaStar key={index} size={24} />
-                      ))}
+                    <div className="flex justify-center items-center">
+                      
+                      <Rating
+                        size='25'
+                        SVGstyle={{ display: 'inline-block' }}
+                        initialValue={data?.data?.rating ?? 0}
+                      />
                     </div>
                   </div>
                   {data?.data?.tag?.length > 0 && (
@@ -357,7 +361,7 @@ const ProductDetail = (id) => {
                       <p className="uppercase font-semibold roboto text-sm">Buyers Premium</p>
                     </div>
                     <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between">
-                      <p className="font-semibold ">{data?.data?.buyerPremium} %</p>
+                      <p className="font-semibold ">{data?.data?.buyerPremium.includes('%') ? data?.data?.buyerPremium : `${data?.data?.buyerPremium}%`   } </p>
                     </div>
                   </div>
                 </div>
@@ -399,7 +403,7 @@ const ProductDetail = (id) => {
                     </p>
                   </div>
                   <div>
-                  
+
                     {visibleBidsHistory?.map((e, i) => (
                       <div
                         key={e._id}
@@ -422,20 +426,20 @@ const ProductDetail = (id) => {
                     ))}
                   </div>
                   {data?.data?.biddingHistory?.length > 4 &&
-                  <button onClick={toggleBidHistory} className="w-full cursor-pointer flex justify-between py-2 px-4 md:px-0">
-                    <p className="uppercase text-burgundy-900 font-semibold">
-                      {showAll ? "View Less" : `View ${data?.data?.biddingHistory?.length - 4} more bids`}
-                    </p>
-                    {showAll ? (
-                      <svg width="24" height="24" className="fill-burgundy-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path d="M246.6 105.4c6.2-6.2 16.4-6.2 22.6 0l192 192c6.2 6.2 6.2 16.4 0 22.6s-16.4 6.2-22.6 0L256 139.3 73.4 320c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l192-192z" />
-                      </svg>
-                    ) : (
-                      <svg width="24" height="24" className="fill-burgundy-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path d="M267.3 395.3c-6.2 6.2-16.4 6.2-22.6 0l-192-192c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L256 361.4 436.7 180.7c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6l-192 192z" />
-                      </svg>
-                    )}
-                  </button>}
+                    <button onClick={toggleBidHistory} className="w-full cursor-pointer flex justify-between py-2 px-4 md:px-0">
+                      <p className="uppercase text-burgundy-900 font-semibold">
+                        {showAll ? "View Less" : `View ${data?.data?.biddingHistory?.length - 4} more bids`}
+                      </p>
+                      {showAll ? (
+                        <svg width="24" height="24" className="fill-burgundy-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                          <path d="M246.6 105.4c6.2-6.2 16.4-6.2 22.6 0l192 192c6.2 6.2 6.2 16.4 0 22.6s-16.4 6.2-22.6 0L256 139.3 73.4 320c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l192-192z" />
+                        </svg>
+                      ) : (
+                        <svg width="24" height="24" className="fill-burgundy-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                          <path d="M267.3 395.3c-6.2 6.2-16.4 6.2-22.6 0l-192-192c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L256 361.4 436.7 180.7c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6l-192 192z" />
+                        </svg>
+                      )}
+                    </button>}
                 </div>}
             </div>
           </div>
