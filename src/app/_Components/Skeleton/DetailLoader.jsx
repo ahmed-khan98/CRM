@@ -2,7 +2,7 @@ import React from 'react'
 
 const DetailLoader = () => {
   return (
-    <div className='container mx-auto p-4 animate-pulse pt-[80px]'>
+    <div className='container mx-auto p-4 animate-pulse pt-[90px]'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto'>
         {/* Image Gallery Placeholder */}
         <div className='space-y-4'>

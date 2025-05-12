@@ -120,8 +120,8 @@ const SortDropdowns = () => {
   };
 
   return (
-    <div className="md:mt-[54px] mt-[50px] w-full bg-white">
-      <div className="flex gap-3 flex-wrap justify-center my-2 container fixed z-20 bg-white py-2 shadow-lg">
+    <div className="md:mt-[58px] mt-[50px] bg-white w-full">
+      <div className="flex gap-3 flex-wrap justify-center my-2 fixed z-20 bg-white py-2 shadow-lg w-full">
         <SortMenu
           width={220}
           title="Sort By"

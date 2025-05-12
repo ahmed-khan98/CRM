@@ -3,7 +3,7 @@ import { createApiAuction } from "@/redux/createApi"
 const productApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({
     getTodayyAuctionsProduct: builder.query({
-      query: () => 'user/product',
+      query: () => 'user/product/allProducts',
       providesTags: ['auction'],
       keepUnusedDataFor: 1800, 
       refetchOnMountOrArgChange: false,
@@ -18,6 +18,9 @@ const productApi = createApiAuction.injectEndpoints({
       query: (id) => `user/product/${id}`,
       providesTags:['detailproduct'],
       invalidatesTags: ['watch'],
+    }),
+    relatedProducts: builder.query({
+      query: (id) => `user/product/${id}/relatedProducts`,
     }),
     addListing: builder.mutation({
       query: (formData) => {
@@ -48,4 +51,4 @@ const productApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const { useAddListingMutation,useGetTodayyAuctionsProductQuery,useAddWatchQuery, useProductDetailQuery,useAddBidMutation ,useGetMissedProductQuery} = productApi
+export const { useAddListingMutation,useGetTodayyAuctionsProductQuery,useAddWatchQuery, useProductDetailQuery,useAddBidMutation ,useGetMissedProductQuery,useRelatedProductsQuery} = productApi

@@ -1,17 +1,45 @@
-import React from "react";
+import React from "react"
+import { Package, DollarSign, BarChart2 } from "lucide-react"
 
-const ProductInfo = ({ quantity, retail, highestBid,biddingCount,title }) => (
-    <>
-      <div className="text-sm px-6 py-3 bg-white rounded-tl-2xl rounded-tr-2xl shadow-xl">
-        <div className="flex justify-between"><p><strong>Qty:</strong></p><p>{quantity}</p></div>
-        <div className="flex justify-between"><p><strong>Est Retail:</strong></p><p className="text-gray-600">${retail}</p></div>
-        <div className="flex justify-between"><p><strong>#Bids:</strong></p><p>{biddingCount}</p></div>
+const ProductInfo = ({ quantity, retail, highestBid, biddingCount, title }) => {
+  return (
+    <div className="bg-white px-4 py-3 rounded-t-2xl shadow-sm border-b border-gray-100">
+
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Package size={16} className="text-[#F33E0A]" />
+            <span className="text-sm text-gray-700">Quantity</span>
+          </div>
+          <span className="text-sm font-medium">{quantity}</span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <DollarSign size={16} className="text-[#F33E0A]" />
+            <span className="text-sm text-gray-700">Retail</span>
+          </div>
+          <span className="text-sm font-medium">${retail || 0}</span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <BarChart2 size={16} className="text-[#F33E0A]" />
+            <span className="text-sm text-gray-700">Bids</span>
+          </div>
+          <span className="text-sm font-medium">{biddingCount || 0}</span>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <DollarSign size={16} className="text-[#F33E0A]" />
+            <span className="text-sm text-gray-700">Highest</span>
+          </div>
+          <span className="text-sm font-medium">${highestBid || 0}</span>
+        </div>
       </div>
-      <div className="text-center text-sm py-3 border-t-2 border-gray-200 bg-white">
-        {title ? title: 'Current Bid:'}  <strong>${highestBid}</strong>
-      </div>
-    </>
-  );
-  
-  export default React.memo(ProductInfo);
-  
+    </div>
+  )
+}
+
+export default React.memo(ProductInfo)

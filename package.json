@@ -11,7 +11,9 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.0",
     "axios": "^1.9.0",
+    "canvas-confetti": "^1.9.3",
     "formik": "^2.4.6",
+    "framer-motion": "^12.10.5",
     "jodit-react": "^5.2.15",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.479.0",

@@ -1,23 +1,86 @@
-import React from 'react'
-import LeftNav from '../_Components/Dashboard/LeftNav'
-import HeadingDashboard from '../_Components/Dashboard/HeadingDashboard'
-import OfferBar from '../_Components/Dashboard/OfferBar'
+"use client"
 
- const layout = ({children}) => {
+import { useState, useEffect } from "react"
+import LeftNav from "../_Components/Dashboard/LeftNav"
+import HeadingDashboard from "../_Components/Dashboard/HeadingDashboard"
+import OfferBar from "../_Components/Dashboard/OfferBar"
+import { Menu, X } from "lucide-react"
+import { usePathname } from "next/navigation"
+
+const DashboardLayout = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
+  const pathname = usePathname()
+
+  // Handle responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setIsSidebarOpen(false)
+        setIsMobile(true)
+      } else {
+        setIsSidebarOpen(true)
+        setIsMobile(false)
+      }
+    }
+
+    // Initial check
+    handleResize()
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  // Close sidebar on mobile when route changes
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false)
+    }
+  }, [pathname, isMobile])
+
   return (
-      <>
-      <OfferBar/>
-      {/* <OfferBar/> */}
-          <HeadingDashboard/>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <OfferBar />
+      <HeadingDashboard />
 
-        <div className="flex">
-      <LeftNav /> 
-        {children}
+      <div className="flex flex-1 relative">
+        {/* Sidebar Toggle Button for Mobile */}
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="lg:hidden fixed bottom-6 right-6 z-50 bg-[#F33E0A] text-white p-3 rounded-full shadow-lg hover:bg-[#E03500] transition-all duration-300"
+          aria-label={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
+        >
+          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Overlay for mobile when sidebar is open */}
+        {isMobile && isSidebarOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-20" onClick={() => setIsSidebarOpen(false)}></div>
+        )}
+
+        {/* Sidebar */}
+        <div
+          className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} ${
+            isMobile ? "fixed top-0 left-0 h-full z-30 w-64 shadow-xl" : "lg:relative lg:w-64 xl:w-72"
+          } transition-transform duration-300 ease-in-out`}
+        >
+          <LeftNav />
+        </div>
+
+        {/* Main Content */}
+        <main
+          className={`flex-1 transition-all duration-300 ease-in-out
+            ${isMobile ? "w-full" : ""}`}
+            >
+          <div className="p-4 md:p-0 max-w-7xl mx-auto w-full">{children}</div>
+        </main>
+      </div>
     </div>
-      </>
   )
 }
 
+export default DashboardLayout
 
-export default layout
-
+//    ${
+//   isSidebarOpen && !isMobile ? "lg:ml-64 xl:ml-72" : ""
+// } 

@@ -65,5 +65,7 @@ body{
 ol, ul, menu {
   list-style: disc;
 }
-
+a{
+  color:#0578ff !important
+}
 

@@ -23,10 +23,10 @@ const menuItems = [
 const HeadingDashboard = () => {
   const pathname = usePathname(); 
   const matchedItem = menuItems.find((item) => item.path === pathname);
-  const heading = matchedItem ? matchedItem.name : "HOME / DASHBOARD";
+  const heading = matchedItem ? matchedItem.name : "USER / DASHBOARD";
 
   return (
-    <div className="container px-10 border-b border-[#DDDDDD] mx-auto mt-10 pb-5">
+    <div className="container px-10 border-b border-[#DDDDDD] mx-auto mt-2 pb-5">
       <h1 className="text-[#999999] text-sm">{heading}</h1>
       <h3 className="text-[#242424] text-[20px] font-extrabold">{heading}</h3>
     </div>

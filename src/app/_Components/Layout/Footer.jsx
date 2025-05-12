@@ -132,17 +132,17 @@ return (
             <Link href="/about" className="hover:underline ">About</Link> |
             <Link href="/faq" className="hover:underline "> FAQ’s</Link> |
             <Link href="/contact" className="hover:underline "> Contact Us</Link> |
-            <Link href="/resource" className="text-red-600 font-bold hover:underline "> Resources</Link> |
-            <Link href="/sell" className="text-green-600 font-bold hover:underline "> SELL YOUR STUFF</Link>
+            <Link href="/resource" className="text-red-600 hover:underline "> Resources</Link> |
+            <Link href="/sell" className="text-green-600 hover:underline "> SELL YOUR STUFF</Link>
           </div>
 
           {/* Social Icons */}
           <div className="flex space-x-3 text-xl">
-            <a href="#" className="text-pink-500 hover:text-pink-600"><FaInstagram /></a>
-            <a href="#" className="text-blue-600 hover:text-blue-700"><FaFacebook /></a>
-            <a href="#" className="text-gray-500 hover:text-gray-600"><FaXTwitter /></a>
-            <a href="#" className="text-red-600 hover:text-red-700"><FaYoutube /></a>
-            <a href="#" className="text-blue-500 hover:text-blue-600"><FaLinkedin /></a>
+            <div className="text-pink-500 hover:text-pink-600"><FaInstagram /></div>
+            <div className="text-blue-600 hover:text-blue-700"><FaFacebook /></div>
+            <div className="text-gray-500 hover:text-gray-600"><FaXTwitter /></div>
+            <div className="text-red-600 hover:text-red-700"><FaYoutube /></div>
+            <div className="text-blue-500 hover:text-blue-600"><FaLinkedin /></div>
           </div>
         </div>
 

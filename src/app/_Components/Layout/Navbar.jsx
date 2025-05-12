@@ -77,31 +77,37 @@ const handleSearchChange = (e) => {
   const renderAuthButtons = () => (
     <>
       {!token && (
-        <Link href="/register" className="py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap">
-          Register
-        </Link>
-      )}
-      <Link
-        href={token ? "#" : "/login"}
-        onClick={token ? handleLogout : undefined}
-        className={`py-2.5 px-3 rounded-lg text-white text-sm font-medium whitespace-nowrap ${token ? "orange-bg" : "bg-[#2F318B]"}`}
+        <button
+        onClick={() => router.push('/register')}
+        className="py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
       >
-        {token ? "Logout" : "Log In"}
-      </Link>
+        Register
+      </button>
+      )}
+  <button
+        onClick={() => (token ? handleLogout() : router.push('/login'))}
+        className={`py-2.5 px-3 rounded-lg text-white text-sm font-medium whitespace-nowrap shadow ${
+          token ? 'orange-bg' : 'bg-[#2F318B]'
+        }`}
+      >
+        {token ? 'Logout' : 'Log In'}
+      </button>
+
       {token && (
-        <Link
-          href="/dashboard/wishlist"
-          className="py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap"
+        <button
+          onClick={() => router.push('/dashboard/wishlist')}
+          className="py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
         >
           Dashboard
-        </Link>
+        </button>
       )}
-      <Link
-        href="/sell"
-        className="py-2.5 px-3 bg-[#007E38] text-white rounded-lg text-sm font-medium whitespace-nowrap"
+
+      <button
+        onClick={() => router.push('/sell')}
+        className="py-2.5 px-3 bg-[#007E38] text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
       >
         Sell Your Stuff
-      </Link>
+      </button>
     </>
   );
 

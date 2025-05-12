@@ -11,9 +11,9 @@ const WonItems = ({text}) => {
     const skeletonRows = wonItems.length || 8;
 
     return (
-        <div className="flex justify-start gap-4 mt-4 flex-wrap w-full">
+        <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]">
         <AuctionTab/>
-                 <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 container mx-auto p-6">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 container mx-auto p-6">
                  {isLoading ? (
                                 [...Array(skeletonRows)].map((_, index) => (
                                     <AuctionCardSkeleton key={index} />

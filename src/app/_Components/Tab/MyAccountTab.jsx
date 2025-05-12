@@ -1,33 +1,50 @@
-'use client'
-import React from 'react'
-import { usePathname, useRouter } from "next/navigation";
+"use client"
 
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { motion } from "framer-motion"
+import { User, Lock } from "lucide-react"
 
 const MyAccountTab = () => {
+  const pathname = usePathname()
 
-      const pathname = usePathname();
-        const router = useRouter(); 
+  const tabs = [
+    { name: "Profile", path: "/dashboard/profile", icon: <User className="h-4 w-4" /> },
+    { name: "Change Password", path: "/dashboard/changepassword", icon: <Lock className="h-4 w-4" /> },
+  ]
 
-    const tabs = [
-        { path: "/dashboard/profile", label: "Profile ", color: "bg-blue-500" },
-        { path: "/dashboard/changepassword", label: "Change Password", color: "bg-green-400" },
-    ];
+  return (
+    <div className="relative flex justify-Start ">
+      <div className="inline-flex bg-white rounded-full p-1.5 shadow-sm border border-gray-100">
+        {tabs.map((tab) => {
+          const isActive = pathname === tab.path
 
-    return (
-        <div className="flex gap-1 my-2 w-full mx-6">
-            {tabs.map((tab) => (
-                <button
-                    key={tab.path}
-                    onClick={() =>router.push(tab.path)}
-                    className={`w-[18%] px-4 py-2 font-semibold flex items-center justify-center rounded-tl-lg rounded-tr-lg shadow-lg text-white cursor-pointer ${pathname === tab.path
-                        ? `border-1 border-black ${tab.color}`
-                        : `${tab.color}`
-                        }`}
-                >
-                    {tab.label}
-                </button>
-            ))}
-        </div>)
+          return (
+            <Link href={tab.path} key={tab.path} passHref>
+              <div
+                className={`relative rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
+                  isActive ? "text-white" : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTabBackground"
+                    className="absolute inset-0 bg-[#F33E0A] rounded-full"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+                <span className="relative flex items-center gap-1.5">
+                  {tab.icon}
+                  {tab.name}
+                </span>
+              </div>
+            </Link>
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 
 export default MyAccountTab

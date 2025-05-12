@@ -8,14 +8,18 @@ import toast from 'react-hot-toast';
 import { useGetCategoriesQuery, useGetSubCategoriesQuery } from '../_Services/categories/page';
 import { useAddListingMutation } from '../_Services/products/page';
 import { Rating } from 'react-simple-star-rating'
+import Link from 'next/link';
+import Main from "../../app/Assets/Main.png";
+import Image from 'next/image';
+
 
 
 export default function Home() {
 
     const [addListing, { isLoading }] = useAddListingMutation()
-    console.log(isLoading, 'isLoading')
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(11);
     console.log(step, 'step')
+
     const goNext = () => {
         if (step === 'PREVIEW LISTING') {
             setStep(15)
@@ -34,23 +38,23 @@ export default function Home() {
     };
 
     const validationSchemas = {
-        step5: Yup.object({
-            categoryId: Yup.string().required('Category is required'),
-            subCategoryId: Yup.string().required('Subcategory is required'),
-        }),
+        // step5: Yup.object({
+        //     categoryId: Yup.string().required('Category is required'),
+        //     subCategoryId: Yup.string().required('Subcategory is required'),
+        // }),
         step6: Yup.object({
             images: Yup.array()
                 .min(1, 'Please upload at least 1 image of the product')
                 .required('Product image is required'),
         }),
-        step7: Yup.object({
-            brand: Yup.string().required('brand is required'),
-            model: Yup.string().required('model is required'),
-        }),
-        step8: Yup.object({
-            ASIN: Yup.string().required('ASIN is required'),
-            'EAN/UPC': Yup.string().required('EAN/UPC is required'),
-        }),
+        // step7: Yup.object({
+        //     brand: Yup.string().required('brand is required'),
+        //     model: Yup.string().required('model is required'),
+        // }),
+        // step8: Yup.object({
+        //     ASIN: Yup.string().required('ASIN is required'),
+        //     'EAN/UPC': Yup.string().required('EAN/UPC is required'),
+        // }),
         step9: Yup.object({
             name: Yup.string()
                 .required('Product Title is required')
@@ -72,8 +76,8 @@ export default function Home() {
                 .typeError('Retail price must be a number')
                 .required('Product retail is required')
                 .moreThan(0, 'Retail price must be greater than 0'),
-            buyerPremium: Yup.string()
-                .required('Product buyerPremium is required'),
+            // buyerPremium: Yup.string()
+            //     .required('Product buyerPremium is required'),
             price: Yup.number()
                 .typeError('Price must be a number')
                 .required('Product price is required')
@@ -86,8 +90,6 @@ export default function Home() {
                 .required('Product dimension is required'),
             location: Yup.string()
                 .required('Product location is required'),
-            'handling fee': Yup.string()
-                .required('Product handling fee is required'),
         }),
 
     };
@@ -106,12 +108,12 @@ export default function Home() {
         tags: [],
         retail: '',
         price: '',
-        buyerPremium: '',
+        buyerPremium: '15%',
         location: '',
         rating: 0,
         dimension: '',
         'item weight': '',
-        'handling fee': ''
+        'handling fee': '5%'
     };
 
     const handleSubmit = async (values) => {
@@ -123,6 +125,7 @@ export default function Home() {
             product.append('subcategoryId', values?.subCategoryId);
             product.append('price', values?.price);
             product.append('retail', values?.retail);
+            product.append('condition', values?.condition);
             product.append('buyerPremium', values?.buyerPremium);
             product.append('rating', values?.rating);
 
@@ -153,7 +156,7 @@ export default function Home() {
 
 
             const response = await addListing(product).unwrap();
-          
+
             console.log(response, 'response')
             if (response?.success) {
                 toast.success(response.message);
@@ -168,9 +171,9 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-screen bg-sky-100 flex items-center justify-center px-4">
+        <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center px-4">
             <div className="w-full max-w-xl text-center">
-                <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">{step === 15 ? 'LAST STEP' : `STEP ${step}`}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">{step === 'PREVIEW LISTING' ? 'PREVIEW LISTING' : step === 16 ? 'LAST STEP' : `STEP ${step}`}</h1>
                 {
                     step === 2 ? <Login onNext={goNext} onBack={goBack} />
                         :
@@ -179,7 +182,7 @@ export default function Home() {
                             validationSchema={validationSchemas[`step${step}`]}
                             onSubmit={(values) => {
                                 console.log(values, 'values');
-                                if (step < 15 || step === 'PREVIEW LISTING') {
+                                if (step < 16 || step === 'PREVIEW LISTING') {
                                     goNext();
                                 } else {
                                     handleSubmit(values);
@@ -202,15 +205,15 @@ export default function Home() {
                                     {step === 12 && <Step12 onNext={goNext} onBack={goBack} />}
                                     {step === 13 && <Step13 onNext={goNext} onBack={goBack} />}
                                     {step === 14 && <Step14 onNext={goNext} onBack={goBack} setStep={setStep} />}
-                                    {step === 15 && <LastStep onNext={goNext} onBack={goBack} isLoading={isLoading} />}
+                                    {step === 15 && <Step15 />}
+                                    {step === 16 && <LastStep onNext={goNext} onBack={goBack} isLoading={isLoading} />}
                                     {step === 'PREVIEW LISTING' && <ListingPreview onNext={goNext} onBack={goBack} />}
 
-                                    {step !== 1 && step !== 2 && step !== 3 && step !== 4 && step !== 15 && (
+                                    {step !== 1 && step !== 2 && step !== 3 && step !== 4 && step !== 16 && (
                                         <div className="space-y-4 pt-4">
                                             <button
                                                 type="submit"
-                                                className="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold text-lg md:text-2xl py-3 md:py-5 rounded-lg transition-colors"
-                                            >
+                                                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                                                 CONTINUE
                                             </button>
                                         </div>
@@ -235,14 +238,11 @@ export default function Home() {
 // STEP 1
 function Step1({ onNext }) {
     return (
-        <>
-            <button
-                onClick={onNext}
-                className="bg-red-600 text-white text-2xl font-bold py-5 w-full rounded hover:bg-red-700"
-            >
-                Login
-            </button>
-        </>
+        <button
+            onClick={onNext}
+            className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"                    >
+            Login
+        </button>
     );
 }
 
@@ -267,6 +267,9 @@ function Login({ onNext }) {
             try {
                 const response = await loginForm(values).unwrap();
                 if (response.statusCode === 200) {
+                    if (response?.data?.user?.role === 'USER') {
+                        return toast.error('You dont have a permission to access listing');
+                    }
                     const { accessToken } = response?.data;
                     const user = response?.data?.user;
                     Cookies.set("token", accessToken, { expires: 7, secure: true });
@@ -283,43 +286,57 @@ function Login({ onNext }) {
 
 
     return (
-        <>
-            <h1 className="text-3xl font-bold mb-5">Login</h1>
-            <form onSubmit={formik.handleSubmit} className="space-y-4">
-                <input
-                    type="email"
-                    placeholder="Email"
-                    className="w-full p-2 md:p-4 border-2 border-gray-300 rounded-md min-h-[50px] text-sm md:text-base"
-                    name="email"
-                    onChange={formik.handleChange}
-                    value={formik.values.email}
-                />
-                {
-                    formik.errors.email && formik.touched.email ?
-                        <span className="text-red-500 text-sm">{formik.errors.email}</span>
-                        : null
-                }
-                <input
-                    type="password"
-                    placeholder="Password"
-                    className="w-full p-2 md:p-4 border-2 border-gray-300 rounded-md min-h-[50px] text-sm md:text-base"
-                    name="password"
-                    onChange={formik.handleChange}
-                    value={formik.values.password}
-                />
-                {
-                    formik.errors.password && formik.touched.password ?
-                        <span className="text-red-500 text-sm pb-4">{formik.errors.password}</span>
-                        : null
-                }
-                <button
-                    type="submit"
-                    className="w-full bg-red-600 text-white text-xl font-bold py-4 rounded hover:bg-red-700"
-                >
-                    {isSubmitting ? "Loading...." : "LOG IN"}
-                </button>
-            </form>
-        </>
+        <div className="flex min-h-full flex-col justify-center px-2 py-4 lg:px-8">
+            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                <Link href="/" className="mx-auto">
+                    <Image className="mx-auto h-10 w-auto" src={Main} alt="Logo" height={50} />
+                </Link>
+                <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+            </div>
+            <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
+
+                <form onSubmit={formik.handleSubmit} className="space-y-6">
+                    <div>
+                        <label for="email" className="text-left block text-sm/6 font-medium text-gray-900">Email address</label>
+                        <div classMName="mt-2">
+                            <input type="email" name="email" id="email" autocomplete="email"
+                                onChange={formik.handleChange}
+                                value={formik.values.email} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6" />
+                        </div>
+
+                        {
+                            formik.errors.email && formik.touched.email ?
+                                <span className="text-red-500 text-sm">{formik.errors.email}</span>
+                                : null
+                        }
+                    </div>
+
+                    <div>
+                        <div className="flex items-center justify-between">
+                            <label for="password" className="block text-sm/6 font-medium text-gray-900">Password</label>
+                            <div className="text-sm">
+                                <Link href="/forget" className="font-semibold text-red-500 hover:text-red-600">Forgot password?</Link>
+                            </div>
+                        </div>
+                        <div className="mt-2">
+                            <input type="password" name="password" id="password" autocomplete="current-password" onChange={formik.handleChange}
+                                value={formik.values.password} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6" />
+                        </div>
+
+                        {
+                            formik.errors.password && formik.touched.password ?
+                                <span className="text-red-500 text-sm pb-4">{formik.errors.password}</span>
+                                : null
+                        }
+                    </div>
+                    <button
+                        type="submit"
+                        className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"                    >
+                        {isSubmitting ? "Loading...." : "LOG IN"}
+                    </button>
+                </form>
+            </div>
+        </div>
     );
 }
 
@@ -327,15 +344,15 @@ function Step3({ onNext }) {
     return (
 
         <div className="space-y-4">
-            <button className="bg-blue-600 text-white font-bold text-lg py-5 w-full rounded">
+            <button onClick={onNext} className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                 CREATE LISTING FOR VENDOR
             </button>
             <button
                 onClick={onNext}
-                className="bg-red-600 text-white font-bold text-lg py-5 w-full rounded"
-            >
+                className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
                 CREATE A LISTING FOR OUR SITE
             </button>
+
         </div>
 
 
@@ -347,12 +364,13 @@ function Step4({ onNext }) {
 
 
         <div className="space-y-4">
-            <button className="bg-blue-600 text-white font-bold text-xl py-5 w-full rounded">
+            <button className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
                 SCAN UPC
             </button>
-            <button onClick={onNext} className="bg-red-600 text-white font-bold text-xl py-5 w-full rounded">
+            <button onClick={onNext} className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                 CREATE MANUALLY
             </button>
+
         </div>
 
     );
@@ -489,7 +507,7 @@ function Step6() {
             <button
                 type="button"
                 onClick={() => fileInputRef.current.click()}
-                className="bg-blue-600 text-white font-bold text-xl py-5 w-full rounded"
+                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
                 UPLOAD IMAGES
             </button>
@@ -506,10 +524,10 @@ function Step6() {
             <button
                 type="button"
                 onClick={handleTakePhoto}
-                className="bg-red-600 text-white font-bold text-xl py-5 w-full rounded"
-            >
+                className="flex w-full justify-center rounded-md bg-red-600 px-3 py-2.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
                 TAKE A PHOTO
             </button>
+
 
             {values.images?.length > 0 && (
                 <div className="space-y-4">
@@ -520,7 +538,7 @@ function Step6() {
                                 <img
                                     src={typeof image === 'string' ? image : URL.createObjectURL(image)}
                                     alt={`uploaded-${index}`}
-                                    className="w-20 h-20 object-cover border-1 rounded-md"
+                                    className="w-20 h-20 object-cover border-1 border-gray-300 rounded-md"
                                 />
                                 <button
                                     type="button"
@@ -549,25 +567,25 @@ function Step7() {
         <div className="space-y-4">
             <p className="font-semibold text-lg mx-4 md:mx-12 p-2 text-center">PLEASE ENTER ITEM BRAND & MODEL</p>
             <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                <p className="bg-gray-300 p-3 font-medium w-full md:w-1/3 text-center md:text-left">Brand</p>
+                <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/3 text-center md:text-left">Brand</p>
                 <input
                     type='text'
                     name="brand"
                     value={values.brand}
                     onChange={handleChange}
-                    className="w-full md:flex-1 p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                    className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                 />
             </div>
             <ErrorMessage name="brand" component="div" className="text-red-500 text-sm" />
             <div className="flex flex-col md:flex-row mt-5 items-start md:items-center gap-2">
-                <p className="bg-gray-300 p-3 font-medium w-full md:w-1/3 text-center md:text-left">Model
+                <p className="bg-gray-300 px-3 py-2.5 rounded-md  font-medium w-full md:w-1/3 text-center md:text-left">Model
                 </p>
                 <input
                     type='text'
                     name="model"
                     value={values.model}
                     onChange={handleChange}
-                    className="w-full md:flex-1 p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                    className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                 />
             </div>
             <ErrorMessage name="model" component="div" className="text-red-500 text-sm" />
@@ -576,6 +594,7 @@ function Step7() {
 
     );
 }
+
 function Step8() {
     const { values, handleChange } = useFormikContext();
 
@@ -586,26 +605,26 @@ function Step8() {
             </p>
 
             <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                <p className="bg-gray-300 p-3 font-medium w-full md:w-1/3 text-center md:text-left">ASIN</p>
+                <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/3 text-center md:text-left">ASIN</p>
                 <input
                     type='text'
                     name="ASIN"
                     value={values.ASIN}
                     onChange={handleChange}
-                    className="w-full md:flex-1 p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                    className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                 />
             </div>
             <ErrorMessage name="ASIN" component="div" className="text-red-500 text-sm" />
 
             <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                <p className="bg-gray-300 p-3 font-medium w-full md:w-1/3 text-center md:text-left">EAN/UPC
+                <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/3 text-center md:text-left">EAN/UPC
                 </p>
                 <input
                     type='text'
                     name="EAN/UPC"
                     value={values?.['EAN/UPC']}
                     onChange={handleChange}
-                    className="w-full md:flex-1 p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                    className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                 />
             </div>
             <ErrorMessage name="EAN/UPC" component="div" className="text-red-500 text-sm" />
@@ -613,6 +632,7 @@ function Step8() {
 
     );
 }
+
 function Step9() {
     const { values, handleChange } = useFormikContext();
     return (
@@ -640,6 +660,7 @@ function Step9() {
 
     );
 }
+
 function Step10() {
 
     const { values, handleChange } = useFormikContext();
@@ -669,9 +690,11 @@ function Step10() {
 
     );
 }
-function Step11() {
 
+function Step11() {
     const { values, errors, touched, setFieldValue, handleChange } = useFormikContext();
+    const [newTag, setNewTag] = useState('');
+
     const handleTagChange = (tag) => {
         const tagValue = tag.toLowerCase().replace(/ /g, '');
         const isSelected = values.tags.includes(tagValue);
@@ -683,27 +706,34 @@ function Step11() {
         }
     };
 
+    const handleAddTag = (e) => {
+        if (e.key === 'Enter' && newTag.trim()) {
+            const tagValue = newTag.toLowerCase().replace(/ /g, '');
+            if (!values.tags.includes(tagValue)) {
+                setFieldValue('tags', [...values.tags, tagValue]);
+            }
+            setNewTag('');
+        }
+    };
+
+    const handleRemoveTag = (tag) => {
+        setFieldValue('tags', values.tags.filter(t => t !== tag));
+    };
+
     const tagGroups = [
         ['Not Funtional', 'Tested', 'Works Great', 'Missing Parts'],
         ['X-Small', 'Small', 'Large', 'Extra Large'],
         ['Boys', 'Girls', 'Men', 'Women']
     ];
 
-
-    // Catch Rating value
-    const handleRating = (rate) => {
-        setFieldValue('rating', rate)
-    }
-
     return (
         <div className="space-y-6 max-w-4xl mx-auto py-5">
-
             <div className="bg-white p-3 md:p-6 rounded-lg shadow-md space-y-6">
                 <div className="space-y-4">
                     <h2 className="text-3xl md:text-[38px] font-bold text-center">QUALITY</h2>
                     <div className="flex justify-center items-center py-6">
                         <Rating
-                            onClick={handleRating}
+                            onClick={(rate) => setFieldValue('rating', rate)}
                             initialValue={values?.rating}
                             SVGstyle={{ display: 'inline-block' }}
                             allowFraction
@@ -712,21 +742,18 @@ function Step11() {
                     {touched.rating && errors.rating && (
                         <div className="text-red-500 text-sm">{errors.rating}</div>
                     )}
-
                 </div>
 
                 <hr className="border-t-2 border-gray-200" />
 
                 <div className="space-y-4">
-
                     <span className="font-medium bg-gray-300 p-2 block w-full md:w-auto text-center">ITEM CONDITION</span>
 
                     <div className="flex flex-col md:flex-row gap-4 justify-center text-center">
                         {['New', 'Open Box', 'Used', 'For Parts'].map((cond) => (
                             <label
                                 key={cond}
-                                className={`flex items-center gap-2  p-3 rounded-md bg-gray-200 cursor-pointer ${values?.condition === cond ? 'ring-2 ring-blue-400' : ''
-                                    }`}
+                                className={`flex items-center gap-2 p-3 rounded-md bg-gray-200 cursor-pointer ${values?.condition === cond ? 'ring-2 ring-blue-400' : ''}`}
                             >
                                 <input
                                     type="radio"
@@ -743,12 +770,23 @@ function Step11() {
                         ))}
                     </div>
                     <ErrorMessage name="condition" component="div" className="text-red-500 text-sm" />
-
                 </div>
+
                 <span className="font-medium bg-gray-300 p-2 block w-full md:w-auto text-center">Add More Tag</span>
 
+                <div className="flex items-center gap-2">
+                    <input
+                        type="text"
+                        placeholder="Type and press Enter to add tag"
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                        onKeyDown={handleAddTag}
+                        className="border rounded-md p-2 w-full"
+                    />
+                </div>
+
                 {tagGroups?.map((group, index) => (
-                    <div key={index} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div key={index} className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
                         {group?.map(tag => {
                             const tagValue = tag.toLowerCase().replace(/ /g, '');
                             const isChecked = values.tags.includes(tagValue);
@@ -770,11 +808,25 @@ function Step11() {
                     </div>
                 ))}
 
+                <div className="flex flex-wrap gap-2 mt-4">
+                    {values.tags.map((tag) => (
+                        <div key={tag} className="inline-flex items-center bg-green-700 text-gray-700 px-3 py-1 rounded-full">
+                            <span>{tag}</span>
+                            <button
+                                type="button"
+                                onClick={() => handleRemoveTag(tag)}
+                                className="ml-2 text-red-500 hover:text-red-700"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
-
     );
 }
+
 function Step12() {
 
     const { values, handleChange } = useFormikContext();
@@ -788,39 +840,38 @@ function Step12() {
 
             <div className="space-y-6 p-1 ">
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <p className="bg-gray-300 p-3 font-medium w-full md:w-1/2 text-center md:text-left">Estimated Retail Price</p>
+                    <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/2 text-center md:text-left">Estimated Retail Price</p>
                     <input
                         type="number"
                         name='retail'
                         value={values?.retail}
                         onChange={handleChange}
-                        className="w-full p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                     />
                 </div>
                 <ErrorMessage name="retail" component="div" className="text-red-500 text-sm" />
 
 
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <p className="bg-gray-300 p-3 font-medium w-full md:w-1/2 text-center md:text-left">Start Price</p>
+                    <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/2 text-center md:text-left">Start Price</p>
                     <input
                         type="number"
                         name='price'
                         value={values?.price}
                         onChange={handleChange}
-                        className="w-full p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                     />
                 </div>
                 <ErrorMessage name="price" component="div" className="text-red-500 text-sm" />
 
 
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <p className="bg-gray-300 p-3 font-medium w-full md:w-1/2 text-center md:text-left">Buyers Premium</p>
+                    <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/2 text-center md:text-left">Buyers Premium</p>
                     <input
-                        type="number"
+                        type="text"
                         name='buyerPremium'
                         value={values?.buyerPremium}
-                        onChange={handleChange}
-                        className="w-full p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                     />
                 </div>
                 <ErrorMessage name="buyerPremium" component="div" className="text-red-500 text-sm" />
@@ -829,6 +880,7 @@ function Step12() {
         </div>
     );
 }
+
 function Step13() {
     const { values, handleChange } = useFormikContext();
 
@@ -841,50 +893,49 @@ function Step13() {
 
             <div className="space-y-6 p-1 rounded-lg">
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <p className="bg-gray-300 p-3 font-medium w-full md:w-1/3 text-center md:text-left">ITEM WEIGHT</p>
+                    <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/3 text-center md:text-left">ITEM WEIGHT</p>
                     <input
                         type="text"
                         name='item weight'
                         value={values?.['item weight']}
                         onChange={handleChange}
-                        className="w-full p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                     />
                 </div>
                 <ErrorMessage name="item weight" component="div" className="text-red-500 text-sm" />
 
 
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <p className="bg-gray-300 p-3 font-medium w-full md:w-1/3 text-center md:text-left">DIMENSION</p>
+                    <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/3 text-center md:text-left">DIMENSION</p>
                     <input
                         type="text"
                         name='dimension'
                         value={values?.dimension}
                         onChange={handleChange}
-                        className="w-full p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                     />
                 </div>
                 <ErrorMessage name="dimension" component="div" className="text-red-500 text-sm" />
 
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <p className="bg-gray-300 p-3 font-medium w-full md:w-1/3 text-center md:text-left">HANDLING FEE</p>
+                    <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/3 text-center md:text-left">HANDLING FEE</p>
                     <input
                         type="text"
                         name='handling fee'
                         value={values?.['handling fee']}
-                        onChange={handleChange}
-                        className="w-full p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                     />
                 </div>
                 <ErrorMessage name="handling fee" component="div" className="text-red-500 text-sm" />
 
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <p className="bg-gray-300 p-3 font-medium w-full md:w-1/3 text-center md:text-left">LOCATION</p>
+                    <p className="bg-gray-300 rounded-md px-3 py-2.5 font-medium w-full md:w-1/3 text-center md:text-left">LOCATION</p>
                     <input
                         type="text"
                         name='location'
                         value={values?.location}
                         onChange={handleChange}
-                        className="w-full p-3 border-2 border-gray-300 rounded-md focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                        className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
                     />
                 </div>
                 <ErrorMessage name="location" component="div" className="text-red-500 text-sm" />
@@ -893,13 +944,22 @@ function Step13() {
         </div>
     );
 }
+
 function Step14({ setStep }) {
     return (
         <div className="space-y-4">
-            <button type='button' onClick={() => setStep('PREVIEW LISTING')} className="bg-orange-700 text-white font-bold text-xl py-5 w-full rounded">
+            <button type='button' onClick={() => setStep('PREVIEW LISTING')} className="flex w-full justify-center rounded-md bg-orange-700 px-3 py-3 text-sm/6 font-semibold text-white shadow-xs hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700">
                 PREVIEW LISTING
             </button>
-            <button className="bg-[#b1a646] text-white font-bold text-xl py-5 w-full rounded">
+
+        </div>
+    );
+}
+
+function Step15() {
+    return (
+        <div className="space-y-4">
+            <button className="flex w-full justify-center rounded-md bg-[#b1a646] px-3 py-3 text-sm/6 font-semibold text-white shadow-xs hover:bg-[#b1a011] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b1a646]">
                 PRINT ITEM SKU
                 <p>Using ZEBRA Label Printer</p>
             </button>
@@ -907,13 +967,14 @@ function Step14({ setStep }) {
         </div>
     );
 }
+
 function LastStep({ onBack, isLoading }) {
     const { submitForm } = useFormikContext()
 
     return (
 
         <div className="space-y-4">
-            <button className="bg-orange-700 text-white font-bold text-xl py-5 w-full rounded">
+            <button className="flex w-full justify-center rounded-md bg-orange-700 px-3 py-3 text-sm/6 font-semibold text-white shadow-xs hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700">
                 CREATE ANOTHER
                 LISTING
             </button>

@@ -1,64 +1,131 @@
-'use client'
+"use client"
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import ProductHeader from '../CardChildComponent/ProductHeader';
-import ProductImageSection from '../CardChildComponent/ProductImageSection';
-import TimeCounter from '../CardChildComponent/TimeCounter';
-import ProductInfo from '../CardChildComponent/ProductInfo';
-import ProductBidding from '../CardChildComponent/ProductBidding';
-import ProductButton from '../CardChildComponent/ProductButton';
-
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import ProductHeader from "../CardChildComponent/ProductHeader"
+import ProductImageSection from "../CardChildComponent/ProductImageSection"
+import TimeCounter from "../CardChildComponent/TimeCounter"
+import ProductInfo from "../CardChildComponent/ProductInfo"
+import ProductBidding from "../CardChildComponent/ProductBidding"
 
 const ProductCard = React.memo(({ item }) => {
-    const [timeLeft, setTimeLeft] = useState({});
+  const [timeLeft, setTimeLeft] = useState({})
+  const [auctionStatus, setAuctionStatus] = useState("upcoming") // 'upcoming', 'active', or 'ended'
 
-    const timerRef = useRef(null);
+  const timerRef = useRef(null)
 
-    const calculateTimeLeft = useCallback(() => {
-        const endTime = new Date(item?.biddingEndTime).getTime();
-        const now = Date.now();
-        const diff = endTime - now;
+  const calculateTimeLeft = useCallback(() => {
+    const now = Date.now()
+    const startTime = new Date(item?.biddingStartTime).getTime()
+    const endTime = new Date(item?.biddingEndTime).getTime()
 
-        if (diff > 0) {
-            setTimeLeft({
-                hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-            });
-        } else {
-            clearInterval(timerRef.current);
-            setTimeLeft({ hours: 0 });
-        }
-    }, [item?.biddingEndTime]);
+    // Check if auction is upcoming, active, or ended
+    if (now < startTime) {
+      // Auction hasn't started yet
+      const diff = startTime - now
+      setAuctionStatus("upcoming")
 
-    useEffect(() => {
-        calculateTimeLeft();
-        timerRef.current = setInterval(calculateTimeLeft, 1000);
-        return () => clearInterval(timerRef.current);
-    }, [calculateTimeLeft]);
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000)
 
+        setTimeLeft({
+          days,
+          hours,
+          minutes,
+          seconds,
+          total: diff,
+        })
+      }
+    } else if (now >= startTime && now < endTime) {
+      // Auction is active
+      const diff = endTime - now
+      setAuctionStatus("active")
 
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000)
 
-    console.log('Render Product')
+        setTimeLeft({
+          days,
+          hours,
+          minutes,
+          seconds,
+          total: diff,
+        })
+      }
+    } else {
+      // Auction has ended
+      setAuctionStatus("ended")
+      setTimeLeft({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        total: 0,
+      })
+      clearInterval(timerRef.current)
+    }
+  }, [item?.biddingStartTime, item?.biddingEndTime])
 
-    return (
-        <div className="relative bg-gray-200 border-1 border-gray-300 rounded-3xl my-3 shadow-lg">
-            <ProductHeader name={item.name} id={item._id}/>
-            {/* <ProductButton  item={item}/> */}
-            <ProductImageSection item={item} />
-            <TimeCounter timeLeft={timeLeft?.hours} type='hours' title='Time Left' price={item.price} />
-            <ProductInfo quantity={item.quantity}
-             retail={item?.retail ? item?.retail : 0}
-             highestBid={item.highestBid}
-             biddingCount={item?.biddingCount}
-            />
-            <div className="flex">
-                <ProductBidding
-                    id={item._id}
-                    isSold={item.isSold}
-                    highestBid={item.highestBid}
-                />
-            </div>
-        </div>
-    );
-});
+  useEffect(() => {
+    calculateTimeLeft()
+    timerRef.current = setInterval(calculateTimeLeft, 1000)
+    return () => clearInterval(timerRef.current)
+  }, [calculateTimeLeft])
 
-export default ProductCard;
+  // Format time for display
+  const formatTimeDisplay = () => {
+    if (auctionStatus === "ended") {
+      return "Auction Ended"
+    }
+
+    const { days, hours, minutes, seconds } = timeLeft
+
+    // For upcoming auctions
+    if (auctionStatus === "upcoming") {
+      if (days > 0) {
+        return `${days}d ${hours}h`
+      } else if (hours > 0) {
+        return `${hours}h ${minutes}m`
+      } else if (minutes > 0) {
+        return `${minutes}m ${seconds}s`
+      } else {
+        return `${seconds}s`
+      }
+    }
+
+    // For active auctions
+    if (days > 0) {
+      return `${days}d ${hours}h `
+    } else if (hours > 0) {
+      return `${hours}h ${minutes}m `
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds}s `
+    } else {
+      return `${seconds}s `
+    }
+  }
+
+  return (
+    <div className="relative bg-gray-200 border-1 border-gray-300 rounded-3xl my-3 shadow-lg flex flex-col">
+      <ProductHeader name={item.name} id={item._id} />
+      <ProductImageSection item={item} />
+      <TimeCounter timeDisplay={formatTimeDisplay()} status={auctionStatus} price={item.price} />
+      <ProductInfo
+        quantity={item.quantity}
+        retail={item?.retail ? item?.retail : 0}
+        highestBid={item.highestBid}
+        biddingCount={item?.biddingCount}
+      />
+      <div className="flex">
+        <ProductBidding id={item._id} isSold={item.isSold} highestBid={item.highestBid} auctionStatus={auctionStatus} />
+      </div>
+    </div>
+  )
+})
+
+export default ProductCard

@@ -5,7 +5,7 @@ const page = () => {
  
 
   return (
-<PaidItems status='unpaid'/>
+<PaidItems status='Penalized'/>
   );
 };
 

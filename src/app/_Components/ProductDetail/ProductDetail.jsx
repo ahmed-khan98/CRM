@@ -1,23 +1,19 @@
 "use client"
-import React, { useEffect, useRef } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import { Navigation, Pagination } from 'swiper/modules';
-import { useState } from "react";
-import { useAddBidMutation, useAddWatchQuery, useProductDetailQuery } from '@/app/_Services/products/page';
-import { ImHammer2 } from 'react-icons/im';
+import { useEffect, useState } from "react";
+import {  useAddWatchQuery, useProductDetailQuery, useRelatedProductsQuery,  } from '@/app/_Services/products/page';
 import toast from 'react-hot-toast';
 import DetailLoader from '../Skeleton/DetailLoader';
 import { FaHeart, FaStar } from 'react-icons/fa';
 import { IoIosShareAlt } from "react-icons/io";
-import Cookies from 'js-cookie';
-import Link from 'next/link';
 import { useAddWishlistMutation, useDeleteWishlistMutation } from '@/app/_Services/wishlist/page';
 import { CiHeart } from 'react-icons/ci';
 import Loader from '../Loader';
-import { Check, Copy } from 'lucide-react'; // Optional: if you use icons
-import { Rating } from 'react-simple-star-rating';
+import BiddingHistory from './BiddingHistory';
+import DetailPageTab from './DetailPageTab';
+import ImageSection from './ImageSection';
+import ProductInfo from './ProductInfo';
+import AuctionCardSkeleton from "../Skeleton/CardSkeleton";
+import ProductCard from "../Card/ProductCard";
 
 
 function formatDate(dateString) {
@@ -29,97 +25,26 @@ function formatDate(dateString) {
 
 const ProductDetail = (id) => {
 
-  const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
-  const [bidValue, setBidValue] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const swiperRef = useRef(null);
-
   const { data: addWatcher, error, isLoading: loding } = useAddWatchQuery(id.id);
   const { data, error: isError, isLoading: isDetailLoading } = useProductDetailQuery(id.id);
-  const [visibleBidsHistory, setVisibleBidsHistory] = useState([]);
-  const [showAll, setShowAll] = useState(false);
-  const [showFull, setShowFull] = useState(false);
+  const { data:relatedProduct, error: relatedError, isLoading: isRelatedLoading } = useRelatedProductsQuery(id.id);
+
+console.log(relatedProduct,'relatedProduct')
+
   const [addWishlist] = useAddWishlistMutation();
   const [deleteWishlist] = useDeleteWishlistMutation();
   const [loading, setLoading] = useState(false);
-  const maxLength = 300;
-  const [copiedIndex, setCopiedIndex] = useState(null);
 
-  const handleCopy = (value, index) => {
-    navigator.clipboard.writeText(value || '').then(() => {
-      setCopiedIndex(index);
-      setTimeout(() => setCopiedIndex(null), 1500);
-    });
-  };
+  // useEffect(() => {
+  //   if (!data?.data?.isSold) {
+  //     const highestBidderId = data?.data?.highestBidder;
+  //     const biddingHistory = data?.data?.biddingHistory;
 
-  const isLong = data?.data?.shortDescription?.length > maxLength;
-  const displayedText = showFull ? data?.data?.shortDescription : data?.data?.shortDescription?.slice(0, maxLength);
-  const [activeTab, setActiveTab] = useState("item_spec");
-
-  const tabs = [
-    { key: "item_spec", label: "Item Spec", color: "bg-red-500" },
-    { key: "shipping", label: "Shipping", color: "bg-gray-500" },
-    { key: "details", label: "More Info", color: "bg-green-500" },
-  ];
-
-  useEffect(() => {
-    setBidValue(data?.data?.highestBid + 1)
-  }, [data])
-
-  // Handle bid input change
-  const handleBidChange = (id, value) => {
-    setBidValue(Number(value));
-  };
-
-  const submitBid = async () => {
-    if (bidValue <= data?.data?.highestBid) {
-      toast.error("Bid amount must be greater than the highest bid!");
-      return;
-    }
-    try {
-      const response = await addBid({ id: data?.data?._id, bidAmount: bidValue }).unwrap();
-      toast.success(response?.message);
-      setBidValue(bidValue + 1)
-      // router.replace(router.asPath);
-    } catch (error) {
-      toast.error(error.data?.message || "Failed to place bid");
-    }
-  };
-
-  useEffect(() => {
-    setVisibleBidsHistory(data?.data?.biddingHistory?.slice(0, 4))
-  }, [data])
-
-  const toggleBidHistory = () => {
-    if (showAll) {
-      setVisibleBidsHistory(data?.data?.biddingHistory?.slice(0, 4));
-    } else {
-      setVisibleBidsHistory(data?.data?.biddingHistory);
-    }
-    setShowAll(!showAll);
-  };
-
-  const token = Cookies.get("token");
-
-
-  useEffect(() => {
-    if (!data?.data?.isSold) {
-      const highestBidderId = data?.data?.highestBidder;
-      const biddingHistory = data?.data?.biddingHistory;
-
-      if (highestBidderId && Array.isArray(biddingHistory)) {
-        const matchedBidder = biddingHistory.find(bid => bid.bidder._id === highestBidderId);
-
-        console.log("highestBidderId", highestBidderId);
-      }
-    }
-  }, [data]);
-
-
-  const handleThumbnailClick = (index) => {
-    setCurrentIndex(index);
-    swiperRef.current?.slideTo(index);
-  };
+  //     if (highestBidderId && Array.isArray(biddingHistory)) {
+  //       const matchedBidder = biddingHistory.find(bid => bid.bidder._id === highestBidderId);
+  //     }
+  //   }
+  // }, [data]);
 
   const toggleWishlist = async (id, isWishlisted) => {
     setLoading(true);
@@ -162,290 +87,37 @@ const ProductDetail = (id) => {
                   Share <IoIosShareAlt color="white" size={18} />
                 </button>
               </div>
-
-
-              <div className="h-[30vh] lg:h-[45vh] relative">
-
-                <Swiper
-                  modules={[Navigation, Pagination]}
-                  navigation
-                  pagination={{ clickable: true }}
-                  spaceBetween={20}
-                  slidesPerView={1}
-                  className="h-full w-full max-w-xl m-auto"
-                  onSlideChange={(swiper) => setCurrentIndex(swiper.activeIndex)}
-                  onSwiper={(swiper) => (swiperRef.current = swiper)}
-                  initialSlide={currentIndex}
-                >
-                  {data?.data?.images?.map((img, i) => (
-                    <SwiperSlide key={i}>
-                      <img
-                        src={img}
-                        alt={`Product ${i + 1}`}
-                        className="object-contain w-full h-full"
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-
-                <div className="absolute bottom-4 right-4 bg-gray-800 text-white text-sm font-bold w-10 h-10 flex items-center justify-center rounded-full shadow-lg z-10">
-                  {currentIndex + 1}/{data?.data?.images?.length}
-                </div>
-              </div>
-
-              <div className="flex justify-start gap-4 mt-4 flex-wrap">
-                {data?.data?.images?.map((img, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleThumbnailClick(index)}
-                    className={`w-20 h-20 border-2 rounded overflow-hidden cursor-pointer ${currentIndex === index ? "border-[#F33E0A]" : "border-gray-300"
-                      }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`Thumbnail ${index + 1}`}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8">
-                {/* Tab Buttons */}
-                <div className="flex gap-1 mb-2">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setActiveTab(tab.key)}
-                      className={`px-2 py-1 font-semibold flex w-[33%] items-center justify-center rounded-tl-lg rounded-tr-lg text-white cursor-pointer ${activeTab === tab.key
-                        ? `border-1 border-black ${tab.color}`
-                        : `${tab.color}`
-                        }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Tab Content */}
-                <div className="flex flex-col gap-1">
-                  {data?.data?.[activeTab]?.map((e, i) => {
-                    const isASIN = e?.name === 'ASIN';
-                    const displayValue = isASIN ? e?.code : e?.value;
-
-                    return (
-                      <div className="flex gap-2" key={i}>
-                        <div className="w-[35%] bg-[#a6a6a6] p-3 flex items-center">
-                          <p className="uppercase font-semibold roboto text-sm">{e?.name}</p>
-                        </div>
-                        <div className="w-[65%] bg-[#d9d9d9] p-3 flex items-center justify-between">
-                          <p className="font-semibold  break-words">{displayValue}</p>
-
-                          {isASIN && (
-                            <button
-                              onClick={() => handleCopy(e?.value, i)}
-                              className={`ml-2 flex items-center gap-1 text-xs px-2 py-1 rounded transition-all 
-                    ${copiedIndex === i ? 'bg-green-600 text-white' : 'bg-gray-700 text-white hover:bg-gray-900'}
-                  `}
-                            >
-                              {copiedIndex === i ? (
-                                <>
-                                  <Check size={14} /> Copied
-                                </>
-                              ) : (
-                                <>
-                                  <Copy size={14} /> Copy
-                                </>
-                              )}
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-              </div>
+              <ImageSection images={data?.data?.images} />
+              <DetailPageTab data={data?.data} />
 
             </div>
 
             <div className="flex flex-col gap-y-8">
-              <h1 className="  mt-6 p-4  sm:px-0 text-left text-2xl capitalize font-bold text-title-md sm:text-title-lg">
-                {data?.data?.name}
-              </h1>
 
 
-
-              {/* Quality */}
-              <div className="flex flex-col gap-y-6 bg-white rounded-md p-4 sm:mr-4 xl:mr-0">
-                <div className='text-center'>
-                  <div className='flex justify-center'>
-                    <p className=" font-normal uppercase my-1  py-2 text-title-xs bg-[#f4e405] w-30 ">
-                      Quality
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 my-3">
-                    <div className="flex justify-center items-center">
-                      
-                      <Rating
-                        size='25'
-                        SVGstyle={{ display: 'inline-block' }}
-                        initialValue={data?.data?.rating ?? 0}
-                      />
-                    </div>
-                  </div>
-                  {data?.data?.tag?.length > 0 && (
-                    <div className="flex items-center justify-start gap-2 flex-wrap">
-                      {data?.data?.tag.map((tag, index) => (
-                        <div key={index} className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-[#7ed957] text-gray-800 rounded-2xl">
-                          <span className="px-3  whitespace-nowrap overflow-hidden text-ellipsis">
-                            {tag}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <p className=" font-semibold uppercase mt-2  py-2 text-title-xs text-center">
-                    Item Description
-                  </p>
-                  <p className=" font-normal py-2 text-title-xs text-left bg-[#d9d9d9] p-2 ">
-                    {displayedText}
-                    {isLong && !showFull && "... "}
-                    {isLong && (
-                      <span
-                        onClick={() => setShowFull(!showFull)}
-                        className="text-[#F33E0A] cursor-pointer font-medium"
-                      >
-                        {showFull ? " See less" : " See more"}
-                      </span>
-                    )}
-                  </p>
-                </div>
-
-
-
-                {/* {(data?.data?.address1 || data?.data?.address2) && (
-                  <div>
-                    <p className="text-left  font-bold uppercase mb-1 text-title-xs">
-                      {data?.data?.address1}
-                    </p>
-                    {data?.data?.address2 && <p className="text-left ">{data?.data?.address2}</p>}
-                  </div>
-                )} */}
-
-
-                <div className="flex flex-col gap-2">
-                  {/* Row 1 */}
-                  <div className="flex gap-2">
-                    <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between">
-                      <p className="uppercase font-semibold roboto text-sm">Estimated Retail</p>
-                    </div>
-                    <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between">
-                      <p className="font-semibold ">${data?.data?.retail}</p>
-                    </div>
-                  </div>
-
-                  {/* Row 2 */}
-                  <div className="flex gap-2">
-                    <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between">
-                      <p className="uppercase font-semibold roboto text-sm">Current Price</p>
-                    </div>
-                    <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between">
-                      <p className="font-semibold ">${data?.data?.price}</p>
-                    </div>
-                  </div>
-
-                  {/* Row 3 */}
-                  <div className="flex gap-2">
-                    <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between">
-                      <p className="uppercase font-semibold roboto text-sm">Buyers Premium</p>
-                    </div>
-                    <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between">
-                    <p className="font-semibold ">
-  {`${data?.data?.buyerPremium}${data?.data?.buyerPremium?.includes('%') ? '' : '%'}`}
-</p>
-                    </div>
-                  </div>
-                </div>
-                {data?.data?.isSold ? (
-                  <button className="bg-green-600  cursor-pointer w-full text-white px-4 py-2 rounded hover:bg-green-500 flex items-center justify-center">
-                    Sold
-                  </button>
-                ) : token ? (
-                  <div className="mt-1 flex">
-                    <input
-                      type="text"
-                      className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center  outline-none 
-                 appearance-none [&::-webkit-outer-spin-button]:appearance-none 
-                 [&::-webkit-inner-spin-button]:appearance-none"
-                      onChange={(e) => handleBidChange(data?.data?._id, e.target.value)}
-                      value={bidValue}
-                    />
-                    <button
-                      disabled={bidValue <= data?.data?.highestBid || isSubmitting}
-                      onClick={() => submitBid(data?.data?._id)}
-                      className={`w-1/2 cursor-pointer  text-white py-2 flex items-center justify-center space-x-2
-                 ${Number(bidValue) > Number(data?.data?.highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}`}
-                    >
-                      {/* <ImHammer2 className="transform rotate-80" /> */}
-                      <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
-                    </button>
-                  </div>
-                ) : (
-                  <button className="bg-[#f44b0a]  cursor-pointer w-full text-white px-4 py-2 rounded hover:bg-[#f44b0a]  flex items-center justify-center">
-                    <Link href={"/login"}>Login to Bid</Link>
-                  </button>
-                )}
-              </div>
+              <ProductInfo name={data?.data?.name} rating={data?.data?.rating} tag={data?.data?.tag} retail={data?.data?.retail} price={data?.data?.price} buyerPremium={data?.data?.buyerPremium} shortDescription={data?.data?.shortDescription} isSold={data?.data?.isSold} id={data?.data?._id} highestBid={data?.data?.highestBid}/>
+        
               {data?.data?.biddingHistory?.length > 0 &&
-                <div className="bg-white shadow-lg rounded-md sm:p-4 sm:mr-4 xl:mr-0">
-                  <div className="flex justify-between px-4 sm:px-0 pt-4 sm:pt-0">
-                    <p className="  text-left font-bold uppercase mb-1 text-title-xs">
-                      Bid History
-                    </p>
-                  </div>
-                  <div>
-
-                    {visibleBidsHistory?.map((e, i) => (
-                      <div
-                        key={e._id}
-                        className={`py-2 border-b border-b-gray-400 ${i == '0' && data?.data?.isSold ? 'bg-emerald-100' : ''}`}
-                      >
-                        <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_0.5fr)] md:grid-cols-5 justify-items-start items-center px-4 sm:px-3 py-1 rounded ">
-                          <p className="text-label-md text-left ">Bidder no {data?.data?.biddingHistory?.length - i}</p>
-                          <p className="text-label-md  text-left md:justify-self-center">
-                            {e.bidder.username}
-                          </p>
-                          <p className="text-label-md  text-left col-start-1 md:col-start-3 md:justify-self-center">
-                            ${e.bidAmount}
-                          </p>
-                          <p className="text-label-md  text-left whitespace-nowrap">
-                            {new Date(e.createdAt).toLocaleString()}
-                          </p>
-
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {data?.data?.biddingHistory?.length > 4 &&
-                    <button onClick={toggleBidHistory} className="w-full cursor-pointer flex justify-between py-2 px-4 md:px-0">
-                      <p className="uppercase text-burgundy-900 font-semibold">
-                        {showAll ? "View Less" : `View ${data?.data?.biddingHistory?.length - 4} more bids`}
-                      </p>
-                      {showAll ? (
-                        <svg width="24" height="24" className="fill-burgundy-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                          <path d="M246.6 105.4c6.2-6.2 16.4-6.2 22.6 0l192 192c6.2 6.2 6.2 16.4 0 22.6s-16.4 6.2-22.6 0L256 139.3 73.4 320c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l192-192z" />
-                        </svg>
-                      ) : (
-                        <svg width="24" height="24" className="fill-burgundy-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                          <path d="M267.3 395.3c-6.2 6.2-16.4 6.2-22.6 0l-192-192c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L256 361.4 436.7 180.7c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6l-192 192z" />
-                        </svg>
-                      )}
-                    </button>}
-                </div>}
+                <BiddingHistory history={data?.data?.biddingHistory} isSold={data?.data?.isSold} />
+              }
             </div>
           </div>
       }
+           <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto p-4 md:pt-10 pt-20">
+    {isRelatedLoading ? (
+      [...Array(4)].map((_, index) => <AuctionCardSkeleton key={index} />)
+    ) : !relatedProduct?.data?.length  || relatedError ? (
+      <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold  text-3xl text-gray-500">
+      No Related Product Found
+    </p>    
+    ) : (
+      relatedProduct?.data?.map((item, index) => (
+        <ProductCard key={item.id ?? `auction-${index}`} item={item} />
+      ))
+      
+    )}
+  </div>
+      
     </>
   )
 }

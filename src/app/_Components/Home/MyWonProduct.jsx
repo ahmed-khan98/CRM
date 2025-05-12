@@ -1,14 +1,12 @@
 'use client'
-import { useAddBidMutation } from '@/app/_Services/products/page';
-import { useAddWishlistMutation, useDeleteWishlistMutation } from '@/app/_Services/wishlist/page';
+import { Package, DollarSign, BarChart2 } from "lucide-react"
+
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useRef, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import { CiHeart, CiSearch, CiShare2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
-import Loader from '../Loader';
 import Link from 'next/link';
-import Cookies from 'js-cookie';
 import { useAddPaymentMutation } from '@/app/_Services/payment/page';
 
 const MyWonProduct = ({ item }) => {
@@ -46,19 +44,19 @@ const MyWonProduct = ({ item }) => {
     return (
         <div className="relative  shadow-lg bg-white  border-[1px] rounded-3xl  border-gray-300 my-3">
             <Link
-      href={`/detailproduct/${item?.product?._id}`}
-      className="text-[#242424] text-[16px] font-semibold py-1 px-2 h-14 bg-white rounded-t-3xl  cursor-pointer block"
-    >
-            <p className="text-[#242424] pl-2 text-[16px] font-semibold py-1 mt-2  line-clamp-2 underline">
-                {item?.product?.name.length > 50 ? `${item.product?.name.slice(0, 50)}...` : item.product?.name}
-            </p>
+                href={`/detailproduct/${item?.product?._id}`}
+                className="text-[18px] font-semibold py-2 px-3 h-14 bg-white rounded-t-3xl  cursor-pointer block"
+            >
+                <p className="line-clamp-2 overflow-hidden text-ellipsis underline">
+                    {item?.product?.name.length > 50 ? `${item.product?.name.slice(0, 50)}...` : item.product?.name}
+                </p>
             </Link>
             <div className="relative h-[290px]">
                 <img
                     onClick={() => router.push(`/detailproduct/${item.product?._id}`)}
                     src={item?.product?.images?.[0]}
                     alt="Product"
-        className="w-full h-[290px] object-contain cursor-pointer"
+                    className="w-full h-[290px] object-contain cursor-pointer"
                 />
                 {
                     item?.product?.watchers?.length === 0 ? "" :
@@ -87,54 +85,70 @@ const MyWonProduct = ({ item }) => {
 
             <div className="bg-white shadow-xl w-[80%] mx-auto text-center py-2 px-2 rounded -mt-[60px] relative z-1">
                 <div className='flex justify-between py-1'>
-                <p className="text-sm ">Start Date:</p>
-                <div className="flex justify-center space-x-4 font-semibold">
-                    {formatDate(item?.product?.biddingStartTime)}
-                </div>
+                    <p className="text-sm ">Start Date:</p>
+                    <div className="flex justify-center space-x-4 font-semibold">
+                        {formatDate(item?.product?.biddingStartTime)}
                     </div>
+                </div>
                 <div className='flex justify-between py-1'>
-                <p className="text-sm ">End Date:</p>
-                <div className="flex justify-center space-x-4 font-semibold">
-                    {formatDate(item?.product?.biddingEndTime)}
-                </div>
+                    <p className="text-sm ">End Date:</p>
+                    <div className="flex justify-center space-x-4 font-semibold">
+                        {formatDate(item?.product?.biddingEndTime)}
                     </div>
+                </div>
             </div>
-                    {/* {["hours", "minutes", "seconds"].map((unit) => (
+            {/* {["hours", "minutes", "seconds"].map((unit) => (
                         <div key={unit} className="flex flex-col items-center">
                             <span>{timeLeft[unit] ?? 0}</span>
                             <span className="text-xs font-normal ">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
                         </div>
                     ))} */}
+            <div className="bg-white px-4 py-5 rounded-t-2xl shadow-sm border-b border-gray-100">
 
-            {/* Auction Details */}
-            <div className="py-4 text-sm px-6 ">
-                <div className="flex justify-between ">
-                    <p><strong>Qty:</strong></p>
-                    <p>{item?.product?.quantity}</p>
-                </div>
-                <div className="flex justify-between ">
-                    <p><strong>Est Retail:</strong></p>
-                    <p className="text-gray-600">${item?.product?.retail}</p>
-                </div>
-                <div className="flex justify-between ">
-                    <p><strong>#Bids:</strong></p>
-                    <p>{item?.product?.biddingCount}</p>
-                </div>
-                <div className="flex justify-between ">
-                    <p><strong>Current Price:</strong></p>
-                    <p>{item?.product?.price}</p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                            <Package size={16} className="text-[#F33E0A]" />
+                            <span className="text-sm text-gray-700">Quantity</span>
+                        </div>
+                        <span className="text-sm font-medium">{item?.product?.quantity}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                            <DollarSign size={16} className="text-[#F33E0A]" />
+                            <span className="text-sm text-gray-700">Retail</span>
+                        </div>
+                        <span className="text-sm font-medium">${item?.product?.retail || 0}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                            <BarChart2 size={16} className="text-[#F33E0A]" />
+                            <span className="text-sm text-gray-700">Bids</span>
+                        </div>
+                        <span className="text-sm font-medium">{item?.product?.biddingCount || 0}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                            <DollarSign size={16} className="text-[#F33E0A]" />
+                            <span className="text-sm text-gray-700">Current Price</span>
+                        </div>
+                        <span className="text-sm font-medium">${item?.product?.price || 0}</span>
+                    </div>
                 </div>
             </div>
-        
 
-            <div className="bg-gray-200 text-center text-sm py-2 ">
+
+            <div className="bg-[#dbfce7] text-[#00885E] text-center text-sm py-2 ">
                 Winning Bid: <strong> $ {item?.product?.highestBid}</strong>
             </div>
 
             <div className="flex flex-row">
 
-                <button className=" rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-emerald-400 to-green-300 hover:from-green-030 hover:to-emerald-400 py-3 flex items-center justify-center ">
-                    <span>WON</span>
+                <button className=" rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-[#a7f3d0] py-3 flex items-center justify-center ">
+                    <span className='text-[#00885E]'>WON</span>
                 </button>
                 {
                     item?.paymentStatus === 'Completed' ?
@@ -148,7 +162,7 @@ const MyWonProduct = ({ item }) => {
                                 "Loading..."
                             ) : (
                                 "Pay Now"
-                            )}                </button> }
+                            )}                </button>}
             </div>
 
         </div>

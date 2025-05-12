@@ -1,58 +1,204 @@
-"use client";
-import React from "react";
-import { usePathname, useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+"use client"
+
+import { useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
+import Cookies from "js-cookie"
+import {
+  Home,
+  ShoppingCart,
+  Calendar,
+  Store,
+  Wallet,
+  Bell,
+  User,
+  Users,
+  DollarSign,
+  HelpCircle,
+  LogOut,
+  ChevronRight,
+  ChevronDown,
+} from "lucide-react"
 
 const LeftNav = () => {
-  const pathname = usePathname();
-  const router = useRouter(); 
+  const pathname = usePathname()
+  const router = useRouter()
+  const [expandedMenus, setExpandedMenus] = useState({})
 
   const menuItems = [
-    { name: "My Auction", path: ["/dashboard/wishlist", "/dashboard/wonitem","/dashboard/lostitem"],    },
-    { name: "Purchase", path: ["/dashboard/paidItem",'/dashboard/unpaidItem','/dashboard/penalizedItem'] },
-    { name: "Appointments", path: ["/dashboard/upcomingItem",'/dashboard/missedItem'] },
-    { name: "My Store", path: "/dashboard/earnings" },
-    { name: "Wallet", path: "/dashboard/wallet" },
-    // { name: "NOTIFICATIONS", path: "/notifications" },
-    // { name: "FEES & OPEN INVOICES (0)", path: "/fees" },
-    // { name: "SAVED SEARCHES", path: "/saved-searches" },
-    // { name: "RECEIPTS", path: "/receipts" },
-    { name: "My Account", path: ["/dashboard/profile","/dashboard/changepassword"] },
-    { name: "Refer a Freind", path: "/dashboard/account2" },
-    { name: "Fees (0)", path: "/dashboard/account2" },
-    { name: "Help", path: ["/dashboard/contactform"] },
-  ];
+    {
+      name: "My Auction",
+      icon: <Home className="w-5 h-5" />,
+      path: ["/dashboard/wishlist", "/dashboard/wonitem", "/dashboard/lostitem"],
+      submenu: [
+        { name: "Wishlist", path: "/dashboard/wishlist" },
+        { name: "Won Items", path: "/dashboard/wonitem" },
+        { name: "Lost Items", path: "/dashboard/lostitem" },
+      ],
+    },
+    {
+      name: "Purchase",
+      icon: <ShoppingCart className="w-5 h-5" />,
+      path: ["/dashboard/paidItem", "/dashboard/unpaidItem", "/dashboard/penalizedItem"],
+      submenu: [
+        { name: "Paid Items", path: "/dashboard/paidItem" },
+        { name: "Unpaid Items", path: "/dashboard/unpaidItem" },
+        { name: "Penalized Items", path: "/dashboard/penalizedItem" },
+      ],
+    },
+    {
+      name: "Appointments",
+      icon: <Calendar className="w-5 h-5" />,
+      path: ["/dashboard/upcomingItem", "/dashboard/missedItem"],
+      submenu: [
+        { name: "Upcoming", path: "/dashboard/upcomingItem" },
+        { name: "Missed", path: "/dashboard/missedItem" },
+      ],
+    },
+    {
+      name: "My Store",
+      icon: <Store className="w-5 h-5" />,
+      path: ["/dashboard/comingsoon"],
+    },
+    {
+      name: "Wallet",
+      icon: <Wallet className="w-5 h-5" />,
+      path: ["/dashboard/comingsoon"],
+    },
+    {
+      name: "Notification",
+      icon: <Bell className="w-5 h-5" />,
+      path: ["/dashboard/notification"],
+    },
+    {
+      name: "My Account",
+      icon: <User className="w-5 h-5" />,
+      path: ["/dashboard/profile", "/dashboard/changepassword"],
+      submenu: [
+        { name: "Profile", path: "/dashboard/profile" },
+        { name: "Change Password", path: "/dashboard/changepassword" },
+      ],
+    },
+    {
+      name: "Refer a Friend",
+      icon: <Users className="w-5 h-5" />,
+      path: ["/dashboard/comingsoon"],
+    },
+    {
+      name: "Fees",
+      icon: <DollarSign className="w-5 h-5" />,
+      path: ["/dashboard/comingsoon"],
+      badge: "0",
+    },
+    {
+      name: "Help",
+      icon: <HelpCircle className="w-5 h-5" />,
+      path: ["/dashboard/contactform", "/dashboard/response"],
+      submenu: [
+        { name: "Contact Form", path: "/dashboard/contactform" },
+        { name: "Responses", path: "/dashboard/response" },
+      ],
+    },
+  ]
 
   const handleLogout = () => {
-    Cookies.remove("token");
-    Cookies.remove("currentuser");
-    router.push("/"); 
-  };
+    Cookies.remove("token")
+    Cookies.remove("currentuser")
+    router.push("/")
+  }
+
+  const toggleSubmenu = (index) => {
+    setExpandedMenus((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }))
+  }
+
+  const isMenuActive = (paths) => {
+    return paths.some((path) => pathname.startsWith(path))
+  }
+
+  const isSubmenuActive = (path) => {
+    return pathname === path
+  }
 
   return (
-    <div className="w-1/4 text-white bg-[#F33E0A]">
-      {menuItems.map((item, index) => {
-        const isActive = item.path.includes(pathname);
+    <div className="h-full bg-white border-r border-gray-200 overflow-y-auto">
+      <div className="p-4 border-b border-gray-200">
+        <div className="flex items-center justify-center">
+          <span className="text-[#F33E0A] font-bold text-xl">Dashboard</span>
+        </div>
+      </div>
 
-        return (
-          <div
-            key={index}
-            onClick={() => {
-              if (item.name === "LOG OUT") {
-                handleLogout();
-              } else {
-                router.push(item.path[0]);
-              }
-            }}
-            className={`p-3 pl-5 text-sm font-semibold cursor-pointer transition-all  duration-200 
-            ${isActive  ? "bg-white text-[#F33E0A] border border-red-500" : " bg-[#F33E0A]"}`}
-          >
-            {item.name}
-          </div>
-        );
-      })}
+      <div className="py-2">
+        {menuItems.map((item, index) => {
+          const isActive = isMenuActive(item.path)
+          const hasSubmenu = item.submenu && item.submenu.length > 0
+          const isExpanded = expandedMenus[index] || isActive
+
+          return (
+            <div key={index} className="mb-0">
+              <div
+                onClick={() => {
+                  if (hasSubmenu) {
+                    toggleSubmenu(index)
+                  } else {
+                    router.push(item.path[0])
+                  }
+                }}
+                className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-200 ${
+                  isActive
+                    ? "bg-orange-50 text-[#F33E0A] border-l-4 border-[#F33E0A]"
+                    : "text-gray-700 hover:bg-orange-50 hover:text-[#F33E0A]"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className={isActive ? "text-[#F33E0A]" : "text-gray-500"}>{item.icon}</span>
+                  <span className="font-medium text-sm">{item.name}</span>
+                  {item.badge && (
+                    <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+                {hasSubmenu && (
+                  <span className="text-gray-400">
+                    {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                  </span>
+                )}
+              </div>
+
+              {/* Submenu */}
+              {hasSubmenu && isExpanded && (
+                <div className="bg-gray-50 pl-12 pr-4">
+                  {item.submenu.map((subItem, subIndex) => (
+                    <div
+                      key={subIndex}
+                      onClick={() => router.push(subItem.path)}
+                      className={`py-2.5 px-3 text-sm cursor-pointer transition-colors ${
+                        isSubmenuActive(subItem.path)
+                          ? "text-[#F33E0A] font-medium"
+                          : "text-gray-600 hover:text-[#F33E0A]"
+                      }`}
+                    >
+                      {subItem.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })}
+
+        <div
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 mt-4 text-red-500 hover:bg-red-50 cursor-pointer transition-all duration-200"
+        >
+          <LogOut className="w-5 h-5" />
+          <span className="font-medium text-sm">Log Out</span>
+        </div>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default LeftNav;
+export default LeftNav

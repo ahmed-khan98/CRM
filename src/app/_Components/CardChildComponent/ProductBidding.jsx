@@ -1,73 +1,222 @@
-'use client'
-import { useAddBidMutation } from "@/app/_Services/products/page";
-import Link from "next/link";
-import React, { useState } from "react";
-import Cookies from 'js-cookie';
-import toast from "react-hot-toast";
+"use client"
 
+import { useAddBidMutation } from "@/app/_Services/products/page"
+import Link from "next/link"
+import React, { useState, useEffect } from "react"
+import Cookies from "js-cookie"
+import { ArrowUp, Clock, TrendingUp, DollarSign, Loader2, AlertCircle, CheckCircle } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
-const ProductBidding = ({ id,isSold, highestBid }) => {
-    const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
-    const token = Cookies.get("token");  
-    const [bidValue, setBidValue] = useState(highestBid + 1);
+const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
+  const [addBid, { isLoading: isSubmitting }] = useAddBidMutation()
+  const token = Cookies.get("token")
+  const [bidValue, setBidValue] = useState(highestBid + 1)
+  const [showBidTips, setShowBidTips] = useState(false)
+  const [bidSuccess, setBidSuccess] = useState(false)
+  const [bidError, setBidError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [timeLeft, setTimeLeft] = useState(3)
+
+  // Reset success/error states after a delay
+  useEffect(() => {
+    let timer
+    if (bidSuccess || bidError) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer)
+            setBidSuccess(false)
+            setBidError(false)
+            setTimeLeft(3)
+            return 3
+          }
+          return prev - 1
+        })
+      }, 1000)
+    }
+    return () => clearInterval(timer)
+  }, [bidSuccess, bidError])
 
   const handleBidChange = (value) => {
-    setBidValue(Number(value));
-  };
+    // Ensure bid is a positive number
+    const newValue = Math.max(0, Number(value))
+    setBidValue(newValue)
+  }
+
+  const handleQuickBid = (increment) => {
+    setBidValue(Math.max(highestBid + increment, highestBid + 1))
+  }
 
   const submitBid = async () => {
     if (bidValue <= highestBid) {
-      toast.error("Bid amount must be greater than the highest bid!");
-      return;
+      setErrorMessage("Bid amount must be greater than the highest bid!")
+      setBidError(true)
+      return
     }
+
     try {
-      const response = await addBid({ id, bidAmount: bidValue }).unwrap();
-      toast.success(response?.message);
-      setBidValue((prev) => prev + 1);
-      // router.refresh();
+      const response = await addBid({ id, bidAmount: bidValue }).unwrap()
+      setBidSuccess(true)
+      setBidValue((prev) => prev + 1)
     } catch (error) {
-      console.log(error,'error')
-      toast.error(error.data?.message || "Failed to place bid ssssssss--->>>");
+      setErrorMessage(error.data?.message || "Failed to place bid")
+      setBidError(true)
     }
-  };
+  }
+
+  // Calculate suggested bid increments based on current highest bid
+  const getBidIncrements = () => {
+    if (highestBid < 10) return [1, 2, 5]
+    if (highestBid < 50) return [1, 5, 10]
+    if (highestBid < 100) return [5, 10, 25]
+    if (highestBid < 500) return [10, 25, 50]
+    return [25, 50, 100]
+  }
+
+  const bidIncrements = getBidIncrements()
 
   if (isSold) {
     return (
-      <button className="w-full text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 hover:from-green-700 hover:to-emerald-500 py-3 flex items-center justify-center rounded-b-23l">
-        Sold
-      </button>
-    );
+      <div className="w-full rounded-b-3xl overflow-hidden">
+        <button className="w-full text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 py-4 flex items-center justify-center gap-2">
+          <CheckCircle size={20} />
+          Sold
+        </button>
+      </div>
+    )
   }
 
   if (!token) {
     return (
-      <Link href="/login" className="w-full">
-        <button className="w-full rounded-br-3xl rounded-bl-3xl text-white orange-bg hover:bg-[#d63006] py-3 flex items-center justify-center rounded-b-23l cursor-pointer">
-          Login to Bid
-        </button>
-      </Link>
-    );
+      <div className="w-full rounded-b-3xl overflow-hidden">
+        <Link href="/login" className="w-full block">
+          <button className="w-full text-white bg-[#F33E0A] hover:bg-[#d63006] py-4 flex items-center justify-center gap-2 transition-all duration-300">
+            <DollarSign size={20} />
+            Login to Bid
+          </button>
+        </Link>
+      </div>
+    )
   }
 
   return (
-    <>
-      <input
-        type="number"
-        value={bidValue}
-        onChange={(e) => handleBidChange(e.target.value)}
-        className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center outline-none rounded-bl-3xl appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-      />
-      <button
-        onClick={submitBid}
-        disabled={bidValue <= highestBid || isSubmitting}
-        className={`w-1/2 text-white py-3 flex items-center justify-center space-x-2 rounded-br-3xl ${
-          bidValue > highestBid ? 'orange-bg hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'
-        }`}
-      >
-        <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
-      </button>
-    </>
-  );
-};
+    <div className="w-full">
+      <div className="relative">
+        <AnimatePresence>
+          {showBidTips && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="bg-blue-50 p-4 text-sm text-blue-800 rounded-t-xl absolute bottom-full left-0 right-0 z-10 shadow-md"
+            >
+              <h4 className="font-semibold mb-1 flex items-center gap-1">
+                <TrendingUp size={16} /> Bidding Tips
+              </h4>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Your bid must be higher than the current highest bid</li>
+                <li>Once submitted, bids cannot be retracted</li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
-export default React.memo(ProductBidding);
+      <div className="px-4 py-2 bg-gray-100">
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center gap-1 text-gray-700">
+            <Clock size={16} />
+            <span className="text-sm font-medium">Current Bid</span>
+          </div>
+          <button
+            onClick={() => setShowBidTips(!showBidTips)}
+            className="text-xs text-blue-600 hover:text-blue-800 underline"
+          >
+            {showBidTips ? "Hide tips" : "Bidding tips"}
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-2xl font-bold text-gray-900">${highestBid || 0}</div>
+          <div className="flex gap-1">
+            {bidIncrements.map((increment) => (
+              <button
+                key={increment}
+                onClick={() => handleQuickBid(increment)}
+                className="px-2 py-1 text-xs bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+              >
+                +${increment}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {bidSuccess && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg flex items-center gap-2"
+            >
+              <CheckCircle size={18} />
+              <div className="flex-1">Bid placed successfully!</div>
+              <div className="text-xs">{timeLeft}s</div>
+            </motion.div>
+          )}
+
+          {bidError && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg flex items-center gap-2"
+            >
+              <AlertCircle size={18} />
+              <div className="flex-1">{errorMessage}</div>
+              <div className="text-xs">{timeLeft}s</div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <div className="flex rounded-b-3xl overflow-hidden">
+        <div className="relative w-1/2">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <DollarSign size={18} className="text-gray-500" />
+          </div>
+          <input
+            type="number"
+            value={bidValue}
+            onChange={(e) => handleBidChange(e.target.value)}
+            className="w-full h-full px-10 py-4 bg-[#EBEBEB] text-center font-semibold text-lg outline-none rounded-bl-3xl appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            min={highestBid + 1}
+          />
+        </div>
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          onClick={submitBid}
+          disabled={bidValue <= highestBid || isSubmitting}
+          className={`w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${bidValue > highestBid && !isSubmitting
+              ? "bg-[#F33E0A] hover:bg-[#d63006]"
+              : "bg-gray-400 cursor-not-allowed"
+            }`}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 size={20} className="animate-spin" />
+              <span>Bidding...</span>
+            </>
+          ) : (
+            <>
+              <ArrowUp size={20} />
+              <span>Place Bid</span>
+            </>
+          )}
+        </motion.button>
+      </div>
+    </div>
+  )
+}
+
+export default React.memo(ProductBidding)
