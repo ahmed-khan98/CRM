@@ -58,15 +58,23 @@ const ProductCard = React.memo(({ item }) => {
         })
       }
     } else {
-      // Auction has ended
+      const diff = endTime - now
+      console.log(diff,'diff')
       setAuctionStatus("ended")
-      setTimeLeft({
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        total: 0,
-      })
+      if (diff < 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+
+        setTimeLeft({
+          days,
+          hours,
+          minutes,
+          seconds,
+          total: diff,
+        })
+      }
       clearInterval(timerRef.current)
     }
   }, [item?.biddingStartTime, item?.biddingEndTime])
@@ -79,12 +87,20 @@ const ProductCard = React.memo(({ item }) => {
 
   // Format time for display
   const formatTimeDisplay = () => {
-    if (auctionStatus === "ended") {
-      return "Auction Ended"
-    }
+
 
     const { days, hours, minutes, seconds } = timeLeft
-
+    if (auctionStatus === "ended") {
+      if (days < 0) {
+        return `${days}d ${hours}h ago`
+      } else if (hours > 0) {
+        return `${hours}h ${minutes}m ago`
+      } else if (minutes > 0) {
+        return `${minutes}m ${seconds}s ago`
+      } else {
+        return `${seconds}s `
+      }
+      }
     // For upcoming auctions
     if (auctionStatus === "upcoming") {
       if (days > 0) {
@@ -98,7 +114,6 @@ const ProductCard = React.memo(({ item }) => {
       }
     }
 
-    // For active auctions
     if (days > 0) {
       return `${days}d ${hours}h `
     } else if (hours > 0) {
@@ -108,6 +123,7 @@ const ProductCard = React.memo(({ item }) => {
     } else {
       return `${seconds}s `
     }
+
   }
 
   return (

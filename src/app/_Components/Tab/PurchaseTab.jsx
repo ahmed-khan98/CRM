@@ -28,7 +28,7 @@ const PurchaseTab = () => {
   ]
 
   return (
-    <div className="relative flex justify-start md:pl-8">
+    <div className="elative flex justify-start md:pl-6">
     <div className="inline-flex bg-white rounded-full p-1.5 shadow-sm border border-gray-100">
       {tabs.map((tab) => {
         const isActive = pathname === tab.path
@@ -36,9 +36,11 @@ const PurchaseTab = () => {
         return (
           <Link href={tab.path} key={tab.path} passHref>
             <div
-              className={`relative rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
-                isActive ? "text-white" : "text-gray-600 hover:text-gray-900"
+              className={`relative rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200  ${
+                isActive ? " text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                // isActive ? "text-white" : "text-gray-600 hover:text-gray-900"
               }`}
+              
             >
               {isActive && (
                 <motion.div

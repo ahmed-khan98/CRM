@@ -72,7 +72,7 @@ const DashboardLayout = ({ children }) => {
           className={`flex-1 transition-all duration-300 ease-in-out
             ${isMobile ? "w-full" : ""}`}
             >
-          <div className="p-4 md:p-0 max-w-7xl mx-auto w-full">{children}</div>
+          <div className="p-4 max-w-7xl mx-auto w-full bg-[#FFFFFF]">{children}</div>
         </main>
       </div>
     </div>
@@ -80,7 +80,6 @@ const DashboardLayout = ({ children }) => {
 }
 
 export default DashboardLayout
-
 //    ${
 //   isSidebarOpen && !isMobile ? "lg:ml-64 xl:ml-72" : ""
 // } 

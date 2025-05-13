@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ReduxProvider>
         <LayoutWrapper>
-        <Toaster position="top-right" />
+        <Toaster position="top-center" />
           {children}
           </LayoutWrapper>
         </ReduxProvider>

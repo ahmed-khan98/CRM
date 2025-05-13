@@ -12,7 +12,7 @@ const PaidItems = ({ status }) => {
     return (
         <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]">
             <PurchaseTab />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 container mx-auto p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 sm:p-2 lg:grid-cols-3 gap-0 container mx-auto p-2">
                 {isLoading ? (
                     [...Array(skeletonRows)].map((_, index) => (
                         <AuctionCardSkeleton key={index} />

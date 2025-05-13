@@ -1,5 +1,5 @@
 "use client"
-import { useResendMutation, useVerifyMutation } from "@/app/_Services/authentication/page";
+import { useResendMutation, useVerifyCodeMutation } from "@/app/_Services/authentication/page";
 import { useFormik } from "formik";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
@@ -12,7 +12,7 @@ function VerifyEmailForm() {
     const navigation = useRouter();
     const searchParams = useSearchParams();
     const email = searchParams.get("email");
-    const [verifyEmail, { isLoading: isSubmitting, isError: isFormError }] = useVerifyMutation();
+    const [verifyCode, { isLoading: isSubmitting, isError: isFormError }] = useVerifyCodeMutation();
     const [resendcode, { isLoading, isError }] = useResendMutation();
 
     const verifySchema = Yup.object({
@@ -31,7 +31,7 @@ function VerifyEmailForm() {
         validationSchema: verifySchema,
         onSubmit: async (values) => {
             try {
-                const response = await verifyEmail({ email: email, code: values.code }).unwrap();
+                const response = await verifyCode({ email: email, code: values.code }).unwrap();
                 if (response.statusCode === 200) {
                     toast.success(response.message);
                     navigation.push("/login");

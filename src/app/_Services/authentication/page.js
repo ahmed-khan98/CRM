@@ -17,16 +17,16 @@ const authenticationsApi = createApiAuction.injectEndpoints({
         body: formData,
       }),
     }),
-    emailVerificationCode: builder.mutation({
+    sendVerificationCode: builder.mutation({
       query: (formData) => ({
-        url: 'email-verification-code',
+        url: 'send-verification-code',
         method: 'POST',
         body: formData,
       }),
     }),
-    verify: builder.mutation({
+    verifyCode: builder.mutation({
       query: (formData) => ({
-        url: 'verify-email',
+        url: 'verify-code',
         method: 'POST',
         body: formData,
       }),
@@ -69,4 +69,4 @@ const authenticationsApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const { useRegisterMutation,useEmailVerificationCodeMutation,useLoginMutation,useVerifyMutation,useResendMutation,useForgetMutation,useResetMutation ,useUpdateProfileMutation,useChangePasswordMutation} = authenticationsApi
+export const { useRegisterMutation,useSendVerificationCodeMutation,useLoginMutation,useVerifyCodeMutation,useResendMutation,useForgetMutation,useResetMutation ,useUpdateProfileMutation,useChangePasswordMutation} = authenticationsApi

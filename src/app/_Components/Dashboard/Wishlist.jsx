@@ -11,10 +11,10 @@ const page = () => {
     const skeletonRows = wishlistItems?.length || 8;
 
     return (
-        <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]">
+        <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full ">
             <AuctionTab />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 container mx-auto p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 container mx-auto p-2">
             {isLoading ?
                     [...Array(skeletonRows)].map((_, index) => (
                         <AuctionCardSkeleton key={index} />
