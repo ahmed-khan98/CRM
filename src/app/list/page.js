@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 import { useGetCategoriesQuery, useGetSubCategoriesQuery } from '../_Services/categories/page';
 import { useAddListingMutation } from '../_Services/products/page';
 import { Rating } from 'react-simple-star-rating'
+import { motion } from "framer-motion"
+import { AtSign, Lock, Eye, EyeOff } from "lucide-react"
 import Link from 'next/link';
 import Main from "../../app/Assets/Main.png";
 import Image from 'next/image';
@@ -17,7 +19,7 @@ import Image from 'next/image';
 export default function Home() {
 
     const [addListing, { isLoading }] = useAddListingMutation()
-    const [step, setStep] = useState(11);
+    const [step, setStep] = useState(1);
     console.log(step, 'step')
 
     const goNext = () => {
@@ -171,7 +173,7 @@ export default function Home() {
     };
 
     return (
-        <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center px-4">
+        <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-orange-50 to-white">
             <div className="w-full max-w-xl text-center">
                 <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">{step === 'PREVIEW LISTING' ? 'PREVIEW LISTING' : step === 16 ? 'LAST STEP' : `STEP ${step}`}</h1>
                 {
@@ -213,7 +215,7 @@ export default function Home() {
                                         <div className="space-y-4 pt-4">
                                             <button
                                                 type="submit"
-                                                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                                className="cursor-pointer flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                                                 CONTINUE
                                             </button>
                                         </div>
@@ -222,7 +224,7 @@ export default function Home() {
                                         <button
                                             type="button"
                                             onClick={goBack}
-                                            className="block my-4 w-full text-blue-700 font-semibold underline text-center text-base md:text-lg"
+                                            className="cursor-pointer block my-4 w-full text-blue-700 font-semibold underline text-center text-base md:text-lg"
                                         >
                                             ← Back
                                         </button>)}
@@ -247,6 +249,8 @@ function Step1({ onNext }) {
 }
 
 function Login({ onNext }) {
+    const [focusedField, setFocusedField] = useState(null)
+    const [showPassword, setShowPassword] = useState(false)
     const [loginForm, { isLoading: isSubmitting, isError: isFormError }] = useLoginMutation();
 
     const loginSchema = Yup.object({
@@ -286,7 +290,7 @@ function Login({ onNext }) {
 
 
     return (
-        <div className="flex min-h-full flex-col justify-center px-2 py-4 lg:px-8">
+        <div className="bg-white rounded-3xl shadow-xl overflow-hidden flex min-h-full flex-col justify-center py-14 ">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <Link href="/" className="mx-auto">
                     <Image className="mx-auto h-10 w-auto" src={Main} alt="Logo" height={50} />
@@ -296,44 +300,111 @@ function Login({ onNext }) {
             <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
 
                 <form onSubmit={formik.handleSubmit} className="space-y-6">
-                    <div>
-                        <label for="email" className="text-left block text-sm/6 font-medium text-gray-900">Email address</label>
-                        <div classMName="mt-2">
-                            <input type="email" name="email" id="email" autocomplete="email"
-                                onChange={formik.handleChange}
-                                value={formik.values.email} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6" />
-                        </div>
+                <div className="space-y-1">
+                <div
+                  className={`relative border-2 rounded-xl transition-all duration-300 ${focusedField === "email"
+                      ? "border-[#FB3B11] shadow-sm shadow-orange-100"
+                      : formik.touched.email && formik.errors.email
+                        ? "border-red-300"
+                        : "border-gray-200"
+                    }`}
+                >
+                  <div className="absolute inset-y-0 left-3 flex items-center">
+                    <AtSign className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email address"
+                    className="w-full pl-10 pr-4 py-3.5 rounded-xl focus:outline-none text-gray-700"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={(e) => {
+                      formik.handleBlur(e)
+                      setFocusedField(null)
+                    }}
+                    onFocus={() => setFocusedField("email")}
+                  />
+                </div>
+                {formik.touched.email && formik.errors.email && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-500 text-sm ml-2"
+                  >
+                    {formik.errors.email}
+                  </motion.p>
+                )}
+              </div>
+              <div className="space-y-1">
+                <div
+                  className={`relative border-2 rounded-xl transition-all duration-300 ${focusedField === "password"
+                      ? "border-[#FB3B11] shadow-sm shadow-orange-100"
+                      : formik.touched.password && formik.errors.password
+                        ? "border-red-300"
+                        : "border-gray-200"
+                    }`}
+                >
+                  <div className="absolute inset-y-0 left-3 flex items-center">
+                    <Lock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Password"
+                    className="w-full pl-10 pr-10 py-3.5 rounded-xl focus:outline-none text-gray-700"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={(e) => {
+                      formik.handleBlur(e)
+                      setFocusedField(null)
+                    }}
+                    onFocus={() => setFocusedField("password")}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5 text-gray-400" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-gray-400" />
+                    )}
+                  </button>
+                </div>
+                {formik.touched.password && formik.errors.password && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-500 text-sm ml-2"
+                  >
+                    {formik.errors.password}
+                  </motion.p>
+                )}
+              </div>
+              <div className="text-right">
+                <Link href="/forget" className="text-sm text-[#FB3B11] hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
+                
 
-                        {
-                            formik.errors.email && formik.touched.email ?
-                                <span className="text-red-500 text-sm">{formik.errors.email}</span>
-                                : null
-                        }
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label for="password" className="block text-sm/6 font-medium text-gray-900">Password</label>
-                            <div className="text-sm">
-                                <Link href="/forget" className="font-semibold text-red-500 hover:text-red-600">Forgot password?</Link>
-                            </div>
-                        </div>
-                        <div className="mt-2">
-                            <input type="password" name="password" id="password" autocomplete="current-password" onChange={formik.handleChange}
-                                value={formik.values.password} className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6" />
-                        </div>
-
-                        {
-                            formik.errors.password && formik.touched.password ?
-                                <span className="text-red-500 text-sm pb-4">{formik.errors.password}</span>
-                                : null
-                        }
-                    </div>
-                    <button
-                        type="submit"
-                        className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"                    >
-                        {isSubmitting ? "Loading...." : "LOG IN"}
-                    </button>
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-[#FB3B11] hover:bg-[#e03610] text-white py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all cursor-pointer"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center">
+                    <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  "LOG IN"
+                )}
+              </motion.button>
                 </form>
             </div>
         </div>
@@ -708,6 +779,7 @@ function Step11() {
 
     const handleAddTag = (e) => {
         if (e.key === 'Enter' && newTag.trim()) {
+            e.preventDefault(); 
             const tagValue = newTag.toLowerCase().replace(/ /g, '');
             if (!values.tags.includes(tagValue)) {
                 setFieldValue('tags', [...values.tags, tagValue]);
@@ -715,6 +787,7 @@ function Step11() {
             setNewTag('');
         }
     };
+    
 
     const handleRemoveTag = (tag) => {
         setFieldValue('tags', values.tags.filter(t => t !== tag));
@@ -810,7 +883,7 @@ function Step11() {
 
                 <div className="flex flex-wrap gap-2 mt-4">
                     {values.tags.map((tag) => (
-                        <div key={tag} className="inline-flex items-center bg-green-700 text-gray-700 px-3 py-1 rounded-full">
+                        <div key={tag} className="inline-flex items-center bg-green-500 shadow text-white px-3 py-1 rounded-full">
                             <span>{tag}</span>
                             <button
                                 type="button"
@@ -948,7 +1021,7 @@ function Step13() {
 function Step14({ setStep }) {
     return (
         <div className="space-y-4">
-            <button type='button' onClick={() => setStep('PREVIEW LISTING')} className="flex w-full justify-center rounded-md bg-orange-700 px-3 py-3 text-sm/6 font-semibold text-white shadow-xs hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700">
+            <button type='button' onClick={() => setStep('PREVIEW LISTING')} className="cursor-pointer flex w-full justify-center rounded-md bg-orange-700 px-3 py-3 text-sm/6 font-semibold text-white shadow-xs hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700">
                 PREVIEW LISTING
             </button>
 
@@ -974,7 +1047,7 @@ function LastStep({ onBack, isLoading }) {
     return (
 
         <div className="space-y-4">
-            <button className="flex w-full justify-center rounded-md bg-orange-700 px-3 py-3 text-sm/6 font-semibold text-white shadow-xs hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700">
+            <button className=" cursor-pointer flex w-full justify-center rounded-md bg-orange-700 px-3 py-3 text-sm/6 font-semibold text-white shadow-xs hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700">
                 CREATE ANOTHER
                 LISTING
             </button>
@@ -982,7 +1055,7 @@ function LastStep({ onBack, isLoading }) {
             <button
                 onClick={submitForm}
                 disabled={isLoading}
-                className=" text-white font-bold text-xl py-5 w-full rounded bg-blue-900"
+                className=" text-white font-bold text-xl py-5 w-full rounded bg-blue-900 cursor cursor-pointer"
             > {isLoading ? 'Saving...' : 'SAVE & EXIT'}
             </button>
         </div>

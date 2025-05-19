@@ -60,8 +60,9 @@ const ServicesSection = () => {
 
       <div className="mt-12">
         <Link href="/auction-product">
-          <button className="orange-bg cursor-pointer md:w-[35%] shadow text-white text-lg font-bold py-3 px-6 rounded-full transition-all hover:bg-orange-700">
-            BROWSE AUCTION
+          <button  
+          className="cursor-pointer md:w-[35%] shadow text-white text-lg font-bold py-3 px-6 rounded-full transition-all bg-[#FB3B11] hover:bg-[#e03610] disabled:opacity-70">
+            BROWSE AUCTION 
           </button>
         </Link>
       </div>

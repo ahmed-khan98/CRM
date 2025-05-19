@@ -11,7 +11,10 @@ const lostItems = () => {
     const skeletonRows = lostItems.length || 8;
 
     return (
-        <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]">
+   <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-4">
+       <div className="max-w-5xl mx-auto"> 
+
+         {/* <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]"> */}
         <AuctionTab/>
                  <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 container mx-auto p-6">
                  {isLoading ? (
@@ -28,6 +31,7 @@ const lostItems = () => {
                                 ))
                             )}
             </div>
+        </div>
         </div>
     );
 };

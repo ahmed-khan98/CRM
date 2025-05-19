@@ -48,8 +48,9 @@ export default function page() {
     });
 
     return (
-        <div className="w-full min-h-screen bg-gradient-to-b from-red-50 to-white py-4">
+        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 p-3 md:p-0">
             <div className="max-w-5xl mx-auto pt-4">
+                
 
                 <MyAccountTab />
 
@@ -57,9 +58,9 @@ export default function page() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="mt-8 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden"
+                    className="my-8 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden"
                 >
-                    <div className="p-8 md:p-12">
+                    <div className="p-10 md:p-12">
                         <div className="flex items-center gap-4 mb-8">
                             <div className="h-12 w-1 bg-[#F33E0A] rounded-full"></div>
                             <h1 className="text-2xl md:text-3xl font-bold text-[#F33E0A]">Change Password</h1>

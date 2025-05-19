@@ -22,12 +22,14 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
       cpassword: "",
     },
     validationSchema: Yup.object({
-      password: Yup.string()
-        .min(8, "Password must be at least 8 characters")
-        .required("Password is required"),
-      cpassword: Yup.string()
-        .oneOf([Yup.ref("password")], "Passwords don't match")
-        .required("Please confirm your password"),
+      firstName:Yup.string().required("first name is required"),
+      lastName:Yup.string().required("last name is required"),
+      // password: Yup.string()
+      //   .min(8, "Password must be at least 8 characters")
+      //   .required("Password is required"),
+      // cpassword: Yup.string()
+      //   .oneOf([Yup.ref("password")], "Passwords don't match")
+      //   .required("Please confirm your password"),
     }),
     onSubmit: (values) => {
       onSubmit(values)

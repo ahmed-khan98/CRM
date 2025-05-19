@@ -30,7 +30,7 @@ const ResponsesPage = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-red-50 to-white py-4">
+    <div className="w-full min-h-screen bg-gradient-to-b from-orange-50 to-white py-4">
       <div className="max-w-5xl mx-auto px-4 pt-4">
         <HelpTabs activeTab="response" />
 

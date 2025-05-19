@@ -47,7 +47,7 @@ const handleSearchChange = (e) => {
         />
         <button
           onClick={() => router.push("/auction-product")}
-          className="p-3 bg-gray-800 text-white rounded-r-full w-[100px] hover:bg-gray-900"
+          className="cursor-pointer p-3 bg-gray-800 text-white rounded-r-full w-[100px] hover:bg-gray-900 "
         >
           Explore
         </button>
@@ -79,14 +79,14 @@ const handleSearchChange = (e) => {
       {!token && (
         <button
         onClick={() => router.push('/register')}
-        className="py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
+        className="cursor-pointer py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
       >
         Register
       </button>
       )}
   <button
         onClick={() => (token ? handleLogout() : router.push('/login'))}
-        className={`py-2.5 px-3 rounded-lg text-white text-sm font-medium whitespace-nowrap shadow ${
+        className={`cursor-pointer py-2.5 px-3 rounded-lg text-white text-sm font-medium whitespace-nowrap shadow ${
           token ? 'orange-bg' : 'bg-[#2F318B]'
         }`}
       >
@@ -96,7 +96,7 @@ const handleSearchChange = (e) => {
       {token && (
         <button
           onClick={() => router.push('/dashboard/wishlist')}
-          className="py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
+          className="cursor-pointer py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
         >
           Dashboard
         </button>
@@ -104,7 +104,7 @@ const handleSearchChange = (e) => {
 
       <button
         onClick={() => router.push('/sell')}
-        className="py-2.5 px-3 bg-[#007E38] text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
+        className="cursor-pointer py-2.5 px-3 bg-[#007E38] text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
       >
         Sell Your Stuff
       </button>

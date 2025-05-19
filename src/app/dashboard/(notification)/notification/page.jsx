@@ -56,7 +56,7 @@ const NotificationsPage = () => {
   const unreadCount = data?.data?.filter((item) => !item?.hasRead)?.length || 0
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-red-50 to-white py-6">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6">
       <div className="max-w-5xl mx-auto p-5 flex flex-col space-y-6">
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">

@@ -90,8 +90,8 @@ const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
     return (
       <div className="w-full rounded-b-3xl overflow-hidden">
         <Link href="/login" className="w-full block">
-          <button className="w-full text-white bg-[#F33E0A] hover:bg-[#d63006] py-4 flex items-center justify-center gap-2 transition-all duration-300">
-            <DollarSign size={20} />
+          <button className= "cursor-pointer w-full text-white bg-[#F33E0A] hover:bg-[#d63006] py-4 flex items-center justify-center gap-2 transition-all duration-300">
+            {/* <DollarSign size={20} /> */}
             Login to Bid
           </button>
         </Link>
@@ -123,20 +123,22 @@ const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
       </div>
 
       <div className="px-4 py-2 bg-gray-100">
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-center mb-1">
           <div className="flex items-center gap-1 text-gray-700">
             <Clock size={16} />
             <span className="text-sm font-medium">Current Bid</span>
           </div>
-          <button
+          <div className="text-xl font-bold text-gray-900">${highestBid || 0}</div>
+
+          {/* <button
             onClick={() => setShowBidTips(!showBidTips)}
             className="text-xs text-blue-600 hover:text-blue-800 underline"
           >
             {showBidTips ? "Hide tips" : "Bidding tips"}
-          </button>
+          </button> */}
         </div>
 
-        <div className="flex items-center justify-between mb-2">
+        {/* <div className="flex items-center justify-between mb-2">
           <div className="text-2xl font-bold text-gray-900">${highestBid || 0}</div>
           <div className="flex gap-1">
             {bidIncrements.map((increment) => (
@@ -149,7 +151,7 @@ const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <AnimatePresence>
           {bidSuccess && (
@@ -197,7 +199,7 @@ const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
           whileTap={{ scale: 0.97 }}
           onClick={submitBid}
           disabled={bidValue <= highestBid || isSubmitting}
-          className={`w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${bidValue > highestBid && !isSubmitting
+          className={`cursor-pointer w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${bidValue > highestBid && !isSubmitting
               ? "bg-[#F33E0A] hover:bg-[#d63006]"
               : "bg-gray-400 cursor-not-allowed"
             }`}

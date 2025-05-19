@@ -1,13 +1,13 @@
 import React from 'react'
-import SubHeading from '../_Components/Home/SubHeading'
-import AuctionCard from '../_Components/Home/AuctionCard'
+// import SubHeading from '../_Components/Home/SubHeading'
 import SortMenu from '../_Components/AuctionProduct/SortMenu'
+import AuctionSection from '../_Components/Home/AuctionSection'
 
 const page = () => {
   return (
   <>
         <SortMenu/>
-      <AuctionCard />
+      <AuctionSection />
   
   </>
   )

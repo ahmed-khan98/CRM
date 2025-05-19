@@ -29,7 +29,7 @@ const HomeBanner = () => {
           </div>
         ) : banner ? (
           <>
-            <div className="w-full lg:w-[40%] bg-[#D8D8D8] p-4 md:p-8 lg:p-10 flex flex-col gap-4 rounded-lg">
+            <div className="w-full lg:w-[40%] bg-gray-100 p-4 md:p-8 lg:p-10 flex flex-col gap-4 rounded-lg">
               <h1 className="roboto font-semibold text-center md:text-4xl text-2xl text-title-md tracking-tight text-[#0E0E0E]">
                 {banner.title}
               </h1>

@@ -56,12 +56,12 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-red-50 to-white py-4">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 px-4">
       <Toaster position="top-center" />
       <div className="max-w-5xl mx-auto pt-4">
-
+  
       <MyAccountTab />
-      <div className="mb-6">
+      <div className="my-6">
         <h1 className="text-2xl font-bold text-gray-800">My Account</h1>
         <p className="text-gray-500 mt-1">Manage your personal information and preferences</p>
       </div>
@@ -78,9 +78,9 @@ const ProfilePage = () => {
           <div className="h-24 bg-gradient-to-r from-[#F33E0A] to-[#FF6B3D]"></div>
 
           {/* Profile header with edit button */}
-          <div className="relative px-8 pb-6 -mt-12">
+          <div className="relative px-2 md:px-8  pb-6 -mt-14">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-              <div className="flex items-end gap-4">
+              <div className="flex items-end gap-4 mx-4 md:mx-0">
                 <div className="h-20 w-20 rounded-full bg-white shadow-md flex items-center justify-center border-4 border-white">
                   <div className="h-full w-full rounded-full bg-[#F33E0A] flex items-center justify-center text-white text-2xl font-bold">
                     {formData.firstName?.charAt(0) || <User size={30} />}
@@ -97,7 +97,7 @@ const ProfilePage = () => {
               <button
                 type="button"
                 onClick={() => setIsEditable(!isEditable)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full transition-all ${
+                className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${
                   isEditable
                     ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     : "bg-white text-[#F33E0A] border border-[#F33E0A] hover:bg-[#F33E0A] hover:text-white"
@@ -131,7 +131,7 @@ const ProfilePage = () => {
           )}
         </AnimatePresence>
 
-        <form onSubmit={handleSubmit} className="p-8">
+        <form onSubmit={handleSubmit} className="p-6 md:p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">

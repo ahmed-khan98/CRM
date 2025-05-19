@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import ProductHeader from '../CardChildComponent/ProductHeader';
-import ProductImageSection from '../CardChildComponent/ProductImageSection';
-import TimeCounter from '../CardChildComponent/TimeCounter';
-import ProductInfo from '../CardChildComponent/ProductInfo';
-import ProductBidding from '../CardChildComponent/ProductBidding';
+import ProductHeader from '../CardComponent/ProductHeader';
+import ProductImageSection from '../CardComponent/ProductImageSection';
+import TimeCounter from '../CardComponent/TimeCounter';
+import ProductInfo from '../CardComponent/ProductInfo';
+import ProductBidding from '../CardComponent/ProductBidding';
 
 
 const WishlistCard = React.memo(({ item }) => {

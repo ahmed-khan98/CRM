@@ -34,7 +34,7 @@ export default function GenZRegistration() {
     try {
       setFormData((prev) => ({ ...prev, email }))
       await sendVerificationCode({ email }).unwrap()
-      toast.success("Verification code sent! 📱")
+      toast.success("Verification code sent on email!")
       setStep(2)
     } catch (error) {
       toast.error(error.data?.message || "Oops! Couldn't send the code 😕")

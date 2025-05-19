@@ -11,7 +11,10 @@ const page = () => {
     const skeletonRows = wishlistItems?.length || 8;
 
     return (
-        <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full ">
+        // <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full ">
+             <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-2">
+      <div className="max-w-6xl mx-auto">
+
             <AuctionTab />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 container mx-auto p-2">
@@ -34,6 +37,7 @@ const page = () => {
 
                         ))
             }
+        </div>
         </div>
         </div>
     );

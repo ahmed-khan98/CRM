@@ -10,7 +10,9 @@ const PaidItems = ({ status }) => {
     const wonItems = data?.data?.filter(e => e.paymentStatus == status) || [];
     const skeletonRows = wonItems.length || 8;
     return (
-        <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]">
+        // <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]">
+        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-2">
+      <div className="max-w-6xl mx-auto">
             <PurchaseTab />
             <div className="grid grid-cols-1 sm:grid-cols-2 sm:p-2 lg:grid-cols-3 gap-0 container mx-auto p-2">
                 {isLoading ? (
@@ -25,6 +27,7 @@ const PaidItems = ({ status }) => {
                         <PaidUnPaidCard key={item.id ?? `auction-${index}`} item={item} status={status} />
                     ))
                 )}
+            </div>
             </div>
         </div>
     );

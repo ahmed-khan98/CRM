@@ -56,10 +56,22 @@ const filterSlice = createSlice({
                 case 'high-to-low':
                     state.filteredProducts = [...state.filteredProducts].sort((a, b) => b.price - a.price);
                     break;
-                case 'oldest-to-newest':
+                case 'retail_price_asc':
+                    state.filteredProducts = [...state.filteredProducts].sort((a, b) => a.retail - b.retail);
+                    break;
+                case 'retail_price_desc':
+                    state.filteredProducts = [...state.filteredProducts].sort((a, b) => b.retail - a.retail);
+                    break;
+                case 'bids_asc':
+                    state.filteredProducts = [...state.filteredProducts].sort((a, b) => a.biddingCount - b.biddingCount);
+                    break;
+                case 'bids_desc':
+                    state.filteredProducts = [...state.filteredProducts].sort((a, b) => b.biddingCount - a.biddingCount);
+                    break;
+                case 'time_remaining_asc"':
                     state.filteredProducts = [...state.filteredProducts].sort((a, b) => new Date(a.biddingStartTime) - new Date(b.biddingStartTime));
                     break;
-                case 'newest-to-oldest':
+                case 'time_remaining_desc':
                     state.filteredProducts = [...state.filteredProducts].sort((a, b) => new Date(b.biddingStartTime) - new Date(a.biddingStartTime));
                     break;
                 default:

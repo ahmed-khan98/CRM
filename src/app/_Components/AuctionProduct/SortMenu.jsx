@@ -12,14 +12,15 @@ import {
   useGetCategoriesQuery,
   useGetSubCategoriesQuery,
 } from "@/app/_Services/categories/page";
+import { useGetSortTitleQuery } from "@/app/_Services/products/page";
 
 const SortMenu = ({ title, options, onSelect, width = 120 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("");
   const dropdownRef = useRef(null);
 
-  const handleSelect = (label, value) => {
-    setSelected(label);
+  const handleSelect = (title, value) => {
+    setSelected(title);
     setIsOpen(false);
     if (onSelect) onSelect(value);
   };
@@ -34,7 +35,7 @@ const SortMenu = ({ title, options, onSelect, width = 120 }) => {
   }, []);
 
   return (
-    <div className="relative text-left">
+    <div className="relative text-left capitalize">
       <button
         style={{ minWidth: `${width}px` }}
         className="flex items-center cursor-pointer justify-between border border-solid border-gray-400 rounded-xl px-2 py-2 bg-white hover:border-gray-700 focus:outline-secondary"
@@ -58,13 +59,13 @@ const SortMenu = ({ title, options, onSelect, width = 120 }) => {
           role="menu"
           tabIndex="0"
         >
-          {options.map(({ label, value }) => (
+          {options.map(({ title, value }) => (
             <p
               key={value}
-              className="block cursor-pointer py-2 px-3 hover:bg-gray-200 focus-visible:bg-gray-200 focus-visible:outline-none"
-              onClick={() => handleSelect(label, value)}
+              className="block cursor-pointer py-2 px-2 hover:bg-gray-100 focus-visible:bg-gray-200 focus-visible:outline-none"
+              onClick={() => handleSelect(title, value)}
             >
-              {label}
+              {title}
             </p>
           ))}
         </div>
@@ -78,37 +79,26 @@ const SortDropdowns = () => {
   const { data: categories } = useGetCategoriesQuery();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
-
+    const { data:sortTitle, error, isLoading } = useGetSortTitleQuery();
+  
+console.log(sortTitle,'sortTitle')
   const {
     data: subcategories,
-    refetch,
-    isFetching,
   } = useGetSubCategoriesQuery(selectedCategoryId, {
     skip: !selectedCategoryId,
   });
 
   const categoryOptions =
     categories?.data?.map((category) => ({
-      label: category.name,
+      title: category.name,
       value: category._id,
     })) || [];
 
   const subcategoryOptions =
     subcategories?.data?.map((subcategory) => ({
-      label: subcategory.name,
+      title: subcategory.name,
       value: subcategory._id,
     })) || [];
-
-  const sortOptions = [
-    { label: "Current Price (Low - High)", value: "low-to-high" },
-    { label: "Current Price (High - Low)", value: "high-to-low" },
-    { label: "Ending (Earliest - Latest)", value: "time_remaining_asc" },
-    { label: "Ending (Latest - Earliest)", value: "time_remaining_desc" },
-    { label: "Est. Retail (Low - High)", value: "retail_price_asc" },
-    { label: "Est. Retail (High - Low)", value: "retail_price_desc" },
-    { label: "Bid Count (Low - High)", value: "bids_asc" },
-    { label: "Bid Count (High - Low)", value: "bids_desc" },
-  ];
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategoryId(categoryId);
@@ -125,7 +115,7 @@ const SortDropdowns = () => {
         <SortMenu
           width={220}
           title="Sort By"
-          options={sortOptions}
+          options={sortTitle?.data || []}
           onSelect={(value) => dispatch(sortProducts(value))}
         />
 

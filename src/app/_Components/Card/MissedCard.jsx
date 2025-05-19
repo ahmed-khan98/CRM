@@ -4,10 +4,10 @@
 
 'use client'
 import React, { useCallback, useRef, useState, useEffect } from 'react'
-import ProductHeader from '../CardChildComponent/ProductHeader';
-import ProductImageSection from '../CardChildComponent/ProductImageSection';
-import TimeCounter from '../CardChildComponent/TimeCounter';
-import ProductInfo from '../CardChildComponent/ProductInfo';
+import ProductHeader from '../CardComponent/ProductHeader';
+import ProductImageSection from '../CardComponent/ProductImageSection';
+import TimeCounter from '../CardComponent/TimeCounter';
+import ProductInfo from '../CardComponent/ProductInfo';
 
 const MissedCard = ({ item,status }) => {
 
@@ -28,7 +28,7 @@ const MissedCard = ({ item,status }) => {
       }, [item?.biddingEndTime]);
       
     return (
-   <div className="relative bg-gray-200 border-1 border-gray-300 rounded-3xl my-3 shadow-lg">
+      <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
             <ProductHeader name={item?.name} id={item?._id}/>
             <ProductImageSection item={item} />
             <TimeCounter timeLeft={daysSinceEnded} type='days' title='Ended' price={item?.price} />

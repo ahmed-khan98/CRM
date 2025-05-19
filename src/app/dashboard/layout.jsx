@@ -72,7 +72,7 @@ const DashboardLayout = ({ children }) => {
           className={`flex-1 transition-all duration-300 ease-in-out
             ${isMobile ? "w-full" : ""}`}
             >
-          <div className="p-4 max-w-7xl mx-auto w-full bg-[#FFFFFF]">{children}</div>
+          <div className="max-w-8xl mx-auto w-full bg-[#FFFFFF] h-auto">{children}</div>
         </main>
       </div>
     </div>

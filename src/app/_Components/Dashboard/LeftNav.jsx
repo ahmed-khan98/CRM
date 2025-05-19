@@ -62,7 +62,11 @@ const LeftNav = () => {
     {
       name: "Wallet",
       icon: <Wallet className="w-5 h-5" />,
-      path: ["/dashboard/comingsoon"],
+      path: ["/dashboard/wallet/walletDashbaord","dashboard/wallet/ManageCard"],
+      submenu: [
+        { name: "Wallet Dashbaord", path: "/dashboard/wallet/walletDashbaord" },
+        { name: "Manage Card", path: "/dashboard/wallet/ManageCard" },
+      ],
     },
     {
       name: "Notification",

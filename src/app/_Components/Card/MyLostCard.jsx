@@ -4,10 +4,10 @@
 
 'use client'
 import React, { useCallback, useRef, useState, useEffect } from 'react'
-import ProductHeader from '../CardChildComponent/ProductHeader';
-import ProductImageSection from '../CardChildComponent/ProductImageSection';
-import TimeCounter from '../CardChildComponent/TimeCounter';
-import ProductInfo from '../CardChildComponent/ProductInfo';
+import ProductHeader from '../CardComponent/ProductHeader';
+import ProductImageSection from '../CardComponent/ProductImageSection';
+import TimeCounter from '../CardComponent/TimeCounter';
+import ProductInfo from '../CardComponent/ProductInfo';
 
 const MyLostCard = ({ item,status }) => {
 

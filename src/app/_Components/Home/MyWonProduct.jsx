@@ -42,10 +42,10 @@ const MyWonProduct = ({ item }) => {
     };
 
     return (
-        <div className="relative  shadow-lg bg-white  border-[1px] rounded-3xl  border-gray-300 my-3">
+        <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
             <Link
                 href={`/detailproduct/${item?.product?._id}`}
-                className="text-[18px] font-semibold py-2 px-3 h-14 bg-white rounded-t-3xl  cursor-pointer block"
+                className="text-[18px] font-semibold py-2 px-3 h-14 rounded-t-3xl  cursor-pointer block"
             >
                 <p className="line-clamp-2 overflow-hidden text-ellipsis underline">
                     {item?.product?.name.length > 50 ? `${item.product?.name.slice(0, 50)}...` : item.product?.name}
@@ -58,13 +58,12 @@ const MyWonProduct = ({ item }) => {
                     alt="Product"
                     className="w-full h-[290px] object-contain cursor-pointer"
                 />
-                {
+                {/* {
                     item?.product?.watchers?.length === 0 ? "" :
                         <div className="absolute text-white p-2 top-2 md:left-[70%] left-[65%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
                             Watcher <span className="ml-1">{item?.product?.watchers?.length}</span>
                         </div>
-                }
-                {/* Icons */}
+                } */}
                 <div className="absolute top-2 left-3 h-[30px] w-[30px] bg-[#F33E0A] shadow-2xl rounded-full flex items-center justify-center">
                     <CiShare2 className="text-white text-lg" />
                 </div>
@@ -78,9 +77,7 @@ const MyWonProduct = ({ item }) => {
                         <CiHeart className="text-black text-lg" />
                     )}
                 </div>
-                <div className="absolute top-22 left-3 h-[30px] w-[30px] bg-white shadow-2xl rounded-full flex items-center justify-center">
-                    <CiSearch className="text-black text-lg" />
-                </div>
+             
             </div>
 
             <div className="bg-white shadow-xl w-[80%] mx-auto text-center py-2 px-2 rounded -mt-[60px] relative z-1">
@@ -147,8 +144,8 @@ const MyWonProduct = ({ item }) => {
 
             <div className="flex flex-row">
 
-                <button className=" rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-[#a7f3d0] py-3 flex items-center justify-center ">
-                    <span className='text-[#00885E]'>WON</span>
+                <button className=" rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-[#10b981] py-3 flex items-center justify-center ">
+                    <span>WON</span>
                 </button>
                 {
                     item?.paymentStatus === 'Completed' ?

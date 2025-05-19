@@ -2,6 +2,12 @@ import { createApiAuction } from "@/redux/createApi"
 
 const productApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({
+    getSortTitle: builder.query({
+      query: () => 'user/sortTitle/',
+      providesTags: ['sortTitle'],
+      keepUnusedDataFor: 3800, 
+      refetchOnMountOrArgChange: false,
+    }),
     getTodayyAuctionsProduct: builder.query({
       query: () => 'user/product/allProducts',
       providesTags: ['auction'],
@@ -51,4 +57,4 @@ const productApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const { useAddListingMutation,useGetTodayyAuctionsProductQuery,useAddWatchQuery, useProductDetailQuery,useAddBidMutation ,useGetMissedProductQuery,useRelatedProductsQuery} = productApi
+export const { useGetSortTitleQuery,useAddListingMutation,useGetTodayyAuctionsProductQuery,useAddWatchQuery, useProductDetailQuery,useAddBidMutation ,useGetMissedProductQuery,useRelatedProductsQuery} = productApi
