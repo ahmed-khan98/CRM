@@ -7,8 +7,14 @@ const aboutApi = createApiAuction.injectEndpoints({
       keepUnusedDataFor: 1800, 
       refetchOnMountOrArgChange: false,
     }),
+    getSidebarTitle: builder.query({
+      query: () => 'user/sidebar/',
+      providesTags: ['sidebar'],
+      keepUnusedDataFor: 3800, 
+      refetchOnMountOrArgChange: false,
+    }),
   
   }),
 })
 
-export const { useGetServiceQuery } = aboutApi
+export const { useGetServiceQuery,useGetSidebarTitleQuery } = aboutApi

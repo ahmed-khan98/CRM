@@ -18,11 +18,14 @@ import {
   ChevronRight,
   ChevronDown,
 } from "lucide-react"
+import { useGetSidebarTitleQuery } from "@/app/_Services/services/page"
 
 const LeftNav = () => {
   const pathname = usePathname()
   const router = useRouter()
   const [expandedMenus, setExpandedMenus] = useState({})
+      const { data:sidebars, error, isLoading } = useGetSidebarTitleQuery();
+  console.log(sidebars,'sidebars')
 
   const menuItems = [
     {
@@ -157,7 +160,7 @@ const LeftNav = () => {
               >
                 <div className="flex items-center gap-3">
                   <span className={isActive ? "text-[#F33E0A]" : "text-gray-500"}>{item.icon}</span>
-                  <span className="font-medium text-sm">{item.name}</span>
+                  <span className="font-medium text-sm">{sidebars?.data?.[index]?.title ?? item?.name }</span>
                   {item.badge && (
                     <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
                       {item.badge}
