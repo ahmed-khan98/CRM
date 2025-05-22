@@ -20,7 +20,7 @@ const WalletDashboard = () => {
 
   const handleAddCardSuccess = () => {
     setShowAddCard(false)
-    refetchWallet()
+    refetchWallet() 
   }
 
   const filterOptions = [

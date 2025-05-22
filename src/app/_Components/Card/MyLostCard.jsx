@@ -29,7 +29,7 @@ const MyLostCard = ({ item,status }) => {
       
 console.log(daysSinceEnded,'daysSinceEnded')
     return (
-   <div className="relative bg-gray-200 border-1 border-gray-300 rounded-3xl my-3 shadow-lg">
+        <div className="relative bg-gradient-to-b bg-gray-100 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
             <ProductHeader name={item?.product?.name} id={item?.product?._id}/>
             <ProductImageSection item={item?.product} />
             <TimeCounter timeLeft={daysSinceEnded} type='days' title='Ended' price={item?.product?.price} />

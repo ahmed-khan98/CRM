@@ -80,7 +80,7 @@ const MyWonProduct = ({ item }) => {
              
             </div>
 
-            <div className="bg-white shadow-xl w-[80%] mx-auto text-center py-2 px-2 rounded -mt-[60px] relative z-1">
+            {/* <div className="bg-white shadow-xl w-[80%] mx-auto text-center py-2 px-2 rounded -mt-[60px] relative z-1">
                 <div className='flex justify-between py-1'>
                     <p className="text-sm ">Start Date:</p>
                     <div className="flex justify-center space-x-4 font-semibold">
@@ -93,7 +93,7 @@ const MyWonProduct = ({ item }) => {
                         {formatDate(item?.product?.biddingEndTime)}
                     </div>
                 </div>
-            </div>
+            </div> */}
             {/* {["hours", "minutes", "seconds"].map((unit) => (
                         <div key={unit} className="flex flex-col items-center">
                             <span>{timeLeft[unit] ?? 0}</span>

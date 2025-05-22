@@ -29,30 +29,30 @@ const LeftNav = () => {
       name: "My Auction",
       icon: <Home className="w-5 h-5" />,
       path: ["/dashboard/wishlist", "/dashboard/wonitem", "/dashboard/lostitem"],
-      submenu: [
-        { name: "Wishlist", path: "/dashboard/wishlist" },
-        { name: "Won Items", path: "/dashboard/wonitem" },
-        { name: "Lost Items", path: "/dashboard/lostitem" },
-      ],
+      // submenu: [
+      //   { name: "Wishlist", path: "/dashboard/wishlist" },
+      //   { name: "Won Items", path: "/dashboard/wonitem" },
+      //   { name: "Lost Items", path: "/dashboard/lostitem" },
+      // ],
     },
     {
       name: "Purchase",
       icon: <ShoppingCart className="w-5 h-5" />,
       path: ["/dashboard/paidItem", "/dashboard/unpaidItem", "/dashboard/penalizedItem"],
-      submenu: [
-        { name: "Paid Items", path: "/dashboard/paidItem" },
-        { name: "Unpaid Items", path: "/dashboard/unpaidItem" },
-        { name: "Penalized Items", path: "/dashboard/penalizedItem" },
-      ],
+      // submenu: [
+      //   { name: "Paid Items", path: "/dashboard/paidItem" },
+      //   { name: "Unpaid Items", path: "/dashboard/unpaidItem" },
+      //   { name: "Penalized Items", path: "/dashboard/penalizedItem" },
+      // ],
     },
     {
       name: "Appointments",
       icon: <Calendar className="w-5 h-5" />,
       path: ["/dashboard/upcomingItem", "/dashboard/missedItem"],
-      submenu: [
-        { name: "Upcoming", path: "/dashboard/upcomingItem" },
-        { name: "Missed", path: "/dashboard/missedItem" },
-      ],
+      // submenu: [
+      //   { name: "Upcoming", path: "/dashboard/upcomingItem" },
+      //   { name: "Missed", path: "/dashboard/missedItem" },
+      // ],
     },
     {
       name: "My Store",
@@ -77,10 +77,10 @@ const LeftNav = () => {
       name: "My Account",
       icon: <User className="w-5 h-5" />,
       path: ["/dashboard/profile", "/dashboard/changepassword"],
-      submenu: [
-        { name: "Profile", path: "/dashboard/profile" },
-        { name: "Change Password", path: "/dashboard/changepassword" },
-      ],
+      // submenu: [
+      //   { name: "Profile", path: "/dashboard/profile" },
+      //   { name: "Change Password", path: "/dashboard/changepassword" },
+      // ],
     },
     {
       name: "Refer a Friend",
@@ -97,10 +97,10 @@ const LeftNav = () => {
       name: "Help",
       icon: <HelpCircle className="w-5 h-5" />,
       path: ["/dashboard/contactform", "/dashboard/response"],
-      submenu: [
-        { name: "Contact Form", path: "/dashboard/contactform" },
-        { name: "Responses", path: "/dashboard/response" },
-      ],
+      // submenu: [
+      //   { name: "Contact Form", path: "/dashboard/contactform" },
+      //   { name: "Responses", path: "/dashboard/response" },
+      // ],
     },
   ]
 

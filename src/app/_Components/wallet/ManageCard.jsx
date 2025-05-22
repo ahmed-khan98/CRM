@@ -199,7 +199,7 @@ const ManageCards = () => {
           )}
         </div>
 
-        <div className="bg-white rounded-3xl shadow-md p-6 mt-8">
+        {/* <div className="bg-white rounded-3xl shadow-md p-6 mt-8">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Card Security</h2>
           <p className="text-gray-600 mb-6">
             Your card information is securely stored and processed according to PCI DSS standards. We never store your full card number or CVV.
@@ -238,7 +238,7 @@ const ManageCards = () => {
               <ChevronRight className="h-5 w-5 text-gray-400" />
             </motion.div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <AnimatePresence>

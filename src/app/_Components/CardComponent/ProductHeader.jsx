@@ -7,7 +7,7 @@ const ProductHeader = ({ name, id }) => {
   return (
     <Link
       href={`/detailproduct/${id}`}
-      className="text-[18px] font-semibold pt-3 px-3 h-16 rounded-t-3xl  cursor-pointer block"
+      className="text-[18px] font-semibold pt-3 px-3 h-16 rounded-t-3xl  cursor-pointer  bg-orange-50"
     >
       <p className="line-clamp-2 overflow-hidden text-ellipsis underline capitalize">
   {truncatedName}

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 
-const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDescription, isSold, id, highestBid }) => {
+const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDescription, isSold, id, highestBid,isAuctionActive }) => {
 
     const [showFull, setShowFull] = useState(false);
     const maxLength = 300;
@@ -30,7 +30,7 @@ const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDesc
             return;
         }
         try {
-            const response = await addBid({ id: id, bidAmount: bidValue }).unwrap();
+            const response = await addBid({ id: id, bidAmount: bidValue,bidType:isAuctionActive?'live':'pre' }).unwrap();
             toast.success(response?.message);
             setBidValue(bidValue + 1)
             // router.replace(router.asPath);

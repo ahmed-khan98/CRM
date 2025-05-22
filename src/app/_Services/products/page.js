@@ -44,7 +44,7 @@ const productApi = createApiAuction.injectEndpoints({
         return {
           url: `user/product/${formData?.id}/PlaceBid`,
           method: 'POST',
-          body: { bidAmount: formData?.bidAmount },
+          body: { bidAmount: formData?.bidAmount,bidType:formData?.bidType },
         }
       },
       invalidatesTags: ['auction','detailproduct']

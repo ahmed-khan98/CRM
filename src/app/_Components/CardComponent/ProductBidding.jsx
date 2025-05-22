@@ -7,7 +7,7 @@ import Cookies from "js-cookie"
 import { ArrowUp, Clock, TrendingUp, DollarSign, Loader2, AlertCircle, CheckCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
-const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
+const ProductBidding = ({ id, isSold, highestBid,isAuctionActive }) => {
   const [addBid, { isLoading: isSubmitting }] = useAddBidMutation()
   const token = Cookies.get("token")
   const [bidValue, setBidValue] = useState(highestBid + 1)
@@ -55,7 +55,7 @@ const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
     }
 
     try {
-      const response = await addBid({ id, bidAmount: bidValue }).unwrap()
+      const response = await addBid({ id, bidAmount: bidValue,bidType:isAuctionActive?'live':'pre' }).unwrap()
       setBidSuccess(true)
       setBidValue((prev) => prev + 1)
     } catch (error) {
@@ -152,19 +152,20 @@ const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
             ))}
           </div>
         </div> */}
+      <div className="relative">
 
         <AnimatePresence>
           {bidSuccess && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg flex items-center gap-2"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+              className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
             >
               <CheckCircle size={18} />
               <div className="flex-1">Bid placed successfully!</div>
               <div className="text-xs">{timeLeft}s</div>
-            </motion.div>
+            </motion.div> 
           )}
 
           {bidError && (
@@ -172,7 +173,7 @@ const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg flex items-center gap-2"
+              className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
             >
               <AlertCircle size={18} />
               <div className="flex-1">{errorMessage}</div>
@@ -180,6 +181,7 @@ const ProductBidding = ({ id, isSold, highestBid, auctionStatus }) => {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
       </div>
 
       <div className="flex rounded-b-3xl overflow-hidden">
