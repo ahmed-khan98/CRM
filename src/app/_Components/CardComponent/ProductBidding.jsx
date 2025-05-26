@@ -7,7 +7,7 @@ import Cookies from "js-cookie"
 import { ArrowUp, Clock, TrendingUp, DollarSign, Loader2, AlertCircle, CheckCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
-const ProductBidding = ({ id, isSold, highestBid,isAuctionActive }) => {
+const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid }) => {
   const [addBid, { isLoading: isSubmitting }] = useAddBidMutation()
   const token = Cookies.get("token")
   const [bidValue, setBidValue] = useState(highestBid + 1)
@@ -55,7 +55,7 @@ const ProductBidding = ({ id, isSold, highestBid,isAuctionActive }) => {
     }
 
     try {
-      const response = await addBid({ id, bidAmount: bidValue,bidType:isAuctionActive?'live':'pre' }).unwrap()
+      const response = await addBid({ id, bidAmount: bidValue, bidType: isAuctionActive ? 'live' : 'pre' }).unwrap()
       setBidSuccess(true)
       setBidValue((prev) => prev + 1)
     } catch (error) {
@@ -75,22 +75,12 @@ const ProductBidding = ({ id, isSold, highestBid,isAuctionActive }) => {
 
   const bidIncrements = getBidIncrements()
 
-  if (isSold) {
-    return (
-      <div className="w-full rounded-b-3xl overflow-hidden">
-        <button className="w-full text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 py-4 flex items-center justify-center gap-2">
-          <CheckCircle size={20} />
-          Sold
-        </button>
-      </div>
-    )
-  }
 
   if (!token) {
     return (
       <div className="w-full rounded-b-3xl overflow-hidden">
         <Link href="/login" className="w-full block">
-          <button className= "cursor-pointer w-full text-white bg-[#F33E0A] hover:bg-[#d63006] py-4 flex items-center justify-center gap-2 transition-all duration-300">
+          <button className="cursor-pointer w-full text-white bg-[#F33E0A] hover:bg-[#d63006] py-4 flex items-center justify-center gap-2 transition-all duration-300">
             {/* <DollarSign size={20} /> */}
             Login to Bid
           </button>
@@ -122,50 +112,32 @@ const ProductBidding = ({ id, isSold, highestBid,isAuctionActive }) => {
         </AnimatePresence>
       </div>
 
-      <div className="px-4 py-2 bg-gray-100">
-        <div className="flex justify-between items-center mb-1">
-          <div className="flex items-center gap-1 text-gray-700">
-            <Clock size={16} />
-            <span className="text-sm font-medium">Current Bid</span>
+      {userBid &&
+        <div className="px-4 py-2 bg-white">
+          <div className="flex justify-between items-center mb-1">
+            <div className="flex items-center gap-1 text-gray-700">
+              <Clock size={16} />
+              <span className="text-sm font-medium">Your Bid</span>
+            </div>
+            <div className="text-xl font-bold text-gray-900">${userBid}</div>
           </div>
-          <div className="text-xl font-bold text-gray-900">${highestBid || 0}</div>
 
-          {/* <button
-            onClick={() => setShowBidTips(!showBidTips)}
-            className="text-xs text-blue-600 hover:text-blue-800 underline"
-          >
-            {showBidTips ? "Hide tips" : "Bidding tips"}
-          </button> */}
-        </div>
-
-        {/* <div className="flex items-center justify-between mb-2">
-          <div className="text-2xl font-bold text-gray-900">${highestBid || 0}</div>
-          <div className="flex gap-1">
-            {bidIncrements.map((increment) => (
-              <button
-                key={increment}
-                onClick={() => handleQuickBid(increment)}
-                className="px-2 py-1 text-xs bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
-              >
-                +${increment}
-              </button>
-            ))}
-          </div>
-        </div> */}
+        
+        </div>}
       <div className="relative">
 
         <AnimatePresence>
           {bidSuccess && (
             <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
               className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
             >
               <CheckCircle size={18} />
               <div className="flex-1">Bid placed successfully!</div>
               <div className="text-xs">{timeLeft}s</div>
-            </motion.div> 
+            </motion.div>
           )}
 
           {bidError && (
@@ -182,42 +154,50 @@ const ProductBidding = ({ id, isSold, highestBid,isAuctionActive }) => {
           )}
         </AnimatePresence>
       </div>
-      </div>
 
       <div className="flex rounded-b-3xl overflow-hidden">
-        <div className="relative w-1/2">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-            <DollarSign size={18} className="text-gray-500" />
-          </div>
-          <input
-            type="number"
-            value={bidValue}
-            onChange={(e) => handleBidChange(e.target.value)}
-            className="w-full h-full px-10 py-4 bg-[#EBEBEB] text-center font-semibold text-lg outline-none rounded-bl-3xl appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            min={highestBid + 1}
-          />
-        </div>
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          onClick={submitBid}
-          disabled={bidValue <= highestBid || isSubmitting}
-          className={`cursor-pointer w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${bidValue > highestBid && !isSubmitting
-              ? "bg-[#F33E0A] hover:bg-[#d63006]"
-              : "bg-gray-400 cursor-not-allowed"
-            }`}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 size={20} className="animate-spin" />
-              <span>Bidding...</span>
+        {isSold ? <div className="w-full rounded-b-3xl overflow-hidden">
+          <button className="w-full text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 py-4 flex items-center justify-center gap-2">
+            <CheckCircle size={20} />
+            Sold
+          </button>
+        </div> :
+          <>
+            <div className="relative w-1/2">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                <DollarSign size={18} className="text-gray-500" />
+              </div>
+              <input
+                type="number"
+                value={bidValue}
+                onChange={(e) => handleBidChange(e.target.value)}
+                className="w-full h-full px-10 py-4 bg-[#EBEBEB] text-center font-semibold text-lg outline-none rounded-bl-3xl appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                min={highestBid + 1}
+              />
+            </div>
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={submitBid}
+              disabled={bidValue <= highestBid || isSubmitting}
+              className={`cursor-pointer w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${bidValue > highestBid && !isSubmitting
+                ? "bg-[#F33E0A] hover:bg-[#d63006]"
+                : "bg-gray-400 cursor-not-allowed"
+                }`}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" />
+                  <span>Bidding...</span>
+                </>
+              ) : (
+                <>
+                  <ArrowUp size={20} />
+                  <span>Place Bid</span>
+                </>
+              )}
+            </motion.button>
             </>
-          ) : (
-            <>
-              <ArrowUp size={20} />
-              <span>Place Bid</span>
-            </>
-          )}
-        </motion.button>
+        }
       </div>
     </div>
   )

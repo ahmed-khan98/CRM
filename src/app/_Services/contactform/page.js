@@ -10,6 +10,14 @@ const contactFormApi = createApiAuction.injectEndpoints({
             }),
 
         }),
+        createUserContactForm: builder.mutation({
+            query: (formData) => ({
+                url: '/user/contactus/add',
+                method: 'POST',
+                body: formData,
+            }),
+
+        }),
         response: builder.query({
             query: () => 'user/contactform/response',
             keepUnusedDataFor: 180, 
@@ -18,4 +26,4 @@ const contactFormApi = createApiAuction.injectEndpoints({
     }),
 })
 
-export const { useCreateContactFormMutation,useResponseQuery } = contactFormApi
+export const { useCreateContactFormMutation,useResponseQuery,useCreateUserContactFormMutation } = contactFormApi

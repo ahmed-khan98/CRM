@@ -2,6 +2,7 @@
 import React from 'react'
 import { FaGavel } from 'react-icons/fa6'
 import { useGetContactQuery } from '../_Services/contact/page';
+import UserContactForm from '../_Components/UserContactForm/UserContactForm';
 
 
 const page = () => {
@@ -30,6 +31,7 @@ const page = () => {
             </div>
           </div>
 
+            <UserContactForm/>
           <div className="flex flex-wrap lg:flex-nowrap items-center gap-6 py-5">
             {/* Left Section (Description) */}
             <div className="w-full lg:w-1/2 p-4">

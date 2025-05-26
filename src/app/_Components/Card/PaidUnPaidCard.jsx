@@ -56,7 +56,9 @@ const PaidUnPaidCard = ({ item, status }) => {
 
             <ProductHeader name={item?.product?.name} id={item?.product?._id} />
             <ProductImageSection item={item?.product} />
-            <TimeCounter timeLeft={daysSinceEnded} type='days' title='Ended' price={item?.product?.price} />
+            <TimeCounter timeLeft={daysSinceEnded} type='days' title='Ended' price={item?.product?.price}
+            
+            />
             <ProductInfo quantity={item?.product?.quantity}
                 retail={item?.product?.retail ? item?.product?.retail : 0}
                 highestBid={item?.product?.highestBid}

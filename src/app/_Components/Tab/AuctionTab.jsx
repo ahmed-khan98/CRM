@@ -1,7 +1,8 @@
 "use client"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { Heart, Award, XCircle, ShoppingBag, Clock } from "lucide-react"
+import { Heart, Award, XCircle } from "lucide-react"
+import { FaGavel } from 'react-icons/fa6'
 import Link from "next/link"
 
 const AuctionTab = () => {
@@ -25,6 +26,12 @@ const AuctionTab = () => {
       name: "Lost",
       icon: <XCircle className="h-4 w-4" />,
       color: "#EF4444", // Red
+    },
+    {
+      path: "/dashboard/Bidding",
+      name: "Bidding",
+      icon: <FaGavel className="h-4 w-4" />,
+      color: "#d6d4d4", // Red
     },
 
   ]

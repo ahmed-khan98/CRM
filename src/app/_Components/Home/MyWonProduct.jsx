@@ -58,12 +58,7 @@ const MyWonProduct = ({ item }) => {
                     alt="Product"
                     className="w-full h-[290px] object-contain cursor-pointer"
                 />
-                {/* {
-                    item?.product?.watchers?.length === 0 ? "" :
-                        <div className="absolute text-white p-2 top-2 md:left-[70%] left-[65%] h-[25px] bg-[#F33E0A] shadow-2xl flex items-center justify-center">
-                            Watcher <span className="ml-1">{item?.product?.watchers?.length}</span>
-                        </div>
-                } */}
+
                 <div className="absolute top-2 left-3 h-[30px] w-[30px] bg-[#F33E0A] shadow-2xl rounded-full flex items-center justify-center">
                     <CiShare2 className="text-white text-lg" />
                 </div>
@@ -77,7 +72,20 @@ const MyWonProduct = ({ item }) => {
                         <CiHeart className="text-black text-lg" />
                     )}
                 </div>
-             
+
+            </div>
+            <div className=" text-center py-3 flex justify-center bg-gray-100">
+                <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow ">
+
+                    <span className="text-[12px] text-gray-800 font-semibold uppercase">{item?.product?.isSold ? 'Ended':"Time Left"}</span>
+                    <p className={`font-bold text-lg pt-0 text-[#F33E0A]}`}>{`${item?.product?.remainingAuctionTime} hours`}</p>
+            
+                </div>
+                <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow">
+                    <span className="text-[12px] text-gray-800 font-semibold uppercase">Current Price</span>
+
+                    <p className="font-bold text-lg text-gray-800">${item?.product?.price}</p>
+                </div>
             </div>
 
             {/* <div className="bg-white shadow-xl w-[80%] mx-auto text-center py-2 px-2 rounded -mt-[60px] relative z-1">
@@ -130,9 +138,9 @@ const MyWonProduct = ({ item }) => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                             <DollarSign size={16} className="text-[#F33E0A]" />
-                            <span className="text-sm text-gray-700">Current Price</span>
+                            <span className="text-sm text-gray-700">Highest Bid</span>
                         </div>
-                        <span className="text-sm font-medium">${item?.product?.price || 0}</span>
+                        <span className="text-sm font-medium">${item?.product?.highestBid || 0}</span>
                     </div>
                 </div>
             </div>

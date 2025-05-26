@@ -24,7 +24,7 @@ const Page = () => {
   // Filter upcoming products
   const upcomingProducts = useMemo(() => {
     return allProducts?.filter((item) => {
-      const startTime = new Date(item?.biddingStartTime);
+      const startTime = new Date(item?.auctionStartTime);
       return startTime > now;
     });
   }, [allProducts, now]);
