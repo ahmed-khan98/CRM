@@ -162,7 +162,7 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
                 />
                 <div className="flex flex-row">
                     {
-                        status == 'paid' || status == 'paid_with_penalty ' ?
+                        (status == 'paid' || status == 'paid_with_penalty') ?
                             <button
                                 className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-[#0578ff] py-3 flex items-center justify-center ">
                                 Paid
