@@ -5,6 +5,10 @@ import { useResponseQuery } from "@/app/_Services/contactform/page"
 import HelpTabs from "@/app/_Components/Tab/HelpTabs"
 import { motion, AnimatePresence } from "framer-motion"
 import { Clock, MessageCircle, AlertCircle, CheckCircle, Search } from "lucide-react"
+import { formatDate } from "@/app/utilities/date"
+import Tab from "@/app/_Components/Tab/page"
+import { helpTabs } from "@/app/utilities/tabs/page"
+
 
 const ResponsesPage = () => {
   const { data, error: isError, isLoading } = useResponseQuery()
@@ -18,21 +22,12 @@ const ResponsesPage = () => {
       (item.response?.reply && item.response.reply.toLowerCase().includes(searchTerm.toLowerCase())),
   )
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date)
-  }
+
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-orange-50 to-white py-4">
       <div className="max-w-5xl mx-auto px-4 pt-4">
-        <HelpTabs activeTab="response" />
+      <Tab tabs={helpTabs}/>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

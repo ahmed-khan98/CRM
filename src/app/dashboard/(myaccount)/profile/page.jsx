@@ -4,9 +4,11 @@ import { useEffect, useState } from "react"
 import Cookies from "js-cookie"
 import { useUpdateProfileMutation } from "@/app/_Services/authentication/page"
 import toast, { Toaster } from "react-hot-toast"
-import MyAccountTab from "@/app/_Components/Tab/MyAccountTab"
-import { User, Mail, Phone, MapPin, Edit2, Save, CheckCircle, Loader2 } from "lucide-react"
+import { User, Mail, Phone, MapPin, Edit2, Save, CheckCircle, Loader2, } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import Tab from "@/app/_Components/Tab/page"
+import { myAccountTabs } from "@/app/utilities/tabs/page"
+
 
 const ProfilePage = () => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation()
@@ -25,6 +27,7 @@ const ProfilePage = () => {
     const data = Cookies.get("currentuser")
     if (data) {
       const user = JSON.parse(data)
+      console.log(user,'user')
       setFormData({
         firstName: user?.firstName || "",
         lastName: user?.lastName || "",
@@ -55,12 +58,15 @@ const ProfilePage = () => {
     }
   }
 
+
+
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 px-4">
       <Toaster position="top-center" />
       <div className="max-w-5xl mx-auto pt-4">
   
-      <MyAccountTab />
+      <Tab tabs={myAccountTabs}/>
       <div className="my-6">
         <h1 className="text-2xl font-bold text-gray-800">My Account</h1>
         <p className="text-gray-500 mt-1">Manage your personal information and preferences</p>

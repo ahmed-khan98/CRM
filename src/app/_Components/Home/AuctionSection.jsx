@@ -1,6 +1,7 @@
 "use client";
 import { useGetTodayyAuctionsProductQuery } from "@/app/_Services/products/page";
 import CardSkeleton from "../Skeleton/CardSkeleton";
+import { motion } from "framer-motion"
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setAllProducts } from "@/redux/filterSlice";
@@ -18,11 +19,29 @@ console.log(filteredProducts,'filteredProducts')
     }
   }, [data, dispatch]);
 
-  // ✅ Fixing No Product Found Logic
   const showNoProductMessage =filteredProducts.length === 0 && allProducts.length > 0 && !isLoading;
 
   if (error) {
-    return <p className="text-center text-red-500">Failed to load products. Please try again later.</p>;
+    return      <div className="bg-[#FFFFFF]  gap-6 container mx-auto py-44 md:py-48">
+
+      <motion.div
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    className="text-center mb-12"
+  >
+    <div className="inline-flex items-center justify-center p-2 bg-orange-100 rounded-full mb-4">
+      {/* <Clock className="h-6 w-6 text-[#F33E0A]" /> */}
+    </div>
+    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+      Our New <span className="text-[#F33E0A]">Auction Product</span> Are Coming Soon
+    </h1>
+    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+      We're working on exciting new features to enhance your bidding experience. Stay tuned for a revolutionary
+      way to participate in auctions.
+    </p>
+  </motion.div>
+  </div>
   }
 
   return (

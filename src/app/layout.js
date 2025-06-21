@@ -4,6 +4,7 @@ import "./globals.css";
 import LayoutWrapper from "./_Components/LayoutWrapper"; 
 import ReduxProvider from "./_Services/reduxprovider/reduxprovider";
 import { Toaster } from "react-hot-toast";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

@@ -1,20 +1,17 @@
-"use client"
-
-import Link from "next/link"
+'use client'
+import React from 'react'
+import Link from 'next/link';
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { User, Lock } from "lucide-react"
 
-const MyAccountTab = () => {
-  const pathname = usePathname()
+const Tab = ({tabs}) => {
 
-  const tabs = [
-    { name: "Profile", path: "/dashboard/profile", icon: <User className="h-4 w-4" /> },
-    { name: "Change Password", path: "/dashboard/changepassword", icon: <Lock className="h-4 w-4" /> },
-  ]
+      const pathname = usePathname();
 
-  return (
-    <div className="relative flex justify-Start ">
+
+
+    return (
+        <div className="relative flex justify-Start ">
       <div className="inline-flex bg-white rounded-full p-1.5 shadow-sm border border-gray-100">
         {tabs.map((tab) => {
           const isActive = pathname === tab.path
@@ -23,7 +20,7 @@ const MyAccountTab = () => {
             <Link href={tab.path} key={tab.path} passHref>
               <div
                 className={`relative rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
-                  isActive ? "text-white" : "text-gray-600 hover:text-gray-900"
+                  isActive ? "text-white" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                 }`}
               >
                 {isActive && (
@@ -43,8 +40,7 @@ const MyAccountTab = () => {
           )
         })}
       </div>
-    </div>
-  )
+    </div>)
 }
 
-export default MyAccountTab
+export default Tab

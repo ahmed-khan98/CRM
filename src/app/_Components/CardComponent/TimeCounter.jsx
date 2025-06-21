@@ -1,6 +1,7 @@
+import { timeAgo } from "@/app/utilities/date";
 import React, { useEffect, useState } from "react";
 
-const TimeCounter = ({ price, isAuctionActive, remainingAuctionTime,auctionStartTime,isSold,auctionEndTime}) => {
+const TimeCounter = ({ price, isAuctionActive, remainingAuctionTime,auctionStartTime,isSold,auctionEndTime,SoldDate}) => {
 
   const [timeLeftToStart, setTimeLeftToStart] = useState("");
   const [timeLeftToEnd, setTimeLeftToEnd] = useState("");
@@ -40,11 +41,11 @@ const TimeCounter = ({ price, isAuctionActive, remainingAuctionTime,auctionStart
     return () => clearInterval(interval);
   }, [auctionStartTime, auctionEndTime]);
 
-  return (<div className=" text-center py-3 flex justify-center bg-gray-100">
+  return (<div className=" text-center py-2 flex justify-center bg-gray-100">
     <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow ">
 
       <span className="text-[12px] text-gray-800 font-semibold uppercase">{isSold ? 'Ended':"Time Left"}</span>
-      <p className={`font-bold text-lg pt-0 text-[#F33E0A]}`}>{`${remainingAuctionTime} hours`}</p>
+      <p className={`font-bold text-lg pt-0 text-[#F33E0A]}`}>{isSold? timeAgo(SoldDate) :`${remainingAuctionTime} hours`}</p>
       {/* {auctionStartTime &&  <p className="font-bold text-lg pt-0 text-[#F33E0A]">
           {timeLeftToStart || timeLeftToEnd}
         </p>} */}

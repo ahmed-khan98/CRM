@@ -1,11 +1,10 @@
-import PaidItems from "@/app/_Components/Dashboard/PaidItem";
-
+import PenalizedItem from "@/app/_Components/Dashboard/PenalizedItem";
 
 const page = () => {
  
 
   return (
-<PaidItems status='Penalized'/>
+<PenalizedItem />
   );
 };
 

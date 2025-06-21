@@ -7,13 +7,14 @@ import { BiCheckCircle } from "react-icons/bi";
 const PaymentSuccessComponent = () => {
   const searchParams = useSearchParams();
   const session_id = searchParams.get("session_id");
+  const status = searchParams.get("status");
   const router = useRouter();
-  
+  console.log(status,'----status')
   const [paymentSuccess] = usePaymentSuccessMutation();
 
   useEffect(() => {
     if (session_id) {
-      paymentSuccess({ session_id });
+      paymentSuccess({ session_id,status });
     }
   }, [session_id, paymentSuccess]);
 
@@ -30,7 +31,7 @@ const PaymentSuccessComponent = () => {
         </p>
 
         <button
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push("/dashboard/wishlist")}
           className="cursor-pointer mt-6 px-6 py-2 bg-green-500 text-white font-semibold text-lg rounded-lg shadow-md hover:bg-green-600 transition duration-300"
         >
           Go to dashboard

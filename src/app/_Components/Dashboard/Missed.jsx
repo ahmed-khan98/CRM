@@ -1,5 +1,5 @@
 'use client';
-import AppointmentTab from "@/app/_Components/Tab/AppointmentTab";
+import AppointmentTab from "@/app/_Components/Tab/page";
 import MissedCard from "../Card/MissedCard";
 import { useGetMissedProductQuery } from "@/app/_Services/products/page";
 import AuctionCardSkeleton from "../Skeleton/CardSkeleton";

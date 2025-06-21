@@ -5,6 +5,7 @@ import Cookies from "js-cookie"
 import { useMarkAsReadMutation, useUserNotificationsQuery } from "@/app/_Services/notification/page"
 import { Bell, X, Eye, Clock, CheckCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { formatDate } from "@/app/utilities/date"
 
 const NotificationsPage = () => {
   const [selectedMessage, setSelectedMessage] = useState(null)
@@ -72,7 +73,7 @@ const NotificationsPage = () => {
           <div className="flex bg-white rounded-full shadow-sm p-1">
             <button
               onClick={() => setActiveFilter("all")}
-              className={`px-4 py-2 text-sm rounded-full transition-all ${
+              className={`px-4 py-2 text-sm rounded-full transition-all cursor-pointer ${
                 activeFilter === "all" ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
               }`}
             >
@@ -80,7 +81,7 @@ const NotificationsPage = () => {
             </button>
             <button
               onClick={() => setActiveFilter("unread")}
-              className={`px-4 py-2 text-sm rounded-full transition-all ${
+              className={`px-4 py-2 text-sm rounded-full transition-all  cursor-pointer ${
                 activeFilter === "unread" ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
               }`}
             >
@@ -88,7 +89,7 @@ const NotificationsPage = () => {
             </button>
             <button
               onClick={() => setActiveFilter("read")}
-              className={`px-4 py-2 text-sm rounded-full transition-all ${
+              className={`px-4 py-2 text-sm rounded-full transition-all  cursor-pointer ${
                 activeFilter === "read" ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
               }`}
             >
@@ -148,15 +149,10 @@ const NotificationsPage = () => {
                     <div className="flex flex-col items-start gap-4 justify-between md:items-center md:flex-row">
                       <div className="flex items-center text-xs text-gray-500">
                         <Clock className="h-3.5 w-3.5 mr-1" />
-                        {new Date(item?.createdAt).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        {formatDate(item?.createdAt)}
                       </div>
                       <button
-                        className={`px-4 py-2 rounded-full text-sm font-medium flex items-center gap-1.5 transition-all ${
+                        className={`px-4 py-2 cursor-pointer rounded-full text-sm font-medium flex items-center gap-1.5 transition-all ${
                           !item?.hasRead
                             ? "bg-red-600 text-white hover:bg-red-700"
                             : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -201,7 +197,7 @@ const NotificationsPage = () => {
               <div className="flex justify-between items-center p-5 border-b">
                 <h4 className="text-xl font-bold">{selectedTitle}</h4>
                 <button
-                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                  className="text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
                   onClick={() => setShowModal(false)}
                 >
                   <X className="h-5 w-5" />
@@ -212,7 +208,7 @@ const NotificationsPage = () => {
               </div>
               <div className="p-5 border-t flex justify-end">
                 <button
-                  className="px-5 py-2.5 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors font-medium"
+                  className="px-5 py-2.5 bg-red-600  cursor-pointer text-white rounded-full hover:bg-red-700 transition-colors font-medium"
                   onClick={() => setShowModal(false)}
                 >
                   Close

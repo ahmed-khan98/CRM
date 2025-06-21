@@ -66,7 +66,10 @@ const authenticationsApi = createApiAuction.injectEndpoints({
         body: formData,
       }),
     }),
+   referralLink: builder.query({
+      query: () => `/referral-link`,
+  }),
   }),
 })
 
-export const { useRegisterMutation,useSendVerificationCodeMutation,useLoginMutation,useVerifyCodeMutation,useResendMutation,useForgetMutation,useResetMutation ,useUpdateProfileMutation,useChangePasswordMutation} = authenticationsApi
+export const { useReferralLinkQuery,useRegisterMutation,useSendVerificationCodeMutation,useLoginMutation,useVerifyCodeMutation,useResendMutation,useForgetMutation,useResetMutation ,useUpdateProfileMutation,useChangePasswordMutation} = authenticationsApi

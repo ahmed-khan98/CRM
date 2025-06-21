@@ -1,7 +1,7 @@
 'use client';
 
 import { useDispatch, useSelector } from "react-redux";
-import AppointmentTab from "@/app/_Components/Tab/AppointmentTab";
+import AppointmentTab from "@/app/_Components/Tab/page";
 import ProductCard from "@/app/_Components/Card/ProductCard";
 import { useEffect, useMemo } from "react";
 import { setAllProducts } from "@/redux/filterSlice";

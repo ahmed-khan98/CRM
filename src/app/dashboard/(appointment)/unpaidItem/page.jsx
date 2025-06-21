@@ -1,11 +1,11 @@
-import PaidItems from "@/app/_Components/Dashboard/PaidItem";
+import UnpaidItem from "@/app/_Components/Dashboard/UnpaidItem";
 
 
 const page = () => {
  
 
   return (
-<PaidItems status='Not Paid'/>
+<UnpaidItem/>
   );
 };
 

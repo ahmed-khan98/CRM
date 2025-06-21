@@ -1,11 +1,11 @@
-import PaidItems from "@/app/_Components/Dashboard/PaidItem";
+import PaidItem from "@/app/_Components/Dashboard/PaidItem";
 
 
 const page = () => {
  
 
   return (
-<PaidItems status='Completed'/>
+<PaidItem />
   );
 };
 

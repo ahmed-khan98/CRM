@@ -6,11 +6,9 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 import { motion } from "framer-motion"
 import { SendHorizontal, Loader2 } from "lucide-react"
-
-
-
-import { useChangePasswordMutation, useResetMutation } from "@/app/_Services/authentication/page";
-import MyAccountTab from "@/app/_Components/Tab/MyAccountTab";
+import Tab from "@/app/_Components/Tab/page"
+import { myAccountTabs } from "@/app/utilities/tabs/page"
+import { useChangePasswordMutation } from "@/app/_Services/authentication/page";
 
 export default function page() {
     const navigation = useRouter();
@@ -52,7 +50,7 @@ export default function page() {
             <div className="max-w-5xl mx-auto pt-4">
                 
 
-                <MyAccountTab />
+            <Tab tabs={myAccountTabs}/>
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

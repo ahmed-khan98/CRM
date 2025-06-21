@@ -4,7 +4,8 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { useFormik } from "formik"
 import * as Yup from "yup"
-import { User, Eye, EyeOff, Lock } from "lucide-react"
+import { User, Eye, EyeOff, Lock ,Hash} from "lucide-react"
+import {  useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Main from "../../../../app/Assets/Main.png";
 import Image from "next/image";
@@ -13,15 +14,20 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [focusedField, setFocusedField] = useState(null)
+      const searchParams = useSearchParams();
+      const ref = searchParams.get("ref");
 
   const formik = useFormik({
     initialValues: {
+      username: "",
       firstName: "",
       lastName: "",
       password: "",
       cpassword: "",
+      referralBy: ref|| "",
     },
     validationSchema: Yup.object({
+      username:Yup.string().required("username is required"),
       firstName:Yup.string().required("first name is required"),
       lastName:Yup.string().required("last name is required"),
       // password: Yup.string()
@@ -75,7 +81,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-30 h-30 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center"
+          className="w-30 h-30 mx-auto mb-2 rounded-full bg-orange-100 flex items-center justify-center"
         >
           <Link href="/" className="mx-auto">
             <Image src={Main} alt="Logo" />
@@ -84,7 +90,41 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
         <p className="text-gray-500">Tell us a bit about yourself</p>
       </div>
 
-      <form onSubmit={formik.handleSubmit} className="space-y-4">
+      <form onSubmit={formik.handleSubmit} className="space-y-3">
+      <div className="space-y-1">
+            <div
+              className={`relative border-2 rounded-xl transition-all duration-300 ${focusedField === "username"
+                  ? "border-[#FB3B11] shadow-sm shadow-orange-100"
+                  : formik.touched.username && formik.errors.username
+                    ? "border-red-300"
+                    : "border-gray-200"
+                }`}
+            >
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="username"
+                className="w-full px-4 py-2 rounded-xl focus:outline-none text-gray-700"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                onBlur={(e) => {
+                  formik.handleBlur(e)
+                  setFocusedField(null)
+                }}
+                onFocus={() => setFocusedField("username")}
+              />
+            </div>
+            {formik.touched.username && formik.errors.username && (
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-500 text-xs ml-2"
+              >
+                {formik.errors.username}
+              </motion.p>
+            )}
+          </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <div
@@ -100,7 +140,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
                 name="firstName"
                 id="firstName"
                 placeholder="First name"
-                className="w-full px-4 py-3 rounded-xl focus:outline-none text-gray-700"
+                className="w-full px-4 py-2 rounded-xl focus:outline-none text-gray-700"
                 value={formik.values.firstName}
                 onChange={formik.handleChange}
                 onBlur={(e) => {
@@ -135,7 +175,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
                 name="lastName"
                 id="lastName"
                 placeholder="Last name"
-                className="w-full px-4 py-3 rounded-xl focus:outline-none text-gray-700"
+                className="w-full px-4 py-2 rounded-xl focus:outline-none text-gray-700"
                 value={formik.values.lastName}
                 onChange={formik.handleChange}
                 onBlur={(e) => {
@@ -174,7 +214,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
               name="password"
               id="password"
               placeholder="Create password"
-              className="w-full pl-10 pr-10 py-3 rounded-xl focus:outline-none text-gray-700"
+              className="w-full pl-10 pr-10 py-2 rounded-xl focus:outline-none text-gray-700"
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={(e) => {
@@ -239,7 +279,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
               name="cpassword"
               id="cpassword"
               placeholder="Confirm password"
-              className="w-full pl-10 pr-10 py-3 rounded-xl focus:outline-none text-gray-700"
+              className="w-full pl-10 pr-10 py-2 rounded-xl focus:outline-none text-gray-700"
               value={formik.values.cpassword}
               onChange={formik.handleChange}
               onBlur={(e) => {
@@ -270,6 +310,38 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
             </motion.p>
           )}
         </div>
+        <div className="space-y-1">
+          <div
+            className={`relative border-2 rounded-xl transition-all duration-300 ${focusedField === "referralBy"
+                ? "border-[#FB3B11] shadow-sm shadow-orange-100"
+                : formik.touched.referralBy && formik.errors.referralBy
+                  ? "border-red-300"
+                  : "border-gray-200"
+              }`}
+          >
+            <div className="absolute inset-y-0 left-3 flex items-center">
+              <Hash className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              name="referralBy"
+              id="referralBy"
+              placeholder="Reffered Code"
+              className="w-full pl-10 pr-10 py-2 rounded-xl focus:outline-none text-gray-700"
+              readOnly={ref}
+              value={ref || formik.values.referralBy}
+              onChange={formik.handleChange}
+              onBlur={(e) => {
+                formik.handleBlur(e)
+                setFocusedField(null)
+              }}
+              onFocus={() => setFocusedField("referralBy")}
+            />
+           
+          </div>
+       
+        </div>
+       
 
         <motion.button
           whileTap={{ scale: 0.98 }}

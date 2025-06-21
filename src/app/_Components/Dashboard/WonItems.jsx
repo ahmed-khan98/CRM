@@ -7,7 +7,11 @@ import AuctionTab from '../Tab/AuctionTab';
 
 const WonItems = ({ text }) => {
     const { data, error: isError, isLoading } = useWonItemsQuery();
-    const wonItems = data?.data || [];
+    const wonItems = [
+        ...(data?.data?.pending || []),
+        ...(data?.data?.paid || []),
+        ...(data?.data?.penalized || [])
+      ];
     const skeletonRows = wonItems.length || 8;
 
     return (

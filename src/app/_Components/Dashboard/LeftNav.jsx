@@ -51,7 +51,7 @@ const LeftNav = () => {
     {
       name: "Appointments",
       icon: <Calendar className="w-5 h-5" />,
-      path: ["/dashboard/upcomingItem", "/dashboard/missedItem"],
+      path: ["/dashboard/appointment",],
       // submenu: [
       //   { name: "Upcoming", path: "/dashboard/upcomingItem" },
       //   { name: "Missed", path: "/dashboard/missedItem" },
@@ -88,7 +88,7 @@ const LeftNav = () => {
     {
       name: "Refer a Friend",
       icon: <Users className="w-5 h-5" />,
-      path: ["/dashboard/comingsoon"],
+      path: ["/dashboard/refferal"],
     },
     {
       name: "Fees",

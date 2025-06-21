@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast, Toaster } from "react-hot-toast"
 import { motion, AnimatePresence } from "framer-motion"
@@ -14,12 +14,13 @@ import VerificationStep from "./steps/VerificationStep"
 import UserDetailsStep from "./steps/UserDetailsStep"
 import SuccessStep from "./steps/SuccessStep"
 
-export default function GenZRegistration() {
+function GenZRegistrationPage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     email: "",
     code: "",
+    username: "",
     firstName: "",
     lastName: "",
     password: "",
@@ -144,4 +145,11 @@ export default function GenZRegistration() {
       </div>
     </div>
   )
+}
+export default function GenZRegistration() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GenZRegistrationPage />
+    </Suspense>
+  );
 }

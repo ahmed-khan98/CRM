@@ -7,8 +7,11 @@ import { Toaster } from "react-hot-toast"
 import * as Yup from "yup"
 import HelpTabs from "@/app/_Components/Tab/HelpTabs"
 import { motion } from "framer-motion"
-import { SendHorizontal, Loader2 } from "lucide-react"
+import { SendHorizontal, Loader2, HelpCircle, MessageSquare } from "lucide-react"
 import confetti from "canvas-confetti"
+import Tab from "@/app/_Components/Tab/page"
+import { helpTabs } from "@/app/utilities/tabs/page"
+
 
 const ContactPage = () => {
   const [createContact, { isLoading }] = useCreateContactFormMutation()
@@ -48,12 +51,14 @@ const ContactPage = () => {
     },
   })
 
+
+
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 p-3 md:p-0">
       <Toaster position="top-center" />
 
       <div className="max-w-5xl mx-auto pt-4">
-        <HelpTabs activeTab="contact" />
+      <Tab tabs={helpTabs}/>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

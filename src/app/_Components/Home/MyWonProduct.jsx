@@ -8,6 +8,7 @@ import { CiHeart, CiSearch, CiShare2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import Link from 'next/link';
 import { useAddPaymentMutation } from '@/app/_Services/payment/page';
+import { timeAgo } from "@/app/utilities/date";
 
 const MyWonProduct = ({ item }) => {
 
@@ -78,7 +79,7 @@ const MyWonProduct = ({ item }) => {
                 <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow ">
 
                     <span className="text-[12px] text-gray-800 font-semibold uppercase">{item?.product?.isSold ? 'Ended':"Time Left"}</span>
-                    <p className={`font-bold text-lg pt-0 text-[#F33E0A]}`}>{`${item?.product?.remainingAuctionTime} hours`}</p>
+                    <p className={`font-bold text-sm pt-0 text-[#F33E0A]}`}>{timeAgo(item?.product?.SoldDate)}</p>
             
                 </div>
                 <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow">
@@ -108,7 +109,7 @@ const MyWonProduct = ({ item }) => {
                             <span className="text-xs font-normal ">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
                         </div>
                     ))} */}
-            <div className="bg-white px-4 py-5 rounded-t-2xl shadow-sm border-b border-gray-100">
+            <div className="bg-white px-4 py-3 rounded-t-2xl shadow-sm border-b border-gray-100">
 
                 <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                     <div className="flex items-center justify-between">
@@ -152,10 +153,10 @@ const MyWonProduct = ({ item }) => {
 
             <div className="flex flex-row">
 
-                <button className=" rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-[#10b981] py-3 flex items-center justify-center ">
+                <button className=" rounded-b-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-emerald-500 to-green-700 py-3 flex items-center justify-center ">
                     <span>WON</span>
                 </button>
-                {
+                {/* {
                     item?.paymentStatus === 'Completed' ?
                         <button
                             className="rounded-br-3xl w-full font-bold  text-white bg-gradient-to-r from-blue-300 to-blue-400 py-3 flex items-center justify-center ">
@@ -167,7 +168,7 @@ const MyWonProduct = ({ item }) => {
                                 "Loading..."
                             ) : (
                                 "Pay Now"
-                            )}                </button>}
+                            )}                </button>} */}
             </div>
 
         </div>
