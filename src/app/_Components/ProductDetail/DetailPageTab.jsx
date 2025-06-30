@@ -73,7 +73,8 @@ const DetailPageTab = ({data}) => {
                 })}
             </div>
 
-        </div>)
+        </div>
+        )    
 }
 
 export default DetailPageTab

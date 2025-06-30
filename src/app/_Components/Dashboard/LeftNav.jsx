@@ -60,7 +60,7 @@ const LeftNav = () => {
     {
       name: "My Store",
       icon: <Store className="w-5 h-5" />,
-      path: ["/dashboard/comingsoon"],
+      path: ["/dashboard/myItem"],
     },
     {
       name: "Wallet",

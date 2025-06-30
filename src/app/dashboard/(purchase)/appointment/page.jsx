@@ -90,7 +90,7 @@ export default function AppointmentBooking() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
-      <div className="max-w-6xl mx-auto p-5 flex flex-col space-y-6">
+      <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-6">
       <Tab tabs={appointmentTabs}/>
       <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
@@ -149,6 +149,9 @@ export default function AppointmentBooking() {
                         Product SKU
                       </th>
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                        SKU Location
+                      </th>
+                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Product Title
                       </th>
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
@@ -163,8 +166,9 @@ export default function AppointmentBooking() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredNotifications().map((appointment, index) => (
-                      <motion.tr
+                    {filteredNotifications().map((appointment, index) => {
+                        const lastFour = appointment.auctionWin?.product?._id.toString().slice(-4).toUpperCase();
+                      return(<motion.tr
                         key={appointment._id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -187,7 +191,8 @@ export default function AppointmentBooking() {
                             </span>
                           </div>
                         </td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{appointment.auctionWin?.product?._id}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
+                        <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation},${appointment.auctionWin?.product?.skuRoom},${appointment.auctionWin?.product?.skuDetail}`}</td>
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{appointment.auctionWin?.product?.name}</td>
                         <td className="px-3 py-4 whitespace-nowrap">
                           <span
@@ -221,7 +226,7 @@ export default function AppointmentBooking() {
                           )}
                         </td>
                       </motion.tr>
-                    ))}
+                    )})}
                   </tbody>
                 </table>
               </div>

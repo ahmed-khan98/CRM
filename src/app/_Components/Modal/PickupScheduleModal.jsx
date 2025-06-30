@@ -4,11 +4,13 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
-import { X, Calendar, Clock, MapPin, Phone, Truck, Package } from "lucide-react"
+import { X, Calendar, Clock, MapPin, Truck, Package } from "lucide-react"
 import { toast } from "react-hot-toast"
+import Cookies from "js-cookie";
 import { useCreateAppointmentMutation } from "@/app/_Services/appointment/page"
 import { getAvailableTimeSlots } from "@/app/utilities/timeSlot"
 import { useCreateShippingRequestMutation } from "@/app/_Services/shippingRequest/page"
+import { formatPhoneNumber } from "@/app/utilities/phoneFormat"
 
 // Validation schemas
 const pickupSchema = Yup.object().shape({
@@ -26,7 +28,6 @@ const shippingSchema = Yup.object().shape({
     zipCode: Yup.string()
         .required("ZIP code is required")
         .matches(/^\d{5}(-\d{4})?$/, "Invalid ZIP code format"),
-    country: Yup.string().required("Country is required"),
     contactPhone: Yup.string().required("Mobile Number is required"),
 
     // contactPhone: Yup.string()
@@ -41,19 +42,6 @@ const shippingSchema = Yup.object().shape({
 
 
 })
-
-function formatPhoneNumber(value) {
-    const cleaned = value.replace(/\D/g, "");
-    if (cleaned.length <= 1) {
-        return cleaned; // "1"
-    } else if (cleaned.length <= 4) {
-        return `${cleaned[0]}-(${cleaned.slice(1)}`; // "1-(234"
-    } else if (cleaned.length <= 7) {
-        return `${cleaned[0]}-(${cleaned.slice(1, 4)})-${cleaned.slice(4)}`; // "1-(234)-567"
-    } else {
-        return `${cleaned[0]}-(${cleaned.slice(1, 4)})-${cleaned.slice(4, 7)}-${cleaned.slice(7, 11)}`; // "1-(234)-567-8901"
-    }
-}
 
 const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
 
@@ -126,6 +114,23 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
         },
     }
 
+    const user = Cookies.get("currentuser")
+      ? JSON.parse(Cookies.get("currentuser"))
+      : null;
+    
+    const initialValues = {
+      deliveryMethod: "",
+      appointmentDate: "",
+      appointmentTime: "",
+      notes: "",
+      street: user?.address?.street || "",
+      city: user?.address?.city || "",
+      state: user?.address?.state || "",
+      zipCode: user?.address?.zipCode || "",
+      country: "",
+      contactPhone: user?.phone || "",
+    };
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -191,20 +196,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                         {/* Form */}
                         <div className="px-8 py-6 max-h-[60vh] overflow-y-auto">
                             <Formik
-                                initialValues={{
-                                    deliveryMethod: "",
-                                    // Pickup fields
-                                    appointmentDate: "",
-                                    appointmentTime: "",
-                                    notes: "",
-                                    // Shipping fields
-                                    street: "",
-                                    city: "",
-                                    state: "",
-                                    zipCode: "",
-                                    country: "",
-                                    contactPhone: "",
-                                }}
+                                 initialValues={initialValues}
                                 validationSchema={getValidationSchema(selectedMethod)}
                                 onSubmit={handleSubmit}
                                 enableReinitialize
@@ -237,7 +229,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                     <option value="pickup">🏪 Pickup from Store</option>
                                                     <option value="shipping">🚚 Home Delivery (Request Shipping)</option>
                                                 </Field>
-                                                <ErrorMessage name="deliveryMethod" component="div" className="text-oarnge-500 text-sm mt-2" />
+                                                <ErrorMessage name="deliveryMethod" component="div" className="text-red-500 text-sm mt-2" />
                                             </div>
 
                                             {/* Pickup Fields */}
@@ -274,7 +266,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                     <ErrorMessage
                                                                         name="appointmentDate"
                                                                         component="div"
-                                                                        className="text-oarnge-500 text-sm mt-1"
+                                                                        className="text-red-500 text-sm mt-1"
                                                                     />
                                                                 </div>
 
@@ -301,7 +293,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                     <ErrorMessage
                                                                         name="appointmentTime"
                                                                         component="div"
-                                                                        className="text-oarnge-500 text-sm mt-1"
+                                                                        className="text-red-500 text-sm mt-1"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -315,7 +307,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                     placeholder="Any special instructions or notes..."
                                                                     className="w-full px-4 py-3 border-2 border-gray-200 focus:border-blue-500 rounded-xl focus:outline-none transition-colors resize-none"
                                                                 />
-                                                                <ErrorMessage name="notes" component="div" className="text-oarnge-500 text-sm mt-1" />
+                                                                <ErrorMessage name="notes" component="div" className="text-red-500 text-sm mt-1" />
                                                             </div>
                                                         </div>
                                                     </motion.div>
@@ -350,7 +342,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                             : "border-gray-200 focus:border-green-500"
                                                                             } rounded-xl focus:outline-none transition-colors`}
                                                                     />
-                                                                    <ErrorMessage name="street" component="div" className="text-oarnge-500 text-sm mt-1" />
+                                                                    <ErrorMessage name="street" component="div" className="text-red-500 text-sm mt-1" />
                                                                 </div>
 
                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -365,7 +357,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                                 : "border-gray-200 focus:border-green-500"
                                                                                 } rounded-xl focus:outline-none transition-colors`}
                                                                         />
-                                                                        <ErrorMessage name="city" component="div" className="text-oarnge-500 text-sm mt-1" />
+                                                                        <ErrorMessage name="city" component="div" className="text-red-500 text-sm mt-1" />
                                                                     </div>
 
                                                                     <div>
@@ -379,7 +371,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                                 : "border-gray-200 focus:border-green-500"
                                                                                 } rounded-xl focus:outline-none transition-colors`}
                                                                         />
-                                                                        <ErrorMessage name="state" component="div" className="text-oarnge-500 text-sm mt-1" />
+                                                                        <ErrorMessage name="state" component="div" className="text-red-500 text-sm mt-1" />
                                                                     </div>
                                                                 </div>
 
@@ -398,39 +390,12 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                         <ErrorMessage
                                                                             name="zipCode"
                                                                             component="div"
-                                                                            className="text-oarnge-500 text-sm mt-1"
+                                                                            className="text-red-500 text-sm mt-1"
                                                                         />
                                                                     </div>
-
                                                                     <div>
-                                                                        <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
-                                                                        <Field
-                                                                            as="select"
-                                                                            name="country"
-                                                                            className={`w-full px-4 py-3 border-2 ${errors.country && touched.country
-                                                                                ? "border-red-300 focus:border-oarnge-500"
-                                                                                : "border-gray-200 focus:border-green-500"
-                                                                                } rounded-xl focus:outline-none transition-colors`}
-                                                                        >
-                                                                            <option value="">Select country...</option>
-                                                                            <option value="US">United States</option>
-                                                                            <option value="CA">Canada</option>
-                                                                            <option value="UK">United Kingdom</option>
-                                                                            <option value="AU">Australia</option>
-                                                                            <option value="PK">Pakistan</option>
-                                                                            <option value="IN">India</option>
-                                                                        </Field>
-                                                                        <ErrorMessage
-                                                                            name="country"
-                                                                            component="div"
-                                                                            className="text-oarnge-500 text-sm mt-1"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                                <div>
-                                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                                        <Phone className="inline w-4 h-4 mr-1" />
+                                                                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                                        {/* <Phone className="inline w-4 h-4 mr-1" /> */}
                                                                         Contact Number
                                                                     </label>
                                                                     <Field
@@ -449,17 +414,18 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                     <ErrorMessage
                                                                         name="contactPhone"
                                                                         component="div"
-                                                                        className="text-oarnge-500 text-sm mt-1"
-                                                                    />
+                                                                        className="text-red-500 text-sm mt-1"
+                                                                    />  
                                                                 </div>
-                                                            </div>
+                                                                </div>
+                                                        </div>
                                                         </div>
                                                     </motion.div>
                                                 )}
                                             </AnimatePresence>
 
                                             {/* Submit Button */}
-                                            <div className="flex gap-4 pt-6">
+                                            <div className="flex gap-4 pt-2">
                                                 <motion.button
                                                     type="button"
                                                     whileHover={{ scale: 1.02 }}
