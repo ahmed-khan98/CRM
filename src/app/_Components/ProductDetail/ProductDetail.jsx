@@ -92,10 +92,10 @@ console.log(relatedProduct,'relatedProduct')
 
             </div>
 
-            <div className="flex flex-col gap-y-8">
+            <div className="flex flex-col gap-y-4">
 
 
-              <ProductInfo name={data?.data?.name} rating={data?.data?.rating} tag={data?.data?.tag} retail={data?.data?.retail} price={data?.data?.price} buyerPremium={data?.data?.buyerPremium} shortDescription={data?.data?.shortDescription} isSold={data?.data?.isSold} id={data?.data?._id} highestBid={data?.data?.highestBid}  isAuctionActive={data?.data?.isAuctionActive}/>
+              <ProductInfo name={data?.data?.name} rating={data?.data?.rating} tag={data?.data?.tag} retail={data?.data?.retail} price={data?.data?.price} buyerPremium={data?.data?.buyerPremium} shortDescription={data?.data?.shortDescription}  remainingAuctionTime={data?.data?.remainingAuctionTime} isSold={data?.data?.isSold} id={data?.data?._id} highestBid={data?.data?.highestBid}  isAuctionActive={data?.data?.isAuctionActive}/>
         
               {data?.data?.biddingHistory?.length > 0 &&
                 <BiddingHistory history={data?.data?.biddingHistory} isSold={data?.data?.isSold} />

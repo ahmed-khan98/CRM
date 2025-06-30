@@ -43,10 +43,10 @@ const DetailPageTab = ({data}) => {
 
                     return (
                         <div className="flex gap-2" key={i}>
-                            <div className="w-[35%] bg-[#a6a6a6] p-3 flex items-center">
+                            <div className="w-[35%] bg-[#a6a6a6] p-3 flex items-center rounded-lg">
                                 <p className="uppercase font-semibold roboto text-sm">{e?.name}</p>
                             </div>
-                            <div className="w-[65%] bg-[#d9d9d9] p-3 flex items-center justify-between">
+                            <div className="w-[65%] bg-[#d9d9d9] p-3 flex items-center justify-between rounded-lg">
                                 <p className="font-semibold  break-words">{displayValue}</p>
 
                                 {isASIN && (

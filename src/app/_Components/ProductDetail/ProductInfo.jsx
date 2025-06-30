@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 
-const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDescription, isSold, id, highestBid,isAuctionActive }) => {
+const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDescription, remainingAuctionTime, isSold, id, highestBid, isAuctionActive }) => {
 
     const [showFull, setShowFull] = useState(false);
     const maxLength = 300;
@@ -30,7 +30,7 @@ const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDesc
             return;
         }
         try {
-            const response = await addBid({ id: id, bidAmount: bidValue,bidType:isAuctionActive?'live':'pre' }).unwrap();
+            const response = await addBid({ id: id, bidAmount: bidValue, bidType: isAuctionActive ? 'live' : 'pre' }).unwrap();
             toast.success(response?.message);
             setBidValue(bidValue + 1)
             // router.replace(router.asPath);
@@ -43,13 +43,22 @@ const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDesc
 
     return (
         <>
-            <h1 className="  mt-6 p-4  sm:px-0 text-left text-2xl capitalize font-bold text-title-md sm:text-title-lg">
+            <div className="flex gap-2   mt-6">
+                <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between rounded-lg">
+                    <p className="uppercase font-semibold roboto text-sm">Time Left</p>
+                </div>
+                <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between rounded-lg">
+                    <p className="font-semibold ">{`${remainingAuctionTime} hours`}</p>
+                </div>
+            </div>
+
+            <h1 className="p-1  sm:px-0 text-left text-2xl capitalize font-bold text-title-md sm:text-title-lg">
                 {name}
             </h1>
             <div className="flex flex-col gap-y-6 bg-white rounded-md p-4 sm:mr-4 xl:mr-0">
                 <div className='text-center'>
                     <div className='flex justify-center'>
-                        <p className=" font-normal uppercase my-1  py-2 text-title-xs bg-[#f4e405] w-30 ">
+                        <p className=" font-normal uppercase my-1  py-2 text-title-xs bg-[#f4e405] w-30 rounded-lg ">
                             Quality
                         </p>
                     </div>
@@ -77,7 +86,7 @@ const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDesc
                     <p className=" font-semibold uppercase mt-2  py-2 text-title-xs text-center">
                         Item Description
                     </p>
-                    <p className=" font-normal py-2 text-title-xs text-left bg-[#d9d9d9] p-2 ">
+                    <p className=" font-normal py-2 text-title-xs text-left bg-[#d9d9d9] p-2 rounded-lg ">
                         {displayedText}
                         {isLong && !showFull && "... "}
                         {isLong && (
@@ -93,30 +102,30 @@ const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDesc
 
                 <div className="flex flex-col gap-2">
                     <div className="flex gap-2">
-                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between">
+                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between rounded-lg">
                             <p className="uppercase font-semibold roboto text-sm">Estimated Retail</p>
                         </div>
-                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between">
+                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between rounded-lg">
                             <p className="font-semibold ">${retail}</p>
                         </div>
                     </div>
 
                     {/* Row 2 */}
                     <div className="flex gap-2">
-                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between">
+                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between rounded-lg">
                             <p className="uppercase font-semibold roboto text-sm">Current Price</p>
                         </div>
-                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between">
+                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between rounded-lg">
                             <p className="font-semibold ">${price}</p>
                         </div>
                     </div>
 
                     {/* Row 3 */}
                     <div className="flex gap-2">
-                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between">
+                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between rounded-lg">
                             <p className="uppercase font-semibold roboto text-sm">Buyers Premium</p>
                         </div>
-                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between">
+                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between rounded-lg">
                             <p className="font-semibold ">
                                 {`${buyerPremium}${buyerPremium?.includes('%') ? '' : '%'}`}
                             </p>
