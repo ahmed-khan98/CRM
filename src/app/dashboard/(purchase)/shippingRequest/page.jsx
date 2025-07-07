@@ -172,7 +172,7 @@ export default function page() {
                                                     </td>
 
                                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
-                                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{shipping.auctionWin?.product?.name}</td>
+                                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize"><Link href={`/detailproduct/${shipping.auctionWin?.product?._id}`}>{shipping.auctionWin?.product?.name}</Link></td>
                                                     <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">
                                                         {`${shipping.shippingAddress.street},${shipping.shippingAddress.zipCode},${shipping.shippingAddress.city},${shipping.shippingAddress.state},${shipping.shippingAddress.country}`} </td>
                                                     <td className="px-3 py-4 whitespace-nowrap">
