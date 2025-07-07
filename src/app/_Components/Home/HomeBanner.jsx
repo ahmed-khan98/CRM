@@ -4,6 +4,8 @@ import { useGetBannerQuery } from "@/app/_Services/banner/page";
 import { useGetTodayyAuctionsProductQuery } from "@/app/_Services/products/page";
 import { useDispatch } from "react-redux";
 import { setAllProducts } from "@/redux/filterSlice";
+import Link from 'next/link';
+
 
 const HomeBanner = () => {
   const dispatch = useDispatch();
@@ -19,7 +21,7 @@ const HomeBanner = () => {
   }, [product, dispatch]);
 
   return (
-    <div className="container mx-auto pt-[50px] md:my-12 my-5 px-4 md:px-6">
+    <div className="container mx-auto  pt-[80px] md:pt-[20px] md:my-12 my-5 px-4 md:px-6">
       <div className="flex flex-col lg:flex-row gap-1 md:min-h-[50vh]">
 
         {isLoading ? (
@@ -29,14 +31,19 @@ const HomeBanner = () => {
           </div>
         ) : banner ? (
           <>
-            <div className="w-full lg:w-[40%] bg-gray-100 p-4 md:p-8 lg:p-10 flex flex-col gap-4 rounded-lg">
-              <h1 className="roboto font-semibold text-center md:text-4xl text-2xl text-title-md tracking-tight text-[#0E0E0E]">
+            <div className="w-full lg:w-[40%] bg-gray-100 p-4 md:p-8 lg:p-10 flex flex-col justify-between items-center gap-4 rounded-lg">
+              <h1 className="font-semibold text-center md:text-5xl text-2xl text-title-md tracking-tight text-[#0E0E0E]">
                 {banner.title}
               </h1>
+
               <div
                 dangerouslySetInnerHTML={{ __html: banner.description }}
-                className="text-center"
+                className="text-center text-2xl leading-10 text-gray-700"
               />
+               {banner?.linkUrl &&
+              <Link href={banner?.linkUrl} className="cursor-pointer pt-8 text-2xl font-semibold uppercase">
+               {banner?.linkTitle}
+              </Link>}
             </div>
 
             <div className="w-full lg:w-[60%] rounded-lg overflow-hidden">

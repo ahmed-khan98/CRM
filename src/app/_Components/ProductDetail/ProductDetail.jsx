@@ -1,128 +1,203 @@
 "use client"
-import { useEffect, useState } from "react";
-import {  useAddWatchQuery, useProductDetailQuery, useRelatedProductsQuery,  } from '@/app/_Services/products/page';
-import toast from 'react-hot-toast';
-import DetailLoader from '../Skeleton/DetailLoader';
-import { FaHeart, FaStar } from 'react-icons/fa';
-import { IoIosShareAlt } from "react-icons/io";
-import { useAddWishlistMutation, useDeleteWishlistMutation } from '@/app/_Services/wishlist/page';
-import { CiHeart } from 'react-icons/ci';
-import Loader from '../Loader';
-import BiddingHistory from './BiddingHistory';
-import DetailPageTab from './DetailPageTab';
-import ImageSection from './ImageSection';
-import ProductInfo from './ProductInfo';
-import AuctionCardSkeleton from "../Skeleton/CardSkeleton";
-import ProductCard from "../Card/ProductCard";
-
+import { useState } from "react"
+import { useAddWatchQuery, useProductDetailQuery, useRelatedProductsQuery } from "@/app/_Services/products/page"
+import toast from "react-hot-toast"
+import DetailLoader from "../Skeleton/DetailLoader"
+import { FaHeart } from "react-icons/fa"
+import { IoIosShareAlt } from "react-icons/io"
+import { useAddWishlistMutation, useDeleteWishlistMutation } from "@/app/_Services/wishlist/page"
+import { CiHeart } from "react-icons/ci"
+import Loader from "../Loader"
+import BiddingHistory from "./BiddingHistory"
+import DetailPageTab from "./DetailPageTab"
+import ImageSection from "./ImageSection"
+import ProductInfo from "./ProductInfo"
+import AuctionCardSkeleton from "../Skeleton/CardSkeleton"
+import ProductCard from "../Card/ProductCard"
 
 function formatDate(dateString) {
-  return new Date(dateString).toLocaleString('en-US', {
-    dateStyle: 'medium',
-    timeStyle: 'short'
-  });
+  return new Date(dateString).toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  })
 }
 
 const ProductDetail = (id) => {
+  const { data: addWatcher, error, isLoading: loding } = useAddWatchQuery(id.id)
+  const { data, error: isError, isLoading: isDetailLoading } = useProductDetailQuery(id.id)
+  const { data: relatedProduct, error: relatedError, isLoading: isRelatedLoading } = useRelatedProductsQuery(id.id)
 
-  const { data: addWatcher, error, isLoading: loding } = useAddWatchQuery(id.id);
-  const { data, error: isError, isLoading: isDetailLoading } = useProductDetailQuery(id.id);
-  const { data:relatedProduct, error: relatedError, isLoading: isRelatedLoading } = useRelatedProductsQuery(id.id);
-
-console.log(relatedProduct,'relatedProduct')
-
-  const [addWishlist] = useAddWishlistMutation();
-  const [deleteWishlist] = useDeleteWishlistMutation();
-  const [loading, setLoading] = useState(false);
-
-  // useEffect(() => {
-  //   if (!data?.data?.isSold) {
-  //     const highestBidderId = data?.data?.highestBidder;
-  //     const biddingHistory = data?.data?.biddingHistory;
-
-  //     if (highestBidderId && Array.isArray(biddingHistory)) {
-  //       const matchedBidder = biddingHistory.find(bid => bid.bidder._id === highestBidderId);
-  //     }
-  //   }
-  // }, [data]);
+  const [addWishlist] = useAddWishlistMutation()
+  const [deleteWishlist] = useDeleteWishlistMutation()
+  const [loading, setLoading] = useState(false)
 
   const toggleWishlist = async (id, isWishlisted) => {
-    setLoading(true);
+    setLoading(true)
     try {
       if (isWishlisted) {
-        const response = await deleteWishlist(id).unwrap();
-        toast.success(response.message);
+        const response = await deleteWishlist(id).unwrap()
+        toast.success(response.message)
       } else {
-        const response = await addWishlist(id).unwrap();
-        toast.success(response.message);
+        const response = await addWishlist(id).unwrap()
+        toast.success(response.message)
       }
     } catch (error) {
-      toast.error(error?.data?.message || "Something went wrong");
+      toast.error(error?.data?.message || "Something went wrong")
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: data?.data?.name,
+          text: `Check out this auction item: ${data?.data?.name}`,
+          url: window.location.href,
+        })
+      } catch (error) {
+        console.log("Error sharing:", error)
+      }
+    } else {
+      // Fallback to copying URL
+      navigator.clipboard.writeText(window.location.href)
+      toast.success("Link copied to clipboard!")
+    }
+  }
 
   return (
     <>
+      {isDetailLoading ? (
+        <DetailLoader />
+      ) : (
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+          {/* Header Section */}
+          <div className="pt-20 pb-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              {/* Breadcrumb */}
+              <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+                <span>Home</span>
+                <span>/</span>
+                <span>Auctions</span>
+                <span>/</span>
+                <span className="text-gray-900 font-medium">{data?.data?.name}</span>
+              </nav>
 
-      {
-        isDetailLoading ? <DetailLoader /> :
-          <div className="pt-[80px] grid grid-cols-1 my-4 sm:grid-cols-[minmax(0,_0.75fr)_minmax(0,_1fr)] sm:gap-6 max-w-full sm:max-w-screen-xl mx-auto">
+              {/* Main Content Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                {/* Left Column - Images */}
+                <div className="space-y-6">
+                  {/* Action Buttons */}
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => toggleWishlist(data?.data?._id, data?.data?.isWishlisted)}
+                      className="group relative p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+                    >
+                      {loading ? (
+                        <Loader />
+                      ) : data?.data?.isWishlisted ? (
+                        <FaHeart className="text-red-500 text-xl group-hover:scale-110 transition-transform" />
+                      ) : (
+                        <CiHeart className="text-gray-700 text-xl group-hover:scale-110 transition-transform" />
+                      )}
+                      <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </button>
 
-            <div className="max-w-full my-6 px-6 sm:px-2.5 xl:px-0">
-              <div className="flex justify-end gap-4">
-                <div
-                  onClick={() => toggleWishlist(data?.data?._id, data?.data?.isWishlisted)}
-                  className="cursor-pointer h-[30px] w-[30px] bg-white shadow-xl rounded-full flex items-center justify-center"
-                >
-                  {loading ? (
-                    <Loader />
-                  ) : data?.data?.isWishlisted ? (
-                    <FaHeart className="text-red-500 text-lg" />
-                  ) : (
-                    <CiHeart className="text-black text-lg" />
+                    <button
+                      onClick={handleShare}
+                      className="group flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl hover:bg-blue-700 transition-all duration-300"
+                    >
+                      <IoIosShareAlt className="text-lg group-hover:scale-110 transition-transform" />
+                      <span className="font-medium">Share</span>
+                    </button>
+                  </div>
+
+                  {/* Image Section */}
+                  <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                    <ImageSection images={data?.data?.images} />
+                  </div>
+
+                  {/* Tabs Section */}
+                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <DetailPageTab data={data?.data} />
+                  </div>
+                </div>
+
+                {/* Right Column - Product Info */}
+                <div className="space-y-6">
+                  <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                    <ProductInfo
+                      name={data?.data?.name}
+                      rating={data?.data?.rating}
+                      tag={data?.data?.tag}
+                      retail={data?.data?.retail}
+                      condition={data?.data?.condition}
+                      price={data?.data?.price}
+                      buyerPremium={data?.data?.buyerPremium}
+                      shortDescription={data?.data?.shortDescription}
+                      remainingAuctionTime={data?.data?.remainingAuctionTime}
+                      isSold={data?.data?.isSold}
+                      id={data?.data?._id}
+                      highestBid={data?.data?.highestBid}
+                      isAuctionActive={data?.data?.isAuctionActive}
+                    />
+                  </div>
+
+                  {/* Bidding History */}
+                  {data?.data?.biddingHistory?.length > 0 && (
+                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                      <BiddingHistory history={data?.data?.biddingHistory} isSold={data?.data?.isSold} />
+                    </div>
                   )}
                 </div>
-                <button className="bg-blue-500  cursor-pointer w-20 text-white px-2 py-1 rounded hover:bg-blue-600 flex items-center justify-center">
-                  Share <IoIosShareAlt color="white" size={18} />
-                </button>
               </div>
-              <ImageSection images={data?.data?.images} />
-              <DetailPageTab data={data?.data} />
-
-            </div>
-
-            <div className="flex flex-col gap-y-4">
-
-
-              <ProductInfo name={data?.data?.name} rating={data?.data?.rating} tag={data?.data?.tag} retail={data?.data?.retail} price={data?.data?.price} buyerPremium={data?.data?.buyerPremium} shortDescription={data?.data?.shortDescription}  remainingAuctionTime={data?.data?.remainingAuctionTime} isSold={data?.data?.isSold} id={data?.data?._id} highestBid={data?.data?.highestBid}  isAuctionActive={data?.data?.isAuctionActive}/>
-        
-              {data?.data?.biddingHistory?.length > 0 &&
-                <BiddingHistory history={data?.data?.biddingHistory} isSold={data?.data?.isSold} />
-              }
             </div>
           </div>
-      }
-           <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto p-4 md:pt-10 pt-20">
-    {isRelatedLoading ? (
-      [...Array(4)].map((_, index) => <AuctionCardSkeleton key={index} />)
-    ) : !relatedProduct?.data?.length  || relatedError ? (
-      <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold  text-3xl text-gray-500">
-      No Related Product Found
-    </p>    
-    ) : (
-      relatedProduct?.data?.map((item, index) => (
-        <ProductCard key={item.id ?? `auction-${index}`} item={item} />
-      ))
-      
-    )}
-  </div>
-      
+
+          {/* Related Products Section */}
+          <div className="py-16">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-orange-600 mb-4">Related Auctions</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Discover more amazing items similar to what you're viewing
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {isRelatedLoading ? (
+                  [...Array(4)].map((_, index) => <AuctionCardSkeleton key={index} />)
+                ) : !relatedProduct?.data?.length || relatedError ? (
+                  <div className="col-span-4 flex flex-col items-center justify-center py-16">
+                    <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                      <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2M4 13h2m13-8l-4 4m0 0l-4-4m4 4V3"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">No Related Products</h3>
+                    <p className="text-gray-500">We couldn't find any similar items at the moment.</p>
+                  </div>
+                ) : (
+                  relatedProduct?.data?.map((item, index) => (
+                    <ProductCard key={item.id ?? `auction-${index}`} item={item} />
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
 
 export default ProductDetail
+
 
 
 {/* Current Price Section */ }

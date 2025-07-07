@@ -10,11 +10,11 @@ const page = () => {
   const about = data?.data?.[0];
 
   return (
-    <div className='container mx-auto pt-[50px] md:my-12 my-5 px-12 md:px-6'>
+    <div className='container mx-auto pt-[50px] md:my-12 my-5 px-4 md:px-12'>
       {isLoading ? (
         <div className="w-full flex justify-center items-center h-[50vh]">
-          <div className="animate-pulse w-full lg:w-[35%] bg-gray-200 h-[250px] mx-4 rounded-lg"></div>
-          <div className="animate-pulse w-full lg:w-[60%] bg-gray-200 h-[250px] rounded-lg"></div>
+          <div className="animate-pulse w-full lg:w-[35%] bg-gray-200 h-[350px] mx-4 rounded-lg"></div>
+          <div className="animate-pulse w-full lg:w-[60%] bg-gray-200 h-[350px] rounded-lg"></div>
         </div>
       ) : about ? (
         <>
@@ -30,25 +30,23 @@ const page = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap lg:flex-nowrap items-center gap-6 py-5">
-            {/* Left Section (Description) */}
+          <div className="flex flex-wrap lg:flex-nowrap  gap-6 py-5">
             <div className="w-full lg:w-1/2 p-4">
-              <div dangerouslySetInnerHTML={{ __html: about.description }} />
+              <div dangerouslySetInnerHTML={{ __html: about.description }} className="text-lg leading-8"/>
             </div>
 
-            {/* Right Section (Image) */}
             <div className="w-full lg:w-1/2">
               <img
                 src={about.image}
                 alt="about-img"
-                className="w-full h-auto object-cover"
+                className="object-contain h-[400px] w-full"
               />
             </div>
           </div>
 
           <div
             dangerouslySetInnerHTML={{ __html: about.mainDescription }}
-            className="pt-10"
+            className="pt-10 px-4 text-lg"
           />
         </>
       ) : (

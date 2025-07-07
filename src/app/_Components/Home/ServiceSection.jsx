@@ -26,7 +26,7 @@ const ServicesSection = () => {
         Services We Offer
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 max-w-7xl mx-auto">
         {isLoading && renderSkeletons()}
 
         {error && (
@@ -46,16 +46,16 @@ const ServicesSection = () => {
           data?.data?.map((e) => (
             <div
               key={e._id}
-              className=" bg-white p-5 pt-5 my-2 rounded-lg shadow-lg flex justify-between flex-col"
+              className=" bg-white p-5 pt-5 my-2 rounded-lg shadow-lg flex  flex-col"
             >
-              <h3 className=" text-red-800 font-bold text-lg py-2 px-4">
+              <h2 className=" text-red-800 font-bold text-2xl py-2 px-4">
                 {e?.title}
-              </h3>
-              <p className="text-gray-700 mt-2 text-sm">
+              </h2>
+              <p className="text-gray-700 mt-2 text-lg">
                 <div dangerouslySetInnerHTML={{ __html: e?.description }} />
               </p>
               {e?.linkUrl &&
-              <Link href={e?.linkUrl} className="cursor-pointer pt-8 text-sm font-semibold">
+              <Link href={e?.linkUrl} className="cursor-pointer pt-8 text-md font-semibold uppercasero">
                {e?.linkTitle}
               </Link>}
             </div>

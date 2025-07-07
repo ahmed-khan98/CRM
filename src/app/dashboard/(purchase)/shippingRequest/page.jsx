@@ -29,23 +29,23 @@ export default function page() {
 
     const getStatusColor = (status) => {
         switch (status.toLowerCase()) {
-          case "processing":
-            return "text-gray-600 bg-gray-100"; 
-          case "accept":
-            return "text-blue-600 bg-blue-100";
-          case "shipped":
-            return "text-orange-600 bg-orange-100";
-          case "delivered":
-            return "text-green-600 bg-green-100";
-          case "denied":
-            return "text-red-600 bg-red-100";
-          case "cancelled":
-            return "text-gray-600 bg-gray-100";
-          default:
-            return "text-gray-600 bg-gray-100";
+            case "processing":
+                return "text-gray-600 bg-gray-100";
+            case "accept":
+                return "text-blue-600 bg-blue-100";
+            case "shipped":
+                return "text-orange-600 bg-orange-100";
+            case "delivered":
+                return "text-green-600 bg-green-100";
+            case "denied":
+                return "text-red-600 bg-red-100";
+            case "cancelled":
+                return "text-gray-600 bg-gray-100";
+            default:
+                return "text-gray-600 bg-gray-100";
         }
-      };
-      
+    };
+
 
     const filteredNotifications = () => {
         if (!data?.data) return []
@@ -113,15 +113,15 @@ export default function page() {
                                     ? "You don't have any request yet."
                                     : activeFilter === "processing"
                                         ? "You don't have any processing request."
-                                    : activeFilter === "delivered"
-                                        ? "You don't have any delivered request."
-                                    : activeFilter === "denied"
-                                        ? "You don't have any denied request."
-                                    : activeFilter === "shipped"
-                                        ? "You don't have any shipped request."
-                                    : activeFilter === "accept"
-                                        ? "You don't have any accept request."
-                                            : "You don't have any request yet."}
+                                        : activeFilter === "delivered"
+                                            ? "You don't have any delivered request."
+                                            : activeFilter === "denied"
+                                                ? "You don't have any denied request."
+                                                : activeFilter === "shipped"
+                                                    ? "You don't have any shipped request."
+                                                    : activeFilter === "accept"
+                                                        ? "You don't have any accept request."
+                                                        : "You don't have any request yet."}
                             </p>
                         </div>
                     ) : (
@@ -152,51 +152,46 @@ export default function page() {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {filteredNotifications().map((shipping, index) => (
-                                            <motion.tr
-                                                key={shipping._id}
-                                                initial={{ opacity: 0, x: -20 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                transition={{ delay: index * 0.1 }}
-                                                className="hover:bg-red-50 transition-colors"
-                                            >
-                                                <td className="px-3 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center gap-3">
-                                                        <Calendar className="h-4 w-4 text-red-600" />
-                                                        <span className="text-sm font-semibold text-gray-900">
-                                                            {formatDate(shipping.createdAt)}
+                                        {filteredNotifications().map((shipping, index) => {
+                                            const lastFour = shipping.auctionWin?.product?._id.toString().slice(-4);
+                                            return (
+                                                <motion.tr
+                                                    key={shipping._id}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: index * 0.1 }}
+                                                    className="hover:bg-red-50 transition-colors"
+                                                >
+                                                    <td className="px-3 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center gap-3">
+                                                            <Calendar className="h-4 w-4 text-red-600" />
+                                                            <span className="text-sm font-semibold text-gray-900">
+                                                                {formatDate(shipping.createdAt)}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+
+                                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
+                                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{shipping.auctionWin?.product?.name}</td>
+                                                    <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">
+                                                        {`${shipping.shippingAddress.street},${shipping.shippingAddress.zipCode},${shipping.shippingAddress.city},${shipping.shippingAddress.state},${shipping.shippingAddress.country}`} </td>
+                                                    <td className="px-3 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center gap-3">
+                                                            <Phone className="h-4 w-4 text-red-600" />
+                                                            <span className="text-sm font-semibold text-gray-900">
+                                                                {shipping?.contactPhone}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-3 py-4 whitespace-nowrap">
+                                                        <span
+                                                            className={`px-3 py-1 rounded-full text-xs capitalize font-medium ${getStatusColor(shipping.shippingStatus)}`}
+                                                        >
+                                                            {shipping.shippingStatus.charAt(0).toUpperCase() + shipping.shippingStatus.slice(1)}
                                                         </span>
-                                                    </div>
-                                                </td>
+                                                    </td>
 
-
-                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{shipping.auctionWin?.product?._id}</td>
-                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{shipping.auctionWin?.product?.name}</td>
-                                                <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">
-  {`${shipping.shippingAddress.street},
-${shipping.shippingAddress.zipCode},
-${shipping.shippingAddress.city},
-${shipping.shippingAddress.state},
-${shipping.shippingAddress.country}`}
-</td>
-
-                                                <td className="px-3 py-4 whitespace-nowrap">
-                                                    <div className="flex items-center gap-3">
-                                                        <Phone className="h-4 w-4 text-red-600" />
-                                                        <span className="text-sm font-semibold text-gray-900">
-                                                            {shipping?.contactPhone}
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-3 py-4 whitespace-nowrap">
-                                                    <span
-                                                        className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(shipping.shippingStatus)}`}
-                                                    >
-                                                        {shipping.shippingStatus.charAt(0).toUpperCase() + shipping.shippingStatus.slice(1)}
-                                                    </span>
-                                                </td>
-
-                                                {/* <td className="px-3 py-4 whitespace-nowrap">
+                                                    {/* <td className="px-3 py-4 whitespace-nowrap">
                                                     {shipping.status === "scheduled" ? (
                                                         <motion.button
                                                             whileHover={{ scale: 1.05 }}
@@ -211,8 +206,9 @@ ${shipping.shippingAddress.country}`}
                                                         <span className="text-gray-400 text-sm">-</span>
                                                     )}
                                                 </td> */}
-                                            </motion.tr>
-                                        ))}
+                                                </motion.tr>
+                                            )
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

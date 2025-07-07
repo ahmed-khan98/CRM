@@ -112,12 +112,12 @@ const ProfilePage = () => {
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div className="flex items-end gap-4 mx-4 md:mx-0">
                   <div className="h-20 w-20 rounded-full bg-white shadow-md flex items-center justify-center border-4 border-white">
-                    <div className="h-full w-full rounded-full bg-[#F33E0A] flex items-center justify-center text-white text-2xl font-bold">
-                      {formData.firstName?.charAt(0) || <User size={30} />}
+                    <div className="h-full w-full rounded-full bg-[#F33E0A] flex items-center justify-center text-white text-2xl font-bold capitalize">
+                      {`${formData.firstName?.charAt(0)} ${formData.lastName?.charAt(0)}`  || <User size={30} />}
                     </div>
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-800">
+                    <h2 className="text-xl font-bold text-gray-800 capitalize">
                       {formData.firstName ? `${formData.firstName} ${formData.lastName || ""}` : "Your Profile"}
                     </h2>
                     <p className="text-gray-500">{formData.email}</p>
@@ -174,7 +174,7 @@ const ProfilePage = () => {
                     value={formData.firstName}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4 border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
                       } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                     placeholder="Your first name"
                   />
@@ -195,7 +195,7 @@ const ProfilePage = () => {
                     value={formData.lastName}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4 border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
                       } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                     placeholder="Your last name"
                   />
@@ -214,7 +214,7 @@ const ProfilePage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4 border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
                       } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                     placeholder="Your email address"
                   />
@@ -241,7 +241,7 @@ const ProfilePage = () => {
                     }}
                     placeholder="+1 (555) 123-4567"
                     disabled={!isEditable}
-                    className={`w-full p-4 border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
                       } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                     // placeholder="Your phone number"
                   />
@@ -260,7 +260,7 @@ const ProfilePage = () => {
                     onChange={handleChange}
                     disabled={!isEditable}
                     // rows={4}
-                    className={`w-full p-4 border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
                       } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                     placeholder="Your full street address"
                   />
@@ -268,6 +268,7 @@ const ProfilePage = () => {
               </div>
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
+                <MapPin size={16} className="text-[#F33E0A]" />
                   City
                 </label>
                 <div className="relative">
@@ -277,7 +278,7 @@ const ProfilePage = () => {
                     value={formData?.address?.city}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4 border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
                       } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                     placeholder="Your city"
                   />
@@ -285,6 +286,7 @@ const ProfilePage = () => {
               </div>
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
+                <MapPin size={16} className="text-[#F33E0A]" />
                   State
                 </label>
                 <div className="relative">
@@ -293,7 +295,7 @@ const ProfilePage = () => {
                     value={formData?.address?.state}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4 border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
                       } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                   >
                     <option value="">Select a state</option>
@@ -308,6 +310,8 @@ const ProfilePage = () => {
 
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
+                <MapPin size={16} className="text-[#F33E0A]" />
+
                   Zip Code
                 </label>
                 <div className="relative">
@@ -317,7 +321,7 @@ const ProfilePage = () => {
                     value={formData?.address?.zipCode}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4 border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
                       } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                     placeholder="Your zip code"
                   />

@@ -149,9 +149,9 @@ export default function Page() {
                       </th>
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Auction Status                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      {/* <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Action
-                      </th>
+                      </th> */}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -173,7 +173,7 @@ export default function Page() {
                         /></td>
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
                         <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${product?.skuLocation},${product?.skuRoom},${product?.skuDetail}`}</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{product?.name}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{product?.name}</td>
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{product?.price}</td>
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{product?.highestBid}</td>
                         <td className="px-3 py-4 whitespace-nowrap">
@@ -190,7 +190,7 @@ export default function Page() {
                             {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
                           </span>
                         </td>
-                        <td className="px-3 py-4 whitespace-nowrap">
+                        {/* <td className="px-3 py-4 whitespace-nowrap">
                           {product.status ? (
                             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
                               💰 $5.00
@@ -198,7 +198,7 @@ export default function Page() {
                           ) : (
                             <span className="text-gray-400 text-sm items-center">N/A</span>
                           )}
-                        </td>
+                        </td> */}
                       
                       </motion.tr>
                   )  })}

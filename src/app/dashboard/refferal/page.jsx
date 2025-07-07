@@ -423,11 +423,11 @@ const ReferralDashboard = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                              <span className="text-[#F33E0A] font-bold">
+                              <span className="text-[#F33E0A] font-bold ">
                                 {referral?.referred?.firstName?.charAt(0)?.toUpperCase()}
                               </span>
                             </div>
-                            <span className="text-sm font-semibold text-gray-900">
+                            <span className="text-sm font-semibold text-gray-900 capitalize">
                               {referral.referred.firstName} {referral.referred.lastName}
                             </span>
                           </div>

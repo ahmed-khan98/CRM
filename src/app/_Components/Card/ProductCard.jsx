@@ -10,7 +10,7 @@ import ProductBidding from "../CardComponent/ProductBidding"
 const ProductCard = React.memo(({ item }) => {
 
   return (
-    <div className="relative bg-gray-100 border-1 border-gray-400 rounded-3xl my-4 shadow-lg flex flex-col">
+    <div className="relative bg-gray-100 border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
       <ProductHeader name={item.name} id={item._id} />
       <ProductImageSection item={item} />
       <TimeCounter 

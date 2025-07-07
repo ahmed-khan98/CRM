@@ -1,170 +1,268 @@
-import { useAddBidMutation } from '@/app/_Services/products/page';
-import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast';
-import { Rating } from 'react-simple-star-rating';
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
+"use client"
 
+import { useAddBidMutation } from "@/app/_Services/products/page"
+import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
+import { Rating } from "react-simple-star-rating"
+import { useRouter } from "next/navigation"
+import Cookies from "js-cookie"
+import { Clock, DollarSign, Award, Tag, Gavel } from "lucide-react"
 
-const ProductInfo = ({ name, rating, tag, retail, price, buyerPremium, shortDescription, remainingAuctionTime, isSold, id, highestBid, isAuctionActive }) => {
+const ProductInfo = ({
+  name,
+  rating,
+  tag,
+  retail,
+  condition,
+  price,
+  buyerPremium,
+  shortDescription,
+  remainingAuctionTime,
+  isSold,
+  id,
+  highestBid,
+  isAuctionActive,
+}) => {
+  const [showFull, setShowFull] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(remainingAuctionTime)
+  const maxLength = 300
+  const isLong = shortDescription?.length > maxLength
+  const displayedText = showFull ? shortDescription : shortDescription?.slice(0, maxLength)
+  const [addBid, { isLoading: isSubmitting }] = useAddBidMutation()
+  const [bidValue, setBidValue] = useState(0)
+  const router = useRouter()
 
-    const [showFull, setShowFull] = useState(false);
-    const maxLength = 300;
-    const isLong = shortDescription?.length > maxLength;
-    const displayedText = showFull ? shortDescription : shortDescription?.slice(0, maxLength);
-    const [addBid, { isLoading: isSubmitting }] = useAddBidMutation();
-    const [bidValue, setBidValue] = useState(0);
-    const router = useRouter();
+  useEffect(() => {
+    setBidValue(highestBid + 1)
+  }, [highestBid])
 
-    useEffect(() => {
-        setBidValue(highestBid + 1)
-    }, [])
+  // Countdown timer effect
+  useEffect(() => {
+    if (!isSold && remainingAuctionTime > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer)
+            return 0
+          }
+          return prev - 1
+        })
+      }, 3600000) // Update every hour
 
-    const handleBidChange = (id, value) => {
-        setBidValue(Number(value));
-    };
+      return () => clearInterval(timer)
+    }
+  }, [remainingAuctionTime, isSold])
 
-    const submitBid = async () => {
-        if (bidValue <= highestBid) {
-            toast.error("Bid amount must be greater than the highest bid!");
-            return;
-        }
-        try {
-            const response = await addBid({ id: id, bidAmount: bidValue, bidType: isAuctionActive ? 'live' : 'pre' }).unwrap();
-            toast.success(response?.message);
-            setBidValue(bidValue + 1)
-            // router.replace(router.asPath);
-        } catch (error) {
-            toast.error(error.data?.message || "Failed to place bid");
-        }
-    };
+  const handleBidChange = (value) => {
+    setBidValue(Number(value))
+  }
 
-    const token = Cookies.get("token");
+  const submitBid = async () => {
+    if (bidValue <= highestBid) {
+      toast.error("Bid amount must be greater than the highest bid!")
+      return
+    }
+    try {
+      const response = await addBid({
+        id: id,
+        bidAmount: bidValue,
+        bidType: isAuctionActive ? "live" : "pre",
+      }).unwrap()
+      toast.success(response?.message)
+      setBidValue(bidValue + 1)
+    } catch (error) {
+      toast.error(error.data?.message || "Failed to place bid")
+    }
+  }
 
-    return (
-        <>
-            <div className="flex gap-2   mt-6">
-                <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between rounded-lg">
-                    <p className="uppercase font-semibold roboto text-sm">Time Left</p>
-                </div>
-                <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between rounded-lg">
-                    <p className="font-semibold ">{`${remainingAuctionTime} hours`}</p>
-                </div>
+  const token = Cookies.get("token")
+
+  const formatTimeLeft = (hours) => {
+    if (hours <= 0) return "Auction Ended"
+    if (hours < 24) return `${hours} hours`
+    const days = Math.floor(hours / 24)
+    const remainingHours = hours % 24
+    return `${days}d ${remainingHours} hours `
+  }
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Auction Status Banner */}
+      <div
+        className={`flex items-center justify-between p-4 rounded-xl ${
+          isSold
+            ? "bg-green-50 border border-green-200"
+            : timeLeft <= 24
+              ? "bg-red-50 border border-red-200"
+              : "bg-blue-50 border border-blue-200"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <Clock
+            className={`w-5 h-5 ${isSold ? "text-green-600" : timeLeft <= 24 ? "text-red-600" : "text-blue-600"}`}
+          />
+          <div>
+            <p className="text-sm font-medium text-gray-600">{isSold ? 'Auction Status' :'Time Left'}</p>
+            <p className={`font-bold ${isSold ? "text-green-700" : timeLeft <= 24 ? "text-red-700" : "text-blue-700"}`}>
+              {isSold ? "SOLD" : formatTimeLeft(timeLeft)}
+            </p>
+          </div>
+        </div>
+        {isAuctionActive && !isSold && (
+          <div className="flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            LIVE
+          </div>
+        )}
+      </div>
+
+      {/* Product Title */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">{name}</h1>
+
+        {/* Rating and Quality */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <Rating size={20} SVGstyle={{ display: "inline-block" }} initialValue={rating ?? 0} readonly />
+            <span className="text-sm text-gray-600">({rating}/5)</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+            <Award className="w-4 h-4" />
+            Quality Verified
+          </div>
+        </div>
+
+        {/* Tags */}
+          <div className="flex flex-wrap gap-2 mb-4">
+              <span
+              
+                className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
+                >
+                <Tag className="w-3 h-3" />
+                {condition}
+              </span>
+            {tag.map((tagItem, index) => tag?.length > 0 && (
+              <span
+                key={index}
+                className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
+              >
+                <Tag className="w-3 h-3" />
+                {tagItem}
+              </span>
+            )
+        )}
+          </div>
+      </div>
+
+      {/* Description */}
+      <div className="bg-gray-50 rounded-xl p-4">
+        <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
+        <p className="text-gray-700 leading-relaxed">
+          {displayedText}
+          {isLong && !showFull && "..."}
+        </p>
+        {isLong && (
+          <button
+            onClick={() => setShowFull(!showFull)}
+            className="text-blue-600 hover:text-blue-700 font-medium mt-2 transition-colors cursor-pointer"
+          >
+            {showFull ? "Show less" : "Read more"}
+          </button>
+        )}
+      </div>
+
+      {/* Pricing Information */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-gray-50 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <DollarSign className="w-4 h-4 text-gray-600" />
+            <span className="text-sm font-medium text-gray-600">Estimated Retail</span>
+          </div>
+          <p className="text-2xl font-bold text-gray-900">${retail}</p>
+        </div>
+
+        <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+          <div className="flex items-center gap-2 mb-2">
+            <DollarSign className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-medium text-blue-600">Current Price</span>
+          </div>
+          <p className="text-2xl font-bold text-blue-700">${price}</p>
+        </div>
+
+        <div className="bg-gray-50 rounded-xl p-4 sm:col-span-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-600">Buyer's Premium</span>
+            <span className="font-bold text-gray-900">
+              {`${buyerPremium}${buyerPremium?.includes("%") ? "" : "%"}`}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bidding Section */}
+      <div className="border-t border-gray-300 pt-4">
+        {isSold ? (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Award className="w-8 h-8 text-green-600" />
+            </div>
+            <h3 className="text-xl font-bold text-green-700 mb-2">Item Sold!</h3>
+            <p className="text-green-600">This auction has ended successfully.</p>
+          </div>
+        ) : token ? (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-600">Next Minimum Bid</span>
+              <span className="font-bold text-gray-900">${highestBid + 1}</span>
             </div>
 
-            <h1 className="p-1  sm:px-0 text-left text-2xl capitalize font-bold text-title-md sm:text-title-lg">
-                {name}
-            </h1>
-            <div className="flex flex-col gap-y-6 bg-white rounded-md p-4 sm:mr-4 xl:mr-0">
-                <div className='text-center'>
-                    <div className='flex justify-center'>
-                        <p className=" font-normal uppercase my-1  py-2 text-title-xs bg-[#f4e405] w-30 rounded-lg ">
-                            Quality
-                        </p>
-                    </div>
-                    <div className="flex items-center justify-center gap-2 my-3">
-                        <div className="flex justify-center items-center">
-
-                            <Rating
-                                size='25'
-                                SVGstyle={{ display: 'inline-block' }}
-                                initialValue={rating ?? 0}
-                            />
-                        </div>
-                    </div>
-                    {tag?.length > 0 && (
-                        <div className="flex items-center justify-start gap-2 flex-wrap">
-                            {tag.map((tag, index) => (
-                                <div key={index} className="max-w-100 whitespace-nowrap flex items-center justify-center h-8 bg-[#7ed957] text-gray-800 rounded-2xl">
-                                    <span className="px-3  whitespace-nowrap overflow-hidden text-ellipsis">
-                                        {tag}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                    <p className=" font-semibold uppercase mt-2  py-2 text-title-xs text-center">
-                        Item Description
-                    </p>
-                    <p className=" font-normal py-2 text-title-xs text-left bg-[#d9d9d9] p-2 rounded-lg ">
-                        {displayedText}
-                        {isLong && !showFull && "... "}
-                        {isLong && (
-                            <span
-                                onClick={() => setShowFull(!showFull)}
-                                className="text-[#F33E0A] cursor-pointer font-medium"
-                            >
-                                {showFull ? " See less" : " See more"}
-                            </span>
-                        )}
-                    </p>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <div className="flex gap-2">
-                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between rounded-lg">
-                            <p className="uppercase font-semibold roboto text-sm">Estimated Retail</p>
-                        </div>
-                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between rounded-lg">
-                            <p className="font-semibold ">${retail}</p>
-                        </div>
-                    </div>
-
-                    {/* Row 2 */}
-                    <div className="flex gap-2">
-                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between rounded-lg">
-                            <p className="uppercase font-semibold roboto text-sm">Current Price</p>
-                        </div>
-                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between rounded-lg">
-                            <p className="font-semibold ">${price}</p>
-                        </div>
-                    </div>
-
-                    {/* Row 3 */}
-                    <div className="flex gap-2">
-                        <div className="flex-1 bg-[#a6a6a6] p-3 flex items-center justify-between rounded-lg">
-                            <p className="uppercase font-semibold roboto text-sm">Buyers Premium</p>
-                        </div>
-                        <div className="flex-1 bg-[#d9d9d9]  p-3 flex items-center justify-between rounded-lg">
-                            <p className="font-semibold ">
-                                {`${buyerPremium}${buyerPremium?.includes('%') ? '' : '%'}`}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <input
+                  type="number"
+                  min={highestBid + 1}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg font-semibold text-center"
+                  onChange={(e) => handleBidChange(e.target.value)}
+                  value={bidValue}
+                  placeholder={`Min $${highestBid + 1}`}
+                />
+              </div>
+              <button
+                disabled={bidValue <= highestBid || isSubmitting || timeLeft <= 0}
+                onClick={submitBid}
+                className={`px-8 py-3 rounded-xl font-semibold text-white transition-all duration-200 cursor-pointer ${
+                  Number(bidValue) > Number(highestBid) && timeLeft > 0
+                    ? "bg-[#FB3B11] hover:bg-[#e03610] hover:scale-105 shadow-lg"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Placing...
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Gavel className="w-4 h-4" />
+                    Place Bid
+                  </div>
+                )}
+              </button>
             </div>
-            {isSold ? (
-                <button className="bg-green-600  cursor-pointer w-full text-white px-4 py-2 rounded hover:bg-green-500 flex items-center justify-center">
-                    Sold
-                </button>
-            ) : token ? (
-                <div className="mt-1 flex">
-                    <input
-                        type="text"
-                        className="w-1/2 px-3 py-2 bg-[#EBEBEB] text-center  outline-none 
-                   appearance-none [&::-webkit-outer-spin-button]:appearance-none 
-                   [&::-webkit-inner-spin-button]:appearance-none"
-                        onChange={(e) => handleBidChange(id, e.target.value)}
-                        value={bidValue}
-                    />
-                    <button
-                        disabled={bidValue <= highestBid || isSubmitting}
-                        onClick={() => submitBid(id)}
-                        className={`w-1/2 cursor-pointer  text-white py-2 flex items-center justify-center space-x-2
-                   ${Number(bidValue) > Number(highestBid) ? 'bg-[#F33E0A] hover:bg-[#d63006]' : 'bg-gray-400 cursor-not-allowed'}`}
-                    >
-                        {/* <ImHammer2 className="transform rotate-80" /> */}
-                        <span>{isSubmitting ? "Submitting..." : "Submit BID"}</span>
-                    </button>
-                </div>
-            ) : (
-                <button onClick={() => router.push("/login")} className="bg-[#f44b0a]  cursor-pointer w-full text-white px-4 py-2 rounded hover:bg-[#f44b0a]  flex items-center justify-center">
-                    Login to Bid
-                </button>
-            )}
-        </>)
+
+            {bidValue <= highestBid && <p className="text-sm text-red-600">Bid must be higher than ${highestBid}</p>}
+          </div>
+        ) : (
+          <button
+            onClick={() => router.push("/login")}
+            className="w-full cursor-pointer bg-[#FB3B11] hover:bg-[#e03610] hover:scale-102 shadow-lg text-white font-semibold py-4 rounded-xl transition-all duration-200 "
+          >
+            Login to Start Bidding
+          </button>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default ProductInfo

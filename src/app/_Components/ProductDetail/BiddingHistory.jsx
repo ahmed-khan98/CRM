@@ -1,69 +1,105 @@
-import React, { useEffect, useState } from 'react'
+"use client"
 
-const BiddingHistory = ({history,isSold}) => {
-    const [visibleBidsHistory, setVisibleBidsHistory] = useState([]);
-      const [showAll, setShowAll] = useState(false);
+import React, { useEffect, useState } from "react"
+import { ChevronDown, ChevronUp, Trophy, Clock } from "lucide-react"
 
-    useEffect(() => {
-        setVisibleBidsHistory(history?.slice(0, 4))
-    }, [])
+const BiddingHistory = ({ history, isSold }) => {
+  const [visibleBidsHistory, setVisibleBidsHistory] = useState([])
+  const [showAll, setShowAll] = useState(false)
 
-    const toggleBidHistory = () => {
-        if (showAll) {
-            setVisibleBidsHistory(history?.slice(0, 4));
-        } else {
-            setVisibleBidsHistory(history);
-        }
-        setShowAll(!showAll);
-    };
+  useEffect(() => {
+    setVisibleBidsHistory(history?.slice(0, 3))
+  }, [history])
 
-    return (
-        <div className="bg-white shadow rounded-md sm:p-4 sm:mr-4 xl:mr-0">
-            <div className="flex justify-between px-4 sm:px-0 pt-4 sm:pt-0">
-                <p className="  text-left font-bold uppercase mb-1 text-title-xs">
-                    Bid History
-                </p>
-            </div>
-            <div>
+  const toggleBidHistory = () => {
+    if (showAll) {
+      setVisibleBidsHistory(history?.slice(0, 3))
+    } else {
+      setVisibleBidsHistory(history)
+    }
+    setShowAll(!showAll)
+  }
 
-                {visibleBidsHistory?.map((e, i) => (
-                    <div
-                        key={e._id}
-                        className={`py-2 border-b border-b-gray-400 ${i == '0' && isSold ? 'bg-emerald-100' : ''}`}
-                    >
-                        <div className="grid grid-cols-[minmax(0,_1fr)_minmax(0,_1fr)_minmax(0,_0.5fr)] md:grid-cols-5 justify-items-start items-center px-4 sm:px-3 py-1 rounded ">
-                            <p className="text-label-md text-left ">Bidder no {history?.length - i}</p>
-                            <p className="text-label-md  text-left md:justify-self-center">
-                                {e?.bidder?.username}
-                            </p>
-                            <p className="text-label-md  text-left col-start-1 md:col-start-3 md:justify-self-center">
-                                ${e?.bidAmount}
-                            </p>
-                            <p className="text-label-md  text-left whitespace-nowrap">
-                                {new Date(e.createdAt).toLocaleString()}
-                            </p>
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
 
-                        </div>
-                    </div>
-                ))}
-            </div>
-            {history?.length > 4 &&
-                <button onClick={toggleBidHistory} className="w-full cursor-pointer flex justify-between py-2 px-4 md:px-0">
-                    <p className="uppercase text-burgundy-900 font-semibold">
-                        {showAll ? "View Less" : `View ${history?.length - 4} more bids`}
-                    </p>
-                    {showAll ? (
-                        <svg width="24" height="24" className="fill-burgundy-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M246.6 105.4c6.2-6.2 16.4-6.2 22.6 0l192 192c6.2 6.2 6.2 16.4 0 22.6s-16.4 6.2-22.6 0L256 139.3 73.4 320c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l192-192z" />
-                        </svg>
-                    ) : (
-                        <svg width="24" height="24" className="fill-burgundy-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M267.3 395.3c-6.2 6.2-16.4 6.2-22.6 0l-192-192c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L256 361.4 436.7 180.7c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6l-192 192z" />
-                        </svg>
-                    )}
-                </button>}
+  return (
+    <div className="p-6">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+          <Clock className="w-4 h-4 text-blue-600" />
         </div>
-    )
+        <h3 className="text-xl font-bold text-gray-900">Bidding History</h3>
+        <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
+          {history?.length} bids
+        </span>
+      </div>
+
+      <div className="space-y-3">
+        {visibleBidsHistory?.map((bid, index) => (
+          <div
+            key={bid._id}
+            className={`p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
+              index === 0 && isSold
+                ? "bg-green-50 border-green-200 ring-2 ring-green-100"
+                : "bg-gray-50 border-gray-200 hover:bg-gray-50"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                {index === 0 && isSold && (
+                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                    <Trophy className="w-4 h-4 text-green-600" />
+                  </div>
+                )}
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-gray-900 capitalize">{bid?.bidder?.username}</span>
+                    {index === 0 && isSold && (
+                      <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                        Winner
+                      </span>
+                    )}
+                    {index === 0 && !isSold && (
+                      <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">
+                        Leading
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600">Bidder #{history?.length - index}</p>
+                </div>
+              </div>
+
+              <div className="text-right">
+                <p className="text-xl font-bold text-gray-900">${bid?.bidAmount?.toLocaleString()}</p>
+                <p className="text-sm text-gray-500">{formatDate(bid.createdAt)}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {history?.length > 3 && (
+        <button
+          onClick={toggleBidHistory}
+          className="w-full mt-6 cursor-pointer flex items-center justify-center gap-2 py-3 text-orange-600 hover:text-orange-700 font-medium transition-colors group"
+        >
+          <span>{showAll ? "Show Less" : `View ${history?.length - 3} More Bids`}</span>
+          {showAll ? (
+            <ChevronUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
+          ) : (
+            <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+          )}
+        </button>
+      )}
+    </div>
+  )
 }
 
 export default React.memo(BiddingHistory)
