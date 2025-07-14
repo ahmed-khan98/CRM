@@ -26,9 +26,9 @@ const HeadingDashboard = () => {
   const heading = matchedItem ? matchedItem.name : "USER / DASHBOARD";
 
   return (
-    <div className="container px-10 border-b border-[#DDDDDD] mx-auto mt-2 pb-5">
+    <div className="container px-10 border-b border-[#DDDDDD] mx-auto mt-1 sm:pb-0 md:pb-2">
       <h1 className="text-[#999999] text-sm">{heading}</h1>
-      <h3 className="text-[#242424] text-[20px] font-extrabold">{heading}</h3>
+      <h3 className="text-[#242424] text-md font-extrabold">{heading}</h3>
     </div>
   );
 };

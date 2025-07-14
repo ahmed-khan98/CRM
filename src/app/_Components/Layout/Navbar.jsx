@@ -29,6 +29,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
+    setIsMenuOpen(!isMenuOpen)
     Cookies.remove("token");
     Cookies.remove("currentuser");
     router.push("/login");
@@ -76,7 +77,9 @@ const Navbar = () => {
     <>
       {!token && (
         <button
-        onClick={() => router.push('/register')}
+        onClick={() =>{
+          setIsMenuOpen(!isMenuOpen)
+           router.push('/register')}}
         className="cursor-pointer py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
       >
         Register
@@ -93,7 +96,9 @@ const Navbar = () => {
 
       {token && (
         <button
-          onClick={() => router.push('/dashboard/wishlist')}
+          onClick={() => {
+            setIsMenuOpen(!isMenuOpen)
+            router.push('/dashboard/dashboardcount')}}
           className="cursor-pointer py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
         >
           Dashboard
@@ -101,7 +106,9 @@ const Navbar = () => {
       )}
 
       <button
-        onClick={() => router.push('/sell')}
+        onClick={() => {
+          setIsMenuOpen(!isMenuOpen)
+          router.push('/sell')}}
         className="cursor-pointer py-2.5 px-3 bg-[#007E38] text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
       >
         Sell Your Stuff
@@ -172,7 +179,10 @@ const Navbar = () => {
                 </button>
               </div>
               <button
-                onClick={() => dispatch(clearFilteredProducts())}
+                onClick={() =>{
+                  setSearchTerm('')
+                 dispatch(clearFilteredProducts())
+                }}
                 className="py-2 px-4 bg-gray-800 text-white rounded-md hover:bg-gray-900"
               >
                 Clear

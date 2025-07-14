@@ -58,7 +58,7 @@ export default function page() {
                     transition={{ duration: 0.5 }}
                     className="my-8 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden"
                 >
-                    <div className="p-10 md:p-12">
+                    <div className="p-6 md:p-12">
                         <div className="flex items-center gap-4 mb-8">
                             <div className="h-12 w-1 bg-[#F33E0A] rounded-full"></div>
                             <h1 className="text-2xl md:text-3xl font-bold text-[#F33E0A]">Change Password</h1>

@@ -31,17 +31,17 @@ const HomeBanner = () => {
           </div>
         ) : banner ? (
           <>
-            <div className="w-full lg:w-[40%] bg-gray-100 p-4 md:p-8 lg:p-10 flex flex-col justify-between items-center gap-4 rounded-lg">
-              <h1 className="font-semibold text-center md:text-5xl text-2xl text-title-md tracking-tight text-[#0E0E0E]">
+            <div className="w-full lg:w-[40%] bg-gray-100  flex flex-col justify-between  gap-4 rounded-lg">
+              <h1 className="font-semibold text-center md:text-3xl text-xl text-title-md tracking-tight text-[#0E0E0E] pt-4">
                 {banner.title}
               </h1>
 
               <div
                 dangerouslySetInnerHTML={{ __html: banner.description }}
-                className="text-center text-2xl leading-10 text-gray-700"
+                className="text-center text-xl leading-6 text-gray-700 p-2 md:p-0 lg:p-2"
               />
                {banner?.linkUrl &&
-              <Link href={banner?.linkUrl} className="cursor-pointer pt-8 text-2xl font-semibold uppercase">
+              <Link href={banner?.linkUrl} className="p-2 text-center cursor-pointer pt-2 text-lg font-semibold uppercase text-white  bg-cyan-300 rounded-br-md rounded-bl-md ">
                {banner?.linkTitle}
               </Link>}
             </div>

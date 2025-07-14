@@ -8,7 +8,7 @@ const appointmentApi = createApiAuction.injectEndpoints({
                 method: 'POST',
                 body: formData,
             }),
-            invalidatesTags: ['all']
+            invalidatesTags: ['all','allWon']
         }),
         updateAppointment: builder.mutation({
             query: (formData) => ({
@@ -18,7 +18,7 @@ const appointmentApi = createApiAuction.injectEndpoints({
                     appointmentTime:formData.appointmentTime,
                     notes:formData.notes},
             }),
-            invalidatesTags: ['all']
+            invalidatesTags: ['all','allWon']
 
         }),
         allAppointment: builder.query({

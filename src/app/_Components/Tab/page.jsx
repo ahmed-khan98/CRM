@@ -31,7 +31,7 @@ const Tab = ({tabs}) => {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
-                <span className="relative flex items-center gap-1.5">
+                <span className="relative flex items-center gap-1">
                   {tab.icon}
                   {tab.name}
                 </span>

@@ -2,13 +2,14 @@
 
 import { useState } from "react"
 
-import { Calendar, Clock, Edit,Truck } from "lucide-react"
+import { Calendar, Clock, Edit, Truck } from "lucide-react"
 import { motion } from "framer-motion"
 import { useAllAppointmentQuery } from "@/app/_Services/appointment/page"
 import { formatDate, formatTime12Hour } from "@/app/utilities/date"
 import EditAppointmentModal from "@/app/_Components/Modal/EditAppointmentModal"
 import Tab from "@/app/_Components/Tab/page"
 import { appointmentTabs } from "@/app/utilities/tabs/page"
+import Link from "next/link"
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -65,7 +66,7 @@ export default function AppointmentBooking() {
       return data.data
     }
   }
-  const filterData=[
+  const filterData = [
     'all',
     'scheduled',
     'completed',
@@ -74,7 +75,7 @@ export default function AppointmentBooking() {
   ]
 
 
-  
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
@@ -89,34 +90,33 @@ export default function AppointmentBooking() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-2">
       <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-6">
-      <Tab tabs={appointmentTabs}/>
-      <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
+        <Tab tabs={appointmentTabs} />
+        <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
             <Calendar className="h-7 w-7 text-red-600" />
             <h3 className="text-[#242424] text-[24px] font-bold">Appointments</h3>
           </div>
 
           <div className="flex bg-white rounded-full shadow-sm p-1">
-            {filterData?.map(e=>   <button
+            {filterData?.map(e => <button
               onClick={() => setActiveFilter(e)}
-              className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${
-                activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
-              }`}
+              className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                }`}
             >
               {e}
             </button>)}
-       
+
           </div>
         </div>
 
-        <motion.div variants={itemVariants} className="bg-white rounded-3xl p-8 shadow-xl border border-red-100">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+        <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-3 p-4 md:p-8 shadow-xl border border-red-100">
+          <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
             <div className="p-3 bg-red-100 rounded-2xl">
               <Calendar className="w-6 h-6 text-[#F33E0A]" />
             </div>
-            Your Won Product Pick Up Appointments
+             Pick Up Appointments
           </h3>
 
           {filteredNotifications()?.length === 0 ? (
@@ -128,6 +128,8 @@ export default function AppointmentBooking() {
                   ? "You don't have any appointments yet."
                   : activeFilter === "scheduled"
                     ? "You don't have any scheduled appointments."
+                  : activeFilter === "completed"
+                    ? "You don't have any completed appointments."
                     : activeFilter === "missed"
                       ? "You don't have any missed appointments."
                       : "You don't have any cancelled appointments."}
@@ -157,18 +159,24 @@ export default function AppointmentBooking() {
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Status
                       </th>
+                      {(activeFilter === 'all' || activeFilter === 'missed') &&
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Penalty Fee
-                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Action
-                      </th>
+                      </th>}
+                      {activeFilter === 'missed' &&
+                        <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                          Payment Status
+                        </th>}
+                      {activeFilter === 'scheduled' &&
+                        <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                          Action
+                        </th>}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredNotifications().map((appointment, index) => {
-                        const lastFour = appointment.auctionWin?.product?._id.toString().slice(-4).toUpperCase();
-                      return(<motion.tr
+                      const lastFour = appointment.auctionWin?.product?._id.toString().slice(-4);
+                      return (<motion.tr
                         key={appointment._id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -193,7 +201,7 @@ export default function AppointmentBooking() {
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
                         <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation},${appointment.auctionWin?.product?.skuRoom},${appointment.auctionWin?.product?.skuDetail}`}</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize"><Link href={`/detailproduct/${appointment.auctionWin?.product?._id}`}>{appointment.auctionWin?.product?.name}</Link></td>
+                        <td className="px-3 py-4 whitespace-nowrap text-md text-blue-600 capitalize"><Link href={`/detailproduct/${appointment.auctionWin?.product?._id}`}>{appointment.auctionWin?.product?.name}</Link></td>
                         <td className="px-3 py-4 whitespace-nowrap">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(appointment.status)}`}
@@ -201,6 +209,7 @@ export default function AppointmentBooking() {
                             {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                           </span>
                         </td>
+                        {(activeFilter === 'all' || activeFilter === 'missed') &&
                         <td className="px-3 py-4 whitespace-nowrap">
                           {appointment.penaltyApplied ? (
                             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
@@ -209,24 +218,35 @@ export default function AppointmentBooking() {
                           ) : (
                             <span className="text-gray-400 text-sm items-center">N/A</span>
                           )}
-                        </td>
-                        <td className="px-3 py-4 whitespace-nowrap">
-                          {appointment.status === "scheduled" ? (
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => handleEdit(appointment)}
-                              className="inline-flex items-center cursor-pointer px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                        </td>}
+                        {activeFilter === 'missed' &&
+                          <td className="px-3 py-4 whitespace-nowrap">
+                            <span
+                              className={`px-3 py-1 rounded-full text-xs font-medium ${(appointment.paymentStatus === 'unpaid'? 'text-red-600 bg-red-100' :'text-green-600 bg-green-100' )}`}
                             >
-                              <Edit className="h-4 w-4 mr-1" />
-                              Edit
-                            </motion.button>
-                          ) : (
-                            <span className="text-gray-400 text-sm">-</span>
-                          )}
-                        </td>
+                              {appointment?.paymentStatus.charAt(0).toUpperCase() + appointment?.paymentStatus.slice(1)}
+                            </span>
+                          </td>}
+                        {activeFilter === 'scheduled' &&
+
+                          <td className="px-3 py-4 whitespace-nowrap">
+                            {appointment.status === "scheduled" ? (
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => handleEdit(appointment)}
+                                className="inline-flex items-center cursor-pointer px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                              >
+                                <Edit className="h-4 w-4 mr-1" />
+                                Edit
+                              </motion.button>
+                            ) : (
+                              <span className="text-gray-400 text-sm">-</span>
+                            )}
+                          </td>}
                       </motion.tr>
-                    )})}
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -235,7 +255,7 @@ export default function AppointmentBooking() {
         </motion.div>
 
         {/* Edit Appointment Modal */}
-        <EditAppointmentModal isModalOpen={isModalOpen} editingAppointment={editingAppointment} closeModal={closeModal} refetch={refetch}/>
+        <EditAppointmentModal isModalOpen={isModalOpen} editingAppointment={editingAppointment} closeModal={closeModal} refetch={refetch} />
       </div>
     </div>
   )

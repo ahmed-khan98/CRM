@@ -86,39 +86,10 @@ const ProductInfo = ({
   }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Auction Status Banner */}
-      <div
-        className={`flex items-center justify-between p-4 rounded-xl ${
-          isSold
-            ? "bg-green-50 border border-green-200"
-            : timeLeft <= 24
-              ? "bg-red-50 border border-red-200"
-              : "bg-blue-50 border border-blue-200"
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <Clock
-            className={`w-5 h-5 ${isSold ? "text-green-600" : timeLeft <= 24 ? "text-red-600" : "text-blue-600"}`}
-          />
-          <div>
-            <p className="text-sm font-medium text-gray-600">{isSold ? 'Auction Status' :'Time Left'}</p>
-            <p className={`font-bold ${isSold ? "text-green-700" : timeLeft <= 24 ? "text-red-700" : "text-blue-700"}`}>
-              {isSold ? "SOLD" : formatTimeLeft(timeLeft)}
-            </p>
-          </div>
-        </div>
-        {isAuctionActive && !isSold && (
-          <div className="flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-            LIVE
-          </div>
-        )}
-      </div>
+    <div className="p-4 space-y-3">
 
-      {/* Product Title */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-3">{name}</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-3">{name}</h1>
 
         {/* Rating and Quality */}
         <div className="flex items-center gap-4 mb-4">
@@ -128,7 +99,7 @@ const ProductInfo = ({
           </div>
           <div className="flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
             <Award className="w-4 h-4" />
-            Quality Verified
+            Quality
           </div>
         </div>
 
@@ -155,8 +126,8 @@ const ProductInfo = ({
       </div>
 
       {/* Description */}
-      <div className="bg-gray-50 rounded-xl p-4">
-        <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
+      <div className="bg-gray-200 rounded-xl p-4">
+        <h3 className="font-semibold text-gray-900 mb-1">Description</h3>
         <p className="text-gray-700 leading-relaxed">
           {displayedText}
           {isLong && !showFull && "..."}
@@ -164,7 +135,7 @@ const ProductInfo = ({
         {isLong && (
           <button
             onClick={() => setShowFull(!showFull)}
-            className="text-blue-600 hover:text-blue-700 font-medium mt-2 transition-colors cursor-pointer"
+            className="text-blue-600 hover:text-blue-700 font-medium mt-1 transition-colors cursor-pointer"
           >
             {showFull ? "Show less" : "Read more"}
           </button>
@@ -172,24 +143,24 @@ const ProductInfo = ({
       </div>
 
       {/* Pricing Information */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-gray-50 rounded-xl p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="bg-gray-200 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <DollarSign className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-600">Estimated Retail</span>
+            <span className="text-md font-medium text-gray-600">Estimated Retail</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">${retail}</p>
         </div>
 
-        <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+        <div className="bg-gray-200 rounded-xl p-4 border border-blue-200">
           <div className="flex items-center gap-2 mb-2">
             <DollarSign className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-600">Current Price</span>
+            <span className="text-md font-medium text-blue-600">Current Price</span>
           </div>
           <p className="text-2xl font-bold text-blue-700">${price}</p>
         </div>
 
-        <div className="bg-gray-50 rounded-xl p-4 sm:col-span-2">
+        <div className="bg-gray-200 rounded-xl p-4 sm:col-span-2">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-600">Buyer's Premium</span>
             <span className="font-bold text-gray-900">
@@ -199,18 +170,47 @@ const ProductInfo = ({
         </div>
       </div>
 
+
+      <div
+        className={`flex items-center justify-between p-2 rounded-xl ${
+          isSold
+            ? "bg-green-50 border border-green-200"
+            : timeLeft <= 24
+              ? "bg-red-50 border border-red-200"
+              : "bg-blue-50 border border-blue-200"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <Clock
+            className={`w-5 h-5 ${isSold ? "text-green-600" : timeLeft <= 24 ? "text-red-600" : "text-blue-600"}`}
+          />
+          {/* <div> */}
+            <p className="text-sm font-medium text-gray-600">{isSold ? 'Auction Status' :'Time Left'}</p>
+            <p className={`font-bold ${isSold ? "text-green-700" : timeLeft <= 24 ? "text-red-700" : "text-blue-700"}`}>
+              {isSold ? "SOLD" : formatTimeLeft(timeLeft)}
+            </p>
+          {/* </div> */}
+        </div>
+        {isAuctionActive && !isSold && (
+          <div className="flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            LIVE
+          </div>
+        )}
+      </div>
+
       {/* Bidding Section */}
-      <div className="border-t border-gray-300 pt-4">
+      <div className="border-t border-gray-300 pt-1">
         {isSold ? (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Award className="w-8 h-8 text-green-600" />
+          <div className="bg-green-50 border border-green-200 rounded-xl p-2 text-center">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <Award className="w-6 h-6 text-green-600" />
             </div>
-            <h3 className="text-xl font-bold text-green-700 mb-2">Item Sold!</h3>
+            <h3 className="text-lg font-bold text-green-700 mb-1">Item Sold!</h3>
             <p className="text-green-600">This auction has ended successfully.</p>
           </div>
         ) : token ? (
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-600">Next Minimum Bid</span>
               <span className="font-bold text-gray-900">${highestBid + 1}</span>

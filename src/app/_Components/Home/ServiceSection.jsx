@@ -46,16 +46,16 @@ const ServicesSection = () => {
           data?.data?.map((e) => (
             <div
               key={e._id}
-              className=" bg-white p-5 pt-5 my-2 rounded-lg shadow-lg flex  flex-col"
+              className=" bg-white rounded-xl shadow-lg flex  flex-col justify-between"
             >
               <h2 className=" text-red-800 font-bold text-2xl py-2 px-4">
                 {e?.title}
               </h2>
-              <p className="text-gray-700 mt-2 text-lg">
+              <p className="text-gray-700 mt-2 text-lg py-2 px-4">
                 <div dangerouslySetInnerHTML={{ __html: e?.description }} />
-              </p>
+            </p>
               {e?.linkUrl &&
-              <Link href={e?.linkUrl} className="cursor-pointer pt-8 text-md font-semibold uppercasero">
+              <Link href={e?.linkUrl} className="cursor-pointer py-3 text-white text-md font-semibold uppercase bg-cyan-300 rounded-br-xl rounded-bl-xl ">
                {e?.linkTitle}
               </Link>}
             </div>

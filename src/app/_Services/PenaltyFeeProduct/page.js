@@ -2,9 +2,9 @@ import { createApiAuction } from "@/redux/createApi"
 
 const productApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({
-  wonItems: builder.query({
-      query: () => 'user/won',
-      providesTags: ['allWon'],
+    penalizedProductItems: builder.query({
+      query: () => 'user/penalizedProduct',
+      providesTags: ['allPenalizedProduct'],
       keepUnusedDataFor: 180, 
       refetchOnMountOrArgChange: false,
     }),
@@ -12,4 +12,4 @@ const productApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const { useWonItemsQuery } = productApi
+export const { usePenalizedProductItemsQuery } = productApi

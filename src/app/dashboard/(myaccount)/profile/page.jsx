@@ -92,7 +92,7 @@ const ProfilePage = () => {
 
         <Tab tabs={myAccountTabs} />
         <div className="my-6">
-          <h1 className="text-2xl font-bold text-gray-800">My Account</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-800">My Account</h1>
           <p className="text-gray-500 mt-1">Manage your personal information and preferences</p>
         </div>
 
@@ -108,7 +108,7 @@ const ProfilePage = () => {
             <div className="h-24 bg-gradient-to-r from-[#F33E0A] to-[#FF6B3D]"></div>
 
             {/* Profile header with edit button */}
-            <div className="relative px-2 md:px-8  pb-6 -mt-14">
+            <div className="relative px-1 md:px-8  pb-6 -mt-14">
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div className="flex items-end gap-4 mx-4 md:mx-0">
                   <div className="h-20 w-20 rounded-full bg-white shadow-md flex items-center justify-center border-4 border-white">
@@ -160,7 +160,7 @@ const ProfilePage = () => {
             )}
           </AnimatePresence>
 
-          <form onSubmit={handleSubmit} className="p-6 md:p-8">
+          <form onSubmit={handleSubmit} className="p-4 md:p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">

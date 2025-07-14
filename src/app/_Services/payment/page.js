@@ -11,10 +11,10 @@ const paymentApi = createApiAuction.injectEndpoints({
         }),
       }),
       paymentSuccess: builder.mutation({
-        query: (id) => ({
+        query: (formData) => ({
           url: `user/payment/confirmPayment`,
           method: 'POST',
-          body:id
+          body:{session_id:formData.session_id,status:formData.status,type:formData.type}
         }),
       }),
       paymentfaild: builder.mutation({

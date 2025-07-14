@@ -8,6 +8,7 @@ import { formatDate, formatTime12Hour } from "@/app/utilities/date"
 import Tab from "@/app/_Components/Tab/page"
 import { appointmentTabs } from "@/app/utilities/tabs/page"
 import { useAllShippingRequestQuery } from "@/app/_Services/shippingRequest/page"
+import Link from "next/link"
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -21,7 +22,6 @@ const itemVariants = {
 export default function page() {
 
     const [activeFilter, setActiveFilter] = useState("request")
-    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const { data, error: isError, isLoading } = useAllShippingRequestQuery()
 
@@ -50,15 +50,15 @@ export default function page() {
     const filteredNotifications = () => {
         if (!data?.data) return []
         if (activeFilter === "processing") {
-            return data.data.filter((item) => item?.status === "processing")
+            return data.data.filter((item) => item?.shippingStatus === "processing")
         } else if (activeFilter === "accept") {
-            return data.data.filter((item) => item?.status === "accept")
+            return data.data.filter((item) => item?.shippingStatus === "accept")
         } else if (activeFilter === "denied") {
-            return data.data.filter((item) => item?.status === "denied")
+            return data.data.filter((item) => item?.shippingStatus === "denied")
         } else if (activeFilter === "delivered") {
-            return data.data.filter((item) => item?.status === "delivered")
+            return data.data.filter((item) => item?.shippingStatus === "delivered")
         } else if (activeFilter === "shipped") {
-            return data.data.filter((item) => item?.status === "shipped")
+            return data.data.filter((item) => item?.shippingStatus === "shipped")
         } else {
             return data.data
         }
@@ -81,7 +81,7 @@ export default function page() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-2">
             <div className="max-w-6xl mx-auto p-5 flex flex-col space-y-6">
                 <Tab tabs={appointmentTabs} />
                 <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
@@ -90,7 +90,7 @@ export default function page() {
                         <h3 className="text-[#242424] text-[24px] font-bold">Shipping Request</h3>
                     </div>
 
-                    <div className="flex bg-white rounded-full shadow-sm p-1">
+                    {/* <div className="flex bg-white rounded-full shadow-sm p-1">
                         {filterData?.map(e => <button
                             onClick={() => setActiveFilter(e)}
                             className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
@@ -99,10 +99,10 @@ export default function page() {
                             {e}
                         </button>)}
 
-                    </div>
+                    </div> */}
                 </div>
 
-                <motion.div variants={itemVariants} className="bg-white rounded-3xl p-8 shadow-xl border border-red-100">
+                <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-3 p-4 md:p-8 shadow-xl border border-red-100">
 
                     {filteredNotifications()?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
@@ -172,8 +172,8 @@ export default function page() {
                                                     </td>
 
                                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
-                                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize"><Link href={`/detailproduct/${shipping.auctionWin?.product?._id}`}>{shipping.auctionWin?.product?.name}</Link></td>
-                                                    <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">
+                                                    <td className="px-3 py-4 whitespace-nowrap text-md  text-blue-600 capitalize"><Link href={`/detailproduct/${shipping.auctionWin?.product?._id}`}>{shipping.auctionWin?.product?.name}</Link></td>
+                                                    <td className="px-3 py-4 whitespace-pre-line text-sm  text-gray-600">
                                                         {`${shipping.shippingAddress.street},${shipping.shippingAddress.zipCode},${shipping.shippingAddress.city},${shipping.shippingAddress.state},${shipping.shippingAddress.country}`} </td>
                                                     <td className="px-3 py-4 whitespace-nowrap">
                                                         <div className="flex items-center gap-3">

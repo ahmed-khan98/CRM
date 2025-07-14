@@ -14,7 +14,7 @@ const PaidItem = ({ status }) => {
         <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-2">
       <div className="max-w-6xl mx-auto">
             <PurchaseTab />
-            <div className="grid grid-cols-1 sm:grid-cols-2 sm:p-2 lg:grid-cols-3 gap-0 container mx-auto p-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 sm:p-2 lg:grid-cols-3 gap-0 container md:mx-auto  p-2">
                 {isLoading ? (
                     [...Array(skeletonRows)].map((_, index) => (
                         <AuctionCardSkeleton key={index} />

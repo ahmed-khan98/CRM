@@ -37,17 +37,17 @@ const DetailPageTab = ({ data }) => {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Tab Navigation */}
       <div className="relative">
-        <div className="flex bg-gray-50 rounded-full p-2 shadow-md">
+        <div className="flex bg-gray-200 rounded-full p-1 shadow-md">
           {tabs?.map((tab) => {
             const IconComponent = tab.icon
             return (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`relative cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-full font-medium transition-all duration-200 ${
+                className={`relative cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-200 ${
                   tab.key === activeTab ? "text-white shadow-lg" : "text-gray-600 hover:text-gray-900"
                 }`}
               >
@@ -76,7 +76,7 @@ const DetailPageTab = ({ data }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="space-y-3"
+        className="space-y-1"
       >
         {data?.[activeTab]?.length > 0 ? (
           data[activeTab].map((item, index) => {
@@ -84,12 +84,12 @@ const DetailPageTab = ({ data }) => {
             const displayValue = isASIN ? item?.code : item?.value
 
             return (
-              <div key={index} className="flex gap-3 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+              <div key={index} className="flex gap-2 hover:bg-gray-100 transition-colors">
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide">{item?.name}</p>
+                  <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide bg-gray-300 p-3  rounded-lg">{item?.name}</p>
                 </div>
-                <div className="flex-2 flex items-center justify-between min-w-0">
-                  <p className="font-medium text-gray-700 break-words">{displayValue}</p>
+                <div className="flex-2 min-w-0">
+                  <p className="font-medium text-gray-700 break-words p-3 bg-gray-200  rounded-lg">{displayValue}</p>
                   {isASIN && (
                     <button
                       onClick={() => handleCopy(item?.value, index)}

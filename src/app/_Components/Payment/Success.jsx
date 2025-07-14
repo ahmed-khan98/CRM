@@ -8,13 +8,14 @@ const PaymentSuccessComponent = () => {
   const searchParams = useSearchParams();
   const session_id = searchParams.get("session_id");
   const status = searchParams.get("status");
+  const type = searchParams.get("type");
   const router = useRouter();
   console.log(status,'----status')
   const [paymentSuccess] = usePaymentSuccessMutation();
 
   useEffect(() => {
     if (session_id) {
-      paymentSuccess({ session_id,status });
+      paymentSuccess({ session_id,status,type });
     }
   }, [session_id, paymentSuccess]);
 

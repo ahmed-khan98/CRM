@@ -39,12 +39,11 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
     const [addPayment] = useAddPaymentMutation();
 
 
-    const addPayments = async (id) => {
+    const addPayments = async (auction_id,id) => {
         try {
             setLoadingStates((prev) => ({ ...prev, [id]: true }));
-            const response = await addPayment({ "productId": id }).unwrap();
+            const response = await addPayment({ "productId": id,'auctionWonId': auction_id,'type':'auction_payment'}).unwrap();
             console.log(response, 'sadaf');
-
             if (response?.data?.url) {
                 window.location.href = response?.data?.url;
             }
@@ -70,11 +69,12 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
 
     return (
         <>
-            <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col mx-3">
+            <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col mx-1 md:mx-3">
 
                 <ProductHeader name={item?.product?.name} id={item?.product?._id} />
                 <ProductImageSection item={item?.product} />
-                <TimeCounter timeLeft={daysSinceEnded} type='days' title='Ended' price={item?.product?.price}
+                <TimeCounter
+                type='days' title='Ended' price={item?.product?.price}
                     isSold={item?.product?.isSold}
                     SoldDate={item?.product?.SoldDate}
                 />
@@ -92,7 +92,7 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
 
                                 <div className="flex items-center gap-2">
                                     <Calendar className="w-4 h-4 text-gray-500" />
-                                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${status === 'pending' ? 'text-green-600 bg-green-100':'text-red-600 bg-red-100'}`}>{formatDate(paymentDeadline)}</span>
+                                    {/* <span className={`px-3 py-1 rounded-full text-xs font-medium border ${status === 'pending' ? 'text-green-600 bg-green-100':'text-red-600 bg-red-100'}`}>{formatDate(paymentDeadline)}</span> */}
                                 </div>
 
 
@@ -166,7 +166,7 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
                             <button
                                 className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-[#0578ff] py-3 flex items-center justify-center ">
                                 Paid
-                            </button> : <button onClick={() => addPayments(item?.product?._id)}
+                            </button> : <button onClick={() => addPayments(item?._id,item?.product?._id)}
                                 disabled={loadingStates[item?.product?._id]}
                                 className="rounded-br-3xl rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-blue-500 to-blue-400  hover:from-blue-400 hover:to-blue-500 py-3 flex items-center justify-center ">
                                 {loadingStates[item?.product?._id] ? (

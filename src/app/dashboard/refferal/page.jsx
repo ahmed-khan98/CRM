@@ -112,7 +112,7 @@ const ReferralDashboard = () => {
   }
 
   return (
-<div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+<div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 md:py-12 px-4">
 <div className="max-w-5xl mx-auto">
 
         <motion.div
@@ -344,8 +344,8 @@ const ReferralDashboard = () => {
         </motion.div>
 
         {/* Referrals List */}
-        <motion.div variants={itemVariants} className="bg-white rounded-3xl p-8 shadow-xl border border-red-100">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+        <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-0 p-4 md:p-8 shadow-xl border border-red-100">
+          <h3 className="text-lg md:text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
             <div className="p-3 bg-red-100 rounded-2xl">
               <Users className="w-6 h-6 text-[#F33E0A]" />
             </div>

@@ -8,7 +8,7 @@ const shippingRequestApi = createApiAuction.injectEndpoints({
                 method: 'POST',
                 body: formData,
             }),
-            invalidatesTags: ['allShippingRequest']
+            invalidatesTags: ['allShippingRequest','allWon']
         }),
         updateShippingRequest: builder.mutation({
             query: (formData) => ({
@@ -18,7 +18,7 @@ const shippingRequestApi = createApiAuction.injectEndpoints({
                     appointmentTime:formData.appointmentTime,
                     notes:formData.notes},
             }),
-            invalidatesTags: ['allShippingRequest']
+            invalidatesTags: ['allShippingRequest','allWon']
 
         }),
         allShippingRequest: builder.query({

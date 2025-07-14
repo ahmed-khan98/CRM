@@ -30,22 +30,22 @@ const BiddingHistory = ({ history, isSold }) => {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+    <div className="p-5">
+      <div className="flex items-center gap-3 mb-2">
+        {/* <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
           <Clock className="w-4 h-4 text-blue-600" />
-        </div>
-        <h3 className="text-xl font-bold text-gray-900">Bidding History</h3>
+        </div> */}
+        <h3 className="text-xl font-bold text-gray-900">Bid History</h3>
         <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
           {history?.length} bids
         </span>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {visibleBidsHistory?.map((bid, index) => (
           <div
             key={bid._id}
-            className={`p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
+            className={`p-2 rounded-xl border transition-all duration-200 hover:shadow-md ${
               index === 0 && isSold
                 ? "bg-green-50 border-green-200 ring-2 ring-green-100"
                 : "bg-gray-50 border-gray-200 hover:bg-gray-50"
@@ -53,13 +53,13 @@ const BiddingHistory = ({ history, isSold }) => {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                {index === 0 && isSold && (
+                {index === 0 && isSold ? (
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                     <Trophy className="w-4 h-4 text-green-600" />
                   </div>
-                )}
+                ):''}
                 <div>
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-900 capitalize">{bid?.bidder?.username}</span>
                     {index === 0 && isSold && (
                       <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
@@ -71,15 +71,15 @@ const BiddingHistory = ({ history, isSold }) => {
                         Leading
                       </span>
                     )}
-                  </div>
+                  </div> */}
                   <p className="text-sm text-gray-600">Bidder #{history?.length - index}</p>
                 </div>
               </div>
 
               <div className="text-right">
-                <p className="text-xl font-bold text-gray-900">${bid?.bidAmount?.toLocaleString()}</p>
-                <p className="text-sm text-gray-500">{formatDate(bid.createdAt)}</p>
+                <p className="text-lg font-semibold text-gray-900">${bid?.bidAmount?.toLocaleString()}</p>
               </div>
+                <p className="text-sm text-gray-500">{formatDate(bid.createdAt)}</p>
             </div>
           </div>
         ))}
@@ -88,7 +88,7 @@ const BiddingHistory = ({ history, isSold }) => {
       {history?.length > 3 && (
         <button
           onClick={toggleBidHistory}
-          className="w-full mt-6 cursor-pointer flex items-center justify-center gap-2 py-3 text-orange-600 hover:text-orange-700 font-medium transition-colors group"
+          className="w-full mt-2 cursor-pointer flex items-center justify-center gap-2 py-1 text-orange-600 hover:text-orange-700 font-medium transition-colors group"
         >
           <span>{showAll ? "Show Less" : `View ${history?.length - 3} More Bids`}</span>
           {showAll ? (

@@ -129,9 +129,9 @@ return (
       <footer className="container mx-auto w-full mt-4 py-4 border-t border-gray-300">
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
           <div className="space-x-2">
-            <Link href="/about" className="hover:underline ">About</Link> |
-            <Link href="/faq" className="hover:underline "> FAQ’s</Link> |
-            <Link href="/contact" className="hover:underline "> Contact Us</Link> |
+            <Link href="/about" className="hover:underline text-[#0578ff] ">About</Link> |
+            <Link href="/faq" className="hover:underline text-[#0578ff] "> FAQ’s</Link> |
+            <Link href="/contact" className="hover:underline text-[#0578ff] "> Contact Us</Link> |
             <Link href="/resource" className="text-red-600 hover:underline "> Resources</Link> |
             <Link href="/sell" className="text-green-600 hover:underline "> SELL YOUR STUFF</Link>
           </div>
@@ -171,9 +171,9 @@ return (
 
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
           <div className="space-x-2">
-            <Link href="/term" className="hover:underline ">Terms & Conditions</Link> |
-            <Link href="/privacy" className="hover:underline "> Privacy Policy</Link> |
-            <Link href="/affiliate" className="hover:underline "> Affiliate Policy</Link>
+            <Link href="/term" className="hover:underline text-[#0578ff] ">Terms & Conditions</Link> |
+            <Link href="/privacy" className="hover:underline text-[#0578ff] "> Privacy Policy</Link> |
+            <Link href="/affiliate" className="hover:underline text-[#0578ff] "> Affiliate Policy</Link>
           </div>
 
           <p className=" text-sm">

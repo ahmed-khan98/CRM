@@ -86,7 +86,7 @@ const ProductDetail = (id) => {
               {/* Main Content Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                 {/* Left Column - Images */}
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {/* Action Buttons */}
                   <div className="flex justify-end gap-3">
                     <button
@@ -118,7 +118,7 @@ const ProductDetail = (id) => {
                   </div>
 
                   {/* Tabs Section */}
-                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                  <div className="bg-white rounded-2xl shadow-lg p-4 border border-gray-100">
                     <DetailPageTab data={data?.data} />
                   </div>
                 </div>

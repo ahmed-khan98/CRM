@@ -1,0 +1,324 @@
+"use client"
+import { useEffect, useState } from "react"
+import Cookies from "js-cookie"
+import {
+  ShoppingBag,
+  TrendingUp,
+  DollarSign,
+  Package,
+  Award,
+  Eye,
+  Calendar,
+  Users,
+  Star,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react"
+import { motion } from "framer-motion"
+import { useMyStoreItemsQuery } from "@/app/_Services/store/page"
+import { useWonItemsQuery } from "@/app/_Services/wonProduct/page"
+import { useAllAppointmentQuery } from "@/app/_Services/appointment/page"
+import { usePenalizedProductItemsQuery } from "@/app/_Services/PenaltyFeeProduct/page"
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 },
+  },
+}
+
+const StatCard = ({ icon: Icon, title, value, subtitle, color, trend, trendValue }) => (
+  <motion.div
+    variants={cardVariants}
+    whileHover={{ scale: 1.02, y: -5 }}
+    className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm`}
+  >
+    <div className="relative z-10">
+      <div className="flex items-center justify-between mb-4">
+        <div className={`p-3 rounded-2xl bg-white bg-opacity-20`}>
+          <Icon className={`h-6 w-6 text-${color}`}/>
+        </div>
+        {trend && (
+          <div
+            className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+              trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+            }`}
+          >
+            {trend === "up" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
+            {trendValue}%
+          </div>
+        )}
+      </div>
+      <div className="text-3xl font-bold text-white mb-1">{value}</div>
+      <div className="text-white text-opacity-80 font-medium">{title}</div>
+      {subtitle && <div className="text-white text-opacity-60 text-sm mt-1">{subtitle}</div>}
+    </div>
+    <div className="absolute top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full -translate-y-16 translate-x-16"></div>
+  </motion.div>
+)
+
+const QuickActionCard = ({ icon: Icon, title, description, color, onClick }) => (
+  <motion.div
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+    onClick={onClick}
+    className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300"
+  >
+    <div className={`p-3 rounded-2xl w-fit mb-4 ${color}`}>
+      <Icon className="h-6 w-6 text-white" />
+    </div>
+    <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
+    <p className="text-gray-600 text-sm">{description}</p>
+  </motion.div>
+)
+
+export default function DashboardPage() {
+  const [currentUser, setCurrentUser] = useState({})
+  const [greeting, setGreeting] = useState("")
+
+  // API Queries
+  const { data: storeItems, isLoading: storeLoading } = useMyStoreItemsQuery()
+  const { data: purchasesData, isLoading: purchasesLoading } = useWonItemsQuery()
+
+const { data:missed, isLoading:missedLoading } = useAllAppointmentQuery()
+const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQuery()
+  
+
+  useEffect(() => {
+    const data = Cookies.get("currentuser")
+    if (data) {
+      const user = JSON.parse(data)
+      setCurrentUser(user)
+    }
+
+    // Set greeting based on time
+    const hour = new Date().getHours()
+    if (hour < 12) setGreeting("Good Morning")
+    else if (hour < 17) setGreeting("Good Afternoon")
+    else setGreeting("Good Evening")
+  }, [])
+
+  const soldProducts = storeItems?.data?.filter((item) => item.isSold)?.length || 0
+  const totalProducts = storeItems?.data?.length || 0
+  const purchasedProducts = purchasesData?.data?.paid?.length || 0
+  const totalFees =  0
+  const pendingFees = penalized?.data?.length + missed?.data?.filter(e=>e?.status === 'missed' && e?.paymentStatus === 'unpaid')?.length  + purchasesData?.data?.pending?.length  || 0
+
+
+
+  const isLoading = storeLoading  || purchasesLoading || missedLoading || penalizedLoading
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+          className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full"
+        />
+        <span className="ml-4 text-red-600 font-semibold">Loading your dashboard... ✨</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+      {/* Header Section */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-opacity-100"></div>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 capitalize">
+              {greeting}, {currentUser?.firstName},{currentUser?.lastName}! 👋
+            </h1>
+            <p className="text-xl text-white text-opacity-90 mb-2">Welcome to your personalized dashboard</p>
+            <p className="text-white text-opacity-70">
+              Track your sales, purchases, and account activity all in one place
+            </p>
+          </motion.div>
+        </div>
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-32 h-32 md:w-64 md:h-64 bg-white bg-opacity-10 rounded-full -translate-x-16 -translate-y-16 md-translate-x-32 md:-translate-y-32"></div>
+        <div className="absolute bottom-0 right-0 w-32 h-32 md:w-92 md:h-92 bg-white bg-opacity-5 rounded-full translate-x-14 translate-y-14 md:translate-x-48 md:translate-y-48"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Stats Grid */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: {
+              transition: {
+                staggerChildren: 0.1,
+              },
+            },
+          }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 -mt-16 relative z-10"
+        >
+          <StatCard
+            icon={Package}
+            title="Products Listed"
+            value={totalProducts}
+            subtitle="Items in your store"
+            color="bg-gradient-to-br from-blue-500 to-blue-600"
+            trend="up"
+            trendValue="0"
+          />
+          <StatCard
+            icon={TrendingUp}
+            title="Products Sold"
+            value={soldProducts}
+            subtitle={`${totalProducts > 0 ? Math.round((soldProducts / totalProducts) * 100) : 0}% success rate`}
+            color="bg-gradient-to-br from-green-500 to-emerald-600"
+            trend="up"
+            trendValue="0"
+          />
+          <StatCard
+            icon={ShoppingBag}
+            title="Purchases Made"
+            value={purchasedProducts}
+            subtitle="Items you've bought"
+            color="bg-gradient-to-br from-purple-500 to-purple-600"
+            trend="up"
+            trendValue="0"
+          />
+          <StatCard
+            icon={DollarSign}
+            title="Pending Fees"
+            value={pendingFees}
+            subtitle={`${pendingFees} unpaid fees`}
+            color="bg-gradient-to-br from-orange-500 to-red-500"
+            trend={totalFees > 0 ? "down" : "up"}
+            trendValue="0"
+          />
+        </motion.div>
+
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mb-8"
+        >
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+            <Star className="h-6 w-6 text-yellow-500" />
+            Quick Actions
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <QuickActionCard
+              icon={Package}
+              title="Add New Product"
+              description="List a new item in your store"
+              color="bg-gradient-to-r from-blue-500 to-blue-600"
+              onClick={() => (window.location.href = "/products/create")}
+            />
+            <QuickActionCard
+              icon={Eye}
+              title="View Store"
+              description="Check your store and items"
+              color="bg-gradient-to-r from-green-500 to-emerald-600"
+              onClick={() => (window.location.href = "/dashboard/myItem")}
+            />
+            <QuickActionCard
+              icon={Users}
+              title="My Purchases"
+              description="View items you've bought"
+              color="bg-gradient-to-r from-purple-500 to-purple-600"
+              onClick={() => (window.location.href = "/dashboard/paidItem")}
+            />
+             <QuickActionCard
+              icon={DollarSign}
+              title="Pay Fees"
+              description="Clear pending fees"
+              color="bg-gradient-to-r from-orange-500 to-red-500"
+              onClick={() => (window.location.href = "/dashboard/UnpaidItem")}
+            />
+          </div>
+        </motion.div>
+
+        {/* Recent Activity */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100"
+        >
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+            <Calendar className="h-6 w-6 text-indigo-500" />
+            Recent Activity
+          </h2>
+
+          {/* Activity Timeline */}
+          <div className="space-y-6">
+            {soldProducts > 0 && (
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-800">Products Sold</h3>
+                  <p className="text-gray-600 text-sm">You've successfully sold {soldProducts} products</p>
+                  <p className="text-gray-400 text-xs">Recent activity</p>
+                </div>
+              </div>
+            )}
+
+            {purchasedProducts > 0 && (
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <ShoppingBag className="h-5 w-5 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-800">New Purchases</h3>
+                  <p className="text-gray-600 text-sm">You've made {purchasedProducts} purchases</p>
+                  <p className="text-gray-400 text-xs">Recent activity</p>
+                </div>
+              </div>
+            )}
+
+            {totalFees > 0 && (
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                  <DollarSign className="h-5 w-5 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-800">Pending Fees</h3>
+                  <p className="text-gray-600 text-sm">You have ${totalFees.toFixed(2)} in pending fees</p>
+                  <p className="text-gray-400 text-xs">Action required</p>
+                </div>
+              </div>
+            )}
+
+            {soldProducts === 0 && purchasedProducts === 0 && totalFees === 0 && (
+              <div className="text-center py-8">
+                <Award className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-600 mb-2">No Recent Activity</h3>
+                <p className="text-gray-500">Start by listing your first product or making a purchase!</p>
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Footer Stats */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-8 text-center"
+        >
+          <p className="text-gray-500 text-sm">
+            Dashboard last updated: {new Date().toLocaleDateString()} at {new Date().toLocaleTimeString()}
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  )
+}

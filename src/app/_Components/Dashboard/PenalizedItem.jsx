@@ -3,12 +3,12 @@ import { useWonItemsQuery } from '@/app/_Services/wonProduct/page';
 import AuctionCardSkeleton from '../Skeleton/CardSkeleton';
 import PaidUnPaidCard from '../Card/PaidUnPaidCard';
 import PurchaseTab from '../Tab/PurchaseTab';
+import { usePenalizedProductItemsQuery } from '@/app/_Services/PenaltyFeeProduct/page';
 
 
 const PenalizedItem = () => {
-    const { data, error: isError, isLoading } = useWonItemsQuery();
-    const wonItems = data?.data?.penalized || []
-    const skeletonRows = wonItems?.length || 8;
+    const { data, error: isError, isLoading } = usePenalizedProductItemsQuery();
+    const skeletonRows = data?.data?.length || 8;
     return (
         // <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]">
         <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-2">
@@ -19,12 +19,12 @@ const PenalizedItem = () => {
                     [...Array(skeletonRows)].map((_, index) => (
                         <AuctionCardSkeleton key={index} />
                     ))
-                ) : wonItems?.length === 0 ? (
+                ) : data?.data?.length === 0 ? (
                     <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold  text-3xl text-gray-500">
                         You haven't any Penalized Product                                </p>
                 ) : (
-                    wonItems?.map((item, index) => (
-                        <PaidUnPaidCard key={item.id ?? `auction-${index}`} item={item} status={item?.paymentStatus} paymentDeadline={item?.paymentDeadline} deliveryMethod={item?.deliveryMethod} deliveryStatus={item?.deliveryStatus}/>
+                    data?.data?.map((item, index) => (
+                        <PaidUnPaidCard key={item.id ?? `auction-${index}`} item={item} status={item?.paymentStatus} />
                     ))
                 )}
             </div>

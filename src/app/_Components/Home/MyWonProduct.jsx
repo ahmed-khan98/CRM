@@ -44,10 +44,14 @@ const MyWonProduct = ({ item }) => {
 
     return (
         <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
-            <Link
+            {/* <Link
                 href={`/detailproduct/${item?.product?._id}`}
                 className="text-[18px] font-semibold py-2 px-3 h-14 rounded-t-3xl  cursor-pointer block"
-            >
+            > */}
+             <Link
+      href={`/detailproduct/${item?.product?._id}`}
+      className="text-[18px] font-semibold pt-3 px-3 h-16 rounded-t-3xl text-[#0578ff] cursor-pointer  bg-orange-50"
+    >
                 <p className="line-clamp-2 overflow-hidden text-ellipsis underline">
                     {item?.product?.name.length > 50 ? `${item.product?.name.slice(0, 50)}...` : item.product?.name}
                 </p>

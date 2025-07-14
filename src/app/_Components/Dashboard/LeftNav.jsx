@@ -23,30 +23,27 @@ import { useGetSidebarTitleQuery } from "@/app/_Services/services/page"
 const LeftNav = () => {
   const pathname = usePathname()
   const router = useRouter()
+  const sidebars=[]
   const [expandedMenus, setExpandedMenus] = useState({})
-      const { data:sidebars, error, isLoading } = useGetSidebarTitleQuery();
+      // const { data:sidebars, error, isLoading } = useGetSidebarTitleQuery();
   console.log(sidebars,'sidebars')
 
   const menuItems = [
     {
+      name: "Dashboard",
+      icon: <Home className="w-5 h-5" />,
+      path: ["/dashboard/dashboardcount"],
+
+    },
+    {
       name: "My Auction",
       icon: <Home className="w-5 h-5" />,
       path: ["/dashboard/wishlist", "/dashboard/wonitem", "/dashboard/lostitem"],
-      // submenu: [
-      //   { name: "Wishlist", path: "/dashboard/wishlist" },
-      //   { name: "Won Items", path: "/dashboard/wonitem" },
-      //   { name: "Lost Items", path: "/dashboard/lostitem" },
-      // ],
     },
     {
       name: "Purchase",
       icon: <ShoppingCart className="w-5 h-5" />,
       path: ["/dashboard/paidItem", "/dashboard/unpaidItem", "/dashboard/penalizedItem"],
-      // submenu: [
-      //   { name: "Paid Items", path: "/dashboard/paidItem" },
-      //   { name: "Unpaid Items", path: "/dashboard/unpaidItem" },
-      //   { name: "Penalized Items", path: "/dashboard/penalizedItem" },
-      // ],
     },
     {
       name: "Appointments",
@@ -80,10 +77,6 @@ const LeftNav = () => {
       name: "My Account",
       icon: <User className="w-5 h-5" />,
       path: ["/dashboard/profile", "/dashboard/changepassword"],
-      // submenu: [
-      //   { name: "Profile", path: "/dashboard/profile" },
-      //   { name: "Change Password", path: "/dashboard/changepassword" },
-      // ],
     },
     {
       name: "Refer a Friend",
@@ -93,17 +86,13 @@ const LeftNav = () => {
     {
       name: "Fees",
       icon: <DollarSign className="w-5 h-5" />,
-      path: ["/dashboard/comingsoon"],
-      badge: "0",
+      path: ["/dashboard/UnpaidItem","/dashboard/missedAppointment",'/dashboard/penalizedFeeProduct'],
+      // badge: "0",
     },
     {
       name: "Help",
       icon: <HelpCircle className="w-5 h-5" />,
       path: ["/dashboard/contactform", "/dashboard/response"],
-      // submenu: [
-      //   { name: "Contact Form", path: "/dashboard/contactform" },
-      //   { name: "Responses", path: "/dashboard/response" },
-      // ],
     },
   ]
 

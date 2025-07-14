@@ -15,7 +15,8 @@ import { formatPhoneNumber } from "@/app/utilities/phoneFormat"
 // Validation schemas
 const pickupSchema = Yup.object().shape({
     deliveryMethod: Yup.string().required("Please select a delivery method"),
-    appointmentDate: Yup.date().required("Appointment date is required").min(new Date(), "Date must be in the future"),
+    appointmentDate: Yup.date().required("Appointment date is required"),
+    // .min(new Date(), "Date must be in the future"),
     appointmentTime: Yup.string().required("Appointment time is required"),
     notes: Yup.string().max(500, "Notes must be less than 500 characters"),
 })
@@ -55,7 +56,6 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
     }
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log( values?.deliveryMethod,'----->>>>>>>>>method')
         try {
             const response = await (
                 values?.deliveryMethod === "pickup"
@@ -150,15 +150,15 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-6 text-white relative overflow-hidden">
+                        <div className="bg-gradient-to-r from-red-600 to-red-700 px-2 md:px-8 py-6 text-white relative overflow-hidden">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
                             <div className="relative z-10 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-1 md:gap-4">
                                     <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
                                         <Package className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <h2 className="text-2xl font-bold">Choose Delivery Method</h2>
+                                        <h2 className="text-lg mdtext-2xl font-bold">Choose Delivery Method</h2>
                                         <p className="text-red-100 mt-1">How would you like to receive your product?</p>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                         )}
 
                         {/* Form */}
-                        <div className="px-8 py-6 max-h-[60vh] overflow-y-auto">
+                        <div className="px-6 md:px-8 py-6 max-h-[60vh] overflow-y-auto">
                             <Formik
                                  initialValues={initialValues}
                                 validationSchema={getValidationSchema(selectedMethod)}
@@ -425,13 +425,13 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                             </AnimatePresence>
 
                                             {/* Submit Button */}
-                                            <div className="flex gap-4 pt-2">
+                                            <div className="flex gap-2 md:gap-4 pt-2">
                                                 <motion.button
                                                     type="button"
                                                     whileHover={{ scale: 1.02 }}
                                                     whileTap={{ scale: 0.98 }}
                                                     onClick={onClose}
-                                                    className="flex-1 px-6 py-4 border-2 cursor-pointer border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50 transition-colors"
+                                                    className="flex-1 px-3 md:px-6 py-4 border-2 cursor-pointer border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50 transition-colors"
                                                 >
                                                     Cancel
                                                 </motion.button>
@@ -441,7 +441,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                     disabled={isSubmitting || !selectedMethod}
                                                     whileHover={{ scale: 1.02 }}
                                                     whileTap={{ scale: 0.98 }}
-                                                    className="flex-1 px-6 py-4 cursor-pointer bg-gradient-to-r from-red-600 to-red-700 text-white rounded-2xl font-semibold hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                                                    className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-red-600 to-red-700 text-white rounded-2xl font-semibold hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
                                                 >
                                                     {isSubmitting ? (
                                                         <div className="flex items-center justify-center gap-2">
@@ -451,7 +451,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                     ) : selectedMethod === "pickup" ? (
                                                         "Schedule Pickup"
                                                     ) : selectedMethod === "shipping" ? (
-                                                        "Submit Shipping Request"
+                                                        "Submit  Request"
                                                     ) : (
                                                         "Continue"
                                                     )}
