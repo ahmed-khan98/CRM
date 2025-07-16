@@ -30,39 +30,48 @@ const ProductDetail = ({ id }) => {
   const [deleteWishlist] = useDeleteWishlistMutation()
   const [loading, setLoading] = useState(false)
   const [realTimeData, setRealTimeData] = useState(null)
-
   // Use real-time data if available, otherwise use RTK Query data
   const productData = realTimeData || data
 
   useEffect(() => {
     if (socket && isConnected) {
       // Listen for real-time updates
+
+      socket.emit(`product-auction-start-${id}`)
+      socket.emit(`product-auction-end-${id}`)
+      socket.emit(`product-bid-${id}`)
+      socket.emit(`product-sold-${id}`)
+
       socket.on(`product-auction-start-${id}`, (updatedProduct) => {
+        console.log(updatedProduct, 'product-start-end')
+
         setRealTimeData((prev) => ({
           ...prev,
           data: updatedProduct,
         }))
       })
       socket.on(`product-auction-end-${id}`, (updatedProduct) => {
+        console.log(updatedProduct, 'product-auction-end')
         setRealTimeData((prev) => ({
           ...prev,
           data: updatedProduct,
         }))
       })
       socket.on(`product-bid-${id}`, (updatedProduct) => {
+        console.log(updatedProduct, 'product-bid')
+
         setRealTimeData((prev) => ({
           ...prev,
           data: updatedProduct,
         }))
       })
       socket.on(`product-sold-${id}`, (updatedProduct) => {
+        console.log(updatedProduct, 'product-sold')
         setRealTimeData((prev) => ({
           ...prev,
           data: updatedProduct,
         }))
       })
-
-
 
       return () => {
         socket.off(`product_${id}_updated`)
@@ -105,6 +114,7 @@ const ProductDetail = ({ id }) => {
       toast.success("Link copied to clipboard!")
     }
   }
+  console.log(realTimeData, 'realTimeData')
 
   return (
     <>
@@ -165,12 +175,12 @@ const ProductDetail = ({ id }) => {
 
                   {/* Image Section */}
                   <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-<ImageSection
-  images={[
-    ...(data?.data?.mainImage ? [data.data.mainImage] : []),
-    ...(Array.isArray(data?.data?.images) ? data.data.images : [])
-  ]}
-/>                  </div>
+                    <ImageSection
+                      images={[
+                        ...(data?.data?.mainImage ? [data.data.mainImage] : []),
+                        ...(Array.isArray(data?.data?.images) ? data.data.images : [])
+                      ]}
+                    />                  </div>
 
                   {/* Tabs Section */}
                   <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">

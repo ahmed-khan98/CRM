@@ -14,11 +14,8 @@ const initializeSocket = () => {
       secure: true,
       withCredentials: true,
     });
-    socket.io.on("connect_error", (err) => {
-      console.error("Socket.IO connect_error:", err.message);
-      console.error(err);
-    });
-    
+
+
     // Connection event handlers
     socket.on("connect", () => {
       console.log("✅ Socket connected successfully:", socket.id)
@@ -26,11 +23,14 @@ const initializeSocket = () => {
     socket.on("disconnect", (reason) => {
       console.log("❌ Socket disconnected:", reason)
     })
-console.log(socket,'socket')
     socket.on("connect_error", (error) => {
-      console.error("🔴 Socket connection error---->>>>:", error.message)
+      console.error("connection error---->>>>:", error)
       // Don't throw error, just log it
     })
+    socket.io.on("connect_error", (err) => {
+      console.error("Socket.IO connect_error:", err);
+      console.error(err);
+    });
 
     return socket
   } catch (error) {
@@ -57,56 +57,103 @@ const productApi = createApiAuction.injectEndpoints({
       keepUnusedDataFor: 1800,
       refetchOnMountOrArgChange: false,
       // Override with socket data
-      async onCacheEntryAdded(arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
+      onCacheEntryAdded: async (arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) => {
         try {
-          await cacheDataLoaded
+          await cacheDataLoaded;
+          const socket = initializeSocket();
+      
+          // Access the cached product list
+          const cachedProducts = [];
+      
+          updateCachedData((draft) => {
+            if (Array.isArray(draft?.data)) {
+              cachedProducts.push(...draft.data);
+            }
+          });
+      
+          // ✅ Loop over product IDs
+          for (const product of cachedProducts) {
+            const id = product._id;
+      
+            // Emit (optional, depends if server expects this)
+            socket.emit(`product-auction-start-${id}`)
+            socket.emit(`product-auction-end-${id}`)
+            socket.emit(`product-bid-${id}`)
+            socket.emit(`product-sold-${id}`)
 
-          const socket = initializeSocket()
+      
+            // Listen for bid events
+            socket.on(`product-bid-${id}`, (updatedProduct) => {
+              
 
-          // Listen for real-time product updates
-          socket.on("product-auction-start", (updatedProducts) => {
-            updateCachedData((draft) => {
-              return {
-                ...draft,
-                data: updatedProducts,
-              }
-            })
-          })
-          socket.on("product-auction-end", (updatedProducts) => {
-            updateCachedData((draft) => {
-              return {
-                ...draft,
-                data: updatedProducts,
-              }
-            })
-          })
-          socket.on("product-bid", (updatedProducts) => {
-            updateCachedData((draft) => {
-              return {
-                ...draft,
-                data: updatedProducts,
-              }
-            })
-          })
-          socket.on("product-dold", (updatedProducts) => {
-            updateCachedData((draft) => {
-              return {
-                ...draft,
-                data: updatedProducts,
-              }
-            })
-          })
+              updateCachedData((draft) => {
+                const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
+                if (index !== -1) {
+                  draft.data[index] = updatedProduct;
+                }
+              });
+            });
+      
+            // Do the same for other events
+            socket.on(`product-auction-start-${id}`, (updatedProduct) => {
+              console.log(`product-auction-start-${id}`)
+              updateCachedData((draft) => {
+                const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
+                if (index !== -1) {
+                  draft.data[index] = updatedProduct;
+                }
+              });
+            });
+      
+            socket.on(`product-auction-end-${id}`, (updatedProduct) => {
+              console.log(`product-auction-end-${id}`)
 
+              updateCachedData((draft) => {
+                const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
+                if (index !== -1) {
+                  draft.data[index] = updatedProduct;
+                }
+              });
+            });
+      
+            socket.on(`product-sold-${id}`, (updatedProduct) => {
+              console.log(`product-sold-${id}`)
 
-          await cacheEntryRemoved
-          socket.off("product-auction-start")
-          socket.off("product-auction-end")
-          socket.off("product-bid")
-          socket.off("product-sold")
+              updateCachedData((draft) => {
+                const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
+                if (index !== -1) {
+                  draft.data[index] = updatedProduct;
+                }
+              });
+            });
+
+            socket.on(`product-bid-${id}`, (updatedProduct) => {
+              console.log(`product-bid-${id}`)
+
+              updateCachedData((draft) => {
+                const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
+                if (index !== -1) {
+                  draft.data[index] = updatedProduct;
+                }
+              });
+            });
+          }
+      
+          // ✅ Clean up when cache is removed
+          await cacheEntryRemoved;
+          for (const product of cachedProducts) {
+            const id = product._id;
+            socket.off(`product-bid-${id}`);
+            socket.off(`product-auction-start-${id}`);
+            socket.off(`product-auction-end-${id}`);
+            socket.off(`product-sold-${id}`);
+          }
+      
         } catch (error) {
-          console.error("Socket connection error:", error)
+          console.error("Socket connection error:", error);
         }
-      },
+      }
+      
     }),
 
     getMissedProduct: builder.query({
@@ -148,10 +195,14 @@ const productApi = createApiAuction.injectEndpoints({
           const socket = initializeSocket()
 
           // Join product-specific room for real-time updates
-          socket.emit("join_product_room", id)
+          socket.emit(`product-auction-start-${id}`)
+          socket.emit(`product-auction-end-${id}`)
+          socket.emit(`product-bid-${id}`)
+          socket.emit(`product-sold-${id}`)
 
           // Listen for real-time product detail updates
           socket.on(`product-auction-start-${id}`, (updatedProduct) => {
+
             updateCachedData((draft) => {
               return {
                 ...draft,
@@ -168,6 +219,7 @@ const productApi = createApiAuction.injectEndpoints({
             })
           })
           socket.on(`product-bid-${id}`, (updatedProduct) => {
+            console.log(updatedProduct, 'updatedProduct')
             updateCachedData((draft) => {
               return {
                 ...draft,
@@ -184,10 +236,8 @@ const productApi = createApiAuction.injectEndpoints({
             })
           })
 
-       
-
           await cacheEntryRemoved
-          socket.emit("leave_product_room", id)
+          // socket.emit("leave_product_room", id)
           socket.off(`product-auction-start-${id}`)
           socket.off(`product-auction-end-${id}`)
           socket.off(`product-bid-${id}`)
@@ -245,17 +295,26 @@ const productApi = createApiAuction.injectEndpoints({
           },
         }
       },
-      invalidatesTags: ["auction", "detailproduct"],
+      // invalidatesTags: ["auction", "detailproduct"],
       async onQueryStarted(formData, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
 
           // Emit socket event for new bid placed
           const socket = initializeSocket()
-          socket.emit(`product-bid-${formData.id}`, {
-            productId: formData.id,
-            bidData: data.data,
-          })
+
+          socket.emit(`product-bid-${formData.id}`)
+
+          // socket.on(`product-bid-${formData.id}`, (updatedProduct) => {
+          //   console.log(updatedProduct,'updatedProduct')
+          //   updateCachedData((draft) => {
+          //     return {
+          //       ...draft,
+          //       data: updatedProduct,
+          //     }
+          //   })
+          // })
+
         } catch (error) {
           console.error("Error placing bid:", error)
         }

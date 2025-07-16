@@ -12,7 +12,6 @@ export default function AuctionCard() {
   const allProducts = useSelector((state) => state.filter.allProducts); // Get all products
   const filteredProducts = useSelector((state) => state.filter.filteredProducts);
   const { data, error, isLoading } = useGetTodayyAuctionsProductQuery();
-console.log(filteredProducts,'filteredProducts')
   useEffect(() => {
     if (data?.data) { 
       dispatch(setAllProducts(data.data));

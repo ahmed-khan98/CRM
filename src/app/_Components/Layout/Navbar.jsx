@@ -18,7 +18,7 @@ const Navbar = () => {
   const router = useRouter();
   const token = Cookies.get("token");
   const filteredProducts = useSelector((state) => state.filter.filteredProducts);
-  console.log(filteredProducts,'filteredProducts')
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 

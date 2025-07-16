@@ -114,7 +114,7 @@ const ProductInfo = ({
                 <Tag className="w-3 h-3" />
                 {condition}
               </span>
-            {tag.map((tagItem, index) => tag?.length > 0 && (
+            {tag?.map((tagItem, index) => tag?.length > 0 && (
               <span
                 key={index}
                 className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
