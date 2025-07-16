@@ -112,7 +112,7 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
@@ -145,6 +145,10 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
           </motion.div>
         </div>
         {/* Decorative elements */}
+        <div className="absolute top-12 right-55 w-60 h-60 -mt-10 -mr-10 opacity-10">
+          <div className="w-full h-full rounded-full border-8 border-white"></div>
+          <div className="absolute top-1/2 left-1/2 w-32 h-32 -mt-15 -ml-17 rounded-full border-8 border-white"></div>
+        </div>
         <div className="absolute top-0 left-0 w-32 h-32 md:w-64 md:h-64 bg-white bg-opacity-10 rounded-full -translate-x-16 -translate-y-16 md-translate-x-32 md:-translate-y-32"></div>
         <div className="absolute bottom-0 right-0 w-32 h-32 md:w-92 md:h-92 bg-white bg-opacity-5 rounded-full translate-x-14 translate-y-14 md:translate-x-48 md:translate-y-48"></div>
       </div>

@@ -41,7 +41,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <OfferBar />
-      <HeadingDashboard />
+      {/* <HeadingDashboard /> */}
 
       <div className="flex flex-1 relative">
         {/* Sidebar Toggle Button for Mobile */}

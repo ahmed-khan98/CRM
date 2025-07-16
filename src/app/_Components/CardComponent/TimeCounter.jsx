@@ -42,7 +42,7 @@ const TimeCounter = ({ price, isAuctionActive, remainingAuctionTime,auctionStart
   }, [auctionStartTime, auctionEndTime]);
 
   return (<div className=" text-center py-2 flex justify-center bg-gray-100">
-    <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow ">
+    <div className="mx-2 w-[42%] bg-white rounded-xl py-1 ">
 
       <span className="text-[12px] text-gray-800 font-semibold uppercase">{isSold ? 'Ended':"Time Left"}</span>
       <p className={`font-bold text-lg pt-0 text-[#F33E0A]}`}>{isSold? timeAgo(SoldDate) :`${remainingAuctionTime} hours`}</p>
@@ -50,7 +50,7 @@ const TimeCounter = ({ price, isAuctionActive, remainingAuctionTime,auctionStart
           {timeLeftToStart || timeLeftToEnd}
         </p>} */}
     </div>
-    <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow">
+    <div className="mx-2 w-[42%] bg-white rounded-xl py-1 ">
       <span className="text-[12px] text-gray-800 font-semibold uppercase">Current Price</span>
 
       {/* <p className="text-sm text-gray-600 font-semibold">Current Price</p> */}

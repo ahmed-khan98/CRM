@@ -17,6 +17,7 @@ import {
   LogOut,
   ChevronRight,
   ChevronDown,
+  LayoutDashboard,
 } from "lucide-react"
 import { useGetSidebarTitleQuery } from "@/app/_Services/services/page"
 
@@ -31,7 +32,7 @@ const LeftNav = () => {
   const menuItems = [
     {
       name: "Dashboard",
-      icon: <Home className="w-5 h-5" />,
+      icon: <LayoutDashboard  className="w-5 h-5" />,
       path: ["/dashboard/dashboardcount"],
 
     },
@@ -119,11 +120,11 @@ const LeftNav = () => {
 
   return (
     <div className="h-full bg-white border-r border-gray-200 overflow-y-auto">
-      <div className="p-4 border-b border-gray-200">
+      {/* <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-center">
           <span className="text-[#F33E0A] font-bold text-xl">Dashboard</span>
         </div>
-      </div>
+      </div> */}
 
       <div className="py-2">
         {menuItems.map((item, index) => {

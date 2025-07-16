@@ -1,9 +1,15 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { ChevronDown, ChevronUp, Trophy, Clock } from "lucide-react"
+import { ChevronDown, ChevronUp, Trophy, Clock, Zap } from "lucide-react"
+import Cookies from "js-cookie";
 
 const BiddingHistory = ({ history, isSold }) => {
+
+  const user = Cookies.get("currentuser")
+    ? JSON.parse(Cookies.get("currentuser"))
+    : null;
+
   const [visibleBidsHistory, setVisibleBidsHistory] = useState([])
   const [showAll, setShowAll] = useState(false)
 
@@ -30,7 +36,7 @@ const BiddingHistory = ({ history, isSold }) => {
   }
 
   return (
-    <div className="p-5">
+    <div className="p-4">
       <div className="flex items-center gap-3 mb-2">
         {/* <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
           <Clock className="w-4 h-4 text-blue-600" />
@@ -45,11 +51,12 @@ const BiddingHistory = ({ history, isSold }) => {
         {visibleBidsHistory?.map((bid, index) => (
           <div
             key={bid._id}
-            className={`p-2 rounded-xl border transition-all duration-200 hover:shadow-md ${
-              index === 0 && isSold
-                ? "bg-green-50 border-green-200 ring-2 ring-green-100"
+            className={`px-4 py-1 rounded-xl border transition-all duration-200 hover:shadow-md ${index === 0 && isSold
+              ? "bg-green-50 border-green-200 ring-2 ring-green-100"
+              : user?._id === bid?.bidder?._id
+                ? "bg-[#f9f6f3] border-[#fae5c8] ring-2 ring-[#fcf3e7]"
                 : "bg-gray-50 border-gray-200 hover:bg-gray-50"
-            }`}
+              }`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -57,7 +64,7 @@ const BiddingHistory = ({ history, isSold }) => {
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                     <Trophy className="w-4 h-4 text-green-600" />
                   </div>
-                ):''}
+                ) : ''}
                 <div>
                   {/* <div className="flex items-center gap-2">
                     <span className="font-semibold text-gray-900 capitalize">{bid?.bidder?.username}</span>
@@ -72,14 +79,21 @@ const BiddingHistory = ({ history, isSold }) => {
                       </span>
                     )}
                   </div> */}
-                  <p className="text-sm text-gray-600">Bidder #{history?.length - index}</p>
-                </div>
+                  <p className={`text-md ${user?._id === bid?.bidder?._id ? 'font-bold text-gray-800' : 'text-gray-600'}`}>
+                    {user?._id === bid?.bidder?._id ? (
+                      <>
+                        You <Zap className="inline w-4 h-4 text-gray-400 ml-1" />
+                      </>
+                    ) : (
+                      `Bidder #${history?.length - index}`
+                    )}
+                  </p>                </div>
               </div>
 
               <div className="text-right">
                 <p className="text-lg font-semibold text-gray-900">${bid?.bidAmount?.toLocaleString()}</p>
               </div>
-                <p className="text-sm text-gray-500">{formatDate(bid.createdAt)}</p>
+              <p className="text-sm text-gray-500">{formatDate(bid.createdAt)}</p>
             </div>
           </div>
         ))}

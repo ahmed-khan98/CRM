@@ -11,7 +11,6 @@ const ImageSection = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isZoomed, setIsZoomed] = useState(false)
   const swiperRef = useRef(null)
-
   const handleThumbnailClick = (index) => {
     setCurrentIndex(index)
     swiperRef.current?.slideTo(index)

@@ -22,7 +22,7 @@ const lostItems = () => {
                                     <AuctionCardSkeleton key={index} />
                                 ))
                             ) : lostItems?.length === 0 ? (
-                                <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold  text-3xl text-gray-500">
+                                <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 text-2xl text-gray-600">
                                         You have not lost any items yet.
                                 </p>
                             ) : (

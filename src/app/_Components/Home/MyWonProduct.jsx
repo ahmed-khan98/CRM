@@ -44,10 +44,6 @@ const MyWonProduct = ({ item }) => {
 
     return (
         <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
-            {/* <Link
-                href={`/detailproduct/${item?.product?._id}`}
-                className="text-[18px] font-semibold py-2 px-3 h-14 rounded-t-3xl  cursor-pointer block"
-            > */}
              <Link
       href={`/detailproduct/${item?.product?._id}`}
       className="text-[18px] font-semibold pt-3 px-3 h-16 rounded-t-3xl text-[#0578ff] cursor-pointer  bg-orange-50"
@@ -79,7 +75,7 @@ const MyWonProduct = ({ item }) => {
                 </div>
 
             </div>
-            <div className=" text-center py-3 flex justify-center bg-gray-100">
+            <div className=" text-center py-2 flex justify-center bg-gray-100">
                 <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow ">
 
                     <span className="text-[12px] text-gray-800 font-semibold uppercase">{item?.product?.isSold ? 'Ended':"Time Left"}</span>
@@ -93,29 +89,9 @@ const MyWonProduct = ({ item }) => {
                 </div>
             </div>
 
-            {/* <div className="bg-white shadow-xl w-[80%] mx-auto text-center py-2 px-2 rounded -mt-[60px] relative z-1">
-                <div className='flex justify-between py-1'>
-                    <p className="text-sm ">Start Date:</p>
-                    <div className="flex justify-center space-x-4 font-semibold">
-                        {formatDate(item?.product?.biddingStartTime)}
-                    </div>
-                </div>
-                <div className='flex justify-between py-1'>
-                    <p className="text-sm ">End Date:</p>
-                    <div className="flex justify-center space-x-4 font-semibold">
-                        {formatDate(item?.product?.biddingEndTime)}
-                    </div>
-                </div>
-            </div> */}
-            {/* {["hours", "minutes", "seconds"].map((unit) => (
-                        <div key={unit} className="flex flex-col items-center">
-                            <span>{timeLeft[unit] ?? 0}</span>
-                            <span className="text-xs font-normal ">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
-                        </div>
-                    ))} */}
-            <div className="bg-white px-4 py-3 rounded-t-2xl shadow-sm border-b border-gray-100">
+            <div className="bg-white px-4 py-2 rounded-t-2xl shadow-sm border-b border-gray-100 ">
 
-                <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                             <Package size={16} className="text-[#F33E0A]" />

@@ -12,7 +12,7 @@ import ProductInfo from '../CardComponent/ProductInfo';
 const MyLostCard = ({ item, status }) => {
 
     return (
-        <div className="relative bg-gradient-to-b bg-gray-100 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
+        <div className="relative bg-gradient-to-b bg-gray-100 border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
             <ProductHeader name={item?.product?.name} id={item?.product?._id} />
             <ProductImageSection item={item?.product} />
                   <TimeCounter 
@@ -33,7 +33,7 @@ const MyLostCard = ({ item, status }) => {
                 biddingCount={item?.product?.biddingCount}
             />
 
-            <div className="bg-[#a7f3d0] text-center text-sm py-2 ">
+            <div className="bg-gradient-to-r from-emerald-500 to-green-700 text-center text-white text-sm py-2 ">
                 Winning Bid: <strong> $ {item?.product?.highestBid}</strong>
             </div>
 

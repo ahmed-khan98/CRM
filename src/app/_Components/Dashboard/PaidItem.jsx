@@ -20,7 +20,7 @@ const PaidItem = ({ status }) => {
                         <AuctionCardSkeleton key={index} />
                     ))
                 ) : wonItems?.length === 0 ? (
-                    <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 font-semibold  text-3xl text-gray-500">
+                    <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 text-2xl text-gray-600">
                         You haven't any Paid Product                                </p>
                 ) : (
                     wonItems?.map((item, index) => (

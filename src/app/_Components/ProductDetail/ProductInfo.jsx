@@ -54,7 +54,9 @@ const ProductInfo = ({
   }, [remainingAuctionTime, isSold])
 
   const handleBidChange = (value) => {
-    setBidValue(Number(value))
+    const newValue = Math.max(0, Number(value))
+
+    setBidValue(newValue)
   }
 
   const submitBid = async () => {
@@ -218,14 +220,21 @@ const ProductInfo = ({
 
             <div className="flex gap-3">
               <div className="flex-1">
-                <input
+                {/* <input
                   type="number"
-                  min={highestBid + 1}
+                  min={highestBid ?  highestBid + 1: price + 1}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg font-semibold text-center"
                   onChange={(e) => handleBidChange(e.target.value)}
                   value={bidValue}
-                  placeholder={`Min $${highestBid + 1}`}
-                />
+                  placeholder={`Min $${highestBid ?  highestBid + 1: price + 1}`}
+                /> */}
+                    <input
+                type="number"
+                value={bidValue}
+                onChange={(e) => handleBidChange(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg font-semibold text-center  appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                min={highestBid ?  highestBid + 1: price + 1}
+              />
               </div>
               <button
                 disabled={bidValue <= highestBid || isSubmitting || timeLeft <= 0}
