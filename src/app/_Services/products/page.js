@@ -4,24 +4,21 @@ import { io } from "socket.io-client"
 // Socket connection
 let socket = null
 
-export const initializeSocket = () => {
+const initializeSocket = () => {
   if (socket) return socket
 
   try {
     // Get socket URL from environment or fallback
-    const socketUrl =  "https://auction-api.devssh.xyz"
-
-    socket = io(socketUrl, {
-      // path: "/api/v1",
-      transports: ["websocket", "polling"],
-      timeout: 20000,
-      forceNew: true,
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 5,
-
-    })
-
+    const socket = io("https://auction-api.devssh.xyz", {
+      transports: ["websocket"],
+      secure: true,
+      withCredentials: true,
+    });
+    socket.io.on("connect_error", (err) => {
+      console.error("Socket.IO connect_error:", err.message);
+      console.error(err);
+    });
+    
     // Connection event handlers
     socket.on("connect", () => {
       console.log("✅ Socket connected successfully:", socket.id)
@@ -289,4 +286,4 @@ export const {
 export { initializeSocket }
 
 // Default export
-export default productApi
+// export default productApi
