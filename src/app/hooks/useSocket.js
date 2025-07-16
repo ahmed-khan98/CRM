@@ -53,9 +53,19 @@ export const useProductSocket = (productId) => {
   useEffect(() => {
     if (socket && productId && isConnected) {
       socket.emit("join_product_room", productId)
+      socket.emit(`product-auction-start-${productId}`)
+      socket.emit(`product-auction-end-${id}`)
+      socket.emit(`product-bid-${id}`)
+      socket.emit(`product-sold-${id}`)
+
 
       return () => {
         socket.emit("leave_product_room", productId)
+        socket.emit(`product-auction-start-${productId}`)
+        socket.emit(`product-auction-end-${id}`)
+        socket.emit(`product-bid-${id}`)
+        socket.emit(`product-sold-${id}`)
+  
       }
     }
   }, [socket, productId, isConnected])
