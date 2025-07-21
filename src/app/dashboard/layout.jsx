@@ -39,8 +39,8 @@ const DashboardLayout = ({ children }) => {
   }, [pathname, isMobile])
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <OfferBar />
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex flex-col py-14 md:py-18">
+      {/* <OfferBar /> */}
       {/* <HeadingDashboard /> */}
 
       <div className="flex flex-1 relative">
@@ -62,7 +62,7 @@ const DashboardLayout = ({ children }) => {
         <div
           className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} ${
             isMobile ? "fixed top-0 left-0 h-full z-30 w-64 shadow-xl" : "lg:relative lg:w-64 xl:w-72"
-          } transition-transform duration-300 ease-in-out`}
+          } transition-transform duration-300 ease-in-out mt-15 md:mt-0`}
         >
           <LeftNav />
         </div>

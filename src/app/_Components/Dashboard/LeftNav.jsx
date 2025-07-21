@@ -119,7 +119,7 @@ const LeftNav = () => {
   }
 
   return (
-    <div className="h-full bg-white border-r border-gray-200 overflow-y-auto">
+    <div className="h-full bg-white overflow-y-auto m-0 md:m-4 shadow-md rounded-xl border border-gray-100">
       {/* <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-center">
           <span className="text-[#F33E0A] font-bold text-xl">Dashboard</span>

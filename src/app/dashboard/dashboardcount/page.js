@@ -124,9 +124,9 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-whit mt-0 md:mt-5 px-2">
       {/* Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white">
+      <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white rounded-lg">
         <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-opacity-100"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
           <motion.div
