@@ -1426,7 +1426,7 @@ export default function Page() {
                               className="w-20 h-15 rounded-lg object-cover"
                             />
                           </td>
-                          <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
+                          <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${product?.sku}`}</td>
                           <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${product?.skuLocation},${product?.skuRoom},${product?.skuDetail}`}</td>
                           <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">
                             {product?.name}

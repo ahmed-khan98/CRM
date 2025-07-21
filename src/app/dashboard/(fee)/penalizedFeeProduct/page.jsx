@@ -124,7 +124,7 @@ export default function page() {
                                                 transition={{ delay: index * 0.1 }}
                                                 className="hover:bg-red-50 transition-colors"
                                             >
-                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
+                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`${e?.product?.sku}`}</td>
                                                 {/* <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${e.auctionWin?.product?.skuLocation},${e.auctionWin?.product?.skuRoom},${e.auctionWin?.product?.skuDetail}`}</td> */}
                                                 <td className="px-3 py-4 whitespace-nowrap text-sm text-blue-600 capitalize"><Link href={`/detailproduct/${e?.product?._id}`}>{e?.product?.name}</Link></td>
                                                 <td className="px-3 py-4 whitespace-nowrap">

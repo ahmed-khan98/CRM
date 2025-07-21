@@ -175,7 +175,7 @@ export default function AppointmentBooking() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredNotifications().map((appointment, index) => {
-                      const lastFour = appointment.auctionWin?.product?._id.toString().slice(-4);
+                      // const lastFour = appointment.auctionWin?.product?._id.toString().slice(-4);
                       return (<motion.tr
                         key={appointment._id}
                         initial={{ opacity: 0, x: -20 }}
@@ -199,7 +199,7 @@ export default function AppointmentBooking() {
                             </span>
                           </div>
                         </td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`${appointment.auctionWin?.product?.sku}`}</td>
                         <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation},${appointment.auctionWin?.product?.skuRoom},${appointment.auctionWin?.product?.skuDetail}`}</td>
                         <td className="px-3 py-4 whitespace-nowrap text-md text-blue-600 capitalize"><Link href={`/detailproduct/${appointment.auctionWin?.product?._id}`}>{appointment.auctionWin?.product?.name}</Link></td>
                         <td className="px-3 py-4 whitespace-nowrap">

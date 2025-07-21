@@ -146,7 +146,7 @@ export default function AppointmentBooking() {
                             </span>
                           </div>
                         </td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`${appointment.auctionWin?.product?.sku}`}</td>
                         {/* <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation},${appointment.auctionWin?.product?.skuRoom},${appointment.auctionWin?.product?.skuDetail}`}</td> */}
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-blue-600 capitalize"><Link href={`/detailproduct/${appointment.auctionWin?.product?._id}`}>{appointment.auctionWin?.product?.name}</Link></td>
                         <td className="px-3 py-4 whitespace-nowrap">

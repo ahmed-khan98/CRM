@@ -153,7 +153,7 @@ export default function page() {
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {filteredNotifications().map((shipping, index) => {
-                                            const lastFour = shipping.auctionWin?.product?._id.toString().slice(-4);
+                                            // const lastFour = shipping.auctionWin?.product?._id.toString().slice(-4);
                                             return (
                                                 <motion.tr
                                                     key={shipping._id}
@@ -171,7 +171,7 @@ export default function page() {
                                                         </div>
                                                     </td>
 
-                                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${lastFour}`}</td>
+                                                    <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation}`}</td>
                                                     <td className="px-3 py-4 whitespace-nowrap text-md  text-blue-600 capitalize"><Link href={`/detailproduct/${shipping.auctionWin?.product?._id}`}>{shipping.auctionWin?.product?.name}</Link></td>
                                                     <td className="px-3 py-4 whitespace-pre-line text-sm  text-gray-600">
                                                         {`${shipping.shippingAddress.street},${shipping.shippingAddress.zipCode},${shipping.shippingAddress.city},${shipping.shippingAddress.state},${shipping.shippingAddress.country}`} </td>
