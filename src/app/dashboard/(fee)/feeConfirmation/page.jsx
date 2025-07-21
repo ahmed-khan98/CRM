@@ -346,7 +346,7 @@ import { useAddCardPaymentMutation, useAddPaymentMutation } from "@/app/_Service
 import toast from "react-hot-toast"
 import PayPalButton from "@/app/_Components/PayPalButton"
 
-const page = () => {
+const FeeCindirmation = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const type = searchParams.get("type")
@@ -776,7 +776,7 @@ const page = () => {
 export default function page() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <GenZRegistrationPage />
+      <FeeCindirmation />
     </Suspense>
   );
 }
