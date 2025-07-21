@@ -336,7 +336,7 @@
 // export default page
 
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useState,Suspense } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import { CreditCard, Check, Plus, AlertCircle } from "lucide-react"
@@ -773,5 +773,11 @@ const ManageCards = () => {
     </div>
   )
 }
+export default function ManageCards() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GenZRegistrationPage />
+    </Suspense>
+  );
+}
 
-export default ManageCards
