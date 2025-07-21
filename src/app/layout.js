@@ -4,7 +4,7 @@ import "./globals.css";
 import LayoutWrapper from "./_Components/LayoutWrapper"; 
 import ReduxProvider from "./_Services/reduxprovider/reduxprovider";
 import { Toaster } from "react-hot-toast";
-import { SocketProvider } from "./_Components/SocketProvider";
+import SocketProvider from "./_Components/SocketProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,12 +26,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ReduxProvider>
-        <SocketProvider>
         <LayoutWrapper>
+        <SocketProvider>
         <Toaster position="top-center" />
           {children}
-          </LayoutWrapper>
         </SocketProvider>
+          </LayoutWrapper>
         </ReduxProvider>
       </body>
       <Script

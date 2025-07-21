@@ -1,10 +1,10 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { ChevronDown, ChevronUp, Trophy, Clock, Zap } from "lucide-react"
+import { ChevronDown, ChevronUp, Trophy, Clock, Zap, AlarmClock } from "lucide-react"
 import Cookies from "js-cookie";
 
-const BiddingHistory = ({ history, isSold }) => {
+const BiddingHistory = ({ history, isSold, isExtended }) => {
 
   const user = Cookies.get("currentuser")
     ? JSON.parse(Cookies.get("currentuser"))
@@ -37,14 +37,18 @@ const BiddingHistory = ({ history, isSold }) => {
 
   return (
     <div className="p-4">
-      <div className="flex items-center gap-3 mb-2">
-        {/* <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-          <Clock className="w-4 h-4 text-blue-600" />
-        </div> */}
-        <h3 className="text-xl font-bold text-gray-900">Bid History</h3>
-        <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
-          {history?.length} bids
-        </span>
+      <div className="flex items-center justify-between gap-3 mb-2">
+        <div className="flex gap-3"> <h3 className="text-xl font-bold text-gray-900">Bid History</h3>
+          <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
+            {history?.length} bids
+          </span></div>
+        {isExtended &&
+          <div className="flex items-center gap-1">
+            <AlarmClock className="w-5 h-5 text-grey-500" />
+            <span className="px-1 py-1 text-gray-600 rounded-full text-sm font-medium">
+              TIME EXTENDED
+            </span>
+          </div>}
       </div>
 
       <div className="space-y-2">
@@ -82,7 +86,8 @@ const BiddingHistory = ({ history, isSold }) => {
                   <p className={`text-md ${user?._id === bid?.bidder?._id ? 'font-bold text-gray-800' : 'text-gray-600'}`}>
                     {user?._id === bid?.bidder?._id ? (
                       <>
-                        You <Zap className="inline w-4 h-4 text-gray-400 ml-1" />
+                        You 
+                        {/* <Zap className="inline w-4 h-4 text-gray-400 ml-1" /> */}
                       </>
                     ) : (
                       `Bidder #${history?.length - index}`

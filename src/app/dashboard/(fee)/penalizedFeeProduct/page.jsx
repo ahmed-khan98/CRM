@@ -99,7 +99,7 @@ export default function page() {
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                                                 Product SKU
                                             </th>
-                                  
+
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                                                 Product Title
                                             </th>
@@ -143,12 +143,14 @@ export default function page() {
                                                     <button
                                                         onClick={() => {
                                                             setProcessingId(e?._id)
-                                                            handlePayments(e?._id)
-                                                        }}
-                                                        disabled={processingId === e?._id && isPocessing}
+                                                            // handlePayments(e?._id)
+                                                            router.push(`/dashboard/feeConfirmation?type=auction_payment&id=${e?._id}&amount=${e?.penaltyAmount}&product=${e?.product?.name}&sku=${e?.product?.sku}`)
+                                                        }
+                                                        }
+                                                        disabled={processingId === e?._id}
                                                         className="cursor-pointer w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-2 px-2 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
                                                     >
-                                                        {(processingId === e?._id && isPocessing) ? (
+                                                        {(processingId === e?._id) ? (
                                                             <>
                                                                 <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                                                 Processing...

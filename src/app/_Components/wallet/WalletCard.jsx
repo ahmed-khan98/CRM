@@ -3,10 +3,11 @@
 import { useGetCardsQuery } from "@/app/_Services/wallet/page"
 import { motion } from "framer-motion"
 import { CreditCard, DollarSign, AlertCircle, CheckCircle } from 'lucide-react'
-
-
+import { useRouter } from 'next/navigation';
 
 const WalletCard = ({ balance, currency, isActive }) => {
+
+  const router =useRouter()
   const { data: cardsData, isLoading: isCardsLoading } = useGetCardsQuery()
   const defaultCard = cardsData?.data?.find(card => card.isDefault)
 
@@ -103,7 +104,8 @@ const WalletCard = ({ balance, currency, isActive }) => {
           <motion.button
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="px-5 py-3 flex items-center text-sm font-medium text-gray-700 hover:text-[#FB3B11] transition-colors"
+            onClick={()=>router.push('/dashboard/wallet/ManageCard')}
+            className="cursor-pointer px-5 py-3 flex items-center text-sm font-medium text-gray-700 hover:text-[#FB3B11] transition-colors"
           >
             <CreditCard className="h-4 w-4 mr-1" />
             Manage Cards

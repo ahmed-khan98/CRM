@@ -8,12 +8,20 @@ const walletApi = createApiAuction.injectEndpoints({
     //   keepUnusedDataFor: 1800, 
       refetchOnMountOrArgChange: false,
     }),
+
     getTransactions: builder.query({
       query: () => `user/wallet/transactions`,
       providesTags: ['transactions'],
     //   keepUnusedDataFor: 1800, 
       refetchOnMountOrArgChange: false,
     }),
+    getConnectAccount: builder.query({
+      query: () => `user/payout/connect-account`,
+      providesTags: ['connectAccount'],
+    //   keepUnusedDataFor: 1800, 
+      refetchOnMountOrArgChange: false,
+    }),
+
     getCards: builder.query({
       query: (id) => `user/wallet/cards`,
       providesTags: ['cards'],
@@ -31,6 +39,18 @@ const walletApi = createApiAuction.injectEndpoints({
       invalidatesTags: ['cards']
     }
     ),
+    createConnectAccount: builder.mutation({
+      query: (formData) => {
+        return {
+          url: 'user/payout/connect-account',
+          method: 'POST',
+          body: '' ,
+        }
+      },
+      invalidatesTags: ['cards']
+    }
+    ),
+
     setDefaultCard: builder.mutation({
       query: (cardId) => {
         return {
@@ -41,6 +61,7 @@ const walletApi = createApiAuction.injectEndpoints({
       invalidatesTags: ['cards']
     }
     ),
+
     deleteCard: builder.mutation({
       query: (cardId) => {
         return {
@@ -51,6 +72,7 @@ const walletApi = createApiAuction.injectEndpoints({
       invalidatesTags: ['cards']
     }
     ),
+
     deposit: builder.mutation({
         query: (formData) => {
           return {
@@ -61,6 +83,7 @@ const walletApi = createApiAuction.injectEndpoints({
         },
         invalidatesTags: ['transactions']
     }),
+    
     withdraw: builder.mutation({
         query: (formData) => {
           return {
@@ -75,4 +98,4 @@ const walletApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const {useGetWalletQuery,useGetTransactionsQuery,useGetCardsQuery,useAddCardMutation,useDeleteCardMutation,useSetDefaultCardMutation,useDepositMutation,useWithdrawMutation } = walletApi
+export const {useGetConnectAccountQuery,useCreateConnectAccountMutation,useGetWalletQuery,useGetTransactionsQuery,useGetCardsQuery,useAddCardMutation,useDeleteCardMutation,useSetDefaultCardMutation,useDepositMutation,useWithdrawMutation } = walletApi

@@ -4,22 +4,25 @@
 
 'use client'
 import React, { useCallback, useRef, useState, useEffect } from 'react'
-import ProductHeader from '../CardComponent/ProductHeader';
-import ProductImageSection from '../CardComponent/ProductImageSection';
-import TimeCounter from '../CardComponent/TimeCounter';
-import ProductInfo from '../CardComponent/ProductInfo';
+import ProductHeader from '../CardComponent/productHeader';
+import ProductImageSection from '../CardComponent/productImageSection';
+import TimeCounter from '../CardComponent/timeCounter';
+import ProductInfo from '../CardComponent/productInfo';
 import { useAddPaymentMutation } from '@/app/_Services/payment/page';
 import toast from 'react-hot-toast';
 import { motion } from "framer-motion"
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { formatDate } from '@/app/utilities/date';
 import PickupScheduleModal from '../Modal/PickupScheduleModal';
+import { useRouter } from 'next/navigation';
 
 const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliveryStatus }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [daysSinceEnded, setDaysSinceEnded] = useState(null);
     const [loadingStates, setLoadingStates] = useState({});
+      const router = useRouter()
+    
 
     useEffect(() => {
         if (item?.product?.biddingEndTime) {
@@ -39,10 +42,10 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
     const [addPayment] = useAddPaymentMutation();
 
 
-    const addPayments = async (auction_id,id) => {
+    const addPayments = async (auction_id, id) => {
         try {
             setLoadingStates((prev) => ({ ...prev, [id]: true }));
-            const response = await addPayment({ "productId": id,'auctionWonId': auction_id,'type':'auction_payment'}).unwrap();
+            const response = await addPayment({ "productId": id, 'auctionWonId': auction_id, 'type': 'auction_payment' }).unwrap();
             console.log(response, 'sadaf');
             if (response?.data?.url) {
                 window.location.href = response?.data?.url;
@@ -74,12 +77,12 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
                 <ProductHeader name={item?.product?.name} id={item?.product?._id} />
                 <ProductImageSection item={item?.product} />
                 <TimeCounter
-                type='days' title='Ended' price={item?.product?.price}
+                    type='days' title='Ended' price={item?.product?.price}
                     isSold={item?.product?.isSold}
                     SoldDate={item?.product?.SoldDate}
                 />
                 {(status === 'pending' || status === 'penalized') &&
-                    <div className="flex items-center justify-between px-3 py-2">
+                    <div className="flex items-center justify-between px-3 py-1">
                         <div className="flex items-center gap-1">
                             <span
                                 className='px-1 py-1 text-xs font-medium text-gray-500'
@@ -92,11 +95,8 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
 
                                 <div className="flex items-center gap-2">
                                     <Calendar className="w-4 h-4 text-gray-500" />
-                                    {/* <span className={`px-3 py-1 rounded-full text-xs font-medium border ${status === 'pending' ? 'text-green-600 bg-green-100':'text-red-600 bg-red-100'}`}>{formatDate(paymentDeadline)}</span> */}
+                                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${status === 'pending' ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'}`}>{formatDate(paymentDeadline)}</span>
                                 </div>
-
-
-
                             </div>
                         </div>
 
@@ -120,33 +120,33 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
 
                         {deliveryStatus === "not_selected" && (
                             // <div className="flex items-center justify-between px-1 py-1">
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={() => setIsModalOpen(true)}
-                                    className="px-4 py-2 my-2 text-xs cursor-pointer  font-medium bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-md"
-                                >
-                                    Choose Delivery
-                                </motion.button>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setIsModalOpen(true)}
+                                className="px-4 py-2 my-2 text-xs cursor-pointer  font-medium bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl hover:from-orange-700 hover:to-orange-800 transition-all duration-300 shadow-md"
+                            >
+                                Choose Delivery
+                            </motion.button>
                             // </div>
                         )}
 
                         {deliveryMethod && (
                             // <div className="flex items-center justify-between px-1 py-2">
-                                <div className="flex items-center gap-2 px-2  py-2 text-xs font-medium">
-                                    {deliveryMethod === "pickup" ? (
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="w-4 h-4 text-gray-500" />
-                                            <span className='px-3 py-2 rounded-full text-xs font-medium border  text-gray-600 bg-gray-100  border-gray-200 '>Pickup Scheduled</span>
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center gap-2">
-                                            <MapPin className="w-4 h-4 text-gray-500" />
-                                            <span className='px-3 py-2 rounded-full text-xs font-medium border  text-gray-600 bg-gray-100  border-gray-200 '>Shipping Requested</span>
-                                        </div>
+                            <div className="flex items-center gap-2 px-2  py-2 text-xs font-medium">
+                                {deliveryMethod === "pickup" ? (
+                                    <div className="flex items-center gap-2">
+                                        <Calendar className="w-4 h-4 text-gray-500" />
+                                        <span className='px-3 py-2 rounded-full text-xs font-medium border  text-gray-600 bg-gray-100  border-gray-200 '>Pickup Scheduled</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2">
+                                        <MapPin className="w-4 h-4 text-gray-500" />
+                                        <span className='px-3 py-2 rounded-full text-xs font-medium border  text-gray-600 bg-gray-100  border-gray-200 '>Shipping Requested</span>
+                                    </div>
 
-                                    )}
-                                </div>
+                                )}
+                            </div>
                             // </div>
                         )}
                     </div>
@@ -166,7 +166,12 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
                             <button
                                 className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-[#0578ff] py-3 flex items-center justify-center ">
                                 Paid
-                            </button> : <button onClick={() => addPayments(item?._id,item?.product?._id)}
+                            </button> : <button onClick={
+                                // () => addPayments(item?._id,item?.product?._id)
+                                () => {
+                                    setLoadingStates((prev) => ({ ...prev, [item?.product?._id]: true }));
+                                    router.push(`/dashboard/feeConfirmation?type=auction_payment&id=${item?._id}&amount=${item?.winningBid}&product=${item?.product?.name}&sku=${item?.product?.sku}&productId=${item?.product?._id}`)
+                                }}
                                 disabled={loadingStates[item?.product?._id]}
                                 className="rounded-br-3xl rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-blue-500 to-blue-400  hover:from-blue-400 hover:to-blue-500 py-3 flex items-center justify-center ">
                                 {loadingStates[item?.product?._id] ? (

@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setAllProducts } from "@/redux/filterSlice";
-import ProductCard from "../Card/ProductCard";
+import ProductCard from "../Card/productCard";
 
 export default function AuctionCard() {
   const dispatch = useDispatch();
@@ -53,7 +53,7 @@ export default function AuctionCard() {
     </p>    
     ) : (
       filteredProducts?.filter((item, index) => !item?.isSold).map((item, index) => (
-        <ProductCard key={item.id ?? `auction-${index}`} item={item} />
+        <ProductCard key={item?._id ?? `auction-${index}`} item={item} />
       ))
       
     )}

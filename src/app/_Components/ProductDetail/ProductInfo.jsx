@@ -22,6 +22,7 @@ const ProductInfo = ({
   id,
   highestBid,
   isAuctionActive,
+  auctionEndTime
 }) => {
   const [showFull, setShowFull] = useState(false)
   const [timeLeft, setTimeLeft] = useState(remainingAuctionTime)
@@ -92,6 +93,7 @@ const ProductInfo = ({
 
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-3">{name}</h1>
+        <p className="text-sm text-gray-900 mb-3">{auctionEndTime}</p>
 
         {/* Rating and Quality */}
         <div className="flex items-center gap-4 mb-4">

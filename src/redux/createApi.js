@@ -7,7 +7,6 @@ const rawBaseQuery = fetchBaseQuery({
   baseUrl: BaseUrl,
   prepareHeaders: (headers) => {
     const token = Cookies.get("token");
-    console.log("Token inside prepareHeaders:", token);
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     }

@@ -81,19 +81,6 @@ const productApi = createApiAuction.injectEndpoints({
             socket.emit(`product-bid-${id}`)
             socket.emit(`product-sold-${id}`)
 
-      
-            // Listen for bid events
-            socket.on(`product-bid-${id}`, (updatedProduct) => {
-              
-
-              updateCachedData((draft) => {
-                const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
-                if (index !== -1) {
-                  draft.data[index] = updatedProduct;
-                }
-              });
-            });
-      
             // Do the same for other events
             socket.on(`product-auction-start-${id}`, (updatedProduct) => {
               console.log(`product-auction-start-${id}`)
@@ -295,7 +282,7 @@ const productApi = createApiAuction.injectEndpoints({
           },
         }
       },
-      // invalidatesTags: ["auction", "detailproduct"],
+      invalidatesTags: ["auction", "detailproduct"],
       async onQueryStarted(formData, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled
@@ -304,6 +291,10 @@ const productApi = createApiAuction.injectEndpoints({
           const socket = initializeSocket()
 
           socket.emit(`product-bid-${formData.id}`)
+          socket.emit(`product-auction-start-${formData.id}`)
+          socket.emit(`product-auction-end-${formData.id}`)
+          socket.emit(`product-bid-${formData.id}`)
+          socket.emit(`product-sold-${formData.id}`)
 
           // socket.on(`product-bid-${formData.id}`, (updatedProduct) => {
           //   console.log(updatedProduct,'updatedProduct')

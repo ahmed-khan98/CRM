@@ -9,6 +9,7 @@ import Link from "next/link"
 import { useAddPaymentMutation } from "@/app/_Services/payment/page"
 import toast from "react-hot-toast"
 import FeeTab from "@/app/_Components/Tab/FeeTab"
+import { useRouter } from 'next/navigation'
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -20,6 +21,8 @@ const itemVariants = {
 }
 
 export default function AppointmentBooking() {
+
+  const router = useRouter()
   const [processingId, setProcessingId] = useState(null);
   const { data, error: isError, isLoading, refetch } = useAllAppointmentQuery()
   const [addPayment, { isLoading: isPocessing }] = useAddPaymentMutation()
@@ -164,23 +167,24 @@ export default function AppointmentBooking() {
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap">
                           <button
-                            onClick={()=>{
-                              setProcessingId(appointment?._id)
-                              handlePayments(appointment?._id)}}
-                            disabled={processingId === appointment?._id && isPocessing}
+                            onClick={()=>router.push(`/dashboard/feeConfirmation?type=missed_appointment_payment&id=${appointment?._id}&amount=${5.00}&product=${appointment.auctionWin?.product?.name}&sku=${appointment.auctionWin?.product?.sku}`)}
+                              // setProcessingId(appointment?._id)
+                              // handlePayments(appointment?._id)}
+                              
+                            // disabled={processingId === appointment?._id && isPocessing}
                             className="cursor-pointer w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-2 px-2 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
                           >
-                            {(processingId === appointment?._id && isPocessing) ? (
+                            {/* {(processingId === appointment?._id && isPocessing) ? (
                               <>
                                 <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                 Processing...
                               </>
                             ) : (
-                              <>
+                              <> */}
                                 <CreditCard className="h-4 w-4" />
                                 Pay $5.00
-                              </>
-                            )}
+                              {/* </>
+                            )} */}
                           </button>
                         </td>
                       </motion.tr>

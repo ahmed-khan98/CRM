@@ -8,10 +8,10 @@ import { IoIosShareAlt } from "react-icons/io"
 import { useAddWishlistMutation, useDeleteWishlistMutation } from "@/app/_Services/wishlist/page"
 import { CiHeart } from "react-icons/ci"
 import Loader from "../Loader"
-import BiddingHistory from "./BiddingHistory"
-import DetailPageTab from "./DetailPageTab"
-import ImageSection from "./ImageSection"
-import ProductInfo from "./ProductInfo"
+import BiddingHistory from "./biddingHistory"
+import DetailPageTab from "./detailPageTab"
+import ImageSection from "./imageSection"
+import ProductInfo from "./productInfo"
 import { useProductSocket } from "@/app/hooks/useSocket"
 import { useProductDetailQuery } from "@/app/_Services/products/page"
 
@@ -31,56 +31,56 @@ const ProductDetail = ({ id }) => {
   const [loading, setLoading] = useState(false)
   const [realTimeData, setRealTimeData] = useState(null)
   // Use real-time data if available, otherwise use RTK Query data
-  const productData = realTimeData || data
+  const productData = data
 
-  useEffect(() => {
-    if (socket && isConnected) {
-      // Listen for real-time updates
+  // useEffect(() => {
+  //   if (socket && isConnected) {
+  //     // Listen for real-time updates
 
-      socket.emit(`product-auction-start-${id}`)
-      socket.emit(`product-auction-end-${id}`)
-      socket.emit(`product-bid-${id}`)
-      socket.emit(`product-sold-${id}`)
+  //     socket.emit(`product-auction-start-${id}`)
+  //     socket.emit(`product-auction-end-${id}`)
+  //     socket.emit(`product-bid-${id}`)
+  //     socket.emit(`product-sold-${id}`)
 
-      socket.on(`product-auction-start-${id}`, (updatedProduct) => {
-        console.log(updatedProduct, 'product-start-end')
+  //     socket.on(`product-auction-start-${id}`, (updatedProduct) => {
+  //       console.log(updatedProduct, 'product-start-end')
 
-        setRealTimeData((prev) => ({
-          ...prev,
-          data: updatedProduct,
-        }))
-      })
-      socket.on(`product-auction-end-${id}`, (updatedProduct) => {
-        console.log(updatedProduct, 'product-auction-end')
-        setRealTimeData((prev) => ({
-          ...prev,
-          data: updatedProduct,
-        }))
-      })
-      socket.on(`product-bid-${id}`, (updatedProduct) => {
-        console.log(updatedProduct, 'product-bid')
+  //       setRealTimeData((prev) => ({
+  //         ...prev,
+  //         data: updatedProduct,
+  //       }))
+  //     })
+  //     socket.on(`product-auction-end-${id}`, (updatedProduct) => {
+  //       console.log(updatedProduct, 'product-auction-end')
+  //       setRealTimeData((prev) => ({
+  //         ...prev,
+  //         data: updatedProduct,
+  //       }))
+  //     })
+  //     socket.on(`product-bid-${id}`, (updatedProduct) => {
+  //       console.log(updatedProduct, 'product-bid')
 
-        setRealTimeData((prev) => ({
-          ...prev,
-          data: updatedProduct,
-        }))
-      })
-      socket.on(`product-sold-${id}`, (updatedProduct) => {
-        console.log(updatedProduct, 'product-sold')
-        setRealTimeData((prev) => ({
-          ...prev,
-          data: updatedProduct,
-        }))
-      })
+  //       setRealTimeData((prev) => ({
+  //         ...prev,
+  //         data: updatedProduct,
+  //       }))
+  //     })
+  //     socket.on(`product-sold-${id}`, (updatedProduct) => {
+  //       console.log(updatedProduct, 'product-sold')
+  //       setRealTimeData((prev) => ({
+  //         ...prev,
+  //         data: updatedProduct,
+  //       }))
+  //     })
 
-      return () => {
-        socket.off(`product_${id}_updated`)
-        socket.off(`product_${id}_bid_placed`)
-        socket.off(`product_${id}_auction_status`)
-        socket.off(`product_${id}_watch_updated`)
-      }
-    }
-  }, [socket, id])
+  //     return () => {
+  //       socket.off(`product_${id}_updated`)
+  //       socket.off(`product_${id}_bid_placed`)
+  //       socket.off(`product_${id}_auction_status`)
+  //       socket.off(`product_${id}_watch_updated`)
+  //     }
+  //   }
+  // }, [socket, id])
 
   const toggleWishlist = async (productId, isWishlisted) => {
     setLoading(true)
@@ -114,7 +114,6 @@ const ProductDetail = ({ id }) => {
       toast.success("Link copied to clipboard!")
     }
   }
-  console.log(realTimeData, 'realTimeData')
 
   return (
     <>
@@ -204,13 +203,14 @@ const ProductDetail = ({ id }) => {
                       id={productData?.data?._id}
                       highestBid={productData?.data?.highestBid}
                       isAuctionActive={productData?.data?.isAuctionActive}
+                      auctionEndTime={productData?.data?.auctionEndTime}
                     />
                   </div>
 
                   {/* Bidding History */}
                   {productData?.data?.biddingHistory?.length > 0 && (
                     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                      <BiddingHistory history={productData?.data?.biddingHistory} isSold={productData?.data?.isSold} />
+                      <BiddingHistory history={productData?.data?.biddingHistory} isSold={productData?.data?.isSold} isExtended={productData?.data?.isExtended}/>
                     </div>
                   )}
                 </div>

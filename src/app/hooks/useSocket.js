@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getSocket, initializeSocket } from "../_Services/products/page"
+import { initializeSocket, getSocket } from "@/app/_Services/products/page"
 
 export const useSocket = () => {
   const [socket, setSocket] = useState(null)
@@ -17,23 +17,23 @@ export const useSocket = () => {
         socketInstance.on("connect", () => {
           setIsConnected(true)
           setError(null)
-          console.log("✅ Socket connected:", socketInstance.id)
+          console.log("✅ Socket connected in hook:", socketInstance.id)
         })
 
         socketInstance.on("disconnect", (reason) => {
           setIsConnected(false)
-          console.log("❌ Socket disconnected:", reason)
+          console.log("❌ Socket disconnected in hook:", reason)
         })
 
         socketInstance.on("connect_error", (err) => {
           setIsConnected(false)
           setError(err.message)
-          console.log("🔴 Socket connection error:", err.message)
+          console.log("🔴 Socket connection error in hook:", err.message)
         })
       }
     } catch (err) {
       setError(err.message)
-      console.error("Failed to initialize socket:", err)
+      console.error("Failed to initialize socket in hook:", err)
     }
 
     return () => {
@@ -52,20 +52,21 @@ export const useProductSocket = (productId) => {
 
   useEffect(() => {
     if (socket && productId && isConnected) {
-      // socket.emit("join_product_room", productId)
+      console.log(`🔌 Setting up socket events for product: ${productId}`)
+
+      // Emit the 4 socket events for this product
       socket.emit(`product-auction-start-${productId}`)
       socket.emit(`product-auction-end-${productId}`)
       socket.emit(`product-bid-${productId}`)
       socket.emit(`product-sold-${productId}`)
 
-
       return () => {
-        // socket.emit("leave_product_room", productId)
-        socket.emit(`product-auction-start-${productId}`)
-        socket.emit(`product-auction-end-${productId}`)
-        socket.emit(`product-bid-${productId}`)
-        socket.emit(`product-sold-${productId}`)
-  
+        console.log(`🧹 Cleaning up socket events for product: ${productId}`)
+        // Clean up listeners when component unmounts
+        socket.off(`product-bid-${productId}`)
+        socket.off(`product-auction-start-${productId}`)
+        socket.off(`product-auction-end-${productId}`)
+        socket.off(`product-sold-${productId}`)
       }
     }
   }, [socket, productId, isConnected])

@@ -1,5 +1,5 @@
 'use client'
-import BiddingProductCard from '../Card/BiddingProductCard';
+import BiddingProductCard from '../Card/biddingProductCard';
 import AuctionCardSkeleton from '../Skeleton/CardSkeleton';
 import AuctionTab from '../Tab/AuctionTab';
 import { useBiddingItemsQuery } from '@/app/_Services/bidding/page';

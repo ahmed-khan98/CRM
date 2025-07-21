@@ -2,10 +2,11 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { CreditCard, Trash2, Check, Plus, ChevronRight, AlertCircle } from 'lucide-react'
-import AddCardModal from "../../_Components/wallet/AddCardModal"
+import { CreditCard, Trash2, Check, Plus, AlertCircle } from 'lucide-react'
+// import AddCardModal from "../../_Components/wallet/AddCardModal"
 import { toast } from "react-hot-toast"
 import { useDeleteCardMutation, useGetCardsQuery, useSetDefaultCardMutation } from "@/app/_Services/wallet/page"
+import StripeCardForm from "./StripeCardForm"
 
 const ManageCards = () => {
   const [showAddCard, setShowAddCard] = useState(false)
@@ -43,7 +44,7 @@ const ManageCards = () => {
 
   const getCardTypeIcon = (cardType) => {
     switch (cardType) {
-      case "VISA":
+      case "visa":
         return <span className="font-bold text-blue-600">VISA</span>
       case "MASTERCARD":
         return <span className="font-bold text-red-600">MC</span>
@@ -67,7 +68,7 @@ const ManageCards = () => {
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowAddCard(true)}
-            className="flex items-center gap-2 bg-[#FB3B11] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#e03610] transition-colors"
+            className="cursor-pointer flex items-center gap-2 bg-[#FB3B11] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#e03610] transition-colors"
           >
             <Plus className="h-4 w-4" />
             Add New Card
@@ -178,7 +179,7 @@ const ManageCards = () => {
                           onClick={() => handleSetDefault(card._id)}
                           disabled={isSettingDefault}
                           className="cursor-pointer text-[#FB3B11] hover:bg-orange-50 p-2 rounded-full transition-colors"
-                          title="Set as Acitve"
+                          title="Set as Active"
                         >
                           <Check className="h-5 w-5" />
                         </motion.button>
@@ -243,7 +244,7 @@ const ManageCards = () => {
 
       <AnimatePresence>
         {showAddCard && (
-          <AddCardModal onClose={() => setShowAddCard(false)} onSuccess={handleAddCardSuccess} />
+          <StripeCardForm onClose={() => setShowAddCard(false)} onSuccess={handleAddCardSuccess} />
         )}
       </AnimatePresence>
     </div>

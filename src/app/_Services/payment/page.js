@@ -4,11 +4,32 @@ const paymentApi = createApiAuction.injectEndpoints({
     overrideExisting: true,  
     endpoints: (builder) => ({
       addPayment: builder.mutation({
-        query: (id) => ({
+        query: (data) => ({
           url: 'user/payment/create-checkout-session/',
           method: 'POST',
-          body:id
+          body:data
         }),
+        invalidatesTags: ['allWon','allAppointment','allPenalizedProduct']
+
+        
+      }),
+      addCardPayment: builder.mutation({
+        query: (data) => ({
+          url: 'user/payment/pay-with-card/',
+          method: 'POST',
+          body:data
+        }),
+        invalidatesTags: ['allWon','allAppointment','allPenalizedProduct']
+
+      }),
+      addPaypalPayment: builder.mutation({
+        query: (data) => ({
+          url: 'user/payment/pay-with-paypal/',
+          method: 'POST',
+          body:data
+        }),
+        invalidatesTags: ['allWon','allAppointment','allPenalizedProduct']
+
       }),
       paymentSuccess: builder.mutation({
         query: (formData) => ({
@@ -16,6 +37,7 @@ const paymentApi = createApiAuction.injectEndpoints({
           method: 'POST',
           body:{session_id:formData.session_id,status:formData.status,type:formData.type}
         }),
+
       }),
       paymentfaild: builder.mutation({
         query: (id) => ({
@@ -28,4 +50,4 @@ const paymentApi = createApiAuction.injectEndpoints({
     }),
   });
 
-export const {useAddPaymentMutation,usePaymentSuccessMutation,usePaymentfaildMutation} = paymentApi
+export const {useAddPaymentMutation,usePaymentSuccessMutation,usePaymentfaildMutation,useAddCardPaymentMutation,useAddPaypalPaymentMutation} = paymentApi

@@ -2,7 +2,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import AppointmentTab from "@/app/_Components/Tab/page";
-import ProductCard from "@/app/_Components/Card/ProductCard";
+import ProductCard from "@/app/_Components/Card/productCard";
 import { useEffect, useMemo } from "react";
 import { setAllProducts } from "@/redux/filterSlice";
 import { useGetTodayyAuctionsProductQuery } from "@/app/_Services/products/page";
