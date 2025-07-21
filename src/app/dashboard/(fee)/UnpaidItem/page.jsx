@@ -1,6 +1,6 @@
 'use client'
 import { motion } from "framer-motion"
-import PaidUnPaidCard from '@/app/_Components/Card/paidUnPaidCard';
+import PaidUnPaidCard from '@/app/_Components/Card/PaidUnPaidCard';
 // import AuctionCardSkeleton from '@/app/_Components/Skeleton/CardSkeleton';
 import FeeTab from '@/app/_Components/Tab/FeeTab';
 import { useWonItemsQuery } from '@/app/_Services/wonProduct/page';

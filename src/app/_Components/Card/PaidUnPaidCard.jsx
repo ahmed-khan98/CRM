@@ -4,10 +4,10 @@
 
 'use client'
 import React, { useCallback, useRef, useState, useEffect } from 'react'
-import ProductHeader from '../CardComponent/productHeader';
-import ProductImageSection from '../CardComponent/productImageSection';
-import TimeCounter from '../CardComponent/timeCounter';
-import ProductInfo from '../CardComponent/productInfo';
+import ProductHeader from '../CardComponent/ProductHeader';
+import ProductImageSection from '../CardComponent/ProductImageSection';
+import TimeCounter from '../CardComponent/TimeCounter';
+import ProductInfo from '../CardComponent/ProductInfo';
 import { useAddPaymentMutation } from '@/app/_Services/payment/page';
 import toast from 'react-hot-toast';
 import { motion } from "framer-motion"

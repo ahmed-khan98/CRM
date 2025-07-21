@@ -1,7 +1,7 @@
 'use client'
 import { useWonItemsQuery } from '@/app/_Services/wonProduct/page';
 import AuctionCardSkeleton from '../Skeleton/CardSkeleton';
-import PaidUnPaidCard from '../Card/paidUnPaidCard';
+import PaidUnPaidCard from '../Card/PaidUnPaidCard';
 import PurchaseTab from '../Tab/PurchaseTab';
 
 

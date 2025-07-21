@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setAllProducts } from "@/redux/filterSlice";
-import ProductCard from "../Card/productCard";
+import ProductCard from "../Card/ProductCard";
 
 export default function AuctionCard() {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 'use client'
 import { useGetAllWishlistQuery } from "@/app/_Services/wishlist/page";
 import AuctionCardSkeleton from "../Skeleton/CardSkeleton";
-import ProductCard from "../Card/productCard";
+import ProductCard from "../Card/ProductCard";
 import AuctionTab from "../Tab/AuctionTab";
 import Link from "next/link";
 

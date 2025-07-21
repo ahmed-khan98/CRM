@@ -1,9 +1,9 @@
 'use client'
 import { useWonItemsQuery } from '@/app/_Services/wonProduct/page';
 import AuctionCardSkeleton from '../Skeleton/CardSkeleton';
-import PaidUnPaidCard from '../Card/paidUnPaidCard';
 import PurchaseTab from '../Tab/PurchaseTab';
 import { usePenalizedProductItemsQuery } from '@/app/_Services/PenaltyFeeProduct/page';
+import PaidUnPaidCard from '../Card/PaidUnPaidCard';
 
 
 const PenalizedItem = () => {
