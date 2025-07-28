@@ -146,7 +146,7 @@ const ProductDetail = ({ id }) => {
               {/* Main Content Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                 {/* Left Column - Images */}
-                <div className="space-y-6">
+                <div className="space-y-2">
                   {/* Action Buttons */}
                   <div className="flex justify-end gap-3">
                     <button
@@ -156,16 +156,16 @@ const ProductDetail = ({ id }) => {
                       {loading ? (
                         <Loader />
                       ) : productData?.data?.isWishlisted ? (
-                        <FaHeart className="text-red-500 text-xl group-hover:scale-110 transition-transform" />
+                        <FaHeart className="cursor-pointer text-red-500 text-xl group-hover:scale-110 transition-transform" />
                       ) : (
-                        <CiHeart className="text-gray-700 text-xl group-hover:scale-110 transition-transform" />
+                        <CiHeart className="cursor-pointer text-gray-700 text-xl group-hover:scale-110 transition-transform" />
                       )}
-                      <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      {/* <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div> */}
                     </button>
 
                     <button
                       onClick={handleShare}
-                      className="group flex items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl hover:bg-blue-700 transition-all duration-300"
+                      className="cursor-pointer group flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-full shadow-lg hover:shadow-xl hover:bg-blue-700 transition-all duration-300"
                     >
                       <IoIosShareAlt className="text-lg group-hover:scale-110 transition-transform" />
                       <span className="font-medium">Share</span>
@@ -193,6 +193,7 @@ const ProductDetail = ({ id }) => {
                     <ProductInfo
                       name={productData?.data?.name}
                       rating={productData?.data?.rating}
+                      condition={productData?.data?.condition}
                       tag={productData?.data?.tag}
                       retail={productData?.data?.retail}
                       price={productData?.data?.price}
@@ -201,6 +202,7 @@ const ProductDetail = ({ id }) => {
                       remainingAuctionTime={productData?.data?.remainingAuctionTime}
                       isSold={productData?.data?.isSold}
                       id={productData?.data?._id}
+                      userHighestBid={productData?.data?.userHighestBid?.bidAmount}
                       highestBid={productData?.data?.highestBid}
                       isAuctionActive={productData?.data?.isAuctionActive}
                       auctionEndTime={productData?.data?.auctionEndTime}

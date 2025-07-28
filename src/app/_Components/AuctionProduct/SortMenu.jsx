@@ -62,7 +62,7 @@ const SortMenu = ({ title, options, onSelect, width = 120 }) => {
           {options.map(({ title, value }) => (
             <p
               key={value}
-              className="block cursor-pointer py-2 px-2 hover:bg-gray-100 focus-visible:bg-gray-200 focus-visible:outline-none"
+              className="capitalize block cursor-pointer py-2 px-2 hover:bg-gray-100 focus-visible:bg-gray-200 focus-visible:outline-none"
               onClick={() => handleSelect(title, value)}
             >
               {title}
@@ -89,16 +89,21 @@ console.log(sortTitle,'sortTitle')
   });
 
   const categoryOptions =
-    categories?.data?.map((category) => ({
+  categories?.data
+    ?.map((category) => ({
       title: category.name,
       value: category._id,
-    })) || [];
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title)) || [];
 
-  const subcategoryOptions =
-    subcategories?.data?.map((subcategory) => ({
+const subcategoryOptions =
+  subcategories?.data
+    ?.map((subcategory) => ({
       title: subcategory.name,
       value: subcategory._id,
-    })) || [];
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title)) || [];
+
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategoryId(categoryId);

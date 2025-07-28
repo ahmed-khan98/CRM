@@ -82,10 +82,11 @@ const ProductCard = React.memo(({ item }) => {
         quantity={data.quantity}
         retail={data?.retail ? data?.retail : 0}
         highestBid={data.highestBid}
+        price={data.price}
         biddingCount={data?.biddingCount}
       />
       <div className="flex">
-        <ProductBidding id={data._id} isSold={data.isSold} highestBid={data.highestBid} isAuctionActive={data?.isAuctionActive} />
+        <ProductBidding id={data._id} isSold={data.isSold} price={data.price} biddingCount={data.biddingCount} highestBid={data.highestBid} isAuctionActive={data?.isAuctionActive} />
       </div>
     </div>
   )

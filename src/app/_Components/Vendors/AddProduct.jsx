@@ -48,7 +48,7 @@ const AddProduct = () => {
     })
 
     const addProductInitialValue = {
-        name: "",
+        name: "",       
         price: "",
         images: "",
         description: "",

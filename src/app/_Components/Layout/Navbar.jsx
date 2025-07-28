@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Main from "../../../app/Assets/Main.png";
+
 import {
   filterBySearch,
   clearFilteredProducts,

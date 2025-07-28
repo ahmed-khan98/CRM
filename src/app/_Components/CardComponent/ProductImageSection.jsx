@@ -30,7 +30,7 @@ const ProductImageSection = ({ item}) => {
   return (
     <div className="relative h-[280px] bg-white">
       <img
-        src={item?.images?.[0]}
+        src={item?.mainImage || item?.images?.[0]}
         alt="Product"
         onClick={() => router.push(`/detailproduct/${item._id}`)}
         className="w-full h-[280px] object-contain cursor-pointer"

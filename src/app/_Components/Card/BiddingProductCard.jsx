@@ -38,7 +38,9 @@ const BiddingProductCard = ({ item }) => {
                     id={item?.product?._id}
                     isSold={item?.product?.isSold}
                     highestBid={item?.product?.highestBid}
-                    userBid={item?.userBids?.at(-1)?.bidAmount}
+                    userBid={item?.userHighestBid}
+                    biddingCount={item?.product?.biddingCount}
+
                 />
             </div>
         </div>

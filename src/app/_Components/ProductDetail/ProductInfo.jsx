@@ -22,6 +22,7 @@ const ProductInfo = ({
   id,
   highestBid,
   isAuctionActive,
+  userHighestBid,
   auctionEndTime
 }) => {
   const [showFull, setShowFull] = useState(false)
@@ -34,7 +35,7 @@ const ProductInfo = ({
   const router = useRouter()
 
   useEffect(() => {
-    setBidValue(highestBid + 1)
+    setBidValue(userHighestBid ? userHighestBid + 1 : Math.floor(price) + 1);
   }, [highestBid])
 
   // Countdown timer effect
@@ -56,15 +57,23 @@ const ProductInfo = ({
 
   const handleBidChange = (value) => {
     const newValue = Math.max(0, Number(value))
-
     setBidValue(newValue)
   }
 
   const submitBid = async () => {
-    if (bidValue <= highestBid) {
-      toast.error("Bid amount must be greater than the highest bid!")
-      return
+
+    if (userHighestBid) {
+      if (bidValue <= userHighestBid+1) {
+        toast.error(`Bid amount must be greater than your last bid !`)
+        return
+      }
+    } else {
+      if (bidValue <= price+1) {
+        toast.error(`Bid amount must be greater than price!`)
+        return
+      }
     }
+    
     try {
       const response = await addBid({
         id: id,
@@ -93,7 +102,7 @@ const ProductInfo = ({
 
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-3">{name}</h1>
-        <p className="text-sm text-gray-900 mb-3">{auctionEndTime}</p>
+        {/* <p className="text-sm text-gray-900 mb-3">{auctionEndTime}</p> */}
 
         {/* Rating and Quality */}
         <div className="flex items-center gap-4 mb-4">
@@ -108,25 +117,25 @@ const ProductInfo = ({
         </div>
 
         {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-4">
-              <span
-              
-                className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
-                >
-                <Tag className="w-3 h-3" />
-                {condition}
-              </span>
-            {tag?.map((tagItem, index) => tag?.length > 0 && (
-              <span
-                key={index}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
-              >
-                <Tag className="w-3 h-3" />
-                {tagItem}
-              </span>
-            )
-        )}
-          </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          <span
+
+            className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
+          >
+            {/* <Tag className="w-3 h-3" /> */}
+            {condition}
+          </span>
+          {tag?.map((tagItem, index) => tag?.length > 0 && (
+            <span
+              key={index}
+              className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
+            >
+              {/* <Tag className="w-3 h-3" /> */}
+              {tagItem}
+            </span>
+          )
+          )}
+        </div>
       </div>
 
       {/* Description */}
@@ -161,7 +170,7 @@ const ProductInfo = ({
             <DollarSign className="w-4 h-4 text-blue-600" />
             <span className="text-md font-medium text-blue-600">Current Price</span>
           </div>
-          <p className="text-2xl font-bold text-blue-700">${price}</p>
+          <p className="text-2xl font-bold text-blue-700">${userHighestBid ? userHighestBid : price}</p>
         </div>
 
         <div className="bg-gray-200 rounded-xl p-4 sm:col-span-2">
@@ -174,25 +183,23 @@ const ProductInfo = ({
         </div>
       </div>
 
-
       <div
-        className={`flex items-center justify-between p-2 rounded-xl ${
-          isSold
-            ? "bg-green-50 border border-green-200"
-            : timeLeft <= 24
-              ? "bg-red-50 border border-red-200"
-              : "bg-blue-50 border border-blue-200"
-        }`}
+        className={`flex items-center justify-between p-2 rounded-xl ${isSold
+          ? "bg-green-50 border border-green-200"
+          : timeLeft <= 24
+            ? "bg-red-50 border border-red-200"
+            : "bg-blue-50 border border-blue-200"
+          }`}
       >
         <div className="flex items-center gap-3">
           <Clock
             className={`w-5 h-5 ${isSold ? "text-green-600" : timeLeft <= 24 ? "text-red-600" : "text-blue-600"}`}
           />
           {/* <div> */}
-            <p className="text-sm font-medium text-gray-600">{isSold ? 'Auction Status' :'Time Left'}</p>
-            <p className={`font-bold ${isSold ? "text-green-700" : timeLeft <= 24 ? "text-red-700" : "text-blue-700"}`}>
-              {isSold ? "SOLD" : formatTimeLeft(timeLeft)}
-            </p>
+          <p className="text-sm font-medium text-gray-600">{isSold ? 'Auction Status' : 'Time Left'}</p>
+          <p className={`font-bold ${isSold ? "text-green-700" : timeLeft <= 24 ? "text-red-700" : "text-blue-700"}`}>
+            {isSold ? "SOLD" : formatTimeLeft(timeLeft)}
+          </p>
           {/* </div> */}
         </div>
         {isAuctionActive && !isSold && (
@@ -217,7 +224,7 @@ const ProductInfo = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-600">Next Minimum Bid</span>
-              <span className="font-bold text-gray-900">${highestBid + 1}</span>
+              <span className="font-bold text-gray-900">${userHighestBid ? userHighestBid+1 : price + 1}</span>
             </div>
 
             <div className="flex gap-3">
@@ -230,22 +237,26 @@ const ProductInfo = ({
                   value={bidValue}
                   placeholder={`Min $${highestBid ?  highestBid + 1: price + 1}`}
                 /> */}
-                    <input
-                type="number"
-                value={bidValue}
-                onChange={(e) => handleBidChange(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg font-semibold text-center  appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                min={highestBid ?  highestBid + 1: price + 1}
-              />
+                <input
+                  type="number"
+                  value={bidValue}
+                  onChange={(e) => handleBidChange(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg font-semibold text-center  appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                // min={highestBid !== price ? highestBid + 1 : price + 1}
+                />
               </div>
               <button
-                disabled={bidValue <= highestBid || isSubmitting || timeLeft <= 0}
+                disabled={
+                  (userHighestBid
+                    ? bidValue <= userHighestBid+1
+                    : bidValue <= price+1
+                  ) || isSubmitting || timeLeft <= 0
+                }
                 onClick={submitBid}
-                className={`px-8 py-3 rounded-xl font-semibold text-white transition-all duration-200 cursor-pointer ${
-                  Number(bidValue) > Number(highestBid) && timeLeft > 0
-                    ? "bg-[#FB3B11] hover:bg-[#e03610] hover:scale-105 shadow-lg"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
+                className={`px-8 py-3 rounded-xl font-semibold text-white transition-all duration-200 cursor-pointer ${Number(bidValue) > Number(userHighestBid ? userHighestBid : price) && timeLeft > 0
+                  ? "bg-[#FB3B11] hover:bg-[#e03610] hover:scale-105 shadow-lg"
+                  : "bg-gray-400 cursor-not-allowed"
+                  }`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center gap-2">
@@ -261,9 +272,8 @@ const ProductInfo = ({
               </button>
             </div>
 
-            {bidValue <= highestBid && <p className="text-sm text-red-600">Bid must be higher than ${highestBid}</p>}
-          </div>
-        ) : (
+            {bidValue <= (userHighestBid ? userHighestBid : price) && <p className="text-sm text-red-600">Bid must be higher than ${userHighestBid ? userHighestBid : price}</p>}
+          </div>): (
           <button
             onClick={() => router.push("/login")}
             className="w-full cursor-pointer bg-[#FB3B11] hover:bg-[#e03610] hover:scale-102 shadow-lg text-white font-semibold py-4 rounded-xl transition-all duration-200 "
