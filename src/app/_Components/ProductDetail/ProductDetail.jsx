@@ -200,12 +200,16 @@ const ProductDetail = ({ id }) => {
                       buyerPremium={productData?.data?.buyerPremium}
                       shortDescription={productData?.data?.shortDescription}
                       remainingAuctionTime={productData?.data?.remainingAuctionTime}
+                      biddingCount={productData?.data?.biddingCount}
                       isSold={productData?.data?.isSold}
-                      id={productData?.data?._id}
+                      automateBidder={productData?.data?.automateBidder}
+                      id={productData?.data?._id} 
+                      highestBidder={productData?.data?.highestBidder} 
                       userHighestBid={productData?.data?.userHighestBid?.bidAmount}
                       highestBid={productData?.data?.highestBid}
                       isAuctionActive={productData?.data?.isAuctionActive}
                       auctionEndTime={productData?.data?.auctionEndTime}
+                      history={productData?.data?.biddingHistory}
                     />
                   </div>
 

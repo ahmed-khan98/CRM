@@ -17,7 +17,7 @@ export default function GenZVerificationStep({
   isResending,
 }) {
   const [code, setCode] = useState(["", "", "", "", "", ""])
-  const [timeLeft, setTimeLeft] = useState(600)
+  const [timeLeft, setTimeLeft] = useState(3600)
   const inputRefs = useRef([])
 
   useEffect(() => {

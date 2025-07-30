@@ -7,10 +7,12 @@ import Cookies from "js-cookie"
 import { ArrowUp, Clock, TrendingUp, DollarSign, Loader2, AlertCircle, CheckCircle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
-const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,biddingCount,price}) => {
+const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,biddingCount,price,automateBidder}) => {
   const [addBid, { isLoading: isSubmitting }] = useAddBidMutation()
   const token = Cookies.get("token")
-  const [bidValue, setBidValue] = useState(biddingCount ? highestBid + 1 : Math.floor(price)  + 1)
+    const userCookie = Cookies.get("currentuser");
+    const user = userCookie ? JSON.parse(userCookie) : null;
+  const [bidValue, setBidValue] = useState(!biddingCount ? highestBid : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1)
   const [showBidTips, setShowBidTips] = useState(false)
   const [bidSuccess, setBidSuccess] = useState(false)
   const [bidError, setBidError] = useState(false)
@@ -43,11 +45,11 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,bidd
   }
 
   const submitBid = async () => {
-    if (bidValue <= highestBid) {
-      setErrorMessage("Bid amount must be greater than the highest bid!")
-      setBidError(true)
-      return
-    }
+    // if (bidValue <= highestBid) {
+    //   setErrorMessage("Bid amount must be greater than the highest bid!")
+    //   setBidError(true)
+    //   return
+    // }
 
     try {
       const response = await addBid({ id, bidAmount: bidValue, bidType: isAuctionActive ? 'live' : 'pre' }).unwrap()
@@ -157,19 +159,28 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,bidd
                 value={bidValue}
                 onChange={(e) => handleBidChange(e.target.value)}
                 className="w-full h-full px-10 py-4 bg-[#EBEBEB] text-center font-semibold text-lg outline-none rounded-bl-3xl appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                min={biddingCount ? highestBid + 1 :Math.floor(price)  + 1}
+                // min={biddingCount ? highestBid + 1 :Math.floor(price)  + 1}
               />
             </div>
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={submitBid}
+              // disabled={
+              //   biddingCount === 0
+              //     ? bidValue <= Math.floor(price) 
+              //     : bidValue <= highestBid || isSubmitting
+              // }
               disabled={
-                biddingCount === 0
-                  ? bidValue <= Math.floor(price) 
-                  : bidValue <= highestBid || isSubmitting
+                (!biddingCount ? bidValue < highestBid :
+                  (automateBidder && automateBidder?.bidder === user?._id)
+                    ? bidValue < (automateBidder?.highestBid || 0) + 1
+                    : bidValue < (highestBid || 0) + 1
+                ) || isSubmitting || timeLeft <= 0
               }
-                            className={`cursor-pointer w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${bidValue > highestBid && !isSubmitting
-                ? "bg-[#F33E0A] hover:bg-[#d63006]"
+
+                className={`cursor-pointer w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${(!biddingCount ? Number(bidValue) >= Number(highestBid) :
+                  Number(bidValue) > Number(automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid :
+                    highestBid : highestBid)) && timeLeft > 0 ? "bg-[#F33E0A] hover:bg-[#d63006]"
                 : "bg-gray-400 cursor-not-allowed"
                 }`}
             >

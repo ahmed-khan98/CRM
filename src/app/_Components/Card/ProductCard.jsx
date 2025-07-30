@@ -67,7 +67,7 @@ const ProductCard = React.memo(({ item }) => {
 
 
   return (
-    <div className="relative bg-gray-100 border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
+    <div className="relative bg-gray-100 border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-[#F33E0A] ">
       <ProductHeader name={data.name} id={data._id} />
       <ProductImageSection item={data} />
       <TimeCounter 
@@ -86,7 +86,7 @@ const ProductCard = React.memo(({ item }) => {
         biddingCount={data?.biddingCount}
       />
       <div className="flex">
-        <ProductBidding id={data._id} isSold={data.isSold} price={data.price} biddingCount={data.biddingCount} highestBid={data.highestBid} isAuctionActive={data?.isAuctionActive} />
+        <ProductBidding id={data._id} isSold={data.isSold} price={data.price}  biddingCount={data?.biddingCount} highestBid={data.highestBid} isAuctionActive={data?.isAuctionActive} automateBidder={data?.automateBidder}/>
       </div>
     </div>
   )

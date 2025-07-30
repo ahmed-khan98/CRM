@@ -19,7 +19,6 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
 
   const formik = useFormik({
     initialValues: {
-      username: "",
       firstName: "",
       lastName: "",
       password: "",
@@ -27,7 +26,6 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
       referralBy: ref|| "",
     },
     validationSchema: Yup.object({
-      username:Yup.string().required("username is required"),
       firstName:Yup.string().required("first name is required"),
       lastName:Yup.string().required("last name is required"),
       // password: Yup.string()
@@ -91,40 +89,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-3">
-      <div className="space-y-1">
-            <div
-              className={`relative border-2 rounded-xl transition-all duration-300 ${focusedField === "username"
-                  ? "border-[#FB3B11] shadow-sm shadow-orange-100"
-                  : formik.touched.username && formik.errors.username
-                    ? "border-red-300"
-                    : "border-gray-200"
-                }`}
-            >
-              <input
-                type="text"
-                name="username"
-                id="username"
-                placeholder="username"
-                className="w-full px-4 py-2 rounded-xl focus:outline-none text-gray-700"
-                value={formik.values.username}
-                onChange={formik.handleChange}
-                onBlur={(e) => {
-                  formik.handleBlur(e)
-                  setFocusedField(null)
-                }}
-                onFocus={() => setFocusedField("username")}
-              />
-            </div>
-            {formik.touched.username && formik.errors.username && (
-              <motion.p
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-red-500 text-xs ml-2"
-              >
-                {formik.errors.username}
-              </motion.p>
-            )}
-          </div>
+
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <div
@@ -352,10 +317,10 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
           {isLoading ? (
             <div className="flex items-center">
               <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-              Creating Account...
+              Sending...
             </div>
           ) : (
-            "Create Account"
+            "Continue"
           )}
         </motion.button>
       </form>

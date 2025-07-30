@@ -6,7 +6,8 @@ import toast from "react-hot-toast"
 import { Rating } from "react-simple-star-rating"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
-import { Clock, DollarSign, Award, Tag, Gavel } from "lucide-react"
+import { MdCelebration } from "react-icons/md";
+import { Clock, DollarSign, Award, Tag, Gavel, Zap } from "lucide-react"
 
 const ProductInfo = ({
   name,
@@ -22,6 +23,10 @@ const ProductInfo = ({
   id,
   highestBid,
   isAuctionActive,
+  biddingCount,
+  automateBidder,
+  history,
+  highestBidder,
   userHighestBid,
   auctionEndTime
 }) => {
@@ -33,9 +38,12 @@ const ProductInfo = ({
   const [addBid, { isLoading: isSubmitting }] = useAddBidMutation()
   const [bidValue, setBidValue] = useState(0)
   const router = useRouter()
+  const token = Cookies.get("token")
+  const userCookie = Cookies.get("currentuser");
+  const user = userCookie ? JSON.parse(userCookie) : null;
 
   useEffect(() => {
-    setBidValue(userHighestBid ? userHighestBid + 1 : Math.floor(price) + 1);
+    setBidValue(!biddingCount ? highestBid : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1);
   }, [highestBid])
 
   // Countdown timer effect
@@ -61,25 +69,26 @@ const ProductInfo = ({
   }
 
   const submitBid = async () => {
+    console.log('call')
+    // if (userHighestBid) {
+    //   if (bidValue <= userHighestBid + 1) {
+    //     toast.error(`Bid amount must be greater than your last bid !`)
+    //     return
+    //   }
+    // } else {
+    //   if (bidValue <= price + 1) {
+    //     toast.error(`Bid amount must be greater than price!`)
+    //     return
+    //   }
+    // }
 
-    if (userHighestBid) {
-      if (bidValue <= userHighestBid+1) {
-        toast.error(`Bid amount must be greater than your last bid !`)
-        return
-      }
-    } else {
-      if (bidValue <= price+1) {
-        toast.error(`Bid amount must be greater than price!`)
-        return
-      }
-    }
-    
     try {
       const response = await addBid({
         id: id,
         bidAmount: bidValue,
         bidType: isAuctionActive ? "live" : "pre",
       }).unwrap()
+      console.log(response, 'response')
       toast.success(response?.message)
       setBidValue(bidValue + 1)
     } catch (error) {
@@ -87,7 +96,6 @@ const ProductInfo = ({
     }
   }
 
-  const token = Cookies.get("token")
 
   const formatTimeLeft = (hours) => {
     if (hours <= 0) return "Auction Ended"
@@ -170,7 +178,7 @@ const ProductInfo = ({
             <DollarSign className="w-4 h-4 text-blue-600" />
             <span className="text-md font-medium text-blue-600">Current Price</span>
           </div>
-          <p className="text-2xl font-bold text-blue-700">${userHighestBid ? userHighestBid : price}</p>
+          <p className="text-2xl font-bold text-blue-700">${highestBid}</p>
         </div>
 
         <div className="bg-gray-200 rounded-xl p-4 sm:col-span-2">
@@ -224,7 +232,7 @@ const ProductInfo = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-600">Next Minimum Bid</span>
-              <span className="font-bold text-gray-900">${userHighestBid ? userHighestBid+1 : price + 1}</span>
+              <span className="font-bold text-gray-900">${!biddingCount ? highestBid : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1}</span>
             </div>
 
             <div className="flex gap-3">
@@ -247,16 +255,20 @@ const ProductInfo = ({
               </div>
               <button
                 disabled={
-                  (userHighestBid
-                    ? bidValue <= userHighestBid+1
-                    : bidValue <= price+1
+                  (!biddingCount ? bidValue < highestBid :
+                    (automateBidder && automateBidder?.bidder === user?._id)
+                      ? bidValue < (automateBidder?.highestBid || 0) + 1
+                      : bidValue < (highestBid || 0) + 1
                   ) || isSubmitting || timeLeft <= 0
                 }
                 onClick={submitBid}
-                className={`px-8 py-3 rounded-xl font-semibold text-white transition-all duration-200 cursor-pointer ${Number(bidValue) > Number(userHighestBid ? userHighestBid : price) && timeLeft > 0
-                  ? "bg-[#FB3B11] hover:bg-[#e03610] hover:scale-105 shadow-lg"
-                  : "bg-gray-400 cursor-not-allowed"
-                  }`}
+
+                className={`px-8 py-3 rounded-xl font-semibold text-white transition-all duration-200 cursor-pointer
+                     ${(!biddingCount ? Number(bidValue) >= Number(highestBid) :
+                    Number(bidValue) > Number(automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid :
+                      highestBid : highestBid)) && timeLeft > 0 ?
+                    "bg-[#FB3B11] hover:bg-[#e03610] hover:scale-105 shadow-lg" :
+                    "bg-gray-400 cursor-not-allowed"}`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center gap-2">
@@ -271,9 +283,54 @@ const ProductInfo = ({
                 )}
               </button>
             </div>
+            {/* Another bidder has a higher Max Bid on this item. You'll need to increase your Max Bid for a chance to win. */}
 
-            {bidValue <= (userHighestBid ? userHighestBid : price) && <p className="text-sm text-red-600">Bid must be higher than ${userHighestBid ? userHighestBid : price}</p>}
-          </div>): (
+            {Number(bidValue) < (
+              !biddingCount
+                ? Number(highestBid)
+                : automateBidder
+                  ? automateBidder?.bidder === user?._id
+                    ? Number(automateBidder?.highestBid)
+                    : Number(highestBid)
+                  : Number(highestBid)
+            ) && (
+                <p className="text-sm text-red-600">
+                  {`Bid must be ${!biddingCount
+                    ? 'equal to or higher then'
+                    : automateBidder
+                      ? automateBidder?.bidder === user?._id
+                        ? 'higher then'
+                        : highestBid
+                      : 'higher then'} $`}
+                  {
+                    !biddingCount
+                      ? highestBid
+                      : automateBidder
+                        ? automateBidder?.bidder === user?._id
+                          ? automateBidder?.highestBid
+                          : highestBid
+                        : highestBid
+                  }
+                </p>
+              )}
+
+            {user?._id ===  highestBidder ?
+            <div className="bg-green-200 border border-green-400 rounded-xl p-2 py-4 text-center flex items-center justify-center">
+              <MdCelebration className="w-6 h-6 text-green-700" />
+              <p className="text-green-700 font-medium px-4">You are winning</p>
+
+            </div>:  history?.find(e=>e?.bidder?._id === user?._id) ?
+            <div className="bg-[#fed7aa] border border-[#EA580C] rounded-xl p-2 py-4">
+              <p className="text-gray-700 font-light flex items-center gap-2">
+                <Zap className="w-6 h-6 text-[#EA580C]" />
+                <span>
+                  <strong>OUTBID</strong>: Another bidder has a higher <strong>Max Bid</strong> on this item. You'll need to increase your <strong>Max Bid</strong> for a chance to win.
+                </span>
+              </p>
+            </div> :'no show'}
+
+          </div>
+        ) : (
           <button
             onClick={() => router.push("/login")}
             className="w-full cursor-pointer bg-[#FB3B11] hover:bg-[#e03610] hover:scale-102 shadow-lg text-white font-semibold py-4 rounded-xl transition-all duration-200 "

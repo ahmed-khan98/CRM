@@ -19,6 +19,8 @@ import { useMyStoreItemsQuery } from "@/app/_Services/store/page"
 import { useWonItemsQuery } from "@/app/_Services/wonProduct/page"
 import { useAllAppointmentQuery } from "@/app/_Services/appointment/page"
 import { usePenalizedProductItemsQuery } from "@/app/_Services/PenaltyFeeProduct/page"
+import { useRouter } from "next/navigation"
+
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -29,10 +31,14 @@ const cardVariants = {
   },
 }
 
-const StatCard = ({ icon: Icon, title, value, subtitle, color, trend, trendValue }) => (
+const StatCard = ({ icon: Icon, title, value, subtitle, color, trend, trendValue }) => {
+  const router =useRouter()
+
+  return(
   <motion.div
     variants={cardVariants}
     whileHover={{ scale: 1.02, y: -5 }}
+    onClick={()=>router.push(link)}
     className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm`}
   >
     <div className="relative z-10">
@@ -56,14 +62,17 @@ const StatCard = ({ icon: Icon, title, value, subtitle, color, trend, trendValue
       {subtitle && <div className="text-white text-opacity-60 text-sm mt-1">{subtitle}</div>}
     </div>
     <div className="absolute top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full -translate-y-16 translate-x-16"></div>
-  </motion.div>
-)
+  </motion.div>)
+}
 
-const QuickActionCard = ({ icon: Icon, title, description, color, onClick }) => (
+const QuickActionCard = ({ icon: Icon, title, description, color, link }) => {
+  const router =useRouter()
+
+  return(
   <motion.div
     whileHover={{ scale: 1.02 }}
     whileTap={{ scale: 0.98 }}
-    onClick={onClick}
+    onClick={()=>router.push(link)}
     className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300"
   >
     <div className={`p-3 rounded-2xl w-fit mb-4 ${color}`}>
@@ -71,8 +80,8 @@ const QuickActionCard = ({ icon: Icon, title, description, color, onClick }) => 
     </div>
     <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
     <p className="text-gray-600 text-sm">{description}</p>
-  </motion.div>
-)
+  </motion.div>)
+}
 
 export default function DashboardPage() {
   const [currentUser, setCurrentUser] = useState({})
@@ -105,8 +114,6 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
   const purchasedProducts = purchasesData?.data?.paid?.length || 0
   const totalFees =  0
   const pendingFees = penalized?.data?.length + missed?.data?.filter(e=>e?.status === 'missed' && e?.paymentStatus === 'unpaid')?.length  + purchasesData?.data?.pending?.length  || 0
-
-
 
   const isLoading = storeLoading  || purchasesLoading || missedLoading || penalizedLoading
 
@@ -169,22 +176,15 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
         >
           <StatCard
             icon={Package}
-            title="Products Listed"
+            title="Products Watchlist"
             value={totalProducts}
-            subtitle="Items in your store"
+            subtitle="Items in your watchlist"
             color="bg-gradient-to-br from-blue-500 to-blue-600"
             trend="up"
             trendValue="0"
+            link={'/dashboard/wishlist'}
           />
-          <StatCard
-            icon={TrendingUp}
-            title="Products Sold"
-            value={soldProducts}
-            subtitle={`${totalProducts > 0 ? Math.round((soldProducts / totalProducts) * 100) : 0}% success rate`}
-            color="bg-gradient-to-br from-green-500 to-emerald-600"
-            trend="up"
-            trendValue="0"
-          />
+
           <StatCard
             icon={ShoppingBag}
             title="Purchases Made"
@@ -193,7 +193,20 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
             color="bg-gradient-to-br from-purple-500 to-purple-600"
             trend="up"
             trendValue="0"
+            link={'/dashboard/wonitem'}
           />
+
+            <StatCard
+            icon={TrendingUp}
+            title="Products Lost"
+            value={soldProducts}
+            subtitle={`${totalProducts > 0 ? Math.round((soldProducts / totalProducts) * 100) : 0}% success rate`}
+            color="bg-gradient-to-br from-green-500 to-emerald-600"
+            trend="up"
+            trendValue="0"
+            link={'/dashboard/lostitem'}
+          />
+
           <StatCard
             icon={DollarSign}
             title="Pending Fees"
@@ -202,7 +215,9 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
             color="bg-gradient-to-br from-orange-500 to-red-500"
             trend={totalFees > 0 ? "down" : "up"}
             trendValue="0"
+            link={'/dashboard/UnpaidItem'}
           />
+
         </motion.div>
 
         {/* Quick Actions */}
@@ -219,31 +234,33 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <QuickActionCard
               icon={Package}
-              title="Add New Product"
-              description="List a new item in your store"
+              title="Your Product"
+              description="View store items"
               color="bg-gradient-to-r from-blue-500 to-blue-600"
-              onClick={() => (window.location.href = "/products/create")}
+            link={'/dashboard/appointment'}
             />
             <QuickActionCard
               icon={Eye}
               title="View Store"
               description="Check your store and items"
               color="bg-gradient-to-r from-green-500 to-emerald-600"
-              onClick={() => (window.location.href = "/dashboard/myItem")}
-            />
+              link={'/dashboard/myItem'}
+              />
             <QuickActionCard
               icon={Users}
-              title="My Purchases"
-              description="View items you've bought"
+              title="Appointment"
+              description="View booked appointment"
               color="bg-gradient-to-r from-purple-500 to-purple-600"
-              onClick={() => (window.location.href = "/dashboard/paidItem")}
+              link={'/dashboard/appointment'}
+
             />
              <QuickActionCard
               icon={DollarSign}
-              title="Pay Fees"
-              description="Clear pending fees"
+              title="Invoice"
+              description="Clear invoice fees"
               color="bg-gradient-to-r from-orange-500 to-red-500"
-              onClick={() => (window.location.href = "/dashboard/UnpaidItem")}
+              link={'/dashboard/UnpaidItem'}
+
             />
           </div>
         </motion.div>

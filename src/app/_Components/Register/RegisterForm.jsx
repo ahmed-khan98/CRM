@@ -13,6 +13,9 @@ import EmailStep from "./steps/EmailStep"
 import VerificationStep from "./steps/VerificationStep"
 import UserDetailsStep from "./steps/UserDetailsStep"
 import SuccessStep from "./steps/SuccessStep"
+import Username from "./steps/Username"
+import Store from "./steps/Store"
+import PhoneNo from "./steps/PhoneNo"
 
 function GenZRegistrationPage() {
   const router = useRouter()
@@ -25,6 +28,8 @@ function GenZRegistrationPage() {
     lastName: "",
     password: "",
     cpassword: "",
+    store: "",
+    phone: "",
   })
 
   const [sendVerificationCode, { isLoading: isSendingCode }] = useSendVerificationCodeMutation()
@@ -56,17 +61,52 @@ function GenZRegistrationPage() {
     }
   }
 
+  const handleUsername = async (username) => {
+    try {
+      setFormData((prev) => ({ ...prev, username }))
+      setStep(4)
+    } catch (error) {
+      toast.error(error.data?.message || "Oops! Couldn't send the code 😕")
+    }
+  }
+
+  const handleUserdetail = async (userdetail) => {
+    try {
+      setFormData((prev) => ({ ...prev, userdetail }))
+      setStep(5)
+    } catch (error) {
+      toast.error(error.data?.message || "Oops! Couldn't send the code 😕")
+    }
+  }
+  const handleStore = async (store) => {
+    try {
+      setFormData((prev) => ({ ...prev, store }))
+      setStep(6)
+    } catch (error) {
+      toast.error(error.data?.message || "Oops! Couldn't send the code 😕")
+    }
+  }
+
   const handleUserDetailsSubmit = async (userData) => {
+    console.log(userData,'userData')
+    console.log(formData,'formData')
     try {
       const finalData = {
         ...userData,
+        firstName:formData.userdetail.firstName,
+        lastName:formData.userdetail.lastName,
+        password:formData.userdetail.password,
+        referralBy:formData.userdetail.referralBy,
         email: formData.email,
+        username: formData.username?.username,
+        store: formData.store?.store,
+        phone: formData.phone?.phone,
         role: "USER",
       }
 
       await registerUser(finalData).unwrap()
       toast.success("You're in! 🎉")
-      setStep(4)
+      setStep(7)
     } catch (error) {
       toast.error(error.data?.message || "Registration failed 😢")
     }
@@ -87,8 +127,14 @@ function GenZRegistrationPage() {
           />
         )
       case 3:
-        return <UserDetailsStep onSubmit={handleUserDetailsSubmit} isLoading={isRegistering} />
+        return <Username onSubmit={handleUsername} isLoading={isRegistering} />
       case 4:
+        return <UserDetailsStep onSubmit={handleUserdetail} isLoading={isRegistering} />
+      case 5:
+        return <Store onSubmit={handleStore} isLoading={isRegistering} />
+      case 6:
+        return <PhoneNo onSubmit={handleUserDetailsSubmit} isLoading={isRegistering} />
+      case 7:
         return <SuccessStep onLogin={() => router.push("/login")} />
       default:
         return <EmailStep onSubmit={handleEmailSubmit} isLoading={isSendingCode} initialEmail={formData.email} />
@@ -122,7 +168,7 @@ function GenZRegistrationPage() {
               {/* Step indicator */}
               <div className="pt-6 px-6 flex justify-between items-center">
                 <div className="flex space-x-2">
-                  {[1, 2, 3].map((i) => (
+                  {[1, 2, 3,4,5,6].map((i) => (
                     <motion.div
                       key={i}
                       className={`w-2 h-2 rounded-full ${
@@ -135,7 +181,7 @@ function GenZRegistrationPage() {
                     />
                   ))}
                 </div>
-                <div className="text-xs font-medium text-gray-400">Step {step < 4 ? step : 3} of 3</div>
+                <div className="text-xs font-medium text-gray-400">Step {step < 7 ? step : 6} of 6</div>
               </div>
 
               {renderStep()}
