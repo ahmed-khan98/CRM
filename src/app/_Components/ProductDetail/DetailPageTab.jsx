@@ -63,7 +63,8 @@ const DetailPageTab = ({ data }) => {
   const getCustomTabData = (tabKey) => {
     const customKey = `custom${tabKey.charAt(0).toUpperCase() + tabKey.slice(1)}`
     const customData = data?.[customKey]
-
+    console.log(customData, 'customData')
+    console.log(customKey, 'customKey')
     if (Array.isArray(customData)) {
       return customData.map((item) => ({
         name: item.name?.toUpperCase() || "",
@@ -84,9 +85,8 @@ const DetailPageTab = ({ data }) => {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`relative cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-200 ${
-                  tab.key === activeTab ? "text-white shadow-lg" : "text-gray-600 hover:text-gray-900"
-                }`}
+                className={`relative cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-200 ${tab.key === activeTab ? "text-white shadow-lg" : "text-gray-600 hover:text-gray-900"
+                  }`}
               >
                 {tab.key === activeTab && (
                   <motion.div
@@ -113,6 +113,19 @@ const DetailPageTab = ({ data }) => {
         transition={{ duration: 0.3 }}
         className="space-y-1"
       >
+        {activeTab === 'item_spec' && <div className="flex gap-2 hover:bg-gray-100 transition-colors">
+
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
+              ITEM CONDITION
+            </p>
+          </div>
+          <div className="flex-2 min-w-0 flex items-center gap-2">
+            <p className="font-medium text-gray-700 break-words p-3 bg-gray-200 rounded-lg flex-1">
+              {data?.condition}
+            </p>
+
+          </div></div>}
         {(() => {
           const tabData = getTabData(activeTab)
           const customTabData = getCustomTabData(activeTab)
@@ -124,6 +137,7 @@ const DetailPageTab = ({ data }) => {
 
               return (
                 <div key={index} className="flex gap-2 hover:bg-gray-100 transition-colors">
+
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
                       {item?.name}

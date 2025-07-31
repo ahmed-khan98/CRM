@@ -323,6 +323,12 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
             "Continue"
           )}
         </motion.button>
+        <div className="text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link href="/login" className="text-[#FB3B11] font-medium hover:underline">
+            Sign in
+          </Link>
+        </div>
       </form>
     </div>
   )

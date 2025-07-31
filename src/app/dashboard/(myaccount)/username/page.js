@@ -17,11 +17,10 @@ const ProfilePage = () => {
   const [showSuccess, setShowSuccess] = useState(false)
 
   const [formData, setFormData] = useState({
+    username: "",
     firstName: "",
     lastName: "",
-    email: "",
-    phone: "",
-    
+    email:"",  
   })
 
   useEffect(() => {
@@ -30,11 +29,10 @@ const ProfilePage = () => {
       const user = JSON.parse(data)
       console.log(user, 'user')
       setFormData({
+        username: user?.username || ""  ,
         firstName: user?.firstName || "",
         lastName: user?.lastName || "",
-        email: user?.email || "",
-        phone: user?.phone || "",
-        
+        email: user?.email || "",  
       })
     }
   }, [])
@@ -51,7 +49,7 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await updateProfile(formData).unwrap()
+      const res = await updateProfile({username:formData?.username}).unwrap()
       if (res.success) {
         const user = res?.data
         setShowSuccess(true)
@@ -71,7 +69,7 @@ const ProfilePage = () => {
 
         <Tab tabs={myAccountTabs} />
         <div className="my-6">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-800">My Account</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-800">Username</h1>
           <p className="text-gray-500 mt-1">Manage your personal information and preferences</p>
         </div>
 
@@ -115,7 +113,7 @@ const ProfilePage = () => {
                     <>Cancel Editing</>
                   ) : (
                     <>
-                      <Edit2 size={18} /> Edit Profile
+                      <Edit2 size={18} /> Edit Username
                     </>
                   )}
                 </button>
@@ -133,7 +131,7 @@ const ProfilePage = () => {
               >
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <p className="text-green-700">Your profile has been updated successfully!</p>
+                  <p className="text-green-700">Your username has been updated successfully!</p>
                 </div>
               </motion.div>
             )}
@@ -144,13 +142,13 @@ const ProfilePage = () => {
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
                   <User size={16} className="text-[#F33E0A]" />
-                  First Name
+                  Username
                 </label>
                 <div className="relative">
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="username"
+                    value={formData.username}
                     onChange={handleChange}
                     disabled={!isEditable}
                     className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
@@ -159,71 +157,6 @@ const ProfilePage = () => {
                   />
 
 
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <User size={16} className="text-[#F33E0A]" />
-                  Last Name
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    disabled={!isEditable}
-                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
-                    placeholder="Your last name"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <Mail size={16} className="text-[#F33E0A]" />
-                  Email Address
-                </label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    disabled={!isEditable}
-                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
-                    placeholder="Your email address"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <Phone size={16} className="text-[#F33E0A]" />
-                  Phone Number
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formData.phone}
-                    // onChange={handleChange}
-                    onChange={(e) => {
-                      const formattedValue = formatPhoneNumber(e.target.value);
-                      setFormData((prev) => ({
-                        ...prev,
-                        'phone': formattedValue,
-                      }));
-                    }}
-                    placeholder="+1 (555) 123-4567"
-                    disabled={!isEditable}
-                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
-                    // placeholder="Your phone number"
-                  />
                 </div>
               </div>
 

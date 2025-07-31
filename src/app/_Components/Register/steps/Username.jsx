@@ -25,7 +25,7 @@ export default function Username({ onSubmit, isLoading }) {
       username:Yup.string().required("username is required"),
     }),
     onSubmit: (values) => {
-      onSubmit(values)
+      onSubmit(values?.username)
     },
   })
 
@@ -99,6 +99,12 @@ export default function Username({ onSubmit, isLoading }) {
             "Continue"
           )}
         </motion.button>
+        <div className="text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link href="/login" className="text-[#FB3B11] font-medium hover:underline">
+            Sign in
+          </Link>
+        </div>
       </form>
     </div>
   )

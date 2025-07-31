@@ -148,7 +148,7 @@ const LeftNav = () => {
                     : "text-gray-700 hover:bg-orange-50 hover:text-[#F33E0A]"
                 }`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <span className={isActive ? "text-[#F33E0A]" : "text-gray-500"}>{item.icon}</span>
                   <span className="font-medium text-sm">{sidebars?.data?.[index]?.title ?? item?.name }</span>
                   {item.badge && (

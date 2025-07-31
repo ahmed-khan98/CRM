@@ -17,7 +17,7 @@ export default function Store({ onSubmit, isLoading }) {
       store: ""
     },
     onSubmit: (values) => {
-      onSubmit(values)
+      onSubmit(values?.store)
     },
   })
 
@@ -34,7 +34,7 @@ export default function Store({ onSubmit, isLoading }) {
           <Link href="/" className="mx-auto">
             <Image src={Main} alt="Logo" />
           </Link>        </motion.div>
-        <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Store name</h2>
+        <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Store Name</h2>
         <p className="text-gray-500">Please enter a store name if you have any?</p>
       </div>
 
@@ -87,6 +87,12 @@ export default function Store({ onSubmit, isLoading }) {
             "Continue"
           )}
         </motion.button>
+        <div className="text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link href="/login" className="text-[#FB3B11] font-medium hover:underline">
+            Sign in
+          </Link>
+        </div>
       </form>
     </div>
   )

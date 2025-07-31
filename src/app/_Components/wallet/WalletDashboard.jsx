@@ -238,7 +238,7 @@ console.log(connectAccountData,'connectAccountData')
                   )}
                 </motion.button>
               )}
-              {connectStatus.showPayoutButton && (
+              {/* {connectStatus.showPayoutButton && (
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={handleRequestPayout}
@@ -247,7 +247,7 @@ console.log(connectAccountData,'connectAccountData')
                   <DollarSign className="h-4 w-4" />
                   Request Payout
                 </motion.button>
-              )}
+              )} */}
             </div>
           </div>
         </motion.div>

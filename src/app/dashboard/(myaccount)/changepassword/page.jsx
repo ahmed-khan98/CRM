@@ -118,7 +118,7 @@ export default function page() {
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="group relative overflow-hidden px-8 py-4 bg-[#F33E0A] text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70"
+                                className="group relative cursor-pointer overflow-hidden px-8 py-4 bg-[#F33E0A] text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70"
                             >
                                 <span className="relative flex items-center justify-center gap-2">
                                     {isSubmitting ? (

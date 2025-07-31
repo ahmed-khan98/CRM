@@ -327,7 +327,7 @@ const ProductInfo = ({
                   <strong>OUTBID</strong>: Another bidder has a higher <strong>Max Bid</strong> on this item. You'll need to increase your <strong>Max Bid</strong> for a chance to win.
                 </span>
               </p>
-            </div> :'no show'}
+            </div> :null}
 
           </div>
         ) : (
