@@ -63,8 +63,7 @@ const DetailPageTab = ({ data }) => {
   const getCustomTabData = (tabKey) => {
     const customKey = `custom${tabKey.charAt(0).toUpperCase() + tabKey.slice(1)}`
     const customData = data?.[customKey]
-    console.log(customData, 'customData')
-    console.log(customKey, 'customKey')
+
     if (Array.isArray(customData)) {
       return customData.map((item) => ({
         name: item.name?.toUpperCase() || "",

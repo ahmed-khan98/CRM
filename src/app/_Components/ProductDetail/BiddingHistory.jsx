@@ -1,8 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { ChevronDown, ChevronUp, Trophy, Clock, Zap, AlarmClock } from "lucide-react"
-import { MdCelebration } from "react-icons/md";
+import { ChevronDown, ChevronUp, AlarmClock, ThumbsUp, UserRoundCheck, Frown } from "lucide-react"
 import Cookies from "js-cookie";
 
 const BiddingHistory = ({ history, isSold, isExtended }) => {
@@ -88,13 +87,13 @@ const BiddingHistory = ({ history, isSold, isExtended }) => {
               {index === 0 ?
                 <div className="w-[20%] flex items-center justify-end">
                   {/* <div className="h-8 bg-green-100 rounded-full flex items-center justify-center w-8"> */}
-                    <MdCelebration className="w-5 h-5 text-green-600" />
+                    <UserRoundCheck  className="w-5 h-5 text-green-600" />
                   {/* </div> */}
                 </div>
                 :
                 <div className="w-[20%] flex items-center justify-end">
                   {/* <div className="h-8 bg-[#FED7AA] rounded-full flex items-center justify-center w-8"> */}
-                    <Zap className="w-4 h-4  text-[#EA580C]" />
+                    <Frown className="w-4 h-4  text-[#EA580C]" />
                   {/* </div> */}
                 </div>}
             </div>

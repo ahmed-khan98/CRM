@@ -6,8 +6,7 @@ import toast from "react-hot-toast"
 import { Rating } from "react-simple-star-rating"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
-import { MdCelebration } from "react-icons/md";
-import { Clock, DollarSign, Award, Tag, Gavel, Zap } from "lucide-react"
+import { Clock, DollarSign, Award,  Gavel, UserRoundCheck, Frown } from "lucide-react"
 
 const ProductInfo = ({
   name,
@@ -316,13 +315,13 @@ const ProductInfo = ({
 
             {user?._id ===  highestBidder ?
             <div className="bg-green-200 border border-green-400 rounded-xl p-2 py-4 text-center flex items-center justify-center">
-              <MdCelebration className="w-6 h-6 text-green-700" />
+              <UserRoundCheck  className="w-6 h-6 text-green-700" />
               <p className="text-green-700 font-medium px-4">You are winning</p>
 
             </div>:  history?.find(e=>e?.bidder?._id === user?._id) ?
-            <div className="bg-[#fed7aa] border border-[#EA580C] rounded-xl p-2 py-4">
+            <div className="bg-[#f2d9bd] border border-[#EA580C] rounded-xl p-2 py-4">
               <p className="text-gray-700 font-light flex items-center gap-2">
-                <Zap className="w-6 h-6 text-[#EA580C]" />
+                <Frown className="w-8 h-8 text-[#EA580C]" />
                 <span>
                   <strong>OUTBID</strong>: Another bidder has a higher <strong>Max Bid</strong> on this item. You'll need to increase your <strong>Max Bid</strong> for a chance to win.
                 </span>
