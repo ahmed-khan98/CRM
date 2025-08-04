@@ -11,7 +11,7 @@ import { Clock, DollarSign, Award,  Gavel, UserRoundCheck, Frown } from "lucide-
 const ProductInfo = ({
   name,
   rating,
-  tag,
+  tag,negativeTag,
   retail,
   condition,
   price,
@@ -26,6 +26,8 @@ const ProductInfo = ({
   automateBidder,
   history,
   highestBidder,
+  lotfee,
+  quantity,
   userHighestBid,
   auctionEndTime
 }) => {
@@ -68,7 +70,6 @@ const ProductInfo = ({
   }
 
   const submitBid = async () => {
-    console.log('call')
     // if (userHighestBid) {
     //   if (bidValue <= userHighestBid + 1) {
     //     toast.error(`Bid amount must be greater than your last bid !`)
@@ -95,7 +96,6 @@ const ProductInfo = ({
     }
   }
 
-
   const formatTimeLeft = (hours) => {
     if (hours <= 0) return "Auction Ended"
     if (hours < 24) return `${hours} hours`
@@ -109,9 +109,7 @@ const ProductInfo = ({
 
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-3">{name}</h1>
-        {/* <p className="text-sm text-gray-900 mb-3">{auctionEndTime}</p> */}
 
-        {/* Rating and Quality */}
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-2">
             <Rating size={20} SVGstyle={{ display: "inline-block" }} initialValue={rating ?? 0} readonly />
@@ -123,13 +121,10 @@ const ProductInfo = ({
           </div>
         </div>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-2">
           <span
-
             className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
           >
-            {/* <Tag className="w-3 h-3" /> */}
             {condition}
           </span>
           {tag?.map((tagItem, index) => tag?.length > 0 && (
@@ -137,8 +132,16 @@ const ProductInfo = ({
               key={index}
               className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
             >
-              {/* <Tag className="w-3 h-3" /> */}
               {tagItem}
+            </span>
+          )
+          )}
+          {negativeTag?.map((negativeTagItem, index) => negativeTag?.length > 0 && (
+            <span
+              key={index}
+              className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium"
+            >
+              {negativeTagItem}
             </span>
           )
           )}
@@ -164,7 +167,7 @@ const ProductInfo = ({
 
       {/* Pricing Information */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <div className="bg-gray-200 rounded-xl p-4">
+        <div className="bg-gray-200 rounded-xl p-3 ">
           <div className="flex items-center gap-2 mb-2">
             <DollarSign className="w-4 h-4 text-gray-600" />
             <span className="text-md font-medium text-gray-600">Estimated Retail</span>
@@ -172,7 +175,7 @@ const ProductInfo = ({
           <p className="text-2xl font-bold text-gray-900">${retail}</p>
         </div>
 
-        <div className="bg-gray-200 rounded-xl p-4 border border-blue-200">
+        <div className="bg-gray-200 rounded-xl p-3 border border-blue-500">
           <div className="flex items-center gap-2 mb-2">
             <DollarSign className="w-4 h-4 text-blue-600" />
             <span className="text-md font-medium text-blue-600">Current Price</span>
@@ -180,7 +183,8 @@ const ProductInfo = ({
           <p className="text-2xl font-bold text-blue-700">${highestBid}</p>
         </div>
 
-        <div className="bg-gray-200 rounded-xl p-4 sm:col-span-2">
+        
+        <div className="bg-gray-200 rounded-xl p-3 sm:col-span-2">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-600">Buyer's Premium</span>
             <span className="font-bold text-gray-900">
@@ -188,6 +192,24 @@ const ProductInfo = ({
             </span>
           </div>
         </div>
+
+        <div className="bg-gray-200 rounded-xl p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-600">Lot Fee</span>
+            <span className="font-bold text-gray-900">
+              ${lotfee}
+            </span>
+          </div>
+        </div>
+        <div className="bg-gray-200 rounded-xl p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-600">Quantity</span>
+            <span className="font-bold text-gray-900">
+              {quantity}
+            </span>
+          </div>
+        </div>
+       
       </div>
 
       <div

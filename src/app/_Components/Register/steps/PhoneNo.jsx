@@ -35,7 +35,7 @@ export default function PhoneNo({ onSubmit, isLoading }) {
             <Image src={Main} alt="Logo" />
           </Link>        </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Phone No.</h2>
-        <p className="text-gray-500">Optional?</p>
+        {/* <p className="text-gray-500">Optional?</p> */}
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-3">

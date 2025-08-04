@@ -116,7 +116,7 @@ const DetailPageTab = ({ data }) => {
 
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
-              ITEM CONDITION
+            CONDITION
             </p>
           </div>
           <div className="flex-2 min-w-0 flex items-center gap-2">

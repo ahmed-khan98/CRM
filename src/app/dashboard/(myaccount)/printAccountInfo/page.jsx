@@ -18,6 +18,7 @@ const page = () => {
         lastName: "",
         email: "",
         note: "",
+        accountNo: "",
         address: {
             street: '',
             city: '',
@@ -34,6 +35,7 @@ const page = () => {
                 firstName: user?.firstName || "",
                 lastName: user?.lastName || "",
                 email: user?.email || "",
+                accountNo: '098767' || "",
                 address: {
                     street: user?.address?.street || "",
                     city: user?.address?.city || "",
@@ -113,13 +115,13 @@ const page = () => {
                             <div className="space-y-1">
                                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
                                     <User size={16} className="text-[#F33E0A]" />
-                                    Account Number
+                                   User Account Number
                                 </label>
                                 <div className="relative">
                                     <input
                                         type="text"
                                         name="accountNo"
-                                        value='012245'
+                                        value={formData?.accountNo}
                                         disabled
                                         className={`w-full p-4  border bg-gray-50  
                                              border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
@@ -249,14 +251,15 @@ const page = () => {
                     </form>
 
                     <div className="hidden print:block p-8" ref={printRef}>
-                        <h2 className="text-lg font-bold mb-4">User Account Info</h2>
-                        <p><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
-                        <p><strong>Email:</strong> {formData.email}</p>
-                        <p><strong>Street:</strong> {formData.address.street}</p>
-                        <p><strong>City:</strong> {formData.address.city}</p>
-                        <p><strong>State:</strong> {formData.address.state}</p>
-                        <p><strong>Zip Code:</strong> {formData.address.zipCode}</p>
-                        <p><strong>Note:</strong> {formData.note}</p>
+                        <h1 className="text-lg font-bold mb-6">User Account Info</h1>
+                        <h2><strong>User Account No. :</strong> {formData.accountNo}</h2>
+                        <p ><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
+                        <p ><strong>Email:</strong> {formData.email}</p>
+                        <p ><strong>Street:</strong> {formData.address.street}</p>
+                        <p ><strong>City:</strong> {formData.address.city}</p>
+                        <p ><strong>State:</strong> {formData.address.state}</p>
+                        <p ><strong>Zip Code:</strong> {formData.address.zipCode}</p>
+                        <p ><strong>Note:</strong> {formData.note}</p>
                     </div>
 
                 </motion.div>

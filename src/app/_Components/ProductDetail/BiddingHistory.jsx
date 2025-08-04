@@ -52,54 +52,71 @@ const BiddingHistory = ({ history, isSold, isExtended }) => {
           </div>}
       </div>
 
-      <div className="space-y-2 w-[100%]">
-        {visibleBidsHistory?.map((bid, index) => (
-          <div
-            key={bid._id}
-            className={`px-4 py-1 rounded-xl border transition-all duration-200 hover:shadow ${index === 0 || isSold
-              ? "bg-green-100 border-green-200 ring-2 ring-green-100"
-              : user?._id === bid?.bidder?._id
-                ? "bg-[#f9f6f3] border-[#fae5c8] ring-2 ring-[#fcf3e7]"
-                : "bg-gray-50 border-gray-200 hover:bg-gray-50"
-              }`}
-          >
-            <div className="flex items-center justify-between">
-              {/* <div className="flex items-center gap-4"> */}
-              {/* {index === 0 && isSold ? (
-                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                    <Trophy className="w-4 h-4 text-green-600" />
+      {(() => {
+
+        const sortedByTime = [...history].sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+
+        const bidderNumberMap = {};
+        let currentNumber = 1;
+
+        sortedByTime.forEach((bid) => {
+          const bidderId = bid?.bidder?._id;
+          if (bidderId && !bidderNumberMap[bidderId]) {
+            bidderNumberMap[bidderId] = `Bidder #${currentNumber++}`;
+          }
+        });
+
+        return (
+          <div className="space-y-2 w-[100%]">
+            {visibleBidsHistory.map((bid, index) => {
+              const isCurrentUser = user?._id === bid?.bidder?._id;
+              const bidderLabel = isCurrentUser
+                ? "You"
+                : bidderNumberMap[bid?.bidder?._id];
+
+              return (
+                <div
+                  key={bid._id}
+                  className={`px-4 py-1 rounded-xl border transition-all duration-200 hover:shadow ${index === 0 || isSold
+                      ? "bg-green-100 border-green-200 ring-2 ring-green-100"
+                      : isCurrentUser
+                        ? "bg-[#f9f6f3] border-[#fae5c8] ring-2 ring-[#fcf3e7]"
+                        : "bg-gray-50 border-gray-200 hover:bg-gray-50"
+                    }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p
+                      className={`text-md w-[25%] ${isCurrentUser ? "font-bold text-gray-800" : "text-gray-600"
+                        }`}
+                    >
+                      {bidderLabel}
+                    </p>
+
+                    <p className="text-md text-center font-semibold text-gray-700 w-[25%]">
+                      ${bid?.bidAmount?.toLocaleString()}
+                    </p>
+
+                    <p className="text-sm text-gray-500 w-[30%] text-center">
+                      {formatDate(bid.createdAt)}
+                    </p>
+
+                    <div className="w-[20%] flex items-center justify-end">
+                      {index === 0 ? (
+                        <UserRoundCheck className="w-5 h-5 text-green-600" />
+                      ) : (
+                        <Frown className="w-4 h-4 text-[#EA580C]" />
+                      )}
+                    </div>
                   </div>
-                ) : ''} */}
-
-              <p className={`text-md w-[25%] ${user?._id === bid?.bidder?._id ? 'font-bold text-gray-800' : 'text-gray-600'}`}>
-                {user?._id === bid?.bidder?._id ? (
-                  <>
-                    You
-                    {/* <Zap className="inline w-4 h-4 text-gray-400 ml-1" /> */}
-                  </>
-                ) : (
-                  `Bidder #${history?.length - index}`
-                )}
-              </p>
-
-              <p className="text-md text-center font-semibold text-gray-700 w-[25%]">${bid?.bidAmount?.toLocaleString()}</p>
-              <p className="text-sm text-gray-500 w-30%] text-center ">{formatDate(bid.createdAt)}</p>
-              {index === 0 ?
-                <div className="w-[20%] flex items-center justify-end">
-                  {/* <div className="h-8 bg-green-100 rounded-full flex items-center justify-center w-8"> */}
-                    <UserRoundCheck  className="w-5 h-5 text-green-600" />
-                  {/* </div> */}
                 </div>
-                :
-                <div className="w-[20%] flex items-center justify-end">
-                  {/* <div className="h-8 bg-[#FED7AA] rounded-full flex items-center justify-center w-8"> */}
-                    <Frown className="w-4 h-4  text-[#EA580C]" />
-                  {/* </div> */}
-                </div>}
-            </div>
+              );
+            })}
           </div>
-        ))}
-      </div>
+        );
+      })()}
+
 
       {history?.length > 3 && (
         <button

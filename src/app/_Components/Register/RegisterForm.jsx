@@ -31,10 +31,15 @@ function GenZRegistrationPage() {
     lastName: "",
     password: "",
     cpassword: "",
-    mailing: "",
+    mailing: {
+      address: '',
+      city: '',
+      state: '',
+    },
     store: "",
     phone: "",
   })
+  console.log(formData,'formData')
 
   const [sendVerificationCode, { isLoading: isSendingCode }] = useSendVerificationCodeMutation()
   const [verifyCode, { isLoading: isVerifying }] = useVerifyCodeMutation()
@@ -93,11 +98,18 @@ function GenZRegistrationPage() {
       toast.error(error.data?.message || "Oops! Couldn't send the code 😕")
     }
   }
-  const handleMailing = async (mailing) => {
-
-    console.log(mailing, 'mailing')
+  const handleMailing = async (values) => {
+    console.log(values, 'mailing values')
     try {
-      setFormData((prev) => ({ ...prev, mailing }))
+
+      setFormData((prev) => ({
+        ...prev,
+        mailing: {
+          address: values?.address,
+          city: values?.city,
+          state: values?.state,
+        }
+      }))
       setStep(7)
     } catch (error) {
       toast.error(error.data?.message || "Oops! Couldn't send the code 😕")
@@ -115,7 +127,7 @@ function GenZRegistrationPage() {
         username: formData.username,
         storeName: formData?.store,
         phone: userData,
-        mailingAddress: userData?.mailing,
+        mailing: formData?.mailing,
         role: "USER",
       }
 
@@ -123,6 +135,7 @@ function GenZRegistrationPage() {
       toast.success("You're in! 🎉")
       setStep(8)
     } catch (error) {
+      console.log(error,'error')
       toast.error(error.data?.message || "Registration failed 😢")
     }
   }
@@ -191,19 +204,19 @@ function GenZRegistrationPage() {
 
               <div className="pt-6 px-6 flex justify-between items-center">
                 <div className="flex items-center space-x-4">
-                {(step !== 1 && step !== 8)  &&
-                  <button onClick={handleBack} className="flex items-center">
-                    <ChevronLeft color="#FB3B11" className="w-5 h-5 cursor-pointer" />
-                  </button>}
+                  {(step !== 1 && step !== 8) &&
+                    <button onClick={handleBack} className="flex items-center">
+                      <ChevronLeft color="#FB3B11" className="w-5 h-5 cursor-pointer" />
+                    </button>}
                   <div className="flex space-x-2 items-center">
                     {[1, 2, 3, 4, 5, 6, 7].map((i) => (
                       <motion.div
                         key={i}
                         className={`w-2 h-2 rounded-full ${i <= step
-                            ? "bg-[#FB3B11]"
-                            : i === step + 1
-                              ? "bg-gray-300"
-                              : "bg-gray-200"
+                          ? "bg-[#FB3B11]"
+                          : i === step + 1
+                            ? "bg-gray-300"
+                            : "bg-gray-200"
                           }`}
                         animate={{
                           scale: i === step ? [1, 1.3, 1] : 1,
@@ -217,7 +230,7 @@ function GenZRegistrationPage() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="text-xs font-medium text-gray-400">
                   Step {step < 8 ? step : 7} of 7
                 </div>

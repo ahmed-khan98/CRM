@@ -13,6 +13,9 @@ import {
   Star,
   ArrowUp,
   ArrowDown,
+  TrendingDown,
+  CalendarRange,
+  CalendarRangeIcon,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { useMyStoreItemsQuery } from "@/app/_Services/store/page"
@@ -162,7 +165,7 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats Grid */}
-        <motion.div
+        {/* <motion.div
           initial="hidden"
           animate="visible"
           variants={{
@@ -218,7 +221,7 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
             link={'/dashboard/UnpaidItem'}
           />
 
-        </motion.div>
+        </motion.div> */}
 
         {/* Quick Actions */}
         <motion.div
@@ -231,36 +234,43 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
             <Star className="h-6 w-6 text-yellow-500" />
             Quick Actions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <QuickActionCard
               icon={Package}
-              title="Your Product"
-              description="View store items"
+              title="Your Bidding Product"
+              description="View bidding items"
               color="bg-gradient-to-r from-blue-500 to-blue-600"
-            link={'/dashboard/appointment'}
+            link={'/dashboard/Bidding'}
             />
             <QuickActionCard
-              icon={Eye}
-              title="View Store"
-              description="Check your store and items"
+              icon={ShoppingBag}
+              title="Your Won Product"
+              description="View Won Items"
               color="bg-gradient-to-r from-green-500 to-emerald-600"
-              link={'/dashboard/myItem'}
+              link={'/dashboard/wonitem'}
               />
             <QuickActionCard
-              icon={Users}
-              title="Appointment"
-              description="View booked appointment"
+              icon={Eye}
+              title="Your WatchList"
+              description="View Items"
               color="bg-gradient-to-r from-purple-500 to-purple-600"
-              link={'/dashboard/appointment'}
+              link={'/dashboard/wishlist'}
 
             />
              <QuickActionCard
-              icon={DollarSign}
-              title="Invoice"
-              description="Clear invoice fees"
+              icon={TrendingDown}
+              title="Your Lost Product"
+              description="View Lost Items"
               color="bg-gradient-to-r from-orange-500 to-red-500"
-              link={'/dashboard/UnpaidItem'}
+              link={'/dashboard/lostitem'}
 
+            />
+             <QuickActionCard
+              icon={CalendarRangeIcon}
+              title="Your Pickup "
+              description="View Pickup Appointment"
+              color="bg-gradient-to-r from-red-700 to-red-400"
+              link={'/dashboard/appointment'}
             />
           </div>
         </motion.div>

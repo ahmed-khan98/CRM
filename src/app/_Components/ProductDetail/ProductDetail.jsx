@@ -182,19 +182,20 @@ const ProductDetail = ({ id }) => {
                     />                  </div>
 
                   {/* Tabs Section */}
-                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                  <div className="bg-white rounded-2xl shadow-lg p-3 md:p-6 border border-gray-100">
                     <DetailPageTab data={productData?.data} />
                   </div>
                 </div>
 
                 {/* Right Column - Product Info */}
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                     <ProductInfo
                       name={productData?.data?.name}
                       rating={productData?.data?.rating}
                       condition={productData?.data?.condition}
                       tag={productData?.data?.tag}
+                      negativeTag={productData?.data?.negativeTag}
                       retail={productData?.data?.retail}
                       price={productData?.data?.price}
                       buyerPremium={productData?.data?.buyerPremium}
@@ -204,6 +205,8 @@ const ProductDetail = ({ id }) => {
                       isSold={productData?.data?.isSold}
                       automateBidder={productData?.data?.automateBidder}
                       id={productData?.data?._id} 
+                      lotfee={productData?.data?.lotfee} 
+                      quantity={productData?.data?.quantity} 
                       highestBidder={productData?.data?.highestBidder} 
                       userHighestBid={productData?.data?.userHighestBid?.bidAmount}
                       highestBid={productData?.data?.highestBid}

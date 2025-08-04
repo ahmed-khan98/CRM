@@ -35,7 +35,7 @@ export default function Store({ onSubmit, isLoading }) {
             <Image src={Main} alt="Logo" />
           </Link>        </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Store Name</h2>
-        <p className="text-gray-500">Please enter a store name if you have any?</p>
+        {/* <p className="text-gray-500">Please enter a store name if you have any?</p> */}
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-3">
