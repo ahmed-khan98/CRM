@@ -13,8 +13,14 @@ const aboutApi = createApiAuction.injectEndpoints({
       keepUnusedDataFor: 3800, 
       refetchOnMountOrArgChange: false,
     }),
+    getBillBoard: builder.query({
+      query: () => 'user/notice-board/',
+      providesTags: ['billBoard'],
+      keepUnusedDataFor: 3800, 
+      refetchOnMountOrArgChange: false,
+    }),
   
   }),
 })
 
-export const { useGetServiceQuery,useGetSidebarTitleQuery } = aboutApi
+export const { useGetServiceQuery,useGetSidebarTitleQuery,useGetBillBoardQuery } = aboutApi

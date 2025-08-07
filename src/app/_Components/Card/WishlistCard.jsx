@@ -41,7 +41,9 @@ const WishlistCard = React.memo(({ item }) => {
     return (
         <div className="relative bg-gray-300 border-2 border-gray-200 rounded-2xl my-3 shadow-lg">
             <ProductHeader name={item.name} id={item._id}/>
-            <ProductImageSection item={item} />
+
+            <ProductImageSection item={item} abc={'wishlisted'}/>
+
             <TimeCounter timeLeft={timeLeft} price={item.price} />
             <ProductInfo quantity={item.quantity}
              retail={item?.retail ? item?.retail : 0}

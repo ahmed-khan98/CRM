@@ -8,7 +8,8 @@ import React, { useState } from "react";
 import { useAddWishlistMutation, useDeleteWishlistMutation } from "@/app/_Services/wishlist/page";
 import toast from "react-hot-toast";
 
-const ProductImageSection = ({ item}) => {
+const ProductImageSection = ({ item,wishlisted}) => {
+  console.log(wishlisted,'wishlisted')
   const router = useRouter();
   const [loading, setLoading] = useState(false)
   const [addWishlist] = useAddWishlistMutation();
@@ -47,7 +48,7 @@ const ProductImageSection = ({ item}) => {
         className="absolute top-14 left-2 h-[30px] w-[30px] bg-white rounded-full shadow-xl flex items-center justify-center cursor-pointer"
         onClick={() => toggleWishlist(item?.isWishlisted)}
       >
-        {loading ? <Loader /> : item?.isWishlisted ? <FaHeart className="text-red-500 text-lg" /> : <CiHeart className="text-black text-lg" />}
+        {wishlisted ? <FaHeart className="text-red-500 text-lg" /> : loading ? <Loader /> : item?.isWishlisted ? <FaHeart className="text-red-500 text-lg" /> : <CiHeart className="text-black text-lg" />}
       </div>
     </div>
   )

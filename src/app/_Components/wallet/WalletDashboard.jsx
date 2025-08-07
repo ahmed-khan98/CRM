@@ -26,7 +26,7 @@ const WalletDashboard = () => {
   const { data: transactionsData, isLoading: isTransactionsLoading, refetch: refetchTransactions } = useGetTransactionsQuery({
     type: activeFilter === "ALL" ? undefined : activeFilter,
   })
-console.log(connectAccountData,'connectAccountData')
+console.log(walletData,'walletData')
 
 
   // Check connect account status on component mount
@@ -39,9 +39,9 @@ console.log(connectAccountData,'connectAccountData')
     setShowStripeForm(false)
     setShowAddCard(false)
   }
+
   const onClose=()=>{
     setShowStripeForm(false)
-
   }
 
   const filterOptions = [

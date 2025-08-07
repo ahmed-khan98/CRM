@@ -1,28 +1,26 @@
 "use client"
-import { useEffect, useState } from "react"
-import Cookies from "js-cookie"
+
 import {
   ShoppingBag,
   TrendingUp,
   DollarSign,
-  Package,
   Award,
   Eye,
   Calendar,
-  Users,
   Star,
   ArrowUp,
   ArrowDown,
-  TrendingDown,
-  CalendarRange,
   CalendarRangeIcon,
+  Frown,
 } from "lucide-react"
+import { FaGavel } from 'react-icons/fa6'
 import { motion } from "framer-motion"
 import { useMyStoreItemsQuery } from "@/app/_Services/store/page"
 import { useWonItemsQuery } from "@/app/_Services/wonProduct/page"
 import { useAllAppointmentQuery } from "@/app/_Services/appointment/page"
 import { usePenalizedProductItemsQuery } from "@/app/_Services/PenaltyFeeProduct/page"
 import { useRouter } from "next/navigation"
+import { useGetBillBoardQuery } from "@/app/_Services/services/page"
 
 
 const cardVariants = {
@@ -35,90 +33,90 @@ const cardVariants = {
 }
 
 const StatCard = ({ icon: Icon, title, value, subtitle, color, trend, trendValue }) => {
-  const router =useRouter()
+  const router = useRouter()
 
-  return(
-  <motion.div
-    variants={cardVariants}
-    whileHover={{ scale: 1.02, y: -5 }}
-    onClick={()=>router.push(link)}
-    className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm`}
-  >
-    <div className="relative z-10">
-      <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-2xl bg-white bg-opacity-20`}>
-          <Icon className={`h-6 w-6 text-${color}`}/>
-        </div>
-        {trend && (
-          <div
-            className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-              trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-            }`}
-          >
-            {trend === "up" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
-            {trendValue}%
+  return (
+    <motion.div
+      variants={cardVariants}
+      whileHover={{ scale: 1.02, y: -5 }}
+      onClick={() => router.push(link)}
+      className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm`}
+    >
+      <div className="relative z-10">
+        <div className="flex items-center justify-between mb-4">
+          <div className={`p-3 rounded-2xl bg-white bg-opacity-20`}>
+            <Icon className={`h-6 w-6 text-${color}`} />
           </div>
-        )}
+          {trend && (
+            <div
+              className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${trend === "up" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                }`}
+            >
+              {trend === "up" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
+              {trendValue}%
+            </div>
+          )}
+        </div>
+        <div className="text-3xl font-bold text-white mb-1">{value}</div>
+        <div className="text-white text-opacity-80 font-medium">{title}</div>
+        {subtitle && <div className="text-white text-opacity-60 text-sm mt-1">{subtitle}</div>}
       </div>
-      <div className="text-3xl font-bold text-white mb-1">{value}</div>
-      <div className="text-white text-opacity-80 font-medium">{title}</div>
-      {subtitle && <div className="text-white text-opacity-60 text-sm mt-1">{subtitle}</div>}
-    </div>
-    <div className="absolute top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full -translate-y-16 translate-x-16"></div>
-  </motion.div>)
+      <div className="absolute top-0 right-0 w-32 h-32 bg-white bg-opacity-10 rounded-full -translate-y-16 translate-x-16"></div>
+    </motion.div>)
 }
 
 const QuickActionCard = ({ icon: Icon, title, description, color, link }) => {
-  const router =useRouter()
+  const router = useRouter()
 
-  return(
-  <motion.div
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.98 }}
-    onClick={()=>router.push(link)}
-    className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300"
-  >
-    <div className={`p-3 rounded-2xl w-fit mb-4 ${color}`}>
-      <Icon className="h-6 w-6 text-white" />
-    </div>
-    <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
-    <p className="text-gray-600 text-sm">{description}</p>
-  </motion.div>)
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => router.push(link)}
+      className="bg-white rounded-2xl p-4 md:p-5 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300"
+    >
+      <div className={`p-3 rounded-2xl w-fit mb-4 ${color}`}>
+        <Icon className="h-6 w-6 text-white" />
+      </div>
+      <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm">{description}</p>
+    </motion.div>)
 }
 
 export default function DashboardPage() {
-  const [currentUser, setCurrentUser] = useState({})
-  const [greeting, setGreeting] = useState("")
+  // const [greeting, setGreeting] = useState("")
 
   // API Queries
+  const { data: billBoard, isLoading: billBoardLoading } = useGetBillBoardQuery()
   const { data: storeItems, isLoading: storeLoading } = useMyStoreItemsQuery()
   const { data: purchasesData, isLoading: purchasesLoading } = useWonItemsQuery()
 
-const { data:missed, isLoading:missedLoading } = useAllAppointmentQuery()
-const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQuery()
-  
+  const { data: missed, isLoading: missedLoading } = useAllAppointmentQuery()
+  const { data: penalized, isLoading: penalizedLoading } = usePenalizedProductItemsQuery()
+  console.log(billBoard, 'billBoard')
 
-  useEffect(() => {
-    const data = Cookies.get("currentuser")
-    if (data) {
-      const user = JSON.parse(data)
-      setCurrentUser(user)
-    }
 
-    // Set greeting based on time
-    const hour = new Date().getHours()
-    if (hour < 12) setGreeting("Good Morning")
-    else if (hour < 17) setGreeting("Good Afternoon")
-    else setGreeting("Good Evening")
-  }, [])
+  // useEffect(() => {
+  //   const data = Cookies.get("currentuser")
+  //   if (data) {
+  //     const user = JSON.parse(data)
+  //     setCurrentUser(user)
+  //   }
+
+  //   // Set greeting based on time
+  //   const hour = new Date().getHours()
+  //   if (hour < 12) setGreeting("Good Morning")
+  //   else if (hour < 17) setGreeting("Good Afternoon")
+  //   else setGreeting("Good Evening")
+  // }, [])
 
   const soldProducts = storeItems?.data?.filter((item) => item.isSold)?.length || 0
   const totalProducts = storeItems?.data?.length || 0
   const purchasedProducts = purchasesData?.data?.paid?.length || 0
-  const totalFees =  0
-  const pendingFees = penalized?.data?.length + missed?.data?.filter(e=>e?.status === 'missed' && e?.paymentStatus === 'unpaid')?.length  + purchasesData?.data?.pending?.length  || 0
+  const totalFees = 0
+  const pendingFees = penalized?.data?.length + missed?.data?.filter(e => e?.status === 'missed' && e?.paymentStatus === 'unpaid')?.length + purchasesData?.data?.pending?.length || 0
 
-  const isLoading = storeLoading  || purchasesLoading || missedLoading || penalizedLoading
+  const isLoading = billBoardLoading || storeLoading || purchasesLoading || missedLoading || penalizedLoading
 
   if (isLoading) {
     return (
@@ -135,8 +133,16 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-whit mt-0 md:mt-5 px-2">
-      {/* Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white rounded-lg">
+      <div className=" pt-6 p-1 md:p-4 ">
+        <div
+          dangerouslySetInnerHTML={{ __html: billBoard?.data?.[0]?.title }}
+        />
+        <div
+          dangerouslySetInnerHTML={{ __html: billBoard?.data?.[0]?.description }}
+          className="py-3"
+        />
+      </div>
+      {/* <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white rounded-lg">
         <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-opacity-100"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
           <motion.div
@@ -154,14 +160,13 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
             </p>
           </motion.div>
         </div>
-        {/* Decorative elements */}
         <div className="absolute top-12 right-55 w-60 h-60 -mt-10 -mr-10 opacity-10">
           <div className="w-full h-full rounded-full border-8 border-white"></div>
           <div className="absolute top-1/2 left-1/2 w-32 h-32 -mt-15 -ml-17 rounded-full border-8 border-white"></div>
         </div>
         <div className="absolute top-0 left-0 w-32 h-32 md:w-64 md:h-64 bg-white bg-opacity-10 rounded-full -translate-x-16 -translate-y-16 md-translate-x-32 md:-translate-y-32"></div>
         <div className="absolute bottom-0 right-0 w-32 h-32 md:w-92 md:h-92 bg-white bg-opacity-5 rounded-full translate-x-14 translate-y-14 md:translate-x-48 md:translate-y-48"></div>
-      </div>
+      </div> */}
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats Grid */}
@@ -231,16 +236,16 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
           className="mb-8"
         >
           <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-            <Star className="h-6 w-6 text-yellow-500" />
+            <Star className="h-6 w-6 text-yellow-500 " />
             Quick Actions
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-6">
             <QuickActionCard
-              icon={Package}
+              icon={FaGavel}
               title="Your Bidding Product"
               description="View bidding items"
               color="bg-gradient-to-r from-blue-500 to-blue-600"
-            link={'/dashboard/Bidding'}
+              link={'/dashboard/Bidding'}
             />
             <QuickActionCard
               icon={ShoppingBag}
@@ -248,7 +253,16 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
               description="View Won Items"
               color="bg-gradient-to-r from-green-500 to-emerald-600"
               link={'/dashboard/wonitem'}
-              />
+            />
+
+            <QuickActionCard
+              icon={Frown}
+              title="Your Lost Product"
+              description="View Lost Items"
+              color="bg-gradient-to-r from-red-500 to-red-500"
+              link={'/dashboard/lostitem'}
+
+            />
             <QuickActionCard
               icon={Eye}
               title="Your WatchList"
@@ -257,19 +271,11 @@ const { data:penalized, isLoading:penalizedLoading } = usePenalizedProductItemsQ
               link={'/dashboard/wishlist'}
 
             />
-             <QuickActionCard
-              icon={TrendingDown}
-              title="Your Lost Product"
-              description="View Lost Items"
-              color="bg-gradient-to-r from-orange-500 to-red-500"
-              link={'/dashboard/lostitem'}
-
-            />
-             <QuickActionCard
+            <QuickActionCard
               icon={CalendarRangeIcon}
-              title="Your Pickup "
+              title="Your Appointment "
               description="View Pickup Appointment"
-              color="bg-gradient-to-r from-red-700 to-red-400"
+              color="bg-gradient-to-r from-zinc-500 to-zinc-600"
               link={'/dashboard/appointment'}
             />
           </div>

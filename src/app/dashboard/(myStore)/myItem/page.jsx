@@ -1015,6 +1015,7 @@ import { useCreateStoreMutation, useMyStoreItemsQuery, useMyStoreQuery } from "@
 import CreateStoreModal from "@/app/_Components/Modal/CreateStore"
 import { useAddPaymentMutation } from "@/app/_Services/payment/page"
 import toast from "react-hot-toast"
+import { useRouter } from "next/navigation"
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -1028,9 +1029,10 @@ const itemVariants = {
 export default function Page() {
   const [activeFilter, setActiveFilter] = useState("all")
   const [currentUser, setCurrentUser] = useState({})
-  const [addPayment,{isLoading:isPocessing}] = useAddPaymentMutation()
+  const [addPayment, { isLoading: isPocessing }] = useAddPaymentMutation()
   const [createStore] = useCreateStoreMutation()
   const [showCreateStoreModal, setShowCreateStoreModal] = useState(false)
+  const router = useRouter()
 
   const { data, error: isError, isLoading } = useMyStoreItemsQuery()
   const { data: storeData, error, isLoading: isStoreLoading } = useMyStoreQuery()
@@ -1044,20 +1046,19 @@ export default function Page() {
     }
   }, [])
 
-  const handlePayments = async () => {
-    try {
-      const response = await addPayment({
-        storeId: storeData?.data?._id,
-        type: "store_payment",
-      }).unwrap()
-      if (response?.data?.url) {
-        window.location.href = response?.data?.url
-      }
-    } catch (error) {
-      toast.error(error?.data?.message || "Something went wrong")
-    } 
-  }
-
+  // const handlePayments = async () => {
+  //   try {
+  //     const response = await addPayment({
+  //       storeId: storeData?.data?._id,
+  //       type: "store_payment",
+  //     }).unwrap()
+  //     if (response?.data?.url) {
+  //       window.location.href = response?.data?.url
+  //     }
+  //   } catch (error) {
+  //     toast.error(error?.data?.message || "Something went wrong")
+  //   } 
+  // }
 
   const getStatusColor = (status) => {
     console.log(status, "status")
@@ -1103,20 +1104,41 @@ export default function Page() {
       const response = await createStore({
         name: values.name,
         description: values.description,
+        ein: values?.ein,
+        ownerName: values?.ownerName,
+        businessPhone: values?.businessPhone,
+        ownerPhone: values?.ownerPhone,
+        storeStreet: values?.storeStreet,
+        storeCity: values?.storeCity,
+        storeState: values?.storeState,
+        storeZipCode: values?.storeZipCode,
+        storeCountry: values?.storeCountry,
+        ownerStreet: values?.ownerStreet,
+        ownerCity: values?.ownerCity,
+        ownerState: values?.ownerState,
+        ownerZipCode: values?.ownerZipCode,
+        ownerCountry: values?.ownerCountry,
+        sellerPremium: 20,
+        listingFee: 0.35,
+        advertisingFee: 5,
+        JunkItemFee: 5,
+        packagingFee: 5,
       }).unwrap()
       console.log(response, "response")
       if (response.success) {
         const user = response?.data?.user
         Cookies.set("currentuser", JSON.stringify(user), { expires: 7, secure: true })
-        toast.success("Store created successfully!")
-        const resp = await addPayment({
-          storeId: response?.data?.store?._id,
-          type: "store_payment",
-        }).unwrap()
-        console.log(resp, "sadaf")
-        if (resp?.data?.url) {
-          window.location.href = resp?.data?.url
-        }
+        // toast.success("Store created successfully!")
+        showCreateStoreModal(false)
+        router.push(`/dashboard/feeConfirmation?type=store_payment&id=${response?.data?.store?._id}&amount=${50}&product=${response?.data?.store?.name}`)
+        // const resp = await addPayment({
+        //   storeId: response?.data?.store?._id,
+        //   type: "store_payment",
+        // }).unwrap()
+        // console.log(resp, "sadaf")
+        // if (resp?.data?.url) {
+        //   window.location.href = resp?.data?.url
+        // }
       } else {
         toast.error(response.message || "Failed to process store payment")
       }
@@ -1281,7 +1303,7 @@ export default function Page() {
                 <Store className="h-8 w-8 text-red-600" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2 capitalize">
                   {storeData?.data?.name || "My Store"}
                   {/* {storeData?.data?.isPaid && (
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -1289,12 +1311,16 @@ export default function Page() {
                     </span>
                   )} */}
                 </h1>
-                <p className="text-gray-600 mt-1">{storeData?.data?.description || "Your marketplace store"}</p>
-                {/* <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                  <span>Store ID: {storeData?.data?._id?.slice(-8).toUpperCase()}</span>
+                <p className="text-gray-600 mt-1 capitalize">{storeData?.data?.description || "Your marketplace store"}</p>
+                <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 capitalize">
+                  <span>EIN: {storeData?.data?.ein}</span>
+                  <span>•</span>
+                  <span>Owner Name: {storeData?.data?.ownerName}</span>
+                  <span>•</span>
+                  <span>Owner Phone: {storeData?.data?.ownerPhone}</span>
                   <span>•</span>
                   <span>Items: {data?.data?.length || 0}</span>
-                </div> */}
+                </div>
               </div>
             </div>
 
@@ -1313,7 +1339,8 @@ export default function Page() {
                   </div>
                 </div>
                 <button
-                  onClick={handlePayments}
+                  onClick={() => router.push(`/dashboard/feeConfirmation?type=store_payment&id=${storeData?.data?._id}&amount=${50}&product=${storeData?.data?.name}`)
+                  }
                   disabled={isPocessing}
                   className="cursor-pointer w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
                 >
@@ -1344,9 +1371,8 @@ export default function Page() {
               <button
                 key={e}
                 onClick={() => setActiveFilter(e)}
-                className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${
-                  activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
-                }`}
+                className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                  }`}
               >
                 {e}
               </button>

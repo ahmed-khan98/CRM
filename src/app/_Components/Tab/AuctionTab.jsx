@@ -1,19 +1,20 @@
 "use client"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { Heart, Award, XCircle } from "lucide-react"
+import { Heart, Award, Frown } from "lucide-react"
 import { FaGavel } from 'react-icons/fa6'
 import Link from "next/link"
+
 
 const AuctionTab = () => {
   const pathname = usePathname()
 
   const tabs = [
     {
-      path: "/dashboard/wishlist",
-      name: "Wishlist",
-      icon: <Heart className="h-4 w-4" />,
-      color: "#0578ff", // Indigo
+      path: "/dashboard/Bidding",
+      name: "Bidding",
+      icon: <FaGavel className="h-4 w-4" />,
+      color: "#d6d4d4", // Red
     },
     {
       path: "/dashboard/wonitem",
@@ -24,15 +25,16 @@ const AuctionTab = () => {
     {
       path: "/dashboard/lostitem",
       name: "Lost",
-      icon: <XCircle className="h-4 w-4" />,
+      icon: <Frown  className="h-4 w-4" />,
       color: "#EF4444", // Red
     },
     {
-      path: "/dashboard/Bidding",
-      name: "Bidding",
-      icon: <FaGavel className="h-4 w-4" />,
-      color: "#d6d4d4", // Red
+      path: "/dashboard/wishlist",
+      name: "Watchlist",
+      icon: <Heart className="h-4 w-4" />,
+      color: "#0578ff", // Indigo
     },
+   
 
   ]
   return (

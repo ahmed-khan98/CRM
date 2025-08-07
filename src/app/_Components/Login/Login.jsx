@@ -44,7 +44,7 @@ export default function GenZLoginForm() {
           Cookies.set("token", accessToken, { expires: 7, secure: true })
           Cookies.set("currentuser", JSON.stringify(user), { expires: 7, secure: true })
           toast.success(response.message)
-          navigation.push("/auction-product")
+          navigation.push("/dashboard/dashboardcount")
         }
       } catch (error) {
         console.log(error, "verify-error")

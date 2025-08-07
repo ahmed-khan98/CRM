@@ -43,11 +43,11 @@ const MyWonProduct = ({ item }) => {
     };
 
     return (
-        <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
-             <Link
-      href={`/detailproduct/${item?.product?._id}`}
-      className="text-[18px] font-semibold pt-3 px-3 h-16 rounded-t-3xl text-[#0578ff] cursor-pointer  bg-orange-50"
-    >
+        <div className="relative bg-gradient-to-b from-orange-50 to-white border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-green-600  ">
+            <Link
+                href={`/detailproduct/${item?.product?._id}`}
+                className="text-[18px] font-semibold pt-3 px-3 h-16 rounded-t-3xl text-[#0578ff] cursor-pointer  bg-orange-50"
+            >
                 <p className="line-clamp-2 overflow-hidden text-ellipsis underline">
                     {item?.product?.name.length > 50 ? `${item.product?.name.slice(0, 50)}...` : item.product?.name}
                 </p>
@@ -55,7 +55,7 @@ const MyWonProduct = ({ item }) => {
             <div className="relative h-[290px]">
                 <img
                     onClick={() => router.push(`/detailproduct/${item.product?._id}`)}
-                    src={item?.product?.images?.[0]}
+                    src={item?.product?.mainImage}
                     alt="Product"
                     className="w-full h-[290px] object-contain cursor-pointer"
                 />
@@ -75,12 +75,12 @@ const MyWonProduct = ({ item }) => {
                 </div>
 
             </div>
-            <div className=" text-center py-2 flex justify-center bg-gray-100">
+            <div className=" text-center py-3 flex justify-center bg-gray-100">
                 <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow ">
 
-                    <span className="text-[12px] text-gray-800 font-semibold uppercase">{item?.product?.isSold ? 'Ended':"Time Left"}</span>
+                    <span className="text-[12px] text-gray-800 font-semibold uppercase">{item?.product?.isSold ? 'Ended' : "Time Left"}</span>
                     <p className={`font-bold text-sm pt-0 text-[#F33E0A]}`}>{timeAgo(item?.product?.SoldDate)}</p>
-            
+
                 </div>
                 <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow">
                     <span className="text-[12px] text-gray-800 font-semibold uppercase">Current Price</span>
@@ -89,9 +89,9 @@ const MyWonProduct = ({ item }) => {
                 </div>
             </div>
 
-            <div className="bg-white px-4 py-2 rounded-t-2xl shadow-sm border-b border-gray-100 ">
+            <div className="bg-white px-4 py-3 rounded-t-2xl shadow-sm border-b border-gray-100 ">
 
-                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                             <Package size={16} className="text-[#F33E0A]" />
@@ -119,7 +119,7 @@ const MyWonProduct = ({ item }) => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                             <DollarSign size={16} className="text-[#F33E0A]" />
-                            <span className="text-sm text-gray-700">Highest Bid</span>
+                            <span className="text-sm text-gray-700">Winning Bid</span>
                         </div>
                         <span className="text-sm font-medium">${item?.product?.highestBid || 0}</span>
                     </div>
@@ -127,9 +127,9 @@ const MyWonProduct = ({ item }) => {
             </div>
 
 
-            <div className="bg-[#dbfce7] text-[#00885E] text-center text-sm py-2 ">
+            {/* <div className="bg-[#dbfce7] text-[#00885E] text-center text-sm py-2 ">
                 Winning Bid: <strong> $ {item?.product?.highestBid}</strong>
-            </div>
+            </div> */}
 
             <div className="flex flex-row">
 

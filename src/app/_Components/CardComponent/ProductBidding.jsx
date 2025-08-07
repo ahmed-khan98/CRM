@@ -4,14 +4,16 @@ import { useAddBidMutation } from "@/app/_Services/products/page"
 import Link from "next/link"
 import React, { useState, useEffect } from "react"
 import Cookies from "js-cookie"
-import { ArrowUp, Clock, TrendingUp, DollarSign, Loader2, AlertCircle, CheckCircle } from "lucide-react"
+import { ArrowUp, TrendingUp, DollarSign, Loader2, AlertCircle, CheckCircle, Frown } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { FaGavel } from 'react-icons/fa6'
 
-const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,biddingCount,price,automateBidder}) => {
+
+const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, biddingCount, price, automateBidder }) => {
   const [addBid, { isLoading: isSubmitting }] = useAddBidMutation()
   const token = Cookies.get("token")
-    const userCookie = Cookies.get("currentuser");
-    const user = userCookie ? JSON.parse(userCookie) : null;
+  const userCookie = Cookies.get("currentuser");
+  const user = userCookie ? JSON.parse(userCookie) : null;
   const [bidValue, setBidValue] = useState(!biddingCount ? price : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1)
   const [showBidTips, setShowBidTips] = useState(false)
   const [bidSuccess, setBidSuccess] = useState(false)
@@ -40,9 +42,13 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,bidd
   }, [bidSuccess, bidError])
 
   const handleBidChange = (value) => {
-    const newValue = Math.max(0, Number(value))
-    setBidValue(newValue)
-  }
+    let cleanedValue = value.replace(/\D/g, '');
+    if (cleanedValue.length > 1) {
+      cleanedValue = cleanedValue.replace(/^0+/, '');
+    }
+    setBidValue(cleanedValue);
+  };
+
 
   const submitBid = async () => {
     // if (bidValue <= highestBid) {
@@ -52,7 +58,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,bidd
     // }
 
     try {
-      const response = await addBid({ id, bidAmount: bidValue, bidType: isAuctionActive ? 'live' : 'pre' }).unwrap()
+      const response = await addBid({ id, bidAmount: Number(bidValue), bidType: isAuctionActive ? 'live' : 'pre' }).unwrap()
       setBidSuccess(true)
       setBidValue((prev) => prev + 1)
     } catch (error) {
@@ -101,15 +107,25 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,bidd
 
       {userBid &&
         <div className="px-4 py-2 bg-white">
-          <div className="flex justify-between items-center mb-1">
+
+          <div className="flex justify-between items-center">{highestBid !== userBid &&
+            <span className='px-3 py-1 rounded-full text-xs font-medium border text-gray-500 bg-[#ebbda5] border-[#f09868]'> {''}OUTBID</span>}
             <div className="flex items-center gap-1 text-gray-700">
-              <Clock size={16} />
-              <span className="text-sm font-medium">Your Bid</span>
+              <FaGavel size={14} className="text-[#F33E0A]" />
+              <span className="text-sm text-gray-700">Your Bid</span>
             </div>
-            <div className="text-xl font-bold text-gray-900">${userBid}</div>
+            <div className="text-md font-medium">${userBid}</div>
           </div>
 
-        
+          {/* <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <DollarSign size={16} className="text-[#F33E0A]" />
+                      <span className="text-sm text-gray-700">Retail</span>
+                    </div>
+                    <span className="text-sm font-medium">${retail || 0}</span>
+                  </div> */}
+
+
         </div>}
       <div className="relative">
 
@@ -155,11 +171,11 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,bidd
                 <DollarSign size={18} className="text-gray-500" />
               </div>
               <input
-                type="number"
+                type="text"
                 value={bidValue}
                 onChange={(e) => handleBidChange(e.target.value)}
                 className="w-full h-full px-10 py-4 bg-[#EBEBEB] text-center font-semibold text-lg outline-none rounded-bl-3xl appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                // min={biddingCount ? highestBid + 1 :Math.floor(price)  + 1}
+              // min={biddingCount ? highestBid + 1 :Math.floor(price)  + 1}
               />
             </div>
             <motion.button
@@ -178,9 +194,9 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,bidd
                 ) || isSubmitting || timeLeft <= 0
               }
 
-                className={`cursor-pointer w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${(!biddingCount ? Number(bidValue) >= Number(highestBid) :
-                  Number(bidValue) > Number(automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid :
-                    highestBid : highestBid)) && timeLeft > 0 ? "bg-[#F33E0A] hover:bg-[#d63006]"
+              className={`cursor-pointer w-1/2 text-white py-4 flex items-center justify-center gap-2 rounded-br-3xl transition-all duration-300 ${(!biddingCount ? Number(bidValue) >= Number(highestBid) :
+                Number(bidValue) > Number(automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid :
+                  highestBid : highestBid)) && timeLeft > 0 ? "bg-[#F33E0A] hover:bg-[#d63006]"
                 : "bg-gray-400 cursor-not-allowed"
                 }`}
             >
@@ -196,7 +212,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid ,bidd
                 </>
               )}
             </motion.button>
-            </>
+          </>
         }
       </div>
     </div>

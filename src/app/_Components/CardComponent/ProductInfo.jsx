@@ -35,7 +35,8 @@ const ProductInfo = ({ quantity, retail, highestBid, biddingCount, title, price 
             <DollarSign size={16} className="text-[#F33E0A]" />
             <span className="text-sm text-gray-700">{title ? title : 'Highest Bid'}</span>
           </div>
-          <span className="text-sm font-medium">${(biddingCount ? highestBid : 0) || 0}</span>
+          {/* <span className="text-sm font-medium">${(biddingCount ? highestBid : 0) || 0}</span> */}
+          <span className="text-sm font-medium">{highestBid}</span>
         </div>
       </div>
     </div>

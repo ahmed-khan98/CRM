@@ -123,7 +123,7 @@ const Footer = () => {
     }
   }, []);
 
-return (
+  return (
     <>
 
       <footer className="container mx-auto w-full mt-4 py-4 border-t border-gray-300">
@@ -137,7 +137,7 @@ return (
           </div>
 
           {/* Social Icons */}
-          <div className="flex space-x-3 text-xl">
+          <div className="flex space-x-3 te xt-xl">
             <div className="text-pink-500 hover:text-pink-600"><FaInstagram /></div>
             <div className="text-blue-600 hover:text-blue-700"><FaFacebook /></div>
             <div className="text-gray-500 hover:text-gray-600"><FaXTwitter /></div>
@@ -146,28 +146,30 @@ return (
           </div>
         </div>
 
-        <Script
-        id="adsense-script"
-        async
-        strategy="afterInteractive"
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6648219347495285"
-        crossOrigin="anonymous"
-      />
-      <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
-        <ins
-          className="adsbygoogle"
-          style={{
-            display: "block",
-            width: "100%",
-            maxWidth: "320px",
-            height: "200px",
-          }}
-          data-ad-client="ca-pub-6648219347495285"
-          data-ad-slot="8021679285"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        />
-      </div>
+        {/* <Script
+          id="adsense-script"
+          async
+          strategy="afterInteractive"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6648219347495285"
+          crossOrigin="anonymous"
+        /> */}
+
+        {/* Ad Container */}
+        <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+          <ins
+            className="adsbygoogle"
+            style={{ display: "block", width: "100%", maxWidth: "320px", height: "auto" }}
+            data-ad-client="ca-pub-6648219347495285"
+            data-ad-slot="8021679285" // 👈 replace with your actual slot
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+        </div>
+
+        <Script id="adsbygoogle-init" strategy="afterInteractive">
+          {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+        </Script>
+
 
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
           <div className="space-x-2">

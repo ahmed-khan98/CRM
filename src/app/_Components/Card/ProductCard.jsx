@@ -8,7 +8,7 @@ import ProductInfo from "../CardComponent/ProductInfo"
 import ProductBidding from "../CardComponent/ProductBidding"
 import { useProductSocket } from "@/app/hooks/useSocket"
 
-const ProductCard = React.memo(({ item }) => {
+const ProductCard = React.memo(({ item ,wishlisted}) => {
 
     const { socket, isConnected, error } = useProductSocket(item?._id)
     const [realTimeData, setRealTimeData] = useState(null)
@@ -67,26 +67,26 @@ const ProductCard = React.memo(({ item }) => {
 
 
   return (
-    <div className="relative bg-gray-100 border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-[#F33E0A] ">
+    <div className="relative bg-gray-100 border-2 border-gray-300 rounded-3xl my-2 shadow-lg flex flex-col hover:border-[#F33E0A] ">
       <ProductHeader name={data.name} id={data._id} />
-      <ProductImageSection item={data} />
+      <ProductImageSection item={data}  wishlisted={wishlisted}/>
       <TimeCounter 
-      price={data.price} 
+      price={data?.price} 
       isAuctionActive={data?.isAuctionActive} 
       remainingAuctionTime={data?.remainingAuctionTime} 
       auctionStartTime={data?.auctionStartTime} 
-      isSold={data.isSold}
-      SoldDate={data.SoldDate}
+      isSold={data?.isSold}
+      SoldDate={data?.SoldDate}
       auctionEndTime={data?.auctionEndTime} />
       <ProductInfo
-        quantity={data.quantity}
+        quantity={data?.quantity}
         retail={data?.retail ? data?.retail : 0}
-        highestBid={data.highestBid}
-        price={data.price}
+        highestBid={data?.highestBid}
+        price={data?.price}
         biddingCount={data?.biddingCount}
       />
       <div className="flex">
-        <ProductBidding id={data._id} isSold={data.isSold} price={data.price}  biddingCount={data?.biddingCount} highestBid={data.highestBid} isAuctionActive={data?.isAuctionActive} automateBidder={data?.automateBidder}/>
+        <ProductBidding id={data?._id} isSold={data?.isSold} price={data?.price}  biddingCount={data?.biddingCount} highestBid={data?.highestBid} isAuctionActive={data?.isAuctionActive} automateBidder={data?.automateBidder}/>
       </div>
     </div>
   )

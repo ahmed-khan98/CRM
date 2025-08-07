@@ -134,43 +134,42 @@ const DetailPageTab = ({ data }) => {
             allData.map((item, index) => {
               // const isASIN = item?.name === "ASIN"
 
-              return (
-                <div key={index} className="flex gap-2 hover:bg-gray-100 transition-colors">
-
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
-                      {item?.name}
-                    </p>
+              {/* {isASIN && (
+                <button
+                  onClick={() => handleCopy(item?.value, index)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    copiedIndex === index
+                      ? "bg-green-100 text-green-700"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  {copiedIndex === index ? (
+                    <>
+                      <Check size={12} />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={12} />
+                      Copy
+                    </>
+                  )}
+                </button>
+              )} */}
+                return item?.value !== '' ? (
+                  <div key={index} className="flex gap-2 hover:bg-gray-100 transition-colors">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
+                        {item?.name}
+                      </p>
+                    </div>
+                    <div className="flex-2 min-w-0 flex items-center gap-2">
+                      <p className="font-medium text-gray-700 break-words p-3 bg-gray-200 rounded-lg flex-1">
+                        {item?.value}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-2 min-w-0 flex items-center gap-2">
-                    <p className="font-medium text-gray-700 break-words p-3 bg-gray-200 rounded-lg flex-1">
-                      {item?.value}
-                    </p>
-                    {/* {isASIN && (
-                      <button
-                        onClick={() => handleCopy(item?.value, index)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                          copiedIndex === index
-                            ? "bg-green-100 text-green-700"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        }`}
-                      >
-                        {copiedIndex === index ? (
-                          <>
-                            <Check size={12} />
-                            Copied!
-                          </>
-                        ) : (
-                          <>
-                            <Copy size={12} />
-                            Copy
-                          </>
-                        )}
-                      </button>
-                    )} */}
-                  </div>
-                </div>
-              )
+                ) : null;
             })
           ) : (
             <div className="text-center py-12">

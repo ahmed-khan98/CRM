@@ -33,7 +33,7 @@ const page = () => {
                     </div>
                     : 
                         wishlistItems?.map((item, index) => (
-                            <ProductCard key={item.id ?? `auction-${index}`} item={item} />
+                            <ProductCard key={item.id ?? `auction-${index}`} item={item} wishlisted={true}/>
 
                         ))
             }

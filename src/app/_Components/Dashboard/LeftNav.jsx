@@ -39,7 +39,7 @@ const LeftNav = () => {
     {
       name: "My Auction",
       icon: <Home className="w-5 h-5" />,
-      path: ["/dashboard/wishlist", "/dashboard/wonitem", "/dashboard/lostitem"],
+      path: ['/dashboard/Bidding', "/dashboard/wonitem", "/dashboard/lostitem","/dashboard/wishlist",],
     },
     {
       name: "Purchase",

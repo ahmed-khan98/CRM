@@ -21,8 +21,8 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [daysSinceEnded, setDaysSinceEnded] = useState(null);
     const [loadingStates, setLoadingStates] = useState({});
-      const router = useRouter()
-    
+    const router = useRouter()
+
 
     useEffect(() => {
         if (item?.product?.biddingEndTime) {
@@ -158,13 +158,13 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
                     retail={item?.product?.retail ? item?.product?.retail : 0}
                     highestBid={item?.product?.highestBid}
                     title='Winning Bid :'
-                    biddingCount={item?.product?.biddingCount}
+                    biddingCount={1}
                 />
                 <div className="flex flex-row">
                     {
                         (status == 'paid' || status == 'paid_with_penalty') ?
                             <button
-                                className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-[#0578ff] py-3 flex items-center justify-center ">
+                                className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800  py-3 flex items-center justify-center ">
                                 Paid
                             </button> : <button onClick={
                                 // () => addPayments(item?._id,item?.product?._id)
@@ -173,11 +173,11 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
                                     router.push(`/dashboard/feeConfirmation?type=auction_payment&id=${item?._id}&amount=${item?.winningBid}&product=${item?.product?.name}&sku=${item?.product?.sku}&productId=${item?.product?._id}`)
                                 }}
                                 disabled={loadingStates[item?.product?._id]}
-                                className="rounded-br-3xl rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-blue-500 to-blue-400  hover:from-blue-400 hover:to-blue-500 py-3 flex items-center justify-center ">
+                                className="rounded-br-3xl rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 py-3 flex items-center justify-center ">
                                 {loadingStates[item?.product?._id] ? (
                                     "Loading..."
                                 ) : (
-                                    "Un Paid"
+                                    "Click to pay"
                                 )}                </button>}
                 </div>
             </div>

@@ -65,10 +65,13 @@ const ProductInfo = ({
   }, [remainingAuctionTime, isSold])
 
   const handleBidChange = (value) => {
-    const newValue = Math.max(0, Number(value))
-    setBidValue(newValue)
-  }
-
+    let cleanedValue = value.replace(/\D/g, '');
+    if (cleanedValue.length > 1) {
+      cleanedValue = cleanedValue.replace(/^0+/, '');
+    }
+    setBidValue(cleanedValue);
+  };
+  
   const submitBid = async () => {
     // if (userHighestBid) {
     //   if (bidValue <= userHighestBid + 1) {
@@ -85,7 +88,7 @@ const ProductInfo = ({
     try {
       const response = await addBid({
         id: id,
-        bidAmount: bidValue,
+        bidAmount: Number(bidValue),
         bidType: isAuctionActive ? "live" : "pre",
       }).unwrap()
       console.log(response, 'response')
@@ -267,7 +270,7 @@ const ProductInfo = ({
                   placeholder={`Min $${highestBid ?  highestBid + 1: price + 1}`}
                 /> */}
                 <input
-                  type="number"
+                  type="text"
                   value={bidValue}
                   onChange={(e) => handleBidChange(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg font-semibold text-center  appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"

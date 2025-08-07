@@ -235,7 +235,7 @@ const StripeCardForm = ({ onSuccess,onClose }) => {
               Processing...
             </>
           ) : (
-            "Add Payment Method"
+            "Add Card"
           )}
         </motion.button>
       </form>

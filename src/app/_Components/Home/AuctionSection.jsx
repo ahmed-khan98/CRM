@@ -44,7 +44,7 @@ export default function AuctionCard() {
   }
 
   return (
-     <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 container mx-auto p-4 md:pt-20 pt-30">
+     <div className="bg-[#FFFFFF] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6 container mx-auto p-4 pt-44 md:pt-33 ">
     {isLoading ? (
       [...Array(8)].map((_, index) => <CardSkeleton key={index} />)
     ) : showNoProductMessage ? (

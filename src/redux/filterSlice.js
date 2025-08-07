@@ -14,7 +14,9 @@ const filterSlice = createSlice({
             state.filteredProducts = action.payload; 
           },
         filterByCategory: (state, action) => {
+
             const categoryId = action.payload;
+            console.log(action.payload,'action.payload')
             if (categoryId) {
 
                 state.filteredProducts = state.allProducts.filter(

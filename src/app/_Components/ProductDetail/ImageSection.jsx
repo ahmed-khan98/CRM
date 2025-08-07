@@ -98,7 +98,7 @@ const ImageSection = ({ images }) => {
             <img
               src={images[currentIndex] || "/placeholder.svg"}
               alt="Zoomed product"
-              className="max-w-full max-h-full object-contain"
+              className="w-200 h-140 object-contain"
             />
             <button
               onClick={handleImageZoom}

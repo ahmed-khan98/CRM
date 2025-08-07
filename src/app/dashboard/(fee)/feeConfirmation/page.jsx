@@ -730,9 +730,9 @@ const FeeCindirmation = () => {
                               ? "Penalized Product Penalty"
                               : "Store Creation Fee"}
                       </h3>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-gray-500 mt-1 capitalize">
                         {type === "store_payment"
-                          ? "One-time store setup fee"
+                          ? `${product}`
                             :`${product} ,${sku}`
                            }
                       </p>

@@ -45,24 +45,25 @@ const SortMenu = ({ title, options, onSelect, width = 120 }) => {
         aria-expanded={isOpen}
       >
         <div className="flex flex-col text-left">
-          <p className="cursor-pointer text-label-sm">
+          <p className="cursor-pointer text-label-sm capitalize">
             {selected ? selected : title}
           </p>
         </div>
-        <FaChevronDown className="text-orange-500" size={20} />
+        <FaChevronDown className="text-orange-500" size={16} />
       </button>
 
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute left-0 cursor-pointer w-full mt-1 bg-white rounded-xl ring-2 ring-neutral-400 shadow-lg focus:outline-none z-50 overflow-hidden"
+          className="absolute left-0 cursor-pointer w-full mt-1 bg-white rounded-xl ring-1 ring-neutral-400 shadow-lg focus:outline-none z-[999] overflow-y-auto max-h-90"
           role="menu"
           tabIndex="0"
         >
-          {options.map(({ title, value }) => (
+
+          {options?.map(({ title, value }) => (
             <p
               key={value}
-              className="capitalize block cursor-pointer py-2 px-2 hover:bg-gray-100 focus-visible:bg-gray-200 focus-visible:outline-none"
+              className="capitalize block cursor-pointer py-2 px-2 pl-3 hover:bg-gray-100 focus-visible:bg-gray-200 focus-visible:outline-none text-gray-700"
               onClick={() => handleSelect(title, value)}
             >
               {title}
@@ -79,9 +80,8 @@ const SortDropdowns = () => {
   const { data: categories } = useGetCategoriesQuery();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
-    const { data:sortTitle, error, isLoading } = useGetSortTitleQuery();
-  
-console.log(sortTitle,'sortTitle')
+  const { data: sortTitle, error, isLoading } = useGetSortTitleQuery();
+
   const {
     data: subcategories,
   } = useGetSubCategoriesQuery(selectedCategoryId, {
@@ -89,22 +89,22 @@ console.log(sortTitle,'sortTitle')
   });
 
   const categoryOptions =
-  categories?.data
-    ?.map((category) => ({
-      title: category.name,
-      value: category._id,
-    }))
-    .sort((a, b) => a.title.localeCompare(b.title)) || [];
+    categories?.data
+      ?.map((category) => ({
+        title: category.name,
+        value: category._id,
+      }))
+      .sort((a, b) => a.title.localeCompare(b.title)) || [];
 
-const subcategoryOptions =
-  subcategories?.data
-    ?.map((subcategory) => ({
-      title: subcategory.name,
-      value: subcategory._id,
-    }))
-    .sort((a, b) => a.title.localeCompare(b.title)) || [];
+  const subcategoryOptions =
+    subcategories?.data
+      ?.map((subcategory) => ({
+        title: subcategory.name,
+        value: subcategory._id,
+      }))
+      .sort((a, b) => a.title.localeCompare(b.title)) || [];
 
-
+      console.log(selectedCategoryId,'selectedCategoryId')
   const handleCategoryChange = (categoryId) => {
     setSelectedCategoryId(categoryId);
     dispatch(filterByCategory(categoryId));
@@ -115,22 +115,21 @@ const subcategoryOptions =
   };
 
   return (
-    <div className="md:mt-[58px] mt-[50px] bg-white w-full">
-      <div className="flex gap-3 flex-wrap justify-center my-2 fixed z-20 bg-white py-2 shadow-lg w-full">
+    <div className="md:mt-[58px] mt-[50px] bg-white w-full fixed z-10">
+      <div className="flex gap-3 flex-wrap justify-center my-1 sticky top-0 z-20 bg-white py-2 shadow-lg w-full">
+
         <SortMenu
           width={220}
           title="Sort By"
           options={sortTitle?.data || []}
           onSelect={(value) => dispatch(sortProducts(value))}
         />
-
         <SortMenu
           width={220}
           title="Category"
           options={categoryOptions}
           onSelect={handleCategoryChange}
         />
-
         {selectedCategoryId && subcategoryOptions.length > 0 && (
           <SortMenu
             width={220}
@@ -140,16 +139,15 @@ const subcategoryOptions =
           />
         )}
 
-        {/* <button
-          className="px-3 py-2 cursor-pointer bg-gray-800 text-white rounded-lg hover:bg-gray-900"
+        <button
+          className="px-6 py-1 cursor-pointer bg-gray-700 text-white rounded-xl hover:bg-gray-900"
           onClick={() => {
-            dispatch(clearFilteredProducts());
             setSelectedCategoryId("");
-            
+            dispatch(clearFilteredProducts());
           }}
         >
-          Clear Filter
-        </button> */}
+          Clear
+        </button>
       </div>
     </div>
   );

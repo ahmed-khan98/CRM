@@ -13,7 +13,7 @@ import ProductBidding from '../CardComponent/ProductBidding';
 const BiddingProductCard = ({ item }) => {
 
     return (
-        <div className="relative bg-gradient-to-b bg-gray-100 border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
+        <div className="relative bg-gradient-to-b bg-gray-100 border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-[#F33E0A]">
             <ProductHeader name={item?.product?.name} id={item?.product?._id} />
             <ProductImageSection item={item?.product} />
             <TimeCounter
