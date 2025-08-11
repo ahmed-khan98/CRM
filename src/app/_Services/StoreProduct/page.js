@@ -2,7 +2,6 @@ import { createApiAuction } from "@/redux/createApi"
 
 const storeProductApi = createApiAuction.injectEndpoints({
     endpoints: (builder) => ({
-
         addStoreProduct:builder.mutation({
             query: (formData) => {
               return {
