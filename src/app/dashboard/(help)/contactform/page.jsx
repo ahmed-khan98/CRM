@@ -57,7 +57,7 @@ const ContactPage = () => {
       <Toaster position="top-center" />
 
       <div className="max-w-5xl mx-auto pt-4">
-      <Tab tabs={helpTabs}/>
+      <Tab tabs={helpTabs} />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

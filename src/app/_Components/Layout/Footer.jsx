@@ -126,18 +126,19 @@ const Footer = () => {
   return (
     <>
 
-      <footer className="container mx-auto w-full mt-4 py-4 border-t border-gray-300">
+      <footer className="container mx-auto w-full mt-4 py-3 border-t border-gray-300">
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
-          <div className="space-x-2">
+          <div className="space-x-2 ">
             <Link href="/about" className="hover:underline text-[#0578ff] ">About</Link> |
             <Link href="/faq" className="hover:underline text-[#0578ff] "> FAQ’s</Link> |
             <Link href="/contact" className="hover:underline text-[#0578ff] "> Contact Us</Link> |
             <Link href="/resource" className="text-red-600 hover:underline "> Resources</Link> |
-            <Link href="/sell" className="text-green-600 hover:underline "> SELL YOUR STUFF</Link>
+            <Link href="/sell" className="text-green-600 hover:underline "> SELL YOUR STUFF </Link>|
+            <Link href="/becomeAffiliate" className="hover:underline text-[#0578ff]"> Become Affiliate</Link>
           </div>
 
           {/* Social Icons */}
-          <div className="flex space-x-3 te xt-xl">
+          <div className="flex space-x-17 mt-6 md:mt-0 md:space-x-3 text-xl">
             <div className="text-pink-500 hover:text-pink-600"><FaInstagram /></div>
             <div className="text-blue-600 hover:text-blue-700"><FaFacebook /></div>
             <div className="text-gray-500 hover:text-gray-600"><FaXTwitter /></div>
@@ -153,7 +154,6 @@ const Footer = () => {
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6648219347495285"
           crossOrigin="anonymous"
         /> */}
-
         {/* Ad Container */}
         <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
           <ins
@@ -165,12 +165,9 @@ const Footer = () => {
             data-full-width-responsive="true"
           />
         </div>
-
         <Script id="adsbygoogle-init" strategy="afterInteractive">
           {`(adsbygoogle = window.adsbygoogle || []).push({});`}
         </Script>
-
-
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
           <div className="space-x-2">
             <Link href="/term" className="hover:underline text-[#0578ff] ">Terms & Conditions</Link> |
@@ -178,13 +175,13 @@ const Footer = () => {
             <Link href="/affiliate" className="hover:underline text-[#0578ff] "> Affiliate Policy</Link>
           </div>
 
-          <p className=" text-sm">
-            © Copyright 2025 <a href="#" className="text-blue-600 hover:underline">ArthurNicolas.com</a>
-          </p>
+
         </div>
       </footer>
 
-      <div className="bg-[#F33E0A] h-6 mt-4 w-full"></div>
+      <div className="bg-[#F33E0A] mt-1 w-full text-center py-3">  <p className=" text-md text-white">
+        © Copyright 2025 <a href="https://arthurnicolas.com/" className="text-blue-600 hover:underline">ArthurNicolas.com</a>
+      </p></div>
     </>
   );
 };

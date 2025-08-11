@@ -12,6 +12,11 @@ import {
   ArrowDown,
   CalendarRangeIcon,
   Frown,
+  Users,
+  Settings,
+  Box,
+  BoxIcon,
+  Mail,
 } from "lucide-react"
 import { FaGavel } from 'react-icons/fa6'
 import { motion } from "framer-motion"
@@ -79,7 +84,7 @@ const QuickActionCard = ({ icon: Icon, title, description, color, link }) => {
         <Icon className="h-6 w-6 text-white" />
       </div>
       <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
-      <p className="text-gray-600 text-sm">{description}</p>
+      {/* <p className="text-gray-600 text-sm">{description}</p> */}
     </motion.div>)
 }
 
@@ -210,7 +215,7 @@ export default function DashboardPage() {
             value={soldProducts}
             subtitle={`${totalProducts > 0 ? Math.round((soldProducts / totalProducts) * 100) : 0}% success rate`}
             color="bg-gradient-to-br from-green-500 to-emerald-600"
-            trend="up"
+  emerald="up"
             trendValue="0"
             link={'/dashboard/lostitem'}
           />
@@ -226,7 +231,7 @@ export default function DashboardPage() {
             link={'/dashboard/UnpaidItem'}
           />
 
-        </motion.div> */}
+        </motion.div> 
 
         {/* Quick Actions */}
         <motion.div
@@ -236,20 +241,20 @@ export default function DashboardPage() {
           className="mb-8"
         >
           <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-            <Star className="h-6 w-6 text-yellow-500 " />
+            <Star className="h-6 w-6 text-yellow-500 bg-ora" />
             Quick Actions
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-6">
             <QuickActionCard
               icon={FaGavel}
-              title="Your Bidding Product"
+              title="Bidding"
               description="View bidding items"
-              color="bg-gradient-to-r from-blue-500 to-blue-600"
+              color="bg-gradient-to-r from-gray-500 to-gray-600"
               link={'/dashboard/Bidding'}
             />
             <QuickActionCard
               icon={ShoppingBag}
-              title="Your Won Product"
+              title="Won"
               description="View Won Items"
               color="bg-gradient-to-r from-green-500 to-emerald-600"
               link={'/dashboard/wonitem'}
@@ -257,27 +262,65 @@ export default function DashboardPage() {
 
             <QuickActionCard
               icon={Frown}
-              title="Your Lost Product"
+              title="Lost"
               description="View Lost Items"
-              color="bg-gradient-to-r from-red-500 to-red-500"
+              color="bg-gradient-to-r from-rose-500 to-rose-600"
               link={'/dashboard/lostitem'}
 
             />
             <QuickActionCard
               icon={Eye}
-              title="Your WatchList"
+              title="WatchList"
               description="View Items"
-              color="bg-gradient-to-r from-purple-500 to-purple-600"
+              color="bg-gradient-to-r from-blue-500 to-blue-600"
               link={'/dashboard/wishlist'}
 
             />
-            <QuickActionCard
-              icon={CalendarRangeIcon}
-              title="Your Appointment "
-              description="View Pickup Appointment"
-              color="bg-gradient-to-r from-zinc-500 to-zinc-600"
+                  <QuickActionCard
+              icon={DollarSign}
+              title="Invoices"
+              description="View Invoices"
+              color="bg-gradient-to-r from-orange-400 to-orange-500"
               link={'/dashboard/appointment'}
             />
+           
+            <QuickActionCard
+              icon={BoxIcon}
+              title="Selling"
+              description="View Store Items"
+              color="bg-gradient-to-r from-lime-600 to-lime-700"
+              link={'/dashboard/myItem'}
+            />
+
+             <QuickActionCard
+              icon={CalendarRangeIcon}
+              title="Appointments "
+              description="View Pickup Appointment"
+              color="bg-gradient-to-r from-purple-500 to-purple-600"
+              link={'/dashboard/appointment'}
+            />
+                        <QuickActionCard
+              icon={Users}
+              title="Referrals"
+              description="View Your Squads"
+              color="bg-gradient-to-r from-yellow-500 to-yellow-600"
+              link={'/dashboard/refferal'}
+            />
+            <QuickActionCard
+              icon={Settings}
+              title="Setting"
+              description="View Your Squads"
+              color="bg-gradient-to-r from-fuchsia-300 to-fuchsia-400"
+              link={'/dashboard/profile'}
+            />
+            <QuickActionCard
+              icon={Mail}
+              title="Help"
+              description="View Your Squads"
+              color="bg-gradient-to-r from-cyan-400 to-cyan-500"
+              link={'/dashboard/contactform'}
+            />
+      
           </div>
         </motion.div>
 
@@ -286,7 +329,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100"
+          className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 "
         >
           <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
             <Calendar className="h-6 w-6 text-indigo-500" />

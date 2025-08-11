@@ -123,6 +123,7 @@ function GenZRegistrationPage() {
         lastName: formData.userdetail.lastName,
         password: formData.userdetail.password,
         referralBy: formData.userdetail.referralBy,
+        referralSource: formData.userdetail.referralSource,
         email: formData.email,
         username: formData.username,
         storeName: formData?.store,

@@ -16,6 +16,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
   const [focusedField, setFocusedField] = useState(null)
       const searchParams = useSearchParams();
       const ref = searchParams.get("ref");
+      const referralSource = searchParams.get("referralSource");
 
   const formik = useFormik({
     initialValues: {
@@ -24,6 +25,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
       password: "",
       cpassword: "",
       referralBy: ref|| "",
+      referralSource: referralSource|| "",
     },
     validationSchema: Yup.object({
       firstName:Yup.string().required("first name is required"),

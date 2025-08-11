@@ -1,10 +1,10 @@
 'use client';
-
+import { motion } from "framer-motion"
 import { useGetServiceQuery } from '@/app/_Services/services/page';
 import Link from 'next/link';
 
 const ServicesSection = () => {
-  const { data,isLoading,error } = useGetServiceQuery();
+  const { data, isLoading, error } = useGetServiceQuery();
 
   const renderSkeletons = () => {
     return Array.from({ length: 3 }).map((_, i) => (
@@ -16,17 +16,17 @@ const ServicesSection = () => {
         <div className="h-4 bg-gray-300 rounded mb-2"></div>
         <div className="h-4 bg-gray-300 rounded mb-2"></div>
         <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto mb-2"></div>
-        </div>
+      </div>
     ));
   };
 
   return (
-    <div className="text-center py-10 px-4 md:px-10">
+    <div className="text-center py-20 px-4 md:px-10">
       <h2 className="text-3xl md:text-5xl font-bold text-[#F33E0A]">
         Services We Offer
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-18 max-w-7xl mx-auto">
         {isLoading && renderSkeletons()}
 
         {error && (
@@ -44,29 +44,31 @@ const ServicesSection = () => {
         {!isLoading &&
           !error &&
           data?.data?.map((e) => (
-            <div
+            <motion.div
               key={e._id}
-              className=" bg-white rounded-xl shadow-lg flex  flex-col justify-between"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-white rounded-xl shadow-lg flex  flex-col justify-between over:shadow-xl cursor-pointer hover:shadow-xl transition-all duration-400"
             >
-              <h2 className=" text-red-800 font-bold text-2xl py-2 px-4">
+              <h2 className=" text-red-800 font-bold text-2xl py-4 px-4">
                 {e?.title}
               </h2>
               <p className="text-gray-700 mt-2 text-lg py-2 px-4">
                 <div dangerouslySetInnerHTML={{ __html: e?.description }} />
-            </p>
+              </p>
               {e?.linkUrl &&
-              <Link href={e?.linkUrl} className="cursor-pointer py-3 text-white text-md font-semibold uppercase bg-cyan-300 rounded-br-xl rounded-bl-xl ">
-               {e?.linkTitle}
-              </Link>}
-            </div>
+                <Link href={e?.linkUrl} className="cursor-pointer py-3 text-white text-md font-semibold uppercase bg-cyan-300 rounded-br-xl rounded-bl-xl ">
+                  {e?.linkTitle}
+                </Link>}
+            </motion.div>
           ))}
       </div>
 
-      <div className="mt-12">
+      <div className="mt-18">
         <Link href="/auction-product">
-          <button  
-          className="cursor-pointer md:w-[35%] shadow text-white text-lg font-bold py-3 px-6 rounded-full transition-all bg-[#FB3B11] hover:bg-[#e03610] disabled:opacity-70">
-            BROWSE AUCTION 
+          <button
+            className="cursor-pointer md:w-[35%] shadow text-white text-lg font-bold py-3 px-6 rounded-full transition-all bg-[#FB3B11] hover:bg-[#e03610] disabled:opacity-70">
+            BROWSE AUCTION
           </button>
         </Link>
       </div>

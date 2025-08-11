@@ -5,6 +5,7 @@ import { useGetTodayyAuctionsProductQuery } from "@/app/_Services/products/page"
 import { useDispatch } from "react-redux";
 import { setAllProducts } from "@/redux/filterSlice";
 import Link from 'next/link';
+import Image from "next/image";
 
 
 const HomeBanner = () => {
@@ -12,7 +13,7 @@ const HomeBanner = () => {
   const { data, isLoading, error } = useGetBannerQuery();
   const banner = data?.data?.[0];
 
-  const { data:product} = useGetTodayyAuctionsProductQuery();
+  const { data: product } = useGetTodayyAuctionsProductQuery();
 
   useEffect(() => {
     if (product?.data) {
@@ -32,7 +33,7 @@ const HomeBanner = () => {
         ) : banner ? (
           <>
             <div className="w-full lg:w-[40%] bg-gray-100  flex flex-col justify-between  gap-4 rounded-lg">
-              <h1 className="font-semibold text-center md:text-3xl text-xl text-title-md tracking-tight text-[#0E0E0E] pt-4">
+              <h1 className="font-semibold text-center md:text-3xl text-xl text-title-md tracking-tight text-[#0E0E0E] p-4 ">
                 {banner.title}
               </h1>
 
@@ -40,16 +41,18 @@ const HomeBanner = () => {
                 dangerouslySetInnerHTML={{ __html: banner.description }}
                 className="text-center text-xl leading-6 text-gray-700 p-2 md:p-0 lg:p-2"
               />
-               {banner?.linkUrl &&
-              <Link href={banner?.linkUrl} className="p-2 text-center cursor-pointer pt-2 text-lg font-semibold uppercase text-white  bg-cyan-300 rounded-br-md rounded-bl-md ">
-               {banner?.linkTitle}
-              </Link>}
+              {banner?.linkUrl &&
+                <Link href={banner?.linkUrl} className="p-2 text-center cursor-pointer pt-2 text-lg font-semibold uppercase text-white  bg-cyan-300 rounded-br-md rounded-bl-md ">
+                  {banner?.linkTitle}
+                </Link>}
             </div>
 
             <div className="w-full lg:w-[60%] rounded-lg overflow-hidden">
-              <img
-                src={banner.image}
+              <Image
+                src={banner?.image || "/placeholder.svg"}
                 alt="Home Banner"
+                width={1920} // set a reasonable width
+                height={600} // set a height matching your design
                 className="w-full h-auto object-cover"
               />
             </div>

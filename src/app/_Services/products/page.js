@@ -260,17 +260,6 @@ const productApi = createApiAuction.injectEndpoints({
       },
     }),
 
-    addListing: builder.mutation({
-      query: (formData) => {
-        return {
-          url: "user/product/add/user",
-          method: "POST",
-          body: formData,
-        }
-      },
-      invalidatesTags: ["auction", "detailproduct"],
-    }),
-
     addBid: builder.mutation({
       query: (formData) => {
         return {

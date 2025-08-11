@@ -1,8 +1,6 @@
 "use client"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { Heart, Award, XCircle } from "lucide-react"
-import { FaGavel } from 'react-icons/fa6'
 import Link from "next/link"
 
 const FeeTab = () => {
@@ -30,15 +28,15 @@ const FeeTab = () => {
 
   return (
     <div className="relative flex justify-start md:pl-6">
-      <div className="flex flex-col md:flex-row bg-white rounded-2xl md:rounded-full p-1.5 shadow-sm border border-gray-100">
+      <div className="grid sm:grid-cols-2 md:grid-cols-4 bg-white rounded-2xl md:rounded-full p-1.5 shadow-sm border border-gray-100">
         {tabs.map((tab) => {
           const isActive = pathname === tab.path
 
           return (
             <Link href={tab.path} key={tab.path} passHref>
               <div
-                className={`relative rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
-                  isActive ? " text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                className={`relative rounded-full px-5 py-2.5 sm:my-4 md:my-0 text-sm font-medium transition-all duration-200 ${
+                  isActive ? " text-white  shadow-md" : "text-gray-600 hover:bg-gray-100 "
                   // isActive ? "text-white" : "text-gray-600 hover:text-gray-900"
                 }`}
               >

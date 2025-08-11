@@ -31,7 +31,7 @@ const page = () => {
         <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-2">
             <div className="max-w-6xl mx-auto">
 
-                <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
+                <div className="flex flex-col gap-2 justify-between items-start mx-2 md:mx-0 md:items-center md:flex-row">
                     <div className="flex items-center gap-3">
                         <DollarSign className="h-7 w-7 text-red-600" />
                         <h3 className="text-[#242424] text-[24px] font-bold">Fees Due</h3>
@@ -39,7 +39,6 @@ const page = () => {
                     <FeeTab />
                 </div>
                 
-
                     {wonItems?.length === 0 ? (
                        <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 mx-3 md:mx-0 mt-10 text-center">
                        <Box className="h-16 w-16 text-gray-300 mb-4" />

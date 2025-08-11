@@ -1011,11 +1011,12 @@ import { useEffect, useState } from "react"
 import Cookies from "js-cookie"
 import { Store, Plus, DollarSign, CreditCard, AlertCircle } from "lucide-react"
 import { motion } from "framer-motion"
-import { useCreateStoreMutation, useMyStoreItemsQuery, useMyStoreQuery } from "@/app/_Services/store/page"
+import { useCreateStoreMutation, useMyStoreQuery } from "@/app/_Services/store/page"
 import CreateStoreModal from "@/app/_Components/Modal/CreateStore"
 import { useAddPaymentMutation } from "@/app/_Services/payment/page"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
+import { useAllStoreProductQuery } from "@/app/_Services/StoreProduct/page"
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -1034,7 +1035,7 @@ export default function Page() {
   const [showCreateStoreModal, setShowCreateStoreModal] = useState(false)
   const router = useRouter()
 
-  const { data, error: isError, isLoading } = useMyStoreItemsQuery()
+  const { data, error: isError, isLoading } = useAllStoreProductQuery()
   const { data: storeData, error, isLoading: isStoreLoading } = useMyStoreQuery()
 
   useEffect(() => {
@@ -1130,7 +1131,7 @@ export default function Page() {
         Cookies.set("currentuser", JSON.stringify(user), { expires: 7, secure: true })
         // toast.success("Store created successfully!")
         showCreateStoreModal(false)
-        router.push(`/dashboard/feeConfirmation?type=store_payment&id=${response?.data?.store?._id}&amount=${50}&product=${response?.data?.store?.name}`)
+        router.push(`/dashboard/feeConfirmation?type=store_payment&id=${response?.data?.store?._id}&amount=${99}&product=${response?.data?.store?.name}`)
         // const resp = await addPayment({
         //   storeId: response?.data?.store?._id,
         //   type: "store_payment",
@@ -1339,7 +1340,7 @@ export default function Page() {
                   </div>
                 </div>
                 <button
-                  onClick={() => router.push(`/dashboard/feeConfirmation?type=store_payment&id=${storeData?.data?._id}&amount=${50}&product=${storeData?.data?.name}`)
+                  onClick={() => router.push(`/dashboard/feeConfirmation?type=store_payment&id=${storeData?.data?._id}&amount=${99}&product=${storeData?.data?.name}`)
                   }
                   disabled={isPocessing}
                   className="cursor-pointer w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
@@ -1366,6 +1367,16 @@ export default function Page() {
           <div className="flex items-center gap-3">
             <h3 className="text-[#242424] text-[24px] font-bold">Store Items</h3>
           </div>
+
+          <div className="flex flex-wrap gap-2">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/dashboard/createListing')}
+            className="flex items-center gap-2 cursor-pointer bg-[#FB3B11] text-white px-4 rounded-full text-sm font-medium hover:bg-[#e03610] transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Create Listing
+          </motion.button>
           <div className="flex bg-white rounded-full shadow-sm p-1">
             {filterData?.map((e) => (
               <button
@@ -1380,112 +1391,113 @@ export default function Page() {
           </div>
         </div>
 
-        <motion.div variants={itemVariants} className="bg-white rounded-3xl p-6 shadow-xl border border-red-100">
-          {filteredNotifications()?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Store className="h-16 w-16 text-gray-300 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-700">No Items</h3>
-              <p className="text-gray-500 mt-2">
-                {activeFilter === "all"
-                  ? "You don't have any items yet."
-                  : activeFilter === "sold"
-                    ? "You don't have any sold items."
-                    : activeFilter === "unsold"
-                      ? "You don't have any unsold items."
-                      : "You don't have any discarded items."}
-              </p>
-              {!storeData?.data?.isPaid && (
-                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-                  <p className="text-sm text-yellow-700">
-                    💡 Complete your store payment to start adding items and selling products!
-                  </p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="overflow-hidden rounded-2xl border border-gray-200">
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead className="bg-red-50">
-                    <tr>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Image
-                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        SKU
-                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        SKU Location
-                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Title
-                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Price
-                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Current Bid
-                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Sold Status
-                      </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Auction Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredNotifications().map((product, index) => {
-                      const lastFour = product?._id.toString().slice(-4).toUpperCase()
-                      return (
-                        <motion.tr
-                          key={product._id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="hover:bg-red-50 transition-colors"
-                        >
-                          <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
-                            <img
-                              src={product?.images?.[0] || "/placeholder.svg"}
-                              alt="Product-img"
-                              className="w-20 h-15 rounded-lg object-cover"
-                            />
-                          </td>
-                          <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${product?.sku}`}</td>
-                          <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${product?.skuLocation},${product?.skuRoom},${product?.skuDetail}`}</td>
-                          <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">
-                            {product?.name}
-                          </td>
-                          <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">${product?.price}</td>
-                          <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
-                            ${product?.highestBid || "0"}
-                          </td>
-                          <td className="px-3 py-4 whitespace-nowrap">
-                            <span
-                              className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(product.isSold)}`}
-                            >
-                              {product.isSold ? "Sold" : "Unsold"}
-                            </span>
-                          </td>
-                          <td className="px-3 py-4 whitespace-nowrap">
-                            <span
-                              className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(product.status)}`}
-                            >
-                              {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
-                            </span>
-                          </td>
-                        </motion.tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </motion.div>
       </div>
+
+      <motion.div variants={itemVariants} className="bg-white rounded-3xl p-6 shadow-xl border border-red-100">
+        {filteredNotifications()?.length === 0 ? (
+          <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
+            <Store className="h-16 w-16 text-gray-300 mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700">No Items</h3>
+            <p className="text-gray-500 mt-2">
+              {activeFilter === "all"
+                ? "You don't have any items yet."
+                : activeFilter === "sold"
+                  ? "You don't have any sold items."
+                  : activeFilter === "unsold"
+                    ? "You don't have any unsold items."
+                    : "You don't have any discarded items."}
+            </p>
+            {!storeData?.data?.isPaid && (
+              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+                <p className="text-sm text-yellow-700">
+                  💡 Complete your store payment to start adding items and selling products!
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="overflow-hidden rounded-2xl border border-gray-200">
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead className="bg-red-50">
+                  <tr>
+                    <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      Image
+                    </th>
+                    <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      SKU
+                    </th>
+                    {/* <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                        SKU Location
+                      </th> */}
+                    <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      Title
+                    </th>
+                    <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      Price
+                    </th>
+                    <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      Current Bid
+                    </th>
+                    <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      Sold Status
+                    </th>
+                    <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      Auction Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredNotifications().map((product, index) => {
+                    const lastFour = product?._id.toString().slice(-4).toUpperCase()
+                    return (
+                      <motion.tr
+                        key={product._id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="hover:bg-red-50 transition-colors"
+                      >
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
+                          <img
+                            src={product?.mainImage || "/placeholder.svg"}
+                            alt="Product-img"
+                            className="w-20 h-15 rounded-lg object-cover"
+                          />
+                        </td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${product?.sku}`}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">
+                          {product?.name}
+                        </td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">${product?.price}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
+                          ${product?.highestBid || "0"}
+                        </td>
+                        <td className="px-3 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(product.isSold)}`}
+                          >
+                            {product.isSold ? "Sold" : "Unsold"}
+                          </span>
+                        </td>
+                        <td className="px-3 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(product.status)}`}
+                          >
+                            {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
+                          </span>
+                        </td>
+                      </motion.tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </motion.div>
     </div>
+    </div >
   )
 }
 

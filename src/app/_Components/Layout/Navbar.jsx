@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { FaSearch } from "react-icons/fa";
+// import { FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Main from "../../../app/Assets/Main.png";
 
@@ -13,6 +13,7 @@ import {
   filterBySearch,
   clearFilteredProducts,
 } from "@/redux/filterSlice";
+import LeftNav from "../Dashboard/LeftNav";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -148,11 +149,13 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed inset-0 z-50 bg-black bg-opacity-50 transition-transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:hidden`}
+        className={`fixed inset-0 z-50 backdrop-blur-sm bg-black/20 transition-transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:hidden`}
       >
         <nav className="fixed top-0 left-0 h-full w-80 bg-white p-4 shadow-md">
           <div className="flex justify-between items-center mb-5">
+          <Link href="/" >
             <Image src={Main} alt="Logo" width={120} height={50} />
+            </Link>
             <button
               className="text-gray-500"
               onClick={() => setIsMenuOpen(false)}
@@ -163,10 +166,9 @@ const Navbar = () => {
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
-          </div>
+          </div> 
 
-          {/* Search Input */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <div className="flex flex-col gap-3">
               <div className="flex border border-gray-300 rounded-md overflow-hidden">
                 <input
@@ -189,10 +191,10 @@ const Navbar = () => {
                 Clear
               </button>
             </div>
-          </div>
-
+          </div> */}
+<LeftNav set={()=>setIsMenuOpen(false)}/>
           {/* Mobile Auth Buttons */}
-          <div className="flex flex-col gap-3 mt-6">{renderAuthButtons()}</div>
+          {/* <div className="flex flex-col gap-3 mt-6">{renderAuthButtons()}</div> */}
         </nav>
       </div>
     </>

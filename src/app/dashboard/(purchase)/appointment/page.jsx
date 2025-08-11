@@ -111,7 +111,7 @@ export default function AppointmentBooking() {
           </div>
         </div>
 
-        <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-3 p-4 md:p-8 shadow-xl border border-red-100">
+        <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-0 p-4 md:p-8 shadow-xl border border-red-100">
           <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
             <div className="p-3 bg-red-100 rounded-2xl">
               <Calendar className="w-6 h-6 text-[#F33E0A]" />

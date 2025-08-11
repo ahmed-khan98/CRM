@@ -7,6 +7,21 @@ const aboutApi = createApiAuction.injectEndpoints({
       keepUnusedDataFor: 1800, 
       refetchOnMountOrArgChange: false,
     }),
+    getAuctionPage: builder.query({
+      query: () => 'user/auction-page/', 
+      keepUnusedDataFor: 1800, 
+      refetchOnMountOrArgChange: false,
+    }),
+    getConsignment: builder.query({
+      query: () => 'user/consignment-page/', 
+      keepUnusedDataFor: 1800, 
+      refetchOnMountOrArgChange: false,
+    }),
+    getLiquidation: builder.query({
+      query: () => 'user/liquidation-page/', 
+      keepUnusedDataFor: 1800, 
+      refetchOnMountOrArgChange: false,
+    }),
     getSidebarTitle: builder.query({
       query: () => 'user/sidebar/',
       providesTags: ['sidebar'],
@@ -23,4 +38,4 @@ const aboutApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const { useGetServiceQuery,useGetSidebarTitleQuery,useGetBillBoardQuery } = aboutApi
+export const { useGetAuctionPageQuery,useGetConsignmentQuery,useGetLiquidationQuery,useGetServiceQuery,useGetSidebarTitleQuery,useGetBillBoardQuery } = aboutApi

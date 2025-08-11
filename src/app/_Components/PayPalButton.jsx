@@ -89,6 +89,8 @@ const PayPalButton = ({ type, id, amount, onSuccess, onError, className = "" }) 
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                   },
+
+                  
                   body: JSON.stringify(payload),
                 })
 

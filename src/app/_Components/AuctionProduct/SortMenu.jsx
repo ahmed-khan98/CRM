@@ -55,7 +55,8 @@ const SortMenu = ({ title, options, onSelect, width = 120 }) => {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute left-0 cursor-pointer w-full mt-1 bg-white rounded-xl ring-1 ring-neutral-400 shadow-lg focus:outline-none z-[999] overflow-y-auto max-h-90"
+          className="absolute left-0 cursor-pointer w-full mt-1 bg-white rounded-xl ring-1 ring-neutral-400 shadow-lg focus:outline-none z-[999] overflow-y-auto max-h-80"
+          style={{ overflowY: 'scroll', scrollbarWidth: 'thin' }}
           role="menu"
           tabIndex="0"
         >
@@ -63,7 +64,7 @@ const SortMenu = ({ title, options, onSelect, width = 120 }) => {
           {options?.map(({ title, value }) => (
             <p
               key={value}
-              className="capitalize block cursor-pointer py-2 px-2 pl-3 hover:bg-gray-100 focus-visible:bg-gray-200 focus-visible:outline-none text-gray-700"
+              className="border border-gray-100 capitalize block cursor-pointer py-2 px-2 pl-3 hover:bg-gray-200 hover:font-semibold focus-visible:bg-gray-200 focus-visible:outline-none text-gray-700"
               onClick={() => handleSelect(title, value)}
             >
               {title}
@@ -115,7 +116,7 @@ const SortDropdowns = () => {
   };
 
   return (
-    <div className="md:mt-[58px] mt-[50px] bg-white w-full fixed z-10">
+    <div className="mt-[55px] md:mt-[58px]  bg-white w-full fixed z-10">
       <div className="flex gap-3 flex-wrap justify-center my-1 sticky top-0 z-20 bg-white py-2 shadow-lg w-full">
 
         <SortMenu

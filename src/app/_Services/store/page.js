@@ -2,12 +2,12 @@ import { createApiAuction } from "@/redux/createApi"
 
 const storeApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({
-  myStoreItems: builder.query({
-      query: () => 'user/product/myItems',
-      providesTags: ['myItem'],
-      keepUnusedDataFor: 180, 
-      refetchOnMountOrArgChange: false,
-    }),
+  // myStoreItems: builder.query({
+  //     query: () => 'user/product/myItems',
+  //     providesTags: ['myItem'],
+  //     keepUnusedDataFor: 180, 
+  //     refetchOnMountOrArgChange: false,
+  //   }),
   myStore: builder.query({
       query: () => 'user/store/',
       keepUnusedDataFor: 180, 

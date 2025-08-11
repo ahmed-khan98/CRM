@@ -4,7 +4,10 @@ import { useReferralLinkQuery } from "@/app/_Services/authentication/page"
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Copy, Share2, Users, DollarSign, Hash, ExternalLink, Sparkles, TrendingUp, Gift, Zap,Mail } from "lucide-react"
-import { formatDate } from "@/app/utilities/date"
+import { timeAgo } from "@/app/utilities/date"
+import { FiHome } from "react-icons/fi"
+import { HiMiniBuildingLibrary } from "react-icons/hi2";
+
 
 const WhatsAppIcon = () => (
   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -133,7 +136,7 @@ const ReferralDashboard = () => {
         </motion.div>
 
         {/* Stats Cards */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           {/* Total Referrals */}
           <motion.div
             variants={cardHoverVariants}
@@ -146,7 +149,7 @@ const ReferralDashboard = () => {
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-red-100 rounded-2xl">
-                  <Users className="w-8 h-8 text-[#F33E0A]" />
+                  <FiHome className="w-8 h-8 text-[#F33E0A]" />
                 </div>
                 <motion.div
                   animate={hoveredCard === "referrals" ? { rotate: [0, 10, -10, 0] } : {}}
@@ -155,19 +158,81 @@ const ReferralDashboard = () => {
                   <Sparkles className="w-6 h-6 text-red-400" />
                 </motion.div>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Total Squad</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Top City</h3>
               <motion.p
-                className="text-4xl font-black text-[#F33E0A]"
+                className="text-3xl font-black text-[#F33E0A]"
                 animate={hoveredCard === "referrals" ? { scale: 1 } : { scale: 1 }}
               >
-                {referralData?.data?.totalReferrals || 0}
+                {referralData?.data?.topCity || 'N/A'}
+                {/* {referralData?.data?.totalReferrals || 0} */}
               </motion.p>
-              <p className="text-sm text-gray-500 mt-2">Friends joined 🤝</p>
+              {/* <p className="text-sm text-gray-500 mt-2">City 🤝</p> */}
             </div>
           </motion.div>
 
-          {/* Total Earnings */}
+       
+
+          {/* Referral Code */}
           <motion.div
+            variants={cardHoverVariants}
+            whileHover="hover"
+            onHoverStart={() => setHoveredCard("code1")}
+            onHoverEnd={() => setHoveredCard(null)}
+            className="relative overflow-hidden bg-white rounded-3xl p-8 shadow-xl border border-cyan-100 bg "
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-300 to-cyan-400 opacity-5"></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-cyan-100 rounded-2xl">
+                  <HiMiniBuildingLibrary  className="w-8 h-8 text-cyan-400" />
+                </div>
+                <motion.div animate={hoveredCard === "code1" ? { rotate: 360 } : {}} transition={{ duration: 0.8 }}>
+                  <Zap className="w-6 h-6 text-cyan-400" />
+                </motion.div>
+              </div>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Top State</h3>
+              <motion.p
+                className="text-3xl font-black text-cyan-500 break-all"
+                animate={hoveredCard === "code1" ? { scale: 1 } : { scale: 1 }}
+              >
+               {referralData?.data?.topState || 'N/A'}
+                {/* {referralData?.data?.referralCode || "LOADING..."} */}
+              </motion.p>
+              {/* <p className="text-sm text-gray-500 mt-2">Unique ID 🎯</p> */}
+            </div>
+          </motion.div>
+
+
+          <motion.div
+            variants={cardHoverVariants}
+            whileHover="hover"
+            onHoverStart={() => setHoveredCard("code")}
+            onHoverEnd={() => setHoveredCard(null)}
+            className="relative overflow-hidden bg-white rounded-3xl p-8 shadow-xl border border-red-100"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 opacity-5"></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-purple-100 rounded-2xl">
+                  <Hash className="w-8 h-8 text-purple-600" />
+                </div>
+                <motion.div animate={hoveredCard === "code" ? { rotate: 360 } : {}} transition={{ duration: 0.8 }}>
+                  <Zap className="w-6 h-6 text-purple-400" />
+                </motion.div>
+              </div>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Top Source</h3>
+              <motion.p
+                className="text-3xl font-black text-purple-600 break-all"
+                animate={hoveredCard === "code" ? { scale: 1 } : { scale: 1 }}
+              >{referralData?.data?.referralSource || 'Link'}
+                {/* {referralData?.data?.referralCode || "LOADING..."} */}
+              </motion.p>
+              {/* <p className="text-sm text-gray-500 mt-2">Unique ID 🎯</p> */}
+            </div>
+          </motion.div>
+
+             {/* Total Earnings */}
+             <motion.div
             variants={cardHoverVariants}
             whileHover="hover"
             onHoverStart={() => setHoveredCard("earnings")}
@@ -187,43 +252,14 @@ const ReferralDashboard = () => {
                   <TrendingUp className="w-6 h-6 text-green-400" />
                 </motion.div>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Total Bag</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Earnings Forecast</h3>
               <motion.p
                 className="text-4xl font-black text-green-600"
                 animate={hoveredCard === "earnings" ? { scale: 1 } : { scale: 1 }}
               >
                 ${referralData?.data?.totalEarnings || 0}
               </motion.p>
-              <p className="text-sm text-gray-500 mt-2">Money earned 💰</p>
-            </div>
-          </motion.div>
-
-          {/* Referral Code */}
-          <motion.div
-            variants={cardHoverVariants}
-            whileHover="hover"
-            onHoverStart={() => setHoveredCard("code")}
-            onHoverEnd={() => setHoveredCard(null)}
-            className="relative overflow-hidden bg-white rounded-3xl p-8 shadow-xl border border-red-100"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 opacity-5"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-100 rounded-2xl">
-                  <Hash className="w-8 h-8 text-purple-600" />
-                </div>
-                <motion.div animate={hoveredCard === "code" ? { rotate: 360 } : {}} transition={{ duration: 0.8 }}>
-                  <Zap className="w-6 h-6 text-purple-400" />
-                </motion.div>
-              </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Your Referral Code</h3>
-              <motion.p
-                className="text-2xl font-black text-purple-600 break-all"
-                animate={hoveredCard === "code" ? { scale: 1 } : { scale: 1 }}
-              >
-                {referralData?.data?.referralCode || "LOADING..."}
-              </motion.p>
-              <p className="text-sm text-gray-500 mt-2">Unique ID 🎯</p>
+              {/* <p className="text-sm text-gray-500 mt-2">Money earned 💰</p> */}
             </div>
           </motion.div>
         </motion.div>
@@ -240,14 +276,14 @@ const ReferralDashboard = () => {
           <div className="relative">
             <input
               type="text"
-              value={referralData?.data?.referralLink || ""}
+              value={referralData?.data?.referralLink+'&referralSource=link' || ""}
               readOnly
               className="w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl text-gray-700 font-medium focus:outline-none focus:border-red-300 transition-colors"
             />
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => copyToClipboard(referralData?.data?.referralLink)}
+              onClick={() => copyToClipboard(referralData?.data?.referralLink+'&referralSource=link')}
               className="cursor-pointer absolute right-2 top-2 px-6 py-2 bg-[#F33E0A] text-white rounded-xl hover:bg-red-700 transition-colors font-semibold flex items-center gap-2"
             >
               <Copy className="w-4 h-4" />
@@ -284,7 +320,7 @@ const ReferralDashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0 * 0.1 }}
-              onClick={() => shareOnPlatform("whatsapp", "", referralData?.data?.referralLink)}
+              onClick={() => shareOnPlatform("whatsapp", "", referralData?.data?.referralLink+'&referralSource=whatsapp')}
               className="cursor-pointer bg-gradient-to-br from-[#25D366] to-[#128C7E] hover:from-[#128C7E] hover:to-[#075E54] text-white rounded-3xl p-6 font-bold transition-all duration-300 flex flex-col items-center gap-3 shadow-lg hover:shadow-xl group"
             >
               <div className="p-3 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
@@ -300,7 +336,7 @@ const ReferralDashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1 * 0.1 }}
-              onClick={() => shareOnPlatform("facebook", "", referralData?.data?.referralLink)}
+              onClick={() => shareOnPlatform("facebook", "", referralData?.data?.referralLink+'&referralSource=facebook')}
               className="cursor-pointer bg-gradient-to-br from-[#1877F2] to-[#166FE5] hover:from-[#166FE5] hover:to-[#1464D8] text-white rounded-3xl p-6 font-bold transition-all duration-300 flex flex-col items-center gap-3 shadow-lg hover:shadow-xl group"
             >
               <div className="p-3 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
@@ -316,7 +352,7 @@ const ReferralDashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2 * 0.1 }}
-              onClick={() => shareOnPlatform("instagram", "", referralData?.data?.referralLink)}
+              onClick={() => shareOnPlatform("instagram", "", referralData?.data?.referralLink+'&referralSource=instagram')}
               className="cursor-pointer bg-gradient-to-br from-[#E4405F] via-[#F56040] to-[#FFDC80] hover:from-[#D73447] hover:via-[#E4405F] hover:to-[#F56040] text-white rounded-3xl p-6 font-bold transition-all duration-300 flex flex-col items-center gap-3 shadow-lg hover:shadow-xl group"
             >
               <div className="p-3 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
@@ -332,7 +368,7 @@ const ReferralDashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 3 * 0.1 }}
-              onClick={() => shareOnPlatform("email", "", referralData?.data?.referralLink)}
+              onClick={() => shareOnPlatform("email", "", referralData?.data?.referralLink+'&referralSource=email')}
               className="cursor-pointer bg-gradient-to-br from-[#EA4335] to-[#D33B2C] hover:from-[#D33B2C] hover:to-[#B52D20] text-white rounded-3xl p-6 font-bold transition-all duration-300 flex flex-col items-center gap-3 shadow-lg hover:shadow-xl group"
             >
               <div className="p-3 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
@@ -344,7 +380,7 @@ const ReferralDashboard = () => {
         </motion.div>
 
         {/* Referrals List */}
-        <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-0 p-4 md:p-8 shadow-xl border border-red-100">
+        <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-0 p-6 md:p-8 shadow-xl border border-red-100">
           <h3 className="text-lg md:text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
             <div className="p-3 bg-red-100 rounded-2xl">
               <Users className="w-6 h-6 text-[#F33E0A]" />
@@ -401,7 +437,10 @@ const ReferralDashboard = () => {
                         Squad Member
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Email
+                        Geo Location
+                      </th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                        Source
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Joined
@@ -424,21 +463,22 @@ const ReferralDashboard = () => {
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                               <span className="text-[#F33E0A] font-bold ">
-                                {referral?.referred?.firstName?.charAt(0)?.toUpperCase()}
+                                S
                               </span>
                             </div>
                             <span className="text-sm font-semibold text-gray-900 capitalize">
-                              {referral.referred.firstName} {referral.referred.lastName}
+                             {`Squad ${index+1}`}
                             </span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{referral.referred.email}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{referral?.referred?.address ? `${referral?.referred?.address?.city}, ${referral?.referred?.address?.state}` :'Not Available'}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{referral?.referred?.referralSource || "Link"}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {formatDate(referral.referred.createdAt)}
+                          {timeAgo(referral.referred.createdAt)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">
-                            💰 $5.00
+                            💰 $ {referral?.totalEarning}
                           </span>
                         </td>
                       </motion.tr>

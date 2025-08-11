@@ -26,7 +26,6 @@ const itemVariants = {
 const EditAppointmentModal = ({isModalOpen,editingAppointment,closeModal,refetch}) => {
     const [updateAppointment, { isLoading: updateLoading }] = useUpdateAppointmentMutation()
 
-
     const handleSubmit = async (values, { resetForm }) => {
         try {
           const response = await updateAppointment({

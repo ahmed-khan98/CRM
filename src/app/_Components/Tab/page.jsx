@@ -11,8 +11,8 @@ const Tab = ({tabs}) => {
 
 
     return (
-        <div className="relative flex justify-Start ">
-      <div className="inline-flex bg-white rounded-full p-1.5 shadow-sm border border-gray-100">
+        <div className="relative flex justify-Start">
+      <div className="grid grid-cols-2 md:grid-cols-5 bg-white rounded-2xl md:rounded-full p-1.5 shadow-sm border border-gray-100">
         {tabs.map((tab) => {
           const isActive = pathname === tab.path
 

@@ -21,7 +21,7 @@ import {
 } from "lucide-react"
 import { useGetSidebarTitleQuery } from "@/app/_Services/services/page"
 
-const LeftNav = () => {
+const LeftNav = ({set}) => {
   const pathname = usePathname()
   const router = useRouter()
   const sidebars=[]
@@ -58,14 +58,19 @@ const LeftNav = () => {
     {
       name: "My Store",
       icon: <Store className="w-5 h-5" />,
-      path: ["/dashboard/myItem"],
+      path: ["/dashboard/myItem","/dashboard/createListing","/dashboard/box" ],
+      submenu: [
+        { name: "Store Item", path: "/dashboard/myItem" },
+        { name: "Create Listing", path: "/dashboard/createListing" },
+        { name: "Product Boxes", path: "/dashboard/box" },
+      ],
     },
     {
       name: "Wallet",
       icon: <Wallet className="w-5 h-5" />,
-      path: ["/dashboard/wallet/walletDashbaord","dashboard/wallet/ManageCard"],
+      path: ["/dashboard/wallet/walletDashboard","dashboard/wallet/ManageCard"],
       submenu: [
-        { name: "Wallet Dashboard", path: "/dashboard/wallet/walletDashbaord" },
+        { name: "Wallet Dashboard", path: "/dashboard/wallet/walletDashboard" },
         { name: "Manage Card", path: "/dashboard/wallet/ManageCard" },
       ],
     },
@@ -119,7 +124,7 @@ const LeftNav = () => {
   }
 
   return (
-    <div className="h-full bg-white overflow-y-auto m-0 md:m-4 shadow-xl rounded-xl border border-gray-100">
+    <div className="h-full bg-white overflow-y-auto m-0 md:m-4 shadow-xl rounded-2xl border border-gray-100">
       {/* <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-center">
           <span className="text-[#F33E0A] font-bold text-xl">Dashboard</span>
@@ -140,6 +145,7 @@ const LeftNav = () => {
                     toggleSubmenu(index)
                   } else {
                     router.push(item.path[0])
+                    set()
                   }
                 }}
                 className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-200 ${
@@ -170,7 +176,9 @@ const LeftNav = () => {
                   {item.submenu.map((subItem, subIndex) => (
                     <div
                       key={subIndex}
-                      onClick={() => router.push(subItem.path)}
+                      onClick={() => {
+                        // set()
+                        router.push(subItem.path)}}
                       className={`py-2.5 px-3 text-sm cursor-pointer transition-colors ${
                         isSubmenuActive(subItem.path)
                           ? "text-[#F33E0A] font-medium"

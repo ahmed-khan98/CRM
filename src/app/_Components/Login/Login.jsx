@@ -36,8 +36,6 @@ export default function GenZLoginForm() {
     onSubmit: async (values) => {
       try {
         const response = await loginForm(values).unwrap()
-        console.log("Form submitted successfully:", response)
-
         if (response.statusCode === 200) {
           const { accessToken } = response?.data
           const user = response?.data?.user
@@ -47,7 +45,6 @@ export default function GenZLoginForm() {
           navigation.push("/dashboard/dashboardcount")
         }
       } catch (error) {
-        console.log(error, "verify-error")
         if (error?.data.statusCode === 403 && error?.data?.data?.email) {
           navigation.push(`/register`)
         }
@@ -80,6 +77,7 @@ export default function GenZLoginForm() {
               <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Welcome back</h2>
               <p className="text-gray-500">Sign in to your account</p>
             </div>
+            
 
             <form onSubmit={formik.handleSubmit} className="space-y-5">
               <div className="space-y-1">

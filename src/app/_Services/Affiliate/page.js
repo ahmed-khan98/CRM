@@ -5,7 +5,10 @@ const affiliateApi = createApiAuction.injectEndpoints({
     getAffiliate: builder.query({
       query: () => 'user/affiliate',
     }),
+    getBecomeAffiliate: builder.query({
+      query: () => 'user/affiliate-page',
+    }),
   }),
 })
 
-export const { useGetAffiliateQuery } = affiliateApi
+export const { useGetAffiliateQuery,useGetBecomeAffiliateQuery } = affiliateApi

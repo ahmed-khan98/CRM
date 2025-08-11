@@ -102,7 +102,7 @@ export default function page() {
                     </div> */}
                 </div>
 
-                <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-3 p-4 md:p-8 shadow-xl border border-red-100">
+                <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-0 p-4 md:p-8 shadow-xl border border-red-100">
 
                     {filteredNotifications()?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">

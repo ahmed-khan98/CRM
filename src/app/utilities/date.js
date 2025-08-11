@@ -41,7 +41,7 @@ export const formatDate = (dateString) => {
     for (const interval of intervals) {
       const count = Math.floor(diffInSeconds / interval.seconds);
       if (count > 0) {
-        return `${count} ${interval.label}${count > 1 ? 's' : ''}`;
+        return `${count} ${interval.label}${count > 1 ? 's ago' : ''}`;
       }
     }
   

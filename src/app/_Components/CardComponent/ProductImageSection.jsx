@@ -1,6 +1,6 @@
 'use client'
-
-import { CiShare2, CiHeart, CiSearch } from "react-icons/ci";
+import Image from 'next/image';
+import { CiShare2, CiHeart } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
 import Loader from "../Loader";
 import { useRouter } from 'next/navigation';
@@ -29,13 +29,23 @@ const ProductImageSection = ({ item,wishlisted}) => {
   };
 
   return (
-    <div className="relative h-[280px] bg-white">
-      <img
+    <div className="relative py-[auto] h-[280px] bg-white">
+      {/* <img
         src={item?.mainImage || item?.images?.[0]}
         alt="Product"
         onClick={() => router.push(`/detailproduct/${item._id}`)}
-        className="w-full h-[280px] object-contain cursor-pointer"
-      />
+      /> */}
+      <div
+        className="relative w-full h-full cursor-pointer"
+        onClick={() => router.push(`/detailproduct/${item._id}`)}
+      >
+        <Image
+          src={item?.mainImage || item?.images?.[0]}
+          alt="Product"
+          fill
+          className="object-contain"
+        />
+      </div>
       {/* {item?.watchers?.length > 0 && (
         <div className="absolute top-4 md:left-[73%] left-[75%] bg-[#F33E0A] text-white p-2 h-[25px] shadow-2xl flex items-center justify-center">
           Watcher <span className="ml-1">{item.watchers.length}</span>
