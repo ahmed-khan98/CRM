@@ -20,7 +20,7 @@ import {
 } from "lucide-react"
 import { FaGavel } from 'react-icons/fa6'
 import { motion } from "framer-motion"
-import { useMyStoreItemsQuery } from "@/app/_Services/store/page"
+import { useAllStoreProductQuery } from "@/app/_Service/StoreProduct/page"
 import { useWonItemsQuery } from "@/app/_Services/wonProduct/page"
 import { useAllAppointmentQuery } from "@/app/_Services/appointment/page"
 import { usePenalizedProductItemsQuery } from "@/app/_Services/PenaltyFeeProduct/page"
@@ -93,7 +93,7 @@ export default function DashboardPage() {
 
   // API Queries
   const { data: billBoard, isLoading: billBoardLoading } = useGetBillBoardQuery()
-  const { data: storeItems, isLoading: storeLoading } = useMyStoreItemsQuery()
+  const { data: storeItems, isLoading: storeLoading } = useAllStoreProductQuery()
   const { data: purchasesData, isLoading: purchasesLoading } = useWonItemsQuery()
 
   const { data: missed, isLoading: missedLoading } = useAllAppointmentQuery()
