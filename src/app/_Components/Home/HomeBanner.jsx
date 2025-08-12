@@ -42,7 +42,7 @@ const HomeBanner = () => {
                 className="text-center text-xl leading-6 text-gray-700 p-2 md:p-0 lg:p-2"
               />
               {banner?.linkUrl &&
-                <Link href={banner?.linkUrl} className="p-2 text-center cursor-pointer pt-2 text-lg font-semibold uppercase text-white  bg-cyan-300 rounded-br-md rounded-bl-md ">
+                <Link href={banner?.linkUrl} className="p-2 text-center cursor-pointer pt-2 text-lg font-semibold uppercase text-black  bg-[#FFA51D] rounded-br-md rounded-bl-md ">
                   {banner?.linkTitle}
                 </Link>}
             </div>

@@ -57,7 +57,7 @@ const ServicesSection = () => {
                 <div dangerouslySetInnerHTML={{ __html: e?.description }} />
               </p>
               {e?.linkUrl &&
-                <Link href={e?.linkUrl} className="cursor-pointer py-3 text-white text-md font-semibold uppercase bg-cyan-300 rounded-br-xl rounded-bl-xl ">
+                <Link href={e?.linkUrl} className="cursor-pointer py-3 text-black text-md font-semibold uppercase bg-[#FFA51D] rounded-br-xl rounded-bl-xl ">
                   {e?.linkTitle}
                 </Link>}
             </motion.div>

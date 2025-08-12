@@ -2,14 +2,15 @@
 
 import { useState } from "react"
 
-import { Calendar, Clock, Edit, Truck } from "lucide-react"
+import { Calendar, Clock, Edit, Plus, Truck } from "lucide-react"
 import { motion } from "framer-motion"
 import { useAllAppointmentQuery } from "@/app/_Services/appointment/page"
 import { formatDate, formatTime12Hour } from "@/app/utilities/date"
-import EditAppointmentModal from "@/app/_Components/Modal/EditAppointmentModal"
 import Tab from "@/app/_Components/Tab/page"
 import { appointmentTabs } from "@/app/utilities/tabs/page"
 import Link from "next/link"
+import PickupDropOffModal from "@/app/_Components/Modal/PickupDropOffModal"
+import { useAllPickDropAppointmentQuery } from "@/app/_Services/pickupDropoff/page"
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -20,12 +21,12 @@ const itemVariants = {
   },
 }
 
-export default function AppointmentBooking() {
+export default function page() {
   const [activeFilter, setActiveFilter] = useState("all")
   const [editingAppointment, setEditingAppointment] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { data, error: isError, isLoading, refetch } = useAllAppointmentQuery()
+  const { data, error: isError, isLoading, refetch } = useAllPickDropAppointmentQuery({type:'pickup'})
 
   const handleEdit = (appointment) => {
     setEditingAppointment(appointment)
@@ -56,12 +57,10 @@ export default function AppointmentBooking() {
     if (!data?.data) return []
     if (activeFilter === "scheduled") {
       return data.data.filter((item) => item?.status === "scheduled")
-    } else if (activeFilter === "completed") {
-      return data.data.filter((item) => item?.status === "completed")
-    } else if (activeFilter === "missed") {
-      return data.data.filter((item) => item?.status === "missed")
-    } else if (activeFilter === "cancelled") {
-      return data.data.filter((item) => item?.status === "cancelled")
+    } else if (activeFilter === "delivered") {
+      return data.data.filter((item) => item?.status === "delivered")
+    } else if (activeFilter === "draft") {
+      return data.data.filter((item) => item?.status === "draft")
     } else {
       return data.data
     }
@@ -69,26 +68,24 @@ export default function AppointmentBooking() {
   
   const filterData = [
     'all',
+    'draft',
     'scheduled',
-    'completed',
-    'missed',
-    'cancelled',
+    'delivered',
   ]
 
 
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-[#F33E0A] font-semibold">Loading your pick up appointment... 🚀</span>
-      </div>
-    )
-  }
+//   if (isLoading) {
+//     return (
+//       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
+//         <motion.div
+//           animate={{ rotate: 360 }}
+//           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+//           className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
+//         />
+//         <span className="ml-4 text-[#F33E0A] font-semibold">Loading your pick up & drop off appointment... 🚀</span>
+//       </div>
+//     )
+//   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-2">
@@ -97,10 +94,19 @@ export default function AppointmentBooking() {
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
             <Calendar className="h-7 w-7 text-red-600" />
-            <h3 className="text-[#242424] text-[24px] font-bold">Appointments</h3>
+            <h3 className="text-[#242424] text-[24px] font-bold">Pick Up & Drop Off</h3>
           </div>
 
-          <div className="flex bg-white rounded-full shadow-sm p-1">
+          <div className="flex flex-wrap gap-2">
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleEdit()}
+              className="flex items-center gap-2 cursor-pointer bg-[#FB3B11] text-white px-4 rounded-full text-sm font-medium hover:bg-[#e03610] transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              Create Appointment
+            </motion.button>
+            <div className="flex bg-white rounded-full shadow-sm p-1">
             {filterData?.map(e => <button
               onClick={() => setActiveFilter(e)}
               className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
@@ -108,7 +114,7 @@ export default function AppointmentBooking() {
             >
               {e}
             </button>)}
-
+            </div>
           </div>
         </div>
 
@@ -123,17 +129,15 @@ export default function AppointmentBooking() {
           {filteredNotifications()?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <Calendar className="h-16 w-16 text-gray-300 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-700">No appointments</h3>
+              <h3 className="text-xl font-semibold text-gray-700">No Pick Up</h3>
               <p className="text-gray-500 mt-2">
                 {activeFilter === "all"
-                  ? "You don't have any appointments yet."
+                  ? "You don't have any Pickup appointments yet."
                   : activeFilter === "scheduled"
-                    ? "You don't have any scheduled appointments."
-                  : activeFilter === "completed"
-                    ? "You don't have any completed appointments."
-                    : activeFilter === "missed"
-                      ? "You don't have any missed appointments."
-                      : "You don't have any cancelled appointments."}
+                    ? "You don't have any scheduled pickup appointments."
+                  : activeFilter === "delivered"
+                    ? "You don't have any delivered pickup appointments."
+                      : "You don't have any draft pickup appointments."}
               </p>
             </div>
           ) : (
@@ -256,7 +260,7 @@ export default function AppointmentBooking() {
         </motion.div>
 
         {/* Edit Appointment Modal */}
-        <EditAppointmentModal isModalOpen={isModalOpen} editingAppointment={editingAppointment} closeModal={closeModal} refetch={refetch} />
+        <PickupDropOffModal isOpen={isModalOpen} data={editingAppointment} closeModal={closeModal} refetch={refetch} />
       </div>
     </div>
   )

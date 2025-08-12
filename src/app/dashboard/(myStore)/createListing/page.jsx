@@ -4,13 +4,13 @@ import * as Yup from 'yup';
 import { Formik, Form, ErrorMessage, useFormikContext, Field, FieldArray } from 'formik';
 import Cookies from "js-cookie";
 import toast from 'react-hot-toast';
+import CreatableSelect from "react-select/creatable";
+import { useRouter } from 'next/navigation';
 import { Upload, Camera, Trash2 } from "lucide-react";
 import { Rating } from 'react-simple-star-rating'
-import { useGetIsAllCategoriesQuery, useGetIsAllSubCategoriesQuery } from '@/app/_Services/categories/page';
 import { Type, FileText } from "lucide-react";
-import Select from "react-select";
 import { useAddStoreProductMutation } from '@/app/_Services/StoreProduct/page';
-import { useRouter } from 'next/navigation';
+import { useGetIsAllCategoriesQuery, useGetIsAllSubCategoriesQuery } from '@/app/_Services/categories/page';
 
 const steps = [
     "Category & Subcategory", // Step 1
@@ -18,15 +18,15 @@ const steps = [
     "Basic Information", // Step 3
     "Pricing & Condition", // Step 5
     "Tags & Rating", // Step 6
-    "Description & Details", // Step 7
-    "Review & Submit", // Step 8
-    "Generate Barcode Label", // Step 9
+    "Details", // Step 7
+    "Review", // Step 8
+    "Submit", // Step 9
 ]
 
 export default function Home() {
 
     const [addStoreProduct, { isLoading }] = useAddStoreProductMutation()
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(5);
     console.log(step, 'step')
     const router = useRouter()
 
@@ -961,39 +961,36 @@ function Step5({ errors, touched, values, setFieldValue, handleChange }) {
                 />
             </div>
 
-            {/* Positive Tags */}
             <div>
-                <label className="block text-sm font-semibold text-start text-gray-800 mb-3">
-                    Positive Tags
-                </label>
-                <Select
-                    options={tagOptions}
-                    isMulti
-                    placeholder="Select or type to add..."
-                    value={values?.tag?.map(t => ({
-                        label: tagGroups?.find(g => g.toLowerCase().replace(/ /g, "") === t) || t,
-                        value: t
-                    }))}
-                    onChange={(selected) => {
-                        const tags = selected?.map(s => s.value);
-                        setFieldValue("tag", tags);
-                    }}
-                    className="text-sm text-start"
-                    classNamePrefix="react-select"
-                    styles={{
-                        control: (base) => ({
-                            ...base,
-                            borderRadius: "0.75rem",
-                            padding: "0.25rem",
-                            borderColor: "red"
-                        })
-                    }}
-                />
+                <div>
+                    <label className="block font-semibold mb-2">Positive Tags</label>
+                    <CreatableSelect
+                        options={tagOptions}
+                        isMulti
+                        placeholder="Select or type to create..."
+                        value={values?.tag?.map(t => ({ label: t, value: t }))}
+                        onChange={(selected) => {
+                            const tags = selected?.map(s => s.value);
+                            setFieldValue("tag", tags);
+                        }}
+                        className="text-sm text-start"
+                        classNamePrefix="react-select"
+                        styles={{
+                            control: (base) => ({
+                                ...base,
+                                borderRadius: "0.75rem",
+                                padding: "0.25rem",
+                                borderColor: "red"
+                            })
+                        }}
+                    />
+
+                </div>
                 <div className="flex flex-wrap gap-2 mt-3">
                     {values?.tag?.map((tag) => (
                         <span
                             key={tag}
-                            className="inline-flex items-center bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full  text-start"
+                            className="capitalize inline-flex items-center bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full  text-start"
                         >
                             {tag}
                             <button
@@ -1010,25 +1007,18 @@ function Step5({ errors, touched, values, setFieldValue, handleChange }) {
                 </div>
             </div>
 
-            {/* Negative Tags */}
             <div>
-                <label className="block text-sm font-semibold text-start text-gray-800 mb-3">
-                    Negative Tags
-                </label>
-                <Select
+                <label className="block font-semibold mb-2">Negative Tags</label>
+                <CreatableSelect
                     options={negativeOptions}
                     isMulti
-                    placeholder="Type to add negative tags..."
-                    value={values?.negativeTag?.map(t => ({
-                        label: negativeOptions?.find(e => e.value === t)?.label || t,
-                        value: t
-                    }))}
-
+                    placeholder="Select or type to create..."
+                    value={values?.negativeTag?.map(t => ({ label: t, value: t }))}
                     onChange={(selected) => {
-                        const tag = selected?.map(s => s.value);
-                        setFieldValue("negativeTag", tag);
+                        const tags = selected?.map(s => s.value);
+                        setFieldValue("negativeTag", tags);
                     }}
-                    className="text-sm  text-start"
+                    className="text-sm text-start"
                     classNamePrefix="react-select"
                     styles={{
                         control: (base) => ({
@@ -1043,17 +1033,20 @@ function Step5({ errors, touched, values, setFieldValue, handleChange }) {
                     {values?.negativeTag?.map((tag) => (
                         <span
                             key={tag}
-                            className="inline-flex items-center bg-red-500 text-white text-sm px-3 py-1 rounded-full shadow-sm"
+                            className="capitalize inline-flex items-center bg-red-100 text-red-800 text-sm px-3 py-1 rounded-full"
                         >
                             {tag}
                             <button
                                 type="button"
                                 onClick={() =>
-                                    setFieldValue("negativeTag", values?.negativeTag?.filter(t => t !== tag))
+                                    setFieldValue(
+                                        "negativeTag",
+                                        values?.negativeTag?.filter(t => t !== tag)
+                                    )
                                 }
-                                className="ml-2 text-white/80 hover:text-white"
+                                className="ml-2 hover:text-red-500"
                             >
-                                &times;
+                                ×
                             </button>
                         </span>
                     ))}
@@ -1402,8 +1395,7 @@ function ListingPreview() {
                 </div>
             </Card>
 
-            {/* Tags */}
-            {/* {values?.tag?.length > 0 && ( */}
+
             <Card title="🏷️ Tags">
                 <div className="flex flex-wrap gap-2">
                     {values?.tag.map((tag, i) => (
@@ -1421,7 +1413,6 @@ function ListingPreview() {
                 </div>
                 <InfoRow label="Rating" value={values?.rating ? `${values?.rating}/5 ⭐` : "Not rated"} />
             </Card>
-            {/* )} */}
 
 
             {/* Pricing */}

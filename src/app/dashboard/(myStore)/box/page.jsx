@@ -54,19 +54,17 @@ export default function Page() {
             return data.data.filter((item) => item?.status === "scheduled")
         } else if (activeFilter === "completed") {
             return data.data.filter((item) => item?.status === "completed")
-        } else if (activeFilter === "missed") {
-            return data.data.filter((item) => item?.status === "missed")
-        } else if (activeFilter === "cancelled") {
-            return data.data.filter((item) => item?.status === "cancelled")
+        } else if (activeFilter === "draft") {
+            return data.data.filter((item) => item?.status === "draft")
         } else {
             return data.data
         }
     }
     const filterData = [
         'all',
+        'draft',
         'scheduled',
         'completed',
-        'draft',
     ]
 
     if (isLoading) {

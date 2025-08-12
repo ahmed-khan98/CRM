@@ -18,16 +18,16 @@ const rawBaseQuery = fetchBaseQuery({
 const baseQueryWithAuthHandling = async (args, api, extraOptions) => {
   const result = await rawBaseQuery(args, api, extraOptions);
   console.log('API Result:', result);
-if (
-  result?.error?.status === 401 ||
-  result?.data?.statusCode === 401
-)
- {
-   Cookies.remove("token");
-  Cookies.remove("currentuser");
+// if (
+//   result?.error?.status === 401 ||
+//   result?.data?.statusCode === 401
+// )
+//  {
+//    Cookies.remove("token");
+//   Cookies.remove("currentuser");
 
-    window.location.href = '/login';
-  }
+//     window.location.href = '/login';
+//   }
 
   return result;
 };

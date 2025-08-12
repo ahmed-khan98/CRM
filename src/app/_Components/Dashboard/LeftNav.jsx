@@ -58,11 +58,12 @@ const LeftNav = ({set}) => {
     {
       name: "My Store",
       icon: <Store className="w-5 h-5" />,
-      path: ["/dashboard/myItem","/dashboard/createListing","/dashboard/box" ],
+      path: ["/dashboard/myItem","/dashboard/createListing","/dashboard/box","/dashboard/pickupdropoff" ],
       submenu: [
         { name: "Store Item", path: "/dashboard/myItem" },
         { name: "Create Listing", path: "/dashboard/createListing" },
-        { name: "Product Boxes", path: "/dashboard/box" },
+        { name: "Send a Box", path: "/dashboard/box" },
+        { name: "Pickup & Drop Off", path: "/dashboard/pickupdropoff" },
       ],
     },
     {
