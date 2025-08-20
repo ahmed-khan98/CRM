@@ -21,25 +21,25 @@ import {
 } from "lucide-react"
 import { useGetSidebarTitleQuery } from "@/app/_Services/services/page"
 
-const LeftNav = ({set}) => {
+const LeftNav = ({ set }) => {
   const pathname = usePathname()
   const router = useRouter()
-  const sidebars=[]
+  const sidebars = []
   const [expandedMenus, setExpandedMenus] = useState({})
-      // const { data:sidebars, error, isLoading } = useGetSidebarTitleQuery();
-  console.log(sidebars,'sidebars')
+  // const { data:sidebars, error, isLoading } = useGetSidebarTitleQuery();
+  console.log(sidebars, 'sidebars')
 
   const menuItems = [
     {
       name: "Dashboard",
-      icon: <LayoutDashboard  className="w-5 h-5" />,
+      icon: <LayoutDashboard className="w-5 h-5" />,
       path: ["/dashboard/dashboardcount"],
 
     },
     {
       name: "My Auction",
       icon: <Home className="w-5 h-5" />,
-      path: ['/dashboard/Bidding', "/dashboard/wonitem", "/dashboard/lostitem","/dashboard/wishlist",],
+      path: ['/dashboard/Bidding', "/dashboard/wonitem", "/dashboard/lostitem", "/dashboard/wishlist",],
     },
     {
       name: "Purchase",
@@ -58,7 +58,7 @@ const LeftNav = ({set}) => {
     {
       name: "My Store",
       icon: <Store className="w-5 h-5" />,
-      path: ["/dashboard/myItem","/dashboard/createListing","/dashboard/box","/dashboard/pickupdropoff" ],
+      path: ["/dashboard/myItem", "/dashboard/createListing", "/dashboard/box", "/dashboard/pickupdropoff"],
       submenu: [
         { name: "Store Item", path: "/dashboard/myItem" },
         { name: "Create Listing", path: "/dashboard/createListing" },
@@ -69,7 +69,7 @@ const LeftNav = ({set}) => {
     {
       name: "Wallet",
       icon: <Wallet className="w-5 h-5" />,
-      path: ["/dashboard/wallet/walletDashboard","dashboard/wallet/ManageCard"],
+      path: ["/dashboard/wallet/walletDashboard", "dashboard/wallet/ManageCard"],
       submenu: [
         { name: "Wallet Dashboard", path: "/dashboard/wallet/walletDashboard" },
         { name: "Manage Card", path: "/dashboard/wallet/ManageCard" },
@@ -93,7 +93,7 @@ const LeftNav = ({set}) => {
     {
       name: "Fees",
       icon: <DollarSign className="w-5 h-5" />,
-      path: ["/dashboard/UnpaidItem","/dashboard/missedAppointment",'/dashboard/penalizedFeeProduct'],
+      path: ["/dashboard/UnpaidItem", "/dashboard/missedAppointment", '/dashboard/penalizedFeeProduct'],
       // badge: "0",
     },
     {
@@ -104,6 +104,9 @@ const LeftNav = ({set}) => {
   ]
 
   const handleLogout = () => {
+    if (set) {
+      set()
+    }
     Cookies.remove("token")
     Cookies.remove("currentuser")
     router.push("/")
@@ -146,18 +149,19 @@ const LeftNav = ({set}) => {
                     toggleSubmenu(index)
                   } else {
                     router.push(item.path[0])
-                    set()
+                    if (set) {
+                      set()
+                    }
                   }
                 }}
-                className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-200 ${
-                  isActive
+                className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-200 ${isActive
                     ? "bg-orange-50 text-[#F33E0A] border-l-4 border-[#F33E0A]"
                     : "text-gray-700 hover:bg-orange-50 hover:text-[#F33E0A]"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-4">
                   <span className={isActive ? "text-[#F33E0A]" : "text-gray-500"}>{item.icon}</span>
-                  <span className="font-medium text-sm">{sidebars?.data?.[index]?.title ?? item?.name }</span>
+                  <span className="font-medium text-sm">{sidebars?.data?.[index]?.title ?? item?.name}</span>
                   {item.badge && (
                     <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
                       {item.badge}
@@ -178,13 +182,15 @@ const LeftNav = ({set}) => {
                     <div
                       key={subIndex}
                       onClick={() => {
-                        // set()
-                        router.push(subItem.path)}}
-                      className={`py-2.5 px-3 text-sm cursor-pointer transition-colors ${
-                        isSubmenuActive(subItem.path)
+                        if (set) {
+                          set()
+                        }
+                        router.push(subItem.path)
+                      }}
+                      className={`py-2.5 px-3 text-sm cursor-pointer transition-colors ${isSubmenuActive(subItem.path)
                           ? "text-[#F33E0A] font-medium"
                           : "text-gray-600 hover:text-[#F33E0A]"
-                      }`}
+                        }`}
                     >
                       {subItem.name}
                     </div>

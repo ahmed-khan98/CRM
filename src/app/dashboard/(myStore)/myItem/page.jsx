@@ -1217,7 +1217,7 @@ export default function Page() {
                     <h3 className="text-xl font-semibold text-red-800">One-Time Setup Fee</h3>
                   </div>
                   <div className="text-center">
-                    <span className="text-4xl font-bold text-red-600">$50</span>
+                    <span className="text-4xl font-bold text-red-600">$99</span>
                     <p className="text-gray-600 mt-2">
                       This one-time payment covers your store setup, verification, and lifetime access to our platform.
                     </p>
@@ -1265,7 +1265,7 @@ export default function Page() {
                   className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
                 >
                   <Plus className="h-5 w-5" />
-                  Create My Store - $50
+                  Create My Store - $99
                 </motion.button>
 
                 {/* Additional Info */}
@@ -1305,14 +1305,14 @@ export default function Page() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2 capitalize">
-                  {storeData?.data?.name || "My Store"}
+                  My Store
                   {/* {storeData?.data?.isPaid && (
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       ✓ Verified
                     </span>
                   )} */}
                 </h1>
-                <p className="text-gray-600 mt-1 capitalize">{storeData?.data?.description || "Your marketplace store"}</p>
+                {/* <p className="text-gray-600 mt-1 capitalize">{storeData?.data?.description || "Your marketplace store"}</p>
                 <div className="flex items-center gap-2 mt-2 text-sm text-gray-500 capitalize">
                   <span>EIN: {storeData?.data?.ein}</span>
                   <span>•</span>
@@ -1321,7 +1321,7 @@ export default function Page() {
                   <span>Owner Phone: {storeData?.data?.ownerPhone}</span>
                   <span>•</span>
                   <span>Items: {data?.data?.length || 0}</span>
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -1353,7 +1353,7 @@ export default function Page() {
                   ) : (
                     <>
                       <CreditCard className="h-4 w-4" />
-                      Pay $50 Now
+                      Pay $99 Now
                     </>
                   )}
                 </button>

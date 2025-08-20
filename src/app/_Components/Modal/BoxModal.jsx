@@ -134,7 +134,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
 
                                         <div>
                                             <label htmlFor="notes" className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Notes
+                                             Please describe box content
                                             </label>
                                             <Field
                                                 as="textarea"

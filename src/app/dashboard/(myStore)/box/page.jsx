@@ -142,14 +142,15 @@ export default function Page() {
                                             </th>
 
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                                                Note
+                                            Box content
+
                                             </th>
 
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                                                 Product SKU | Title
                                             </th>
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                                                Product Count
+                                               How Many Product
                                             </th>
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                                                 Status

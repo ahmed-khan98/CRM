@@ -28,7 +28,7 @@ export default function page() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { data, error: isError, isLoading, refetch } = useAllPickDropAppointmentQuery()
-  
+
 
   const handleEdit = (appointment) => {
     setEditingAppointment(appointment)
@@ -59,35 +59,38 @@ export default function page() {
     if (!data?.data) return []
     if (activeFilter === "scheduled") {
       return data.data.filter((item) => item?.status === "scheduled")
-    } else if (activeFilter === "delivered") {
-      return data.data.filter((item) => item?.status === "delivered")
-    } else if (activeFilter === "draft") {
+    } else if (activeFilter === "completed") {
+      return data.data.filter((item) => item?.status === "completed")
+    } else if (activeFilter === "cancelled") {
+      return data.data.filter((item) => item?.status === "cancelled")
+    }else if (activeFilter === "draft") {
       return data.data.filter((item) => item?.status === "draft")
     } else {
       return data.data
     }
   }
-  
+
   const filterData = [
     'all',
     'draft',
     'scheduled',
-    'delivered',
+    'completed',
+    'cancelled',
   ]
 
 
-//   if (isLoading) {
-//     return (
-//       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
-//         <motion.div
-//           animate={{ rotate: 360 }}
-//           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-//           className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
-//         />
-//         <span className="ml-4 text-[#F33E0A] font-semibold">Loading your pick up & drop off appointment... 🚀</span>
-//       </div>
-//     )
-//   }
+  //   if (isLoading) {
+  //     return (
+  //       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
+  //         <motion.div
+  //           animate={{ rotate: 360 }}
+  //           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+  //           className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
+  //         />
+  //         <span className="ml-4 text-[#F33E0A] font-semibold">Loading your pick up & drop off appointment... 🚀</span>
+  //       </div>
+  //     )
+  //   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-2">
@@ -109,13 +112,13 @@ export default function page() {
               Create Appointment
             </motion.button>
             <div className="flex bg-white rounded-full shadow-sm p-1">
-            {filterData?.map(e => <button
-              onClick={() => setActiveFilter(e)}
-              className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
-                }`}
-            >
-              {e}
-            </button>)}
+              {filterData?.map(e => <button
+                onClick={() => setActiveFilter(e)}
+                className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                  }`}
+              >
+                {e}
+              </button>)}
             </div>
           </div>
         </div>
@@ -125,7 +128,7 @@ export default function page() {
             <div className="p-3 bg-red-100 rounded-2xl">
               <Calendar className="w-6 h-6 text-[#F33E0A]" />
             </div>
-             Pick Up Appointments
+            Pick Up Appointments
           </h3>
 
           {filteredNotifications()?.length === 0 ? (
@@ -137,8 +140,8 @@ export default function page() {
                   ? "You don't have any Pickup appointments yet."
                   : activeFilter === "scheduled"
                     ? "You don't have any scheduled pickup appointments."
-                  : activeFilter === "delivered"
-                    ? "You don't have any delivered pickup appointments."
+                    : activeFilter === "delivered"
+                      ? "You don't have any delivered pickup appointments."
                       : "You don't have any draft pickup appointments."}
               </p>
             </div>
@@ -155,29 +158,23 @@ export default function page() {
                         Time
                       </th>
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Product SKU
+                        BOX Describe Content
                       </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      {/* <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         SKU Location
                       </th>
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Product Title
+                      </th> */}
+                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                        Appointment Type
                       </th>
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Status
+                        Box Status
                       </th>
-                      {(activeFilter === 'all' || activeFilter === 'missed') &&
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        Penalty Fee
-                      </th>}
-                      {activeFilter === 'missed' &&
-                        <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                          Payment Status
-                        </th>}
-                      {activeFilter === 'scheduled' &&
-                        <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                          Action
-                        </th>}
+                        ACTION
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -206,9 +203,10 @@ export default function page() {
                             </span>
                           </div>
                         </td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`${appointment.auctionWin?.product?.sku}`}</td>
-                        <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation},${appointment.auctionWin?.product?.skuRoom},${appointment.auctionWin?.product?.skuDetail}`}</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-md text-blue-600 capitalize"><Link href={`/detailproduct/${appointment.auctionWin?.product?._id}`}>{appointment.auctionWin?.product?.name}</Link></td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{`${appointment.notes}`}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{`${appointment.appointmentType}`}</td>
+                        {/* <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation},${appointment.auctionWin?.product?.skuRoom},${appointment.auctionWin?.product?.skuDetail}`}</td> */}
+                        {/* <td className="px-3 py-4 whitespace-nowrap text-md text-blue-600 capitalize"><Link href={`/detailproduct/${appointment.auctionWin?.product?._id}`}>{appointment.auctionWin?.product?.name}</Link></td> */}
                         <td className="px-3 py-4 whitespace-nowrap">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(appointment.status)}`}
@@ -216,41 +214,24 @@ export default function page() {
                             {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                           </span>
                         </td>
-                        {(activeFilter === 'all' || activeFilter === 'missed') &&
-                        <td className="px-3 py-4 whitespace-nowrap">
-                          {appointment.penaltyApplied ? (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
-                              💰 $5.00
-                            </span>
-                          ) : (
-                            <span className="text-gray-400 text-sm items-center">N/A</span>
-                          )}
-                        </td>}
-                        {activeFilter === 'missed' &&
-                          <td className="px-3 py-4 whitespace-nowrap">
-                            <span
-                              className={`px-3 py-1 rounded-full text-xs font-medium ${(appointment.paymentStatus === 'unpaid'? 'text-red-600 bg-red-100' :'text-green-600 bg-green-100' )}`}
-                            >
-                              {appointment?.paymentStatus.charAt(0).toUpperCase() + appointment?.paymentStatus.slice(1)}
-                            </span>
-                          </td>}
-                        {activeFilter === 'scheduled' &&
 
-                          <td className="px-3 py-4 whitespace-nowrap">
-                            {appointment.status === "scheduled" ? (
-                              <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => handleEdit(appointment)}
-                                className="inline-flex items-center cursor-pointer px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                              >
-                                <Edit className="h-4 w-4 mr-1" />
-                                Edit
-                              </motion.button>
-                            ) : (
-                              <span className="text-gray-400 text-sm">-</span>
-                            )}
-                          </td>}
+
+
+                        <td className="px-3 py-4 whitespace-nowrap">
+                          {((appointment.appointmentType === 'pickup' && appointment.status === "draft") || (appointment.appointmentType === 'dropoff' && appointment.status === "scheduled")) ? (
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => handleEdit(appointment)}
+                              className="inline-flex items-center cursor-pointer px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                            >
+                              <Edit className="h-4 w-4 mr-1" />
+                              Edit
+                            </motion.button>
+                          ) : (
+                            <span className="text-gray-400 text-sm">-</span>
+                          )}
+                        </td>
                       </motion.tr>
                       )
                     })}

@@ -64,15 +64,15 @@ const ServicesSection = () => {
           ))}
       </div>
 
-      {/* <div className="mt-18">
-        <Link href="/auction-product">
+      <div className="mt-18">
+        <Link href="/closing-products">
           <button
             className="cursor-pointer md:w-[35%] shadow text-white text-lg font-bold py-3 px-6 rounded-full transition-all bg-[#FB3B11] hover:bg-[#e03610] disabled:opacity-70">
-            BROWSE AUCTION
+          CLOSING SOON
           </button>
         </Link>
-      </div> */}
-      <div className="mt-16 flex flex-col md:flex-row gap-4 md:gap-8 justify-center items-center">
+      </div>
+      {/* <div className="mt-16 flex flex-col md:flex-row gap-4 md:gap-8 justify-center items-center">
         <Link
           href="/auction-product"
           className="block w-full md:w-[35%] shadow text-white text-lg font-bold py-3 px-6 rounded-full transition-all bg-[#FB3B11] hover:bg-[#e03610] text-center"
@@ -86,7 +86,7 @@ const ServicesSection = () => {
         >
           LOT AUCTION
         </Link>
-      </div>
+      </div> */}
 
     </div>
   );

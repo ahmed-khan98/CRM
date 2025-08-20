@@ -20,14 +20,14 @@ const Navbar = () => {
   const router = useRouter();
   const token = Cookies.get("token");
   const filteredProducts = useSelector((state) => state.filter.filteredProducts);
-  
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (e) => {
-  const value = e.target.value;
-  setSearchTerm(value);
-  dispatch(filterBySearch(value));
+    const value = e.target.value;
+    setSearchTerm(value);
+    dispatch(filterBySearch(value));
   };
 
   const handleLogout = () => {
@@ -51,10 +51,10 @@ const Navbar = () => {
           onClick={() => router.push("/auction-product")}
           className="cursor-pointer p-3 bg-gray-800 text-white rounded-r-full w-[100px] hover:bg-gray-900 "
         >
-          Explore
+          Auction
         </button>
       </div>
-  
+
       {searchTerm && filteredProducts.length > 0 && (
         <ul className="absolute top-full left-0 w-full bg-white shadow-md  rounded-b-lg max-h-60 overflow-y-auto z-50">
           {filteredProducts.map((product) => (
@@ -74,24 +74,24 @@ const Navbar = () => {
       )}
     </div>
   );
-  
+
   const renderAuthButtons = () => (
     <>
       {!token && (
         <button
-        onClick={() =>{
-          setIsMenuOpen(!isMenuOpen)
-           router.push('/register')}}
-        className="cursor-pointer py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
-      >
-        Register
-      </button>
+          onClick={() => {
+            setIsMenuOpen(!isMenuOpen)
+            router.push('/register')
+          }}
+          className="cursor-pointer py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
+        >
+          Register
+        </button>
       )}
-  <button
+      <button
         onClick={() => (token ? handleLogout() : router.push('/login'))}
-        className={`cursor-pointer py-2.5 px-3 rounded-lg text-white text-sm font-medium whitespace-nowrap shadow ${
-          token ? 'orange-bg' : 'bg-[#2F318B]'
-        }`}
+        className={`cursor-pointer py-2.5 px-3 rounded-lg text-white text-sm font-medium whitespace-nowrap shadow ${token ? 'orange-bg' : 'bg-[#2F318B]'
+          }`}
       >
         {token ? 'Logout' : 'Log In'}
       </button>
@@ -100,7 +100,8 @@ const Navbar = () => {
         <button
           onClick={() => {
             setIsMenuOpen(!isMenuOpen)
-            router.push('/dashboard/dashboardcount')}}
+            router.push('/dashboard/dashboardcount')
+          }}
           className="cursor-pointer py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
         >
           Dashboard
@@ -110,7 +111,8 @@ const Navbar = () => {
       <button
         onClick={() => {
           setIsMenuOpen(!isMenuOpen)
-          router.push('/sell')}}
+          router.push('/sell')
+        }}
         className="cursor-pointer py-2.5 px-3 bg-[#007E38] text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
       >
         Sell Your Stuff
@@ -126,6 +128,14 @@ const Navbar = () => {
           <Link href="/" className="w-45">
             <Image src={Main} alt="Logo" height={50} />
           </Link>
+          <button
+            onClick={() => {
+              router.push('/auction-product')
+            }}
+            className="lg:hidden cursor-pointer py-2.5 px-3 orange-bg text-white rounded-lg text-sm font-medium whitespace-nowrap shadow"
+          >
+            Browse
+          </button>
 
           <button
             className="lg:hidden p-2 text-[#F33E0A]"
@@ -153,9 +163,10 @@ const Navbar = () => {
       >
         <nav className="fixed top-0 left-0 h-full w-80 bg-white p-4 shadow-md">
           <div className="flex justify-between items-center mb-5">
-          <Link href="/" >
-            <Image src={Main} alt="Logo" width={120} height={50} />
+            <Link href="/" >
+              <Image src={Main} alt="Logo" width={120} height={50} />
             </Link>
+
             <button
               className="text-gray-500"
               onClick={() => setIsMenuOpen(false)}
@@ -166,7 +177,7 @@ const Navbar = () => {
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
-          </div> 
+          </div>
 
           {/* <div className="mb-4">
             <div className="flex flex-col gap-3">
@@ -192,9 +203,10 @@ const Navbar = () => {
               </button>
             </div>
           </div> */}
-<LeftNav set={()=>setIsMenuOpen(false)}/>
+          {token ?
+            <LeftNav set={() => setIsMenuOpen(false)} /> :
+            <div className="flex flex-col gap-3 mt-6">{renderAuthButtons()}</div>}
           {/* Mobile Auth Buttons */}
-          {/* <div className="flex flex-col gap-3 mt-6">{renderAuthButtons()}</div> */}
         </nav>
       </div>
     </>

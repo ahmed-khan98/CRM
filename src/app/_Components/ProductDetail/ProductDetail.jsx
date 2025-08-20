@@ -140,7 +140,10 @@ const ProductDetail = ({ id }) => {
                 <span>/</span>
                 <span>Auctions</span>
                 <span>/</span>
-                <span className="text-gray-900 font-medium">{productData?.data?.name}</span>
+                <span className="text-gray-900 font-medium line-clamp-1 md:line-clamp-none">
+  {productData?.data?.name}
+</span>
+
               </nav>
 
               {/* Main Content Grid */}
