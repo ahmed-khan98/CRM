@@ -29,7 +29,8 @@ const ProductInfo = ({
   lotfee,
   quantity,
   userHighestBid,
-  auctionEndTime
+  auctionEndTime,
+  auctionStartTime
 }) => {
   const [showFull, setShowFull] = useState(false)
   const [timeLeft, setTimeLeft] = useState(remainingAuctionTime)
@@ -42,6 +43,9 @@ const ProductInfo = ({
   const token = Cookies.get("token")
   const userCookie = Cookies.get("currentuser");
   const user = userCookie ? JSON.parse(userCookie) : null;
+    const [timeLeftToStart, setTimeLeftToStart] = useState("");
+    const [timeLeftToEnd, setTimeLeftToEnd] = useState("");
+    const [isUrgent, setIsUrgent] = useState(false)
 
   useEffect(() => {
     setBidValue(!biddingCount ? highestBid : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1);
@@ -99,13 +103,78 @@ const ProductInfo = ({
     }
   }
 
-  const formatTimeLeft = (hours) => {
-    if (hours <= 0) return "Auction Ended"
-    if (hours < 24) return `${hours} hours`
-    const days = Math.floor(hours / 24)
-    const remainingHours = hours % 24
-    return `${days}d ${remainingHours} hours `
-  }
+  // const formatTimeLeft = (hours) => {
+  //   if (hours <= 0) return "Auction Ended"
+  //   if (hours < 24) return `${hours} hours`
+  //   const days = Math.floor(hours / 24)
+  //   const remainingHours = hours % 24
+  //   return `${days}d ${remainingHours} hours `
+  // }
+
+    useEffect(() => {
+      let interval
+  
+      const updateCountdown = () => {
+        const now = new Date().getTime()
+        const start = new Date(auctionStartTime).getTime()
+        const end = new Date(auctionEndTime).getTime()
+        //const elapsedTime = Date.now() - startTime  //Time since component mounted
+        //const now = end - (3+index)  * 60 * 1000 + elapsedTime  //Start 3 min before end, then count up
+  
+        // Auction has not started yet
+        if (now < start) {
+          const diff = start - now
+          const hours = Math.floor(diff / (1000 * 60 * 60))
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+  
+          if (hours > 0) {
+            setTimeLeftToStart(`${hours} hours`)
+          } else {
+            setTimeLeftToStart(`${minutes} min`)
+          }
+          setTimeLeftToEnd("")
+          setIsUrgent(false)
+        }
+        // Auction is active
+        else if (now >= start && now < end) {
+          const diff = end - now
+          const hours = Math.floor(diff / (1000 * 60 * 60))
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+  
+          setTimeLeftToStart("")
+  
+          // If 5 minutes or less, show minutes and seconds
+          if (diff <= 5 * 60 * 1000) {
+            if (minutes) {
+              setTimeLeftToEnd(`${minutes}m ${seconds}s`)
+            }
+            else {
+              setTimeLeftToEnd(`${seconds}s`)
+            }
+            setIsUrgent(true)
+          }
+          // If more than 5 minutes, show appropriate format
+          else {
+            if (hours > 0) {
+              setTimeLeftToEnd(`${hours} hours`)
+            } else {
+              setTimeLeftToEnd(`${minutes} min`)
+            }
+            setIsUrgent(false)
+          }
+        } else {
+          setTimeLeftToStart("")
+          setTimeLeftToEnd("Auction Ended")
+          setIsUrgent(false)
+        }
+      }
+  
+      updateCountdown()
+      interval = setInterval(updateCountdown, 1000)
+  
+      return () => clearInterval(interval)
+    }, [auctionStartTime, auctionEndTime])
 
   return (
     <div className="p-4 space-y-3">
@@ -225,12 +294,12 @@ const ProductInfo = ({
       >
         <div className="flex items-center gap-3">
           <Clock
-            className={`w-5 h-5 ${isSold ? "text-green-600" : timeLeft <= 24 ? "text-red-600" : "text-blue-600"}`}
+            className={`w-5 h-5 ${isSold ? "text-green-600" : isUrgent ? "text-red-600 animate-pulse [animation-duration:0.6s]" : "text-blue-600"}`}
           />
           {/* <div> */}
           <p className="text-sm font-medium text-gray-600">{isSold ? 'Auction Status' : 'Time Left'}</p>
-          <p className={`font-bold ${isSold ? "text-green-700" : timeLeft <= 24 ? "text-red-700" : "text-blue-700"}`}>
-            {isSold ? "SOLD" : formatTimeLeft(timeLeft)}
+          <p className={`font-bold ${isUrgent ? "text-red-600 animate-pulse [animation-duration:0.6s]" : isSold ? "text-gray-500" : "text-blue-600"}`}>
+            {isSold ? "SOLD" : timeLeftToStart || timeLeftToEnd}
           </p>
           {/* </div> */}
         </div>

@@ -137,16 +137,17 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-whit mt-0 md:mt-5 px-2">
-      <div className=" pt-6 p-1 md:p-4 ">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white mt-5 px-4"> 
+    {billBoard?.data?.map(e=><div className=" pt-6 p-1 md:p-4  bg-gray-200 shadow-lg rounded-2xl border-3 border-[#ffa51d] ">
         <div
-          dangerouslySetInnerHTML={{ __html: billBoard?.data?.[0]?.title }}
+          dangerouslySetInnerHTML={{ __html: e?.title }}
         />
         <div
-          dangerouslySetInnerHTML={{ __html: billBoard?.data?.[0]?.description }}
+          dangerouslySetInnerHTML={{ __html: e?.description }}
           className="py-3"
         />
-      </div>
+      </div>)}
+      
       {/* <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white rounded-lg">
         <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-opacity-100"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
@@ -173,7 +174,7 @@ export default function DashboardPage() {
         <div className="absolute bottom-0 right-0 w-32 h-32 md:w-92 md:h-92 bg-white bg-opacity-5 rounded-full translate-x-14 translate-y-14 md:translate-x-48 md:translate-y-48"></div>
       </div> */}
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-2 py-8">
         {/* Stats Grid */}
         {/* <motion.div
           initial="hidden"

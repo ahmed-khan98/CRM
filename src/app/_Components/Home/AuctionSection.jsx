@@ -53,7 +53,7 @@ export default function AuctionCard() {
     </p>    
     ) : (
       filteredProducts?.filter((item, index) => !item?.isSold).map((item, index) => (
-        <ProductCard key={item?._id ?? `auction-${index}`} item={item} />
+        <ProductCard key={item?._id ?? `auction-${index}`} item={item}  index={index}/>
       ))
       
     )}

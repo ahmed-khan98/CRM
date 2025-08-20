@@ -9,7 +9,7 @@ import Select from "react-select";
 import { getAvailableTimeSlots } from "@/app/utilities/timeSlot"
 import { formatPhoneNumber } from "@/app/utilities/phoneFormat"
 import { useCreatePickDropAppointmentMutation, useUpdatePickDropAppointmentMutation } from "@/app/_Services/pickupDropoff/page"
-import { useAllBoxProductQuery } from "@/app/_Services/Box/page"
+import { useAllFilterBoxProductQuery } from "@/app/_Services/Box/page"
 
 // Validation schemas
 const pickupSchema = Yup.object().shape({
@@ -27,7 +27,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
 
     const [createPickDropAppointment] = useCreatePickDropAppointmentMutation()
     const [updatePickDropAppointment] = useUpdatePickDropAppointmentMutation()
-    const { data: boxes, error: isError, isLoading } = useAllBoxProductQuery()
+    const { data: boxes, error: isError, isLoading } = useAllFilterBoxProductQuery()
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
@@ -73,22 +73,6 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
         },
     }
 
-    const fieldVariants = {
-        hidden: { opacity: 0, y: 20, height: 0 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            height: "auto",
-            transition: { duration: 0.3, ease: "easeOut" },
-        },
-        exit: {
-            opacity: 0,
-            y: -20,
-            height: 0,
-            transition: { duration: 0.2 },
-        },
-    }
-
     const initialValues = {
         type: data?.type || '',
         appointmentDate: data?.appointmentDate || '',
@@ -97,7 +81,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
         boxes: data?.boxes || []
     };
 
-    const productsOptions = boxes?.data?.map(e => ({
+    const boxOptions = boxes?.data?.map(e => ({
         label: `${e?.note} | ${e?.note} `,
         value: e?._id
     }));
@@ -236,11 +220,11 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                                                 </label>
 
                                                 <Select
-                                                    options={productsOptions}
+                                                    options={boxOptions}
                                                     isMulti
                                                     menuPortalTarget={document.body}
                                                     placeholder="Select or type to add..."
-                                                    value={productsOptions?.filter(opt => values?.boxes?.includes(opt.value))}
+                                                    value={boxOptions?.filter(opt => values?.boxes?.includes(opt.value))}
                                                     onChange={(selected) => {
                                                         const ids = selected?.map(s => s.value);
                                                         setFieldValue("boxes", ids);
@@ -265,7 +249,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
 
                                                 <div className="flex flex-wrap gap-2 mt-3">
                                                     {values?.boxes?.map((id) => {
-                                                        const product = productsOptions?.find(opt => opt.value === id);
+                                                        const product = boxOptions?.find(opt => opt.value === id);
                                                         return (
                                                             <span
                                                                 key={id}

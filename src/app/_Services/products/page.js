@@ -142,6 +142,60 @@ const productApi = createApiAuction.injectEndpoints({
       }
       
     }),
+    getClosingProducts: builder.query({
+      query: () => "user/product/closingProducts",
+      providesTags: ["closingProducts"],
+      keepUnusedDataFor: 1800,
+      refetchOnMountOrArgChange: false,
+      // Override with socket data
+      onCacheEntryAdded: async (arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) => {
+        try {
+          await cacheDataLoaded;
+          const socket = initializeSocket();
+      
+          // Access the cached product list
+          const cachedProducts = [];
+      
+          updateCachedData((draft) => {
+            if (Array.isArray(draft?.data)) {
+              cachedProducts.push(...draft.data);
+            }
+          });
+      
+          // ✅ Loop over product IDs
+          for (const product of cachedProducts) {
+            const id = product._id;
+      
+            // Emit (optional, depends if server expects this)
+            socket.emit(`product-auction-end-${id}`)
+            
+            // Do the same for other events
+      
+            socket.on(`product-auction-end-${id}`, (updatedProduct) => {
+              console.log(`product-auction-end-${id}`)
+
+              updateCachedData((draft) => {
+                const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
+                if (index !== -1) {
+                  draft.data[index] = updatedProduct;
+                }
+              });
+            });
+          }
+      
+          // ✅ Clean up when cache is removed
+          await cacheEntryRemoved;
+          for (const product of cachedProducts) {
+            const id = product._id;
+            socket.off(`product-auction-end-${id}`);
+          }
+      
+        } catch (error) {
+          console.error("Socket connection error:", error);
+        }
+      }
+      
+    }),
 
     getMissedProduct: builder.query({
       query: () => "user/product/missedProducts",
@@ -319,6 +373,7 @@ export const {
   useAddBidMutation,
   useGetMissedProductQuery,
   useRelatedProductsQuery,
+  useGetClosingProductsQuery
 } = productApi
 
 // Export socket instance for use in components

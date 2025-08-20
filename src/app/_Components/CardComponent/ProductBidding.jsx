@@ -14,7 +14,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
   const token = Cookies.get("token")
   const userCookie = Cookies.get("currentuser");
   const user = userCookie ? JSON.parse(userCookie) : null;
-  const [bidValue, setBidValue] = useState(!biddingCount ? price : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1)
+  const [bidValue, setBidValue] = useState(!biddingCount ? highestBid : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1)
   const [showBidTips, setShowBidTips] = useState(false)
   const [bidSuccess, setBidSuccess] = useState(false)
   const [bidError, setBidError] = useState(false)

@@ -60,7 +60,8 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
     };
 
 
-    console.log(data, 'productdata')
+    console.log(editingBox, 'editingBox')
+
     const productsOptions = data?.data?.map(tag => ({
         label: `${tag?.sku} | ${tag?.name} `,
         value: tag?._id
@@ -110,9 +111,12 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                         <div className="p-6">
                             <Formik
                                 initialValues={{
-                                    //   appointmentDate: editingBox.appointmentDate.split("T")[0],
-                                    //   appointmentTime: editingBox.appointmentTime,
-                                    products: editingBox?.products || [],
+                                    products: editingBox?.products
+                                        ? editingBox.products.map(e => ({
+                                            label: `${e?.sku} | ${e?.name}`,
+                                            value: e?._id,
+                                        }))
+                                        : [],
                                     notes: editingBox?.notes || "",
                                 }}
                                 validationSchema={appointmentSchema}
@@ -123,69 +127,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                     <Form className="space-y-6" onKeyDown={(e) => {
                                         if (e.key === "Enter") e.preventDefault();
                                     }}>
-                                        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                            <label htmlFor="appointmentDate" className="block text-sm font-semibold text-gray-700 mb-2">
-                              <Calendar className="inline h-4 w-4 mr-2 text-red-600" />
-                              Appointment Date
-                            </label>
-                            <Field
-                              id="appointmentDate"
-                              name="appointmentDate"
-                              type="date"
-                              min={new Date().toISOString().split("T")[0]}
-                              className={`w-full px-4 py-3 border-2 ${
-                                errors.appointmentDate && touched.appointmentDate
-                                  ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-red-500"
-                              } rounded-xl focus:outline-none transition-colors`}
-                              onChange={(e) => {
-                                setFieldValue("appointmentDate", e.target.value)
-                                // Reset time when date changes
-                                setFieldValue("appointmentTime", "")
-                              }}
-                            />
-                            <ErrorMessage
-                              name="appointmentDate"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
-                          </div>
 
-                          <div>
-                            <label htmlFor="appointmentTime" className="block text-sm font-semibold text-gray-700 mb-2">
-                              <Clock className="inline h-4 w-4 mr-2 text-red-600" />
-                              Appointment Time
-                            </label>
-                            <Field
-                              as="select"
-                              id="appointmentTime"
-                              name="appointmentTime"
-                              className={`w-full px-4 py-3 border-2 ${
-                                errors.appointmentTime && touched.appointmentTime
-                                  ? "border-red-300 focus:border-red-500"
-                                  : "border-gray-200 focus:border-red-500"
-                              } rounded-xl focus:outline-none transition-colors`}
-                            >
-                              <option value="">Select Time</option>
-                              {getAvailableTimeSlots(values.appointmentDate).map((slot) => (
-                                <option key={slot.value} value={slot.value}>
-                                  {slot.label}
-                                </option>
-                              ))}
-                            </Field>
-                            <ErrorMessage
-                              name="appointmentTime"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
-                            {values.appointmentDate && getAvailableTimeSlots(values.appointmentDate).length === 0 && (
-                              <p className="text-amber-600 text-sm mt-1">
-                                ⚠️ No available time slots for today. Please select a future date.
-                              </p>
-                            )}
-                          </div>
-                        </div> */}
 
                                         <div>
                                             <label htmlFor="notes" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -211,10 +153,14 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                 isMulti
                                                 menuPortalTarget={document.body}
                                                 placeholder="Select or type to add..."
-                                                value={productsOptions?.filter(opt => values?.products?.includes(opt.value))}
+                                                // value={productsOptions?.filter(opt => values?.products?.includes(opt.value))}
+                                                // onChange={(selected) => {
+                                                //     const ids = selected?.map(s => s.value);
+                                                //     setFieldValue("products", ids);
+                                                // }}
+                                                value={values.products}   // ✅ keep objects
                                                 onChange={(selected) => {
-                                                    const ids = selected?.map(s => s.value);
-                                                    setFieldValue("products", ids);
+                                                    setFieldValue("products", selected || []); // ✅ keep objects
                                                 }}
                                                 className="text-sm text-start"
                                                 classNamePrefix="react-select"
@@ -229,7 +175,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                 }}
                                             />
 
-                                            <div className="flex flex-wrap gap-2 mt-3">
+                                            {/* <div className="flex flex-wrap gap-2 mt-3">
                                                 {values?.products?.map((id) => {
                                                     const product = productsOptions?.find(opt => opt.value === id);
                                                     return (
@@ -250,6 +196,25 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                         </span>
                                                     );
                                                 })}
+                                            </div> */}
+                                            <div className="flex flex-wrap gap-2 mt-3">
+                                                {values?.products?.map((p) => (
+                                                    <span
+                                                        key={p.value}
+                                                        className="inline-flex items-center bg-green-300 text-green-800 text-sm px-3 py-1 rounded-full text-start"
+                                                    >
+                                                        {p.label}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                setFieldValue("products", values.products.filter(prod => prod.value !== p.value))
+                                                            }
+                                                            className="ml-2 text-white/80 hover:text-white"
+                                                        >
+                                                            &times;
+                                                        </button>
+                                                    </span>
+                                                ))}
                                             </div>
                                         </div>
 

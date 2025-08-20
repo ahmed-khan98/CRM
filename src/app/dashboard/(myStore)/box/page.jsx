@@ -5,7 +5,6 @@ import { useState } from "react"
 import { BoxIcon, Calendar, Clock, Edit, Plus, Truck } from "lucide-react"
 import { motion } from "framer-motion"
 import { formatDate, formatTime12Hour } from "@/app/utilities/date"
-import EditAppointmentModal from "@/app/_Components/Modal/EditAppointmentModal"
 import { useAllBoxProductQuery } from "@/app/_Services/Box/page"
 import BoxModal from "@/app/_Components/Modal/BoxModal"
 import Tab from "@/app/_Components/Tab/page"
@@ -27,8 +26,7 @@ export default function Page() {
     const { data, error: isError, isLoading, refetch } = useAllBoxProductQuery()
     console.log(data, 'allBox')
 
-    const handleEdit = (box) => {
-        setEditingBox(box)
+    const handleEdit = () => {
         setIsModalOpen(true)
     }
 
@@ -181,8 +179,8 @@ export default function Page() {
                                                     </div>
                                                 </td>
 
-                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`${e.notes}`}</td>
-                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">Product SKU | Name</td>
+                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{`${e.notes}`}</td>
+                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{!e?.products?.length ? 'Empty Box': e?.products?.map(e=>{e?.sku | e?.name})}</td>
                                                 <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{e?.products?.length}</td>
                                                 {/* <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${e.auctionWin?.product?.skuLocation},${e.auctionWin?.product?.skuRoom},${e.auctionWin?.product?.skuDetail}`}</td> */}
                                                 {/* <td className="px-3 py-4 whitespace-nowrap text-md text-blue-600 capitalize"><Link href={`/detailproduct/${e.auctionWin?.product?._id}`}>{e.auctionWin?.product?.name}</Link></td> */}
@@ -197,7 +195,10 @@ export default function Page() {
                                                     <motion.button
                                                         whileHover={{ scale: 1.05 }}
                                                         whileTap={{ scale: 0.95 }}
-                                                        onClick={() => handleEdit(e)}
+                                                        onClick={() => {
+                                                            setEditingBox(e)
+                                                            handleEdit()
+                                                        }}
                                                         className="inline-flex items-center cursor-pointer px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                                                     >
                                                         <Edit className="h-4 w-4 mr-1" />

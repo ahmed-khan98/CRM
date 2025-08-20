@@ -11,6 +11,7 @@ import { appointmentTabs } from "@/app/utilities/tabs/page"
 import Link from "next/link"
 import PickupDropOffModal from "@/app/_Components/Modal/PickupDropOffModal"
 import { useAllPickDropAppointmentQuery } from "@/app/_Services/pickupDropoff/page"
+import { useAllFilterBoxProductQuery } from "@/app/_Services/Box/page"
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -26,7 +27,8 @@ export default function page() {
   const [editingAppointment, setEditingAppointment] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { data, error: isError, isLoading, refetch } = useAllPickDropAppointmentQuery({type:'pickup'})
+  const { data, error: isError, isLoading, refetch } = useAllPickDropAppointmentQuery({type:'dropoff'})
+
 
   const handleEdit = (appointment) => {
     setEditingAppointment(appointment)
@@ -90,7 +92,7 @@ export default function page() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-2">
       <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-6">
-        <Tab tabs={appointmentTabs} />
+        {/* <Tab tabs={appointmentTabs} /> */}
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
             <Calendar className="h-7 w-7 text-red-600" />
@@ -101,7 +103,7 @@ export default function page() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-[#FB3B11] text-white px-4 rounded-full text-sm font-medium hover:bg-[#e03610] transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-[#eb2c17] text-white px-4 rounded-full text-sm font-medium hover:bg-[#e03610] transition-colors"
             >
               <Plus className="h-4 w-4" />
               Create Appointment

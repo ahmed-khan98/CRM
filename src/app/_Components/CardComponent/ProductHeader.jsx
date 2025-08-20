@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 
 const ProductHeader = ({ name, id }) => {
-  const truncatedName = name?.length > 75 ? `${name.slice(0, 75)}...` : name;
+  const truncatedName = name?.length > 8 ? `${name.slice(0, 8)}...` : name;
 
   return (
     <Link

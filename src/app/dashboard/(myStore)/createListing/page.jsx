@@ -26,7 +26,7 @@ const steps = [
 export default function Home() {
 
     const [addStoreProduct, { isLoading }] = useAddStoreProductMutation()
-    const [step, setStep] = useState(5);
+    const [step, setStep] = useState(1);
     console.log(step, 'step')
     const router = useRouter()
 
@@ -246,7 +246,7 @@ export default function Home() {
                             <div key={label} className="flex flex-col items-center flex-1">
                                 <div
                                     className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold 
-            ${index + 1 <= step ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-600"}`}
+            ${index + 1 <= step ? "bg-red-600 text-white" : "bg-gray-300 text-gray-600"}`}
                                 >
                                     {index + 1}
                                 </div>
@@ -296,7 +296,7 @@ export default function Home() {
                                             <button
                                                 type="button"
                                                 onClick={goBack}
-                                                className="flex-1 sm:flex-none px-4 py-2 bg-gray-200 text-gray-800 rounded-md text-sm font-medium hover:bg-gray-300"
+                                                className="cursor-pointer flex-1 sm:flex-none px-4 py-2 bg-gray-200 text-gray-800 rounded-md text-sm font-medium hover:bg-gray-300"
                                             >
                                                 ← Back
                                             </button>
@@ -304,7 +304,7 @@ export default function Home() {
                                         {step !== 9 && (
                                             <button
                                                 type="submit"
-                                                className="flex-1 sm:flex-none px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-500"
+                                                className="cursor-pointer flex-1 sm:flex-none px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-500"
                                             >
                                                 Continue →
                                             </button>
@@ -1187,16 +1187,16 @@ function Step6() {
                                 <button
                                     type="button"
                                     onClick={() => arrayHelpers.remove(index)}
-                                    className="text-red-500 text-sm hover:underline"
+                                    className="text-red-500 cursor-pointer text-sm hover:underline"
                                 >
-                                    <Trash2 className="w-4 h-4 text-red-500" />
+                                    <Trash2 className="w-4 h-4 text-red-500 " />
                                 </button>
                             </div>
                         ))}
                         <button
                             type="button"
                             onClick={() => arrayHelpers.push({ name: "", value: "" })}
-                            className="text-blue-600 text-sm hover:underline"
+                            className="text-blue-600 cursor-pointer text-sm hover:underline"
                         >
                             + Add Shipping Information
                         </button>

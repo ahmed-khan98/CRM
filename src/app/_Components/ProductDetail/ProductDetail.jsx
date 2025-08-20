@@ -211,6 +211,7 @@ const ProductDetail = ({ id }) => {
                       userHighestBid={productData?.data?.userHighestBid?.bidAmount}
                       highestBid={productData?.data?.highestBid}
                       isAuctionActive={productData?.data?.isAuctionActive}
+                      auctionStartTime={productData?.data?.auctionStartTime}
                       auctionEndTime={productData?.data?.auctionEndTime}
                       history={productData?.data?.biddingHistory}
                     />
