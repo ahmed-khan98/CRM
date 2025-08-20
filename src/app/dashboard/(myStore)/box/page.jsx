@@ -180,7 +180,16 @@ export default function Page() {
                                                 </td>
 
                                                 <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{`${e.notes}`}</td>
-                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{!e?.products?.length ? 'Empty Box': e?.products?.map(e=>{e?.sku | e?.name})}</td>
+                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">
+                                                    {!e?.products?.length
+                                                        ? "Empty Box"
+                                                        : e?.products?.map((p, i) => (
+                                                            <span key={i}>
+                                                                {`${p?.sku} | ${p?.name}`}
+                                                                {i < e.products.length - 1 && ", "}
+                                                            </span>
+                                                        ))}
+                                                </td>
                                                 <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{e?.products?.length}</td>
                                                 {/* <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${e.auctionWin?.product?.skuLocation},${e.auctionWin?.product?.skuRoom},${e.auctionWin?.product?.skuDetail}`}</td> */}
                                                 {/* <td className="px-3 py-4 whitespace-nowrap text-md text-blue-600 capitalize"><Link href={`/detailproduct/${e.auctionWin?.product?._id}`}>{e.auctionWin?.product?.name}</Link></td> */}

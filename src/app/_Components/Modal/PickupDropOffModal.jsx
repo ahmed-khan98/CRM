@@ -13,7 +13,7 @@ import { useAllFilterBoxProductQuery } from "@/app/_Services/Box/page"
 
 // Validation schemas
 const pickupSchema = Yup.object().shape({
-    type: Yup.string().required("Please select a appointment type"),
+    appointmentType: Yup.string().required("Please select a appointment type"),
     appointmentDate: Yup.date().required("Appointment date is required"),
     // .min(new Date(), "Date must be in the future"),
     appointmentTime: Yup.string().required("Appointment time is required"),
@@ -28,13 +28,14 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
     const [createPickDropAppointment] = useCreatePickDropAppointmentMutation()
     const [updatePickDropAppointment] = useUpdatePickDropAppointmentMutation()
     const { data: boxes, error: isError, isLoading } = useAllFilterBoxProductQuery()
+console.log(boxes,'boxes')
+
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
             const response = await (
                 data
-                    ? createPickDropAppointment({ ...values }).unwrap()
-                    : updatePickDropAppointment({ ...values, id: data?._id }).unwrap()
+                    ? updatePickDropAppointment({ ...values, id: data?._id }).unwrap() : createPickDropAppointment({ ...values }).unwrap()
             );
 
             if (response.success) {
@@ -74,7 +75,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
     }
 
     const initialValues = {
-        type: data?.type || '',
+        appointmentType: data?.appointmentType || '',
         appointmentDate: data?.appointmentDate || '',
         appointmentTime: data?.appointmentTime || '',
         notes: data?.notes || '',
@@ -82,7 +83,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
     };
 
     const boxOptions = boxes?.data?.map(e => ({
-        label: `${e?.note} | ${e?.note} `,
+        label: `${e?.notes} `,
         value: e?._id
     }));
 
@@ -151,8 +152,8 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                                                     Appointment Type                                                </label>
                                                 <Field
                                                     as="select"
-                                                    name="type"
-                                                    className={`w-full px-4 py-3 border-2 ${errors.type && touched.type
+                                                    name="appointmentType"
+                                                    className={`w-full px-4 py-3 border-2 ${errors.appointmentType && touched.appointmentType
                                                         ? "border-red-300 focus:border-oarnge-500"
                                                         : "border-gray-200 focus:border-oarnge-500"
                                                         } rounded-2xl focus:outline-none transition-colors bg-white text-gray-900`}
@@ -161,7 +162,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                                                     <option value="pickup">Pickup</option>
                                                     <option value="dropoff">Drop Off</option>
                                                 </Field>
-                                                <ErrorMessage name="type" component="div" className="text-red-500 text-sm mt-1" />
+                                                <ErrorMessage name="appointmentType" component="div" className="text-red-500 text-sm mt-1" />
                                             </div>
 
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">

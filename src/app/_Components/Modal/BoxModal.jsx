@@ -32,6 +32,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
 
 
     const handleSubmit = async (values, { resetForm }) => {
+        console.log(values,'values')
         try {
             let response;
 
@@ -39,11 +40,13 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                 // Update case
                 response = await updateProductBox({
                     id: editingBox._id,
-                    ...values,
+                    // ...values,
+                    notes: values?.notes,
+                    products: values?.products?.map(e => e?.value)
                 }).unwrap();
             } else {
                 // Create case
-                response = await addBoxProduct(values).unwrap();
+                response = await addBoxProduct({ notes: values?.notes, products: values?.products?.map(e => e?.value) }).unwrap();
             }
 
             if (response.success) {
@@ -60,7 +63,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
     };
 
 
-    console.log(editingBox, 'editingBox')
+    console.log(data, 'useAllFilterBoxProductQuery  ')
 
     const productsOptions = data?.data?.map(tag => ({
         label: `${tag?.sku} | ${tag?.name} `,
@@ -162,7 +165,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                 onChange={(selected) => {
                                                     setFieldValue("products", selected || []); // ✅ keep objects
                                                 }}
-                                                className="text-sm text-start"
+                                                className="text-sm text-start capitalize"
                                                 classNamePrefix="react-select"
                                                 styles={{
                                                     menuPortal: base => ({ ...base, zIndex: 9999 }),
@@ -170,7 +173,9 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                         ...base,
                                                         borderRadius: "0.75rem",
                                                         padding: "0.25rem",
-                                                        borderColor: "red"
+                                                        borderColor: "red",
+                                                        textTransform: "capitalize"
+
                                                     })
                                                 }}
                                             />

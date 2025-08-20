@@ -27,8 +27,8 @@ export default function page() {
   const [editingAppointment, setEditingAppointment] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { data, error: isError, isLoading, refetch } = useAllPickDropAppointmentQuery({type:'dropoff'})
-
+  const { data, error: isError, isLoading, refetch } = useAllPickDropAppointmentQuery()
+  
 
   const handleEdit = (appointment) => {
     setEditingAppointment(appointment)

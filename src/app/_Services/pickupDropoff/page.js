@@ -23,7 +23,7 @@ const pickdropApi = createApiAuction.injectEndpoints({
 
         }),
         allPickDropAppointment: builder.query({
-            query: (data) => `user/pickup-appointment/${data?.type}`,
+            query: (data) => `user/pickup-appointment`,
             providesTags: ['allPickDropAppointment'],
             keepUnusedDataFor: 180,
             refetchOnMountOrArgChange: false,

@@ -2,8 +2,16 @@ import Link from "next/link";
 import React from "react";
 
 const ProductHeader = ({ name, id }) => {
-  const truncatedName = name?.length > 8 ? `${name.slice(0, 8)}...` : name;
-
+  const truncateWords = (str, limit = 8) => {
+    if (!str) return "";
+    const words = str.split(" ");
+    return words.length > limit
+      ? words.slice(0, limit).join(" ") + "..."
+      : str;
+  };
+  
+  const truncatedName = truncateWords(name, 8);
+  
   return (
     <Link
       href={`/detailproduct/${id}`}

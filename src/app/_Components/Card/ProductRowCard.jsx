@@ -8,7 +8,18 @@ import TimeCounterRow from "../CardComponent/TimeCounterRow"
 
 const ProductRowCard = ({ item, index }) => {
 
-    const truncatedName = item?.name?.length > 20 ? `${item?.name.slice(0, 20)}...` : item?.name;
+    // const truncatedName = item?.name?.length > 20 ? `${item?.name.slice(0, 20)}...` : item?.name;
+
+    const truncateWords = (str, limit = 8) => {
+        if (!str) return "";
+        const words = str.split(" ");
+        return words.length > limit
+          ? words.slice(0, limit).join(" ") + "..."
+          : str;
+      };
+      
+      const truncatedName = truncateWords(item?.name, 8);
+      
 
     return (
         <div className="bg-white border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-3 mb-4 border-2 hover:border-[#F33E0A]">
