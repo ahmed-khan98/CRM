@@ -68,7 +68,7 @@ const handleRefetch=()=>{
         No Closing Product Found
       </p>
     ) : (
-      gridProducts?.map((item, index) => <ProductCard key={item?._id ?? `auction-${index}`} item={item} index={index}  refetch={handleRefetch}/>)
+      gridProducts?.map((item, index) => <ProductCard key={item?._id ?? `auction-${index}`} item={item} index={index}  handleRefetch={handleRefetch}/>)
     )}
   </div>
 
@@ -82,7 +82,7 @@ const handleRefetch=()=>{
       <div className="space-y-4">
         {rowProducts?.map((item, index) => (
           <ProductRowCard
-          refetch={handleRefetch}
+          handleRefetch={handleRefetch}
             key={item?._id ?? `auction-row-${index}`}
             item={item}
             index={index + 11} // Add 11 to show correct index number

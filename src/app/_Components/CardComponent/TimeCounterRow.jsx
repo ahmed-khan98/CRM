@@ -13,7 +13,7 @@ const TimeCounterRow = ({
   isSold,
   auctionEndTime,
   SoldDate,
- refetch
+  handleRefetch
 }) => {
   const [timeLeftToStart, setTimeLeftToStart] = useState("")
   const [timeLeftToEnd, setTimeLeftToEnd] = useState("")
@@ -76,7 +76,9 @@ const TimeCounterRow = ({
           setIsUrgent(false)
         }
       } else {
-        refetch()
+        if (handleRefetch && typeof handleRefetch === "function") {
+          handleRefetch()
+        }
         setTimeLeftToStart("")
         setTimeLeftToEnd("Auction Ended")
         setIsUrgent(false)
@@ -87,7 +89,9 @@ const TimeCounterRow = ({
     interval = setInterval(updateCountdown, 1000)
 
     return () => {
-      refetch()
+      if (handleRefetch && typeof handleRefetch === "function") {
+        handleRefetch()
+      }
       clearInterval(interval)
     }
   }, [auctionStartTime, auctionEndTime, startTime])
@@ -102,7 +106,7 @@ const TimeCounterRow = ({
             <Clock size={16} className={`${isUrgent ? "text-red-500" : "text-blue-500"} flex-shrink-0`} />
             <div className="min-w-0">
               <p className="text-sm text-gray-600 font-medium uppercase tracking-wide">
-                {isSold ? "Ended" :  "Time Left"}
+                {isSold ? "Ended" : "Time Left"}
               </p>
               <p
                 className={`font-bold text-sm ${isUrgent ? "text-red-600 animate-pulse [animation-duration:0.6s]" : isSold ? "text-gray-500" : "text-blue-600"} truncate`}

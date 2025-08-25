@@ -6,7 +6,7 @@ import Link from "next/link"
 import Image from 'next/image';
 import TimeCounterRow from "../CardComponent/TimeCounterRow"
 
-const ProductRowCard = ({ item, index,refetch }) => {
+const ProductRowCard = ({ item, index,handleRefetch }) => {
 
     // const truncatedName = item?.name?.length > 20 ? `${item?.name.slice(0, 20)}...` : item?.name;
 
@@ -55,7 +55,7 @@ const ProductRowCard = ({ item, index,refetch }) => {
                 {/* Time Counter */}
                 <div className="w-full">
                     <TimeCounterRow
-                    refetch={refetch}
+                    handleRefetch={handleRefetch}
                         highestBid={item?.highestBid}
                         isAuctionActive={item?.isAuctionActive}
                         remainingAuctionTime={item?.remainingAuctionTime}

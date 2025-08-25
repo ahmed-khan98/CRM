@@ -2,7 +2,7 @@ import { timeAgo } from "@/app/utilities/date";
 import { Clock, DollarSign } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-const TimeCounter = ({ refetch,isLost, index, price, isAuctionActive, remainingAuctionTime, highestBid, auctionStartTime, isSold, auctionEndTime, SoldDate }) => {
+const TimeCounter = ({ handleRefetch,isLost, index, price, isAuctionActive, remainingAuctionTime, highestBid, auctionStartTime, isSold, auctionEndTime, SoldDate }) => {
 
   const [timeLeftToStart, setTimeLeftToStart] = useState("");
   const [timeLeftToEnd, setTimeLeftToEnd] = useState("");
@@ -97,8 +97,10 @@ const TimeCounter = ({ refetch,isLost, index, price, isAuctionActive, remainingA
           setIsUrgent(false)
         }
       } else {
-        console.log('chala refetch')
-        refetch()
+        console.log('chala handleRefetch')
+        if (handleRefetch && typeof handleRefetch === "function") {
+          handleRefetch()
+        }
         setTimeLeftToStart("")
         setTimeLeftToEnd("Auction Ended")
         setIsUrgent(false)
@@ -109,7 +111,9 @@ const TimeCounter = ({ refetch,isLost, index, price, isAuctionActive, remainingA
     interval = setInterval(updateCountdown, 1000)
 
     return () => {
-      refetch()
+      if (handleRefetch && typeof handleRefetch === "function") {
+        handleRefetch()
+      }
       clearInterval(interval)
     }
 
