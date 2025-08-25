@@ -98,8 +98,13 @@ const TimeCounter = ({ handleRefetch,isLost, index, price, isAuctionActive, rema
         }
       } else {
         console.log('chala handleRefetch')
+        console.log("Auction ended, calling handleRefetch")
         if (handleRefetch && typeof handleRefetch === "function") {
-          handleRefetch()
+          try {
+            handleRefetch()
+          } catch (error) {
+            console.error("Error calling handleRefetch:", error)
+          }
         }
         setTimeLeftToStart("")
         setTimeLeftToEnd("Auction Ended")
@@ -111,9 +116,9 @@ const TimeCounter = ({ handleRefetch,isLost, index, price, isAuctionActive, rema
     interval = setInterval(updateCountdown, 1000)
 
     return () => {
-      if (handleRefetch && typeof handleRefetch === "function") {
-        handleRefetch()
-      }
+      // if (handleRefetch && typeof handleRefetch === "function") {
+      //   handleRefetch()
+      // }
       clearInterval(interval)
     }
 

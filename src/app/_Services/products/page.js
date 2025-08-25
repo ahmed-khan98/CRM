@@ -55,7 +55,7 @@ const productApi = createApiAuction.injectEndpoints({
       query: () => "user/product/allProducts",
       providesTags: ["auction"],
       keepUnusedDataFor: 1800,
-      refetchOnMountOrArgChange: false,
+      // refetchOnMountOrArgChange: true,
       // Override with socket data
       onCacheEntryAdded: async (arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) => {
         try {
@@ -143,7 +143,7 @@ const productApi = createApiAuction.injectEndpoints({
       query: () => "user/product/closingProducts",
       providesTags: ["closingProducts"],
       keepUnusedDataFor: 1800,
-      refetchOnMountOrArgChange: true,
+      // refetchOnMountOrArgChange: true,
       // Override with socket data
       onCacheEntryAdded: async (arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) => {
         try {

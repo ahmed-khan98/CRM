@@ -97,9 +97,11 @@ const TimeCounterRow = ({
   }, [auctionStartTime, auctionEndTime, startTime])
 
   return (
+
     <div className="space-y-2">
       {/* Main Timer Display */}
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-3 min-w-0">
+      <div className="bg-gradient-to-r
+       from-gray-50 to-gray-100 rounded-lg p-3 min-w-0">
         <div className="flex items-center justify-between space-x-4">
           {/* Time Left Section */}
           <div className="flex items-center space-x-2 min-w-0">

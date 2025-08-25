@@ -15,7 +15,8 @@ export default function AuctionClosingSection() {
   const rowProducts= data?.data?.slice(10)
   
 console.log(data,'closing')
-const handleRefetch=()=>{
+
+function handleRefetch(){
   refetch()
 }
   const showNoProductMessage = !data?.data.length  && !isLoading;
