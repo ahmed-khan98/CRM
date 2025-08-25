@@ -10,13 +10,13 @@ import TimeCounter from '../CardComponent/TimeCounter';
 import ProductInfo from '../CardComponent/ProductInfo';
 import ProductBidding from '../CardComponent/ProductBidding';
 
-const BiddingProductCard = ({ item }) => {
+const BiddingProductCard = ({ item,index }) => {
 
     return (
         <div className="relative bg-gradient-to-b bg-gray-100 border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-[#F33E0A]">
             <ProductHeader name={item?.product?.name} id={item?.product?._id} />
             <ProductImageSection item={item?.product} />
-            <TimeCounter
+            {/* <TimeCounter
                 status={item?.product?.isSold}
                 price={item?.product?.price}
                 isAuctionActive={item?.product?.isAuctionActive}
@@ -25,7 +25,18 @@ const BiddingProductCard = ({ item }) => {
                 auctionEndTime={item?.product?.auctionEndTime} 
                 isSold={item?.product?.isSold}
                 SoldDate={item?.product?.SoldDate}
-                />
+                /> */}
+                     <TimeCounter 
+                    //   refetch={refetch}
+                      index={index}
+                      price={item?.product?.price} 
+                      isAuctionActive={item?.product?.isAuctionActive} 
+                      remainingAuctionTime={item?.product?.remainingAuctionTime} 
+                      auctionStartTime={item?.product?.auctionStartTime} 
+                      isSold={item?.product?.isSold}
+                      highestBid={item?.product?.highestBid}
+                      SoldDate={item?.product?.SoldDate}
+                      auctionEndTime={item?.product?.auctionEndTime} />
 
             <ProductInfo
                 quantity={item?.product?.quantity}

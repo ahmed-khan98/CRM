@@ -9,6 +9,7 @@ import { useAddPaymentMutation } from "@/app/_Services/payment/page"
 import toast from "react-hot-toast"
 import FeeTab from "@/app/_Components/Tab/FeeTab"
 import { usePenalizedProductItemsQuery } from "@/app/_Services/PenaltyFeeProduct/page"
+import { useRouter } from "next/navigation"
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -24,6 +25,7 @@ export default function page() {
     const { data, error: isError, isLoading } = usePenalizedProductItemsQuery();
     const [addPayment, { isLoading: isPocessing }] = useAddPaymentMutation()
 
+  const router = useRouter()
 
     const filteredNotifications = () => {
         return data.data.filter((item) => (item?.paymentStatus === 'unpaid'))
@@ -136,7 +138,7 @@ export default function page() {
                                                 </td>
                                                 <td className="px-3 py-4 whitespace-nowrap">
                                                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
-                                                        💰 {e?.penaltyAmount}
+                                                        💰 {Math.round((e?.penaltyAmount*100))/100}
                                                     </span>
                                                 </td>
                                                 <td className="px-3 py-4 whitespace-nowrap">
@@ -144,7 +146,7 @@ export default function page() {
                                                         onClick={() => {
                                                             setProcessingId(e?._id)
                                                             // handlePayments(e?._id)
-                                                            router.push(`/dashboard/feeConfirmation?type=auction_payment&id=${e?._id}&amount=${e?.penaltyAmount}&product=${e?.product?.name}&sku=${e?.product?.sku}`)
+                                                            router.push(`/dashboard/feeConfirmation?type=penalized_product_payment&id=${e?._id}&amount=${e?.penaltyAmount}&product=${e?.product?.name}&sku=${e?.product?.sku}`)
                                                         }
                                                         }
                                                         disabled={processingId === e?._id}
@@ -158,7 +160,7 @@ export default function page() {
                                                         ) : (
                                                             <>
                                                                 <CreditCard className="h-4 w-4" />
-                                                                Pay $5.00
+                                                                Pay ${Math.round((e?.penaltyAmount*100))/100}
                                                             </>
                                                         )}
                                                     </button>

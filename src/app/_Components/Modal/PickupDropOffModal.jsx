@@ -28,7 +28,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
     const [createPickDropAppointment] = useCreatePickDropAppointmentMutation()
     const [updatePickDropAppointment] = useUpdatePickDropAppointmentMutation()
     const { data: boxes, error: isError, isLoading } = useAllFilterBoxProductQuery()
-console.log(boxes,'boxes')
+    console.log(data, 'data')
 
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -76,10 +76,10 @@ console.log(boxes,'boxes')
 
     const initialValues = {
         appointmentType: data?.appointmentType || '',
-        appointmentDate: data?.appointmentDate || '',
-        appointmentTime: data?.appointmentTime || '',
+        appointmentDate: data?.appointmentDate.split("T")[0] || '',
         notes: data?.notes || '',
-        boxes: data?.boxes || []
+        appointmentTime: data?.appointmentTime || '',
+        boxes: data?.box ? data?.box.map(e => e?._id) : [], 
     };
 
     const boxOptions = boxes?.data?.map(e => ({
@@ -214,8 +214,7 @@ console.log(boxes,'boxes')
                                                     />
                                                 </div>
                                             </div>
-
-                                            <div>
+                                            {!data && <div>
                                                 <label className="block text-sm font-medium text-start text-gray-700 mb-1">
                                                     Boxes
                                                 </label>
@@ -254,7 +253,7 @@ console.log(boxes,'boxes')
                                                         return (
                                                             <span
                                                                 key={id}
-                                                                className="inline-flex items-center bg-green-300 text-green-800 text-sm px-3 py-1 rounded-full text-start"
+                                                                className="inline-flex items-center bg-green-300 text-green-800 text-sm px-3 py-1 rounded-full"
                                                             >
                                                                 {product?.label || id}
                                                                 <button
@@ -270,7 +269,9 @@ console.log(boxes,'boxes')
                                                         );
                                                     })}
                                                 </div>
-                                            </div>
+
+
+                                            </div>}
 
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">Notes (Optional)</label>

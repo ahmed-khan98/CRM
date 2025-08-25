@@ -3,7 +3,7 @@ import { Package, DollarSign, BarChart2 } from "lucide-react"
 
 const ProductInfo = ({ quantity, retail, highestBid, biddingCount, title, price }) => {
   return (
-    <div className="bg-white px-4 py-3 rounded-t-2xl shadow-sm border-b border-gray-200">
+    <div className="bg-white px-4 py-3 rounded-t-3xl shadow-sm border-b border-gray-200">
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         <div className="flex items-center justify-between">

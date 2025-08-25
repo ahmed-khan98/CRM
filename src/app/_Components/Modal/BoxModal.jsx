@@ -6,7 +6,7 @@ import { BoxIcon, Edit, X } from "lucide-react"
 import { toast } from "react-hot-toast"
 import Select from "react-select";
 import { motion, AnimatePresence } from "framer-motion"
-import { useAllFilterBoxProductQuery, useAllStoreProductQuery } from '@/app/_Services/StoreProduct/page'
+import {  useAllFilterProductQuery, useAllStoreProductQuery } from '@/app/_Services/StoreProduct/page'
 import { useAddBoxProductMutation, useUpdateProductBoxMutation } from '@/app/_Services/Box/page'
 
 
@@ -28,7 +28,7 @@ const itemVariants = {
 const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
     const [updateProductBox, { isLoading: updateLoading }] = useUpdateProductBoxMutation()
     const [addBoxProduct, { isLoading: addLoading }] = useAddBoxProductMutation()
-    const { data, error: isError, isLoading } = useAllFilterBoxProductQuery()
+    const { data, error: isError, isLoading } = useAllFilterProductQuery()
 
 
     const handleSubmit = async (values, { resetForm }) => {
@@ -63,7 +63,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
     };
 
 
-    console.log(data, 'useAllFilterBoxProductQuery  ')
+    console.log(data, 'useAllFilterProductQuery')
 
     const productsOptions = data?.data?.map(tag => ({
         label: `${tag?.sku} | ${tag?.name} `,
@@ -134,7 +134,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
 
                                         <div>
                                             <label htmlFor="notes" className="block text-sm font-semibold text-gray-700 mb-2">
-                                             Please describe box content
+                                            Please describe the content of the box?
                                             </label>
                                             <Field
                                                 as="textarea"
@@ -142,7 +142,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                 name="notes"
                                                 rows="4"
                                                 className="w-full px-4 py-3 border-2 border-gray-200 focus:border-red-500 rounded-xl focus:outline-none transition-colors resize-none"
-                                                placeholder="Any additional notes for the appointment..."
+                                                placeholder="describe the content of the box..."
                                             />
                                             <ErrorMessage name="notes" component="div" className="text-red-500 text-sm mt-1" />
                                         </div>

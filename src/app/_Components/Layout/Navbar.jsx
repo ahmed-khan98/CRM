@@ -14,6 +14,7 @@ import {
   clearFilteredProducts,
 } from "@/redux/filterSlice";
 import LeftNav from "../Dashboard/LeftNav";
+import { X } from "lucide-react";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,13 @@ const Navbar = () => {
 
   const renderSearchBar = () => (
     <div className="relative w-[600px]">
-      <div className="flex items-center bg-white border border-[#E9EFF4] rounded-full overflow-hidden">
+      <div className={`flex items-center bg-white border border-[#E9EFF4] rounded-full overflow-hidden ${searchTerm ? 'border-red-500': 'border-[#E9EFF4]'} `}>
+        {searchTerm &&
+        <button
+          onClick={() => setSearchTerm('')}
+          className="cursor-pointer p-3  text-gray-600 "
+        ><X />
+        </button>}
         <input
           type="text"
           placeholder="Search products..."
@@ -47,11 +54,12 @@ const Navbar = () => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
+
         <button
           onClick={() => router.push("/auction-product")}
           className="cursor-pointer p-3 bg-gray-800 text-white rounded-r-full w-[100px] hover:bg-gray-900 "
         >
-          Auction
+          {searchTerm ? 'Search' : "Auction"}
         </button>
       </div>
 
@@ -147,7 +155,7 @@ const Navbar = () => {
             </svg>
           </button>
 
-          <ul className="hidden lg:flex items-center space-x-6 !list-none">
+          <ul className="hidden lg:flex items-center space-x-6 !list-none capitalize">
             <li>{renderSearchBar()}</li>
           </ul>
 

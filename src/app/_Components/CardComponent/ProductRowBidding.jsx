@@ -90,75 +90,76 @@ const ProductRowBidding = ({
   }
 
   return (
-    <div className="flex items-center gap-3 relative">
-      {/* User's Current Bid Display */}
-      {userBid && (
-        <div className="flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-lg border">
-          <FaGavel size={12} className="text-[#F33E0A]" />
-          <span className="text-xs text-gray-600">Your Bid:</span>
-          <span className="text-sm font-semibold">${userBid}</span>
+    <div className="w-full">
+    {/* User Bid Display */}
+    {userBid && (
+      <div className="mb-2 p-2 bg-gray-50 rounded-lg">
+        <div className="flex justify-between items-center">
           {highestBid !== userBid && (
-            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-600 border border-orange-200">
+            <span className="px-2 py-1 rounded-full text-xs font-medium border text-gray-500 bg-[#ebbda5] border-[#f09868]">
               OUTBID
             </span>
           )}
+          <div className="flex items-center gap-1 text-gray-700">
+            <FaGavel size={12} className="text-[#F33E0A]" />
+            <span className="text-xs text-gray-700">Your Bid</span>
+          </div>
+          <div className="text-sm font-medium">${userBid}</div>
         </div>
-      )}
+      </div>
+    )}
 
-      {/* Success/Error Messages */}
+    {/* Success/Error Messages */}
+    <div className="relative mb-2">
       <AnimatePresence>
         {bidSuccess && (
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            className="absolute -top-12 left-0 right-0 z-20 p-2 bg-green-100 text-green-800 rounded-lg flex items-center gap-2 text-sm"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-2 p-2 bg-green-100 text-green-800 rounded-lg flex items-center gap-2 text-xs"
           >
-            <CheckCircle size={16} />
-            <span>Bid placed successfully!</span>
-            <span className="text-xs">({timeLeft}s)</span>
+            <CheckCircle size={14} />
+            <div className="flex-1">Bid placed successfully!</div>
+            <div className="text-xs">{timeLeft}s</div>
           </motion.div>
         )}
 
         {bidError && (
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            className="absolute -top-12 left-0 right-0 z-20 p-2 bg-red-100 text-red-800 rounded-lg flex items-center gap-2 text-sm"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mb-2 p-2 bg-red-100 text-red-800 rounded-lg flex items-center gap-2 text-xs"
           >
-            <AlertCircle size={16} />
-            <span>{errorMessage}</span>
-            <span className="text-xs">({timeLeft}s)</span>
+            <AlertCircle size={14} />
+            <div className="flex-1">{errorMessage}</div>
+            <div className="text-xs">{timeLeft}s</div>
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
 
-      {/* Bidding Controls */}
+    {/* Bidding Controls */}
+    <div className="flex rounded-lg overflow-hidden">
       {isSold ? (
-        <div className="flex items-center">
-          <button className="px-4 py-2 text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 rounded-lg flex items-center gap-2 cursor-not-allowed">
-            <CheckCircle size={16} />
-            Sold
-          </button>
-        </div>
+        <button className="w-full text-white font-semibold bg-gradient-to-r from-emerald-500 to-green-700 py-2 px-4 flex items-center justify-center gap-2 text-sm">
+          <CheckCircle size={16} />
+          Sold
+        </button>
       ) : (
-        <div className="flex items-center gap-2">
-          {/* Bid Input */}
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <>
+          <div className="relative w-1/2">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
               <DollarSign size={14} className="text-gray-500" />
             </div>
             <input
               type="text"
               value={bidValue}
               onChange={(e) => handleBidChange(e.target.value)}
-              className="w-24 px-8 py-2 bg-gray-100 text-center font-semibold text-sm outline-none rounded-lg border border-gray-200 focus:border-[#F33E0A] focus:ring-1 focus:ring-[#F33E0A] transition-all"
-              placeholder="0"
+              className="w-full h-full px-6 py-2 bg-[#EBEBEB] text-center font-semibold text-sm outline-none appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           </div>
-
-          {/* Place Bid Button */}
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={submitBid}
@@ -171,7 +172,7 @@ const ProductRowBidding = ({
               isSubmitting ||
               timeLeft <= 0
             }
-            className={`cursor-pointer px-4 py-2 text-white rounded-lg flex items-center gap-2 transition-all duration-300 text-sm font-semibold ${
+            className={`w-1/2 text-white py-2 px-2 flex items-center justify-center gap-1 transition-all duration-300 text-sm ${
               (
                 !biddingCount
                   ? Number(bidValue) >= Number(highestBid)
@@ -184,7 +185,7 @@ const ProductRowBidding = ({
                         : highestBid,
                     )
               ) && timeLeft > 0
-                ? "bg-[#F33E0A] hover:bg-[#d63006] cursor-pointer"
+                ? "bg-[#F33E0A] hover:bg-[#d63006]"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
@@ -200,9 +201,10 @@ const ProductRowBidding = ({
               </>
             )}
           </motion.button>
-        </div>
+        </>
       )}
     </div>
+  </div>
   )
 }
 

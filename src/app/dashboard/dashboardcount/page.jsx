@@ -138,7 +138,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white mt-5 px-4"> 
-    {billBoard?.data?.map(e=><div className=" pt-6 p-1 md:p-4  bg-gray-200 shadow-lg rounded-2xl border-3 border-[#ffa51d] ">
+    {/* {billBoard?.data?.map(e=><div className=" pt-6 p-1 md:p-4  bg-gray-200 shadow-lg rounded-2xl border-3 border-[#ffa51d] ">
         <div
           dangerouslySetInnerHTML={{ __html: e?.title }}
         />
@@ -146,7 +146,7 @@ export default function DashboardPage() {
           dangerouslySetInnerHTML={{ __html: e?.description }}
           className="py-3"
         />
-      </div>)}
+      </div>)} */}
       
       {/* <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white rounded-lg">
         <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-opacity-100"></div>

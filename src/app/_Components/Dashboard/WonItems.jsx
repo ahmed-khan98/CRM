@@ -5,7 +5,7 @@ import MyWonProduct from '../Home/MyWonProduct';
 import AuctionTab from '../Tab/AuctionTab';
 
 
-const WonItems = ({ text }) => {
+const WonItems = () => {
     const { data, error: isError, isLoading } = useWonItemsQuery();
     const wonItems = [
         ...(data?.data?.pending || []),
@@ -26,8 +26,16 @@ const WonItems = ({ text }) => {
                             <AuctionCardSkeleton key={index} />
                         ))
                     ) : wonItems?.length === 0 ? (
-                        <p className="flex items-center justify-center h-[40vh] col-span-4 py-16 text-2xl text-gray-600">
-                            {text}                                </p>
+                        <div className="flex flex-col items-center justify-center h-[40vh] col-span-4 py-16 font-semibold  text-3xl text-gray-500">
+                                <p className="py-6 text-4xl text-gray-500">
+                                    No Items
+                                </p>
+                                <Link href="/auction-product">
+                                    <button className="orange-bg cursor-pointer w-full text-white text-lg font-bold py-3 px-6 rounded-full transition-all hover:bg-orange-700">
+                                        BROWSE AUCTION
+                                    </button>
+                                </Link>
+                            </div>
                     ) : (
                         wonItems?.map((item, index) => (
                             <MyWonProduct key={item.id ?? `auction-${index}`} item={item} />

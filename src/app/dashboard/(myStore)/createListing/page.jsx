@@ -865,6 +865,7 @@ function Step4({ errors, touched, values, setFieldValue }) {
 
 
 function Step5({ errors, touched, values, setFieldValue, handleChange }) {
+
     const tagGroups = [
         "Pristine Condition",
         "Flawless",
@@ -887,7 +888,8 @@ function Step5({ errors, touched, values, setFieldValue, handleChange }) {
         "Original Condition Unaltered",
         "Moderately Used",
         "Inspected",
-        "Tested & Working"
+        "Tested & Working",
+        "No Defects"
     ];
 
     const negativeTag = [
@@ -899,6 +901,7 @@ function Step5({ errors, touched, values, setFieldValue, handleChange }) {
         "Performance Issues",
         "Non-functioning/Not Working",
         "Defective",
+        "Malfunctioning",
         "Not Working Correctly",
         "Incomplete/Missing Parts",
         "Scratched",
@@ -914,14 +917,17 @@ function Step5({ errors, touched, values, setFieldValue, handleChange }) {
         "Missing Original Packaging",
         "Used/Previously Owned",
         "Salvage",
-        'Sold "As Is"',
+        'Sold "as Is"',
         "No Return",
         "Minor Imperfections",
         "Residue/Sticky",
         "Chipped/Cracked",
+        "All Sales Are Final",
         "Worn",
         "Surface Imperfections",
-        "As Is. No Return"
+        "As Is. No Return",
+        "Missing Parts",
+        "Unknown If Missing Parts",
     ];
 
     // Convert tag options for React Select

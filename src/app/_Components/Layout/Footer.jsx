@@ -134,7 +134,7 @@ const Footer = () => {
             <Link href="/contact" className="hover:underline text-[#0578ff] "> Contact Us</Link> |
             <Link href="/resource" className="text-red-600 hover:underline "> Resources</Link> |
             <Link href="/sell" className="text-green-600 hover:underline "> SELL YOUR STUFF </Link>|
-            <Link href="/becomeAffiliate" className="hover:underline text-[#0578ff]"> Become an Affiliate</Link>
+            <Link href="/becomeAffiliate" className="hover:underline text-[#0578ff]"> Become An Affiliate</Link>
           </div>
 
           {/* Social Icons */}

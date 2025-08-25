@@ -25,9 +25,8 @@ const StripeCardForm = ({ onSuccess,onClose }) => {
   useEffect(() => {
     const initializeStripe = async () => {
       if (window.Stripe) {
-        const stripeInstance = window.Stripe(
-          "pk_test_51R4m772NNIACZssRUMxoZ8wTDpRsswMLP7aLv6ZqyZ7wpZzMHn8fSzbeSOE69AK5I2CKipPJKJVBO7EAgdzQGJ0R00fPjm7LZ3",
-        )
+        const stripeInstance = window.Stripe('pk_test_51HvHoVBGDx2Lb6IFoAUFCZG7LjSCigVrcHPAlXO45x02BCK4sLaWAzBTCjOh8xN2O2ahFw4a69n5SY7GW7RbJsie005oQBdm0K')
+        console.log(stripeInstance,'stripeInstance')
         setStripe(stripeInstance)
 
         const elementsInstance = stripeInstance.elements()

@@ -1,13 +1,10 @@
 'use client'
 import { Package, DollarSign, BarChart2 } from "lucide-react"
-
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
-import toast from 'react-hot-toast';
-import { CiHeart, CiSearch, CiShare2 } from 'react-icons/ci';
+import { CiHeart, CiShare2 } from 'react-icons/ci';
 import { FaHeart } from 'react-icons/fa';
 import Link from 'next/link';
-import { useAddPaymentMutation } from '@/app/_Services/payment/page';
 import { timeAgo } from "@/app/utilities/date";
 
 const MyWonProduct = ({ item }) => {
@@ -15,41 +12,31 @@ const MyWonProduct = ({ item }) => {
     const router = useRouter();
     const [loadingStates, setLoadingStates] = useState({});
 
-    function formatDate(dateString) {
-        return new Date(dateString).toLocaleString('en-US', {
-            dateStyle: 'medium',
-            timeStyle: 'short'
-        });
-    }
+    // function formatDate(dateString) {
+    //     return new Date(dateString).toLocaleString('en-US', {
+    //         dateStyle: 'medium',
+    //         timeStyle: 'short'
+    //     });
+    // }
 
-
-    const [addPayment] = useAddPaymentMutation();
-
-
-    const addPayments = async (id) => {
-        try {
-            setLoadingStates((prev) => ({ ...prev, [id]: true }));
-            const response = await addPayment({ "productId": id }).unwrap();
-            console.log(response, 'sadaf');
-
-            if (response?.data?.url) {
-                window.location.href = response?.data?.url;
-            }
-        } catch (error) {
-            toast.error(error?.data?.message || "Something went wrong");
-        } finally {
-            setLoadingStates((prev) => ({ ...prev, [id]: false }));
-        }
-    };
+    const truncateWords = (str, limit = 8) => {
+        if (!str) return "";
+        const words = str.split(" ");
+        return words.length > limit
+          ? words.slice(0, limit).join(" ") + "..."
+          : str;
+      };
+      
+      const truncatedName = truncateWords(item.product?.name, 8);
 
     return (
-        <div className="relative bg-gradient-to-b from-orange-50 to-white border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-green-600  ">
+        <div className="relative bg-gradient-to-b from-green-50 to-white border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-green-600  ">
             <Link
                 href={`/detailproduct/${item?.product?._id}`}
                 className="text-[18px] font-semibold pt-3 px-3 h-16 rounded-t-3xl text-[#0578ff] cursor-pointer  bg-orange-50"
             >
-                <p className="line-clamp-2 overflow-hidden text-ellipsis underline">
-                    {item?.product?.name.length > 50 ? `${item.product?.name.slice(0, 50)}...` : item.product?.name}
+                <p className="capitalize line-clamp-2 overflow-hidden text-ellipsis underline">
+                    {truncatedName}
                 </p>
             </Link>
             <div className="relative h-[290px]">
@@ -75,17 +62,17 @@ const MyWonProduct = ({ item }) => {
                 </div>
 
             </div>
-            <div className=" text-center py-3 flex justify-center bg-gray-100">
-                <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow ">
+            <div className=" text-center py-3 flex justify-center bg-green-200">
+                <div className="mx-2 w-[42%]  bg-gradient-to-r from-green-500 to-green-600 rounded-xl py-1 shadow ">
 
-                    <span className="text-[12px] text-gray-800 font-semibold uppercase">{item?.product?.isSold ? 'Ended' : "Time Left"}</span>
+                    <span className="text-[12px]  font-semibold uppercase text-white">{item?.product?.isSold ? 'Ended' : "Time Left"}</span>
                     <p className={`font-bold text-sm pt-0 text-[#F33E0A]}`}>{timeAgo(item?.product?.SoldDate)}</p>
 
                 </div>
-                <div className="mx-2 w-[42%] bg-white rounded-xl py-1 shadow">
-                    <span className="text-[12px] text-gray-800 font-semibold uppercase">Current Price</span>
+                <div className="mx-2 w-[42%] bg-gradient-to-r from-green-500 to-green-600 rounded-xl py-1 shadow">
+                    <span className="text-[12px]  text-white  font-semibold uppercase">Current Price</span>
 
-                    <p className="font-bold text-lg text-gray-800">${item?.product?.price}</p>
+                    <p className="font-bold text-lg text-white">${item?.product?.highestBid}</p>
                 </div>
             </div>
 
@@ -133,9 +120,19 @@ const MyWonProduct = ({ item }) => {
 
             <div className="flex flex-row">
 
-                <button className=" rounded-b-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-emerald-500 to-green-700 py-3 flex items-center justify-center ">
-                    <span>WON</span>
-                </button>
+                <button onClick={
+                    // () => addPayments(item?._id,item?.product?._id)
+                    () => {
+                        setLoadingStates((prev) => ({ ...prev, [item?.product?._id]: true }));
+                        router.push(`/dashboard/feeConfirmation?type=auction_payment&id=${item?._id}&amount=${item?.winningBid}&product=${item?.product?.name}&sku=${item?.product?.sku}&productId=${item?.product?._id}`)
+                    }}
+                    disabled={loadingStates[item?.product?._id]}
+                    className="rounded-br-3xl rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 py-3 flex items-center justify-center ">
+                    {loadingStates[item?.product?._id] ? (
+                        "Loading..."
+                    ) : (
+                        "Click to pay"
+                    )}                </button>
                 {/* {
                     item?.paymentStatus === 'Completed' ?
                         <button

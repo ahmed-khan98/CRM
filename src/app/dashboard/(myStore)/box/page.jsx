@@ -143,14 +143,13 @@ export default function Page() {
 
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                                             Box content
-
                                             </th>
 
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                                                 Product SKU | Title
                                             </th>
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                                               How Many Product
+                                              Count
                                             </th>
                                             <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                                                 Status
@@ -183,7 +182,7 @@ export default function Page() {
                                                 <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{`${e.notes}`}</td>
                                                 <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">
                                                     {!e?.products?.length
-                                                        ? "Empty Box"
+                                                        ? "No Selection"
                                                         : e?.products?.map((p, i) => (
                                                             <span key={i}>
                                                                 {`${p?.sku} | ${p?.name}`}

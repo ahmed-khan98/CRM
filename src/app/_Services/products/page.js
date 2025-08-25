@@ -83,7 +83,6 @@ const productApi = createApiAuction.injectEndpoints({
 
             // Do the same for other events
             socket.on(`product-auction-start-${id}`, (updatedProduct) => {
-              console.log(`product-auction-start-${id}`)
               updateCachedData((draft) => {
                 const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
                 if (index !== -1) {
@@ -93,7 +92,6 @@ const productApi = createApiAuction.injectEndpoints({
             });
       
             socket.on(`product-auction-end-${id}`, (updatedProduct) => {
-              console.log(`product-auction-end-${id}`)
 
               updateCachedData((draft) => {
                 const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
@@ -115,7 +113,6 @@ const productApi = createApiAuction.injectEndpoints({
             });
 
             socket.on(`product-bid-${id}`, (updatedProduct) => {
-              console.log(`product-bid-${id}`)
 
               updateCachedData((draft) => {
                 const index = draft.data.findIndex((p) => p._id === updatedProduct._id);
@@ -146,7 +143,7 @@ const productApi = createApiAuction.injectEndpoints({
       query: () => "user/product/closingProducts",
       providesTags: ["closingProducts"],
       keepUnusedDataFor: 1800,
-      refetchOnMountOrArgChange: false,
+      refetchOnMountOrArgChange: true,
       // Override with socket data
       onCacheEntryAdded: async (arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) => {
         try {
@@ -161,7 +158,8 @@ const productApi = createApiAuction.injectEndpoints({
               cachedProducts.push(...draft.data);
             }
           });
-      
+          console.log(`product-auction-end-chala`)
+
           // ✅ Loop over product IDs
           for (const product of cachedProducts) {
             const id = product._id;

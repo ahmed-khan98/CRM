@@ -13,10 +13,11 @@ const MyLostCard = ({ item, status }) => {
 
     return (
         <div className="relative bg-gradient-to-b bg-gray-100 border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-[#F33E0A] ">
-            <ProductHeader name={item?.product?.name} id={item?.product?._id} />
+            <ProductHeader name={item?.product?.name} id={item?.product?._id}  />
             <ProductImageSection item={item?.product} />
                   <TimeCounter 
-                  price={item?.product?.price} 
+                isLost={true}
+                highestBid={item?.product?.highestBid} 
                   isAuctionActive={item?.product?.isAuctionActive} 
                   remainingAuctionTime={item?.product?.remainingAuctionTime} 
                   auctionStartTime={item?.product?.auctionStartTime} 
@@ -41,7 +42,7 @@ const MyLostCard = ({ item, status }) => {
                 {status === 'paid' ? <button className=" rounded-bl-3xl rounded-br-3xl w-full font-bold  text-white bg-gradient-to-rfrom-blue-300 to-blue-400 py-3 flex items-center justify-center ">
                     <span>Paid</span>
                 </button> :
-                    <button className=" rounded-bl-3xl rounded-br-3xl w-full font-bold  text-white bg-gradient-to-r from-red-400 to-red-500 py-3 flex items-center justify-center ">
+                    <button className=" rounded-bl-3xl rounded-br-3xl w-full font-bold  text-white bg-[#EF4444] py-3 flex items-center justify-center ">
                         <span>LOST</span>
                     </button>}
             </div>

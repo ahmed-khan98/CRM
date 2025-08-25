@@ -29,13 +29,13 @@ const storeProductApi = createApiAuction.injectEndpoints({
             keepUnusedDataFor: 180,
             refetchOnMountOrArgChange: false,
         }),
-        allFilterBoxProduct: builder.query({
+        allFilterProduct: builder.query({
             query: () => `user/store-product/filter-for-box`,
-            providesTags: ['allFilterBoxProduct'],
+            providesTags: ['allFilterProduct'],
             keepUnusedDataFor: 180,
             refetchOnMountOrArgChange: false,
         }),
     }),
 })
 
-export const { useAddStoreProductMutation,useAllStoreProductQuery,useAllFilterBoxProductQuery } = storeProductApi
+export const { useAddStoreProductMutation,useAllStoreProductQuery,useAllFilterProductQuery } = storeProductApi

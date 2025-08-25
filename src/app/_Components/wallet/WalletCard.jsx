@@ -1,16 +1,14 @@
 "use client"
 
-import { useGetCardsQuery } from "@/app/_Services/wallet/page"
 import { motion } from "framer-motion"
 import { CreditCard, DollarSign, AlertCircle, CheckCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation';
 
-const WalletCard = ({ balance, currency, isActive }) => {
-
+const WalletCard = ({ balance, currency, isActive,defaultCard,storeCredit,isStore }) => {
+console.log( balance, currency, isActive,' balance, currency, isActive')
   const router =useRouter()
-  const { data: cardsData, isLoading: isCardsLoading } = useGetCardsQuery()
-  const defaultCard = cardsData?.data?.find(card => card.isDefault)
 
+console.log(defaultCard,'defaultCard')
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -35,9 +33,14 @@ const WalletCard = ({ balance, currency, isActive }) => {
         <div className="relative z-10">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <p className="text-orange-100 text-sm mb-1">Current Balance</p>
+              <p className="text-orange-100 text-sm mb-1">Wallet Balance</p>
               <h2 className="text-3xl font-bold">{formatCurrency(balance)}</h2>
-            </div>
+            </div> 
+            {isStore &&
+            <div>
+              <p className="text-orange-100 text-sm mb-1">Store Credit</p>
+              <h2 className="text-3xl font-bold">{formatCurrency(storeCredit)}</h2>
+            </div>}
             
             {isActive ? (
               <div className="flex items-center bg-green-500 bg-opacity-20 px-3 py-1 rounded-full">

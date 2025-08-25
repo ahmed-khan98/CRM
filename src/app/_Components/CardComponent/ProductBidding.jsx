@@ -108,7 +108,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
       {userBid &&
         <div className="px-4 py-2 bg-white">
 
-          <div className="flex justify-between items-center">{highestBid !== userBid &&
+          <div className="flex justify-between items-center">{highestBid === userBid ? <span className='px-3 py-1 rounded-full text-xs font-medium border text-green-600 bg-green-200 border-green-600 '> {''}WINNIN  G</span>:
             <span className='px-3 py-1 rounded-full text-xs font-medium border text-gray-500 bg-[#ebbda5] border-[#f09868]'> {''}OUTBID</span>}
             <div className="flex items-center gap-1 text-gray-700">
               <FaGavel size={14} className="text-[#F33E0A]" />

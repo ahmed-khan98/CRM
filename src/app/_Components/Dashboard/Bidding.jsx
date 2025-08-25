@@ -26,7 +26,7 @@ const BiddingItems = ({ text }) => {
                             {text}                                </p>
                     ) : (
                         biddingItems?.map((item, index) => (
-                            <BiddingProductCard key={item.id ?? `auction-${index}`} item={item} />
+                            <BiddingProductCard key={item.id ?? `auction-${index}`} item={item} index={index} />
                         ))
                     )}
                 </div>

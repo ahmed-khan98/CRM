@@ -16,7 +16,7 @@ const pickdropApi = createApiAuction.injectEndpoints({
                 method: 'PATCH',
                 body: {appointmentDate:formData.appointmentDate,
                     appointmentTime:formData.appointmentTime,
-                    boxes:formData.boxes,
+                    // boxes:formData.boxes,
                     notes:formData.notes},
             }),
             invalidatesTags: ['allPickDropAppointment','allWon']

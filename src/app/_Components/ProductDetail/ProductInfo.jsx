@@ -180,7 +180,7 @@ const ProductInfo = ({
     <div className="p-4 space-y-3">
 
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-3">{name}</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-3 capitalize">{name}</h1>
 
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-2">
@@ -319,7 +319,7 @@ const ProductInfo = ({
               <Award className="w-6 h-6 text-green-600" />
             </div>
             <h3 className="text-lg font-bold text-green-700 mb-1">Item Sold!</h3>
-            <p className="text-green-600">This auction has ended successfully.</p>
+            <p className="text-green-600">{user?._id === highestBidder ? 'You won this auction':'This auction has ended successfully'}</p>
           </div>
         ) : token ? (
           <div className="space-y-2">

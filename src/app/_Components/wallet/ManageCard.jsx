@@ -63,7 +63,7 @@ const ManageCards = () => {
         <div className="flex items-center justify-between  my-10 md:my-6">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center">
             <CreditCard className="mr-2 h-6 w-6 text-[#FB3B11]" />
-            Payment Methods
+            My Cards
           </h1>
           <motion.button
             whileTap={{ scale: 0.95 }}
@@ -179,7 +179,7 @@ const ManageCards = () => {
                           onClick={() => handleSetDefault(card._id)}
                           disabled={isSettingDefault}
                           className="cursor-pointer text-[#FB3B11] hover:bg-orange-50 p-2 rounded-full transition-colors"
-                          title="Set as Active"
+                          title="Set as Default"
                         >
                           <Check className="h-5 w-5" />
                         </motion.button>

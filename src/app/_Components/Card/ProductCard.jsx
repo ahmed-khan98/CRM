@@ -8,7 +8,7 @@ import ProductInfo from "../CardComponent/ProductInfo"
 import ProductBidding from "../CardComponent/ProductBidding"
 import { useProductSocket } from "@/app/hooks/useSocket"
 
-const ProductCard = React.memo(({index ,item ,wishlisted}) => {
+const ProductCard = React.memo(({index ,item ,wishlisted,refetch}) => {
 
     const { socket, isConnected, error } = useProductSocket(item?._id)
     const [realTimeData, setRealTimeData] = useState(null)
@@ -71,6 +71,7 @@ const ProductCard = React.memo(({index ,item ,wishlisted}) => {
       <ProductHeader name={data.name} id={data._id} />
       <ProductImageSection item={data}  wishlisted={wishlisted}/>
       <TimeCounter 
+      refetch={refetch}
       index={index}
       price={data?.price} 
       isAuctionActive={data?.isAuctionActive} 

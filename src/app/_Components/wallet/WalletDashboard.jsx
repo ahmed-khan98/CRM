@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState,  } from "react"
+import { useEffect, useState, } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Wallet, Plus, Clock, Filter, ChevronDown, AlertCircle, CheckCircle, ExternalLink,DollarSign  } from "lucide-react"
+import { Wallet, Plus, Clock, Filter, ChevronDown, AlertCircle, CheckCircle, ExternalLink, DollarSign } from "lucide-react"
 import WalletCard from "../../_Components/wallet/WalletCard"
 import TransactionItem from "../../_Components/wallet/TransactionItem"
 import AddCardModal from "../../_Components/wallet/AddCardModal"
-import { useCreateConnectAccountMutation, useGetConnectAccountQuery, useGetTransactionsQuery, useGetWalletQuery } from "@/app/_Services/wallet/page"
+import { useCreateConnectAccountMutation, useGetCardsQuery, useGetConnectAccountQuery, useGetTransactionsQuery, useGetWalletQuery } from "@/app/_Services/wallet/page"
 import StripeCardForm from "./StripeCardForm"
 import toast from "react-hot-toast"
 
@@ -20,13 +20,17 @@ const WalletDashboard = () => {
     isLoading: isConnectLoading,
     refetch: refetchConnectAccount,
   } = useGetConnectAccountQuery()
-  const [createConnectAccount, { isLoading: isCreatingConnect }] = useCreateConnectAccountMutation()  
-
+  const [createConnectAccount, { isLoading: isCreatingConnect }] = useCreateConnectAccountMutation()
+  
   const { data: walletData, isLoading: isWalletLoading, refetch: refetchWallet } = useGetWalletQuery()
+
+  const { data: cardsData, isLoading: isCardsLoading } = useGetCardsQuery()
+  const defaultCard = cardsData?.data?.find(card => card.isDefault)
+
   const { data: transactionsData, isLoading: isTransactionsLoading, refetch: refetchTransactions } = useGetTransactionsQuery({
     type: activeFilter === "ALL" ? undefined : activeFilter,
   })
-console.log(walletData,'walletData')
+  console.log(walletData, 'walletData')
 
 
   // Check connect account status on component mount
@@ -40,7 +44,7 @@ console.log(walletData,'walletData')
     setShowAddCard(false)
   }
 
-  const onClose=()=>{
+  const onClose = () => {
     setShowStripeForm(false)
   }
 
@@ -170,15 +174,14 @@ console.log(walletData,'walletData')
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  connectStatus.status === "enabled"
+                className={`w-12 h-12 rounded-full flex items-center justify-center ${connectStatus.status === "enabled"
                     ? "bg-green-100"
                     : connectStatus.status === "loading"
                       ? "bg-gray-100"
                       : connectStatus.status === "pending"
                         ? "bg-blue-100"
                         : "bg-orange-100"
-                }`}
+                  }`}
               >
                 {connectStatus.status === "enabled" ? (
                   <CheckCircle className="h-6 w-6 text-green-600" />
@@ -264,6 +267,9 @@ console.log(walletData,'walletData')
             balance={walletData?.data?.balance || 0}
             currency={walletData?.data?.currency || "USD"}
             isActive={walletData?.data?.isActive || false}
+            defaultCard={defaultCard}
+            storeCredit={walletData?.data?.storeCredit}
+            isStore={walletData?.data?.isStore}
           />
         )}
 
@@ -300,9 +306,8 @@ console.log(walletData,'walletData')
                           setActiveFilter(option.value)
                           setShowFilters(false)
                         }}
-                        className={`cursor-pointer w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                          activeFilter === option.value ? "font-medium text-[#FB3B11] bg-orange-50" : "text-gray-700"
-                        }`}
+                        className={`cursor-pointer w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${activeFilter === option.value ? "font-medium text-[#FB3B11] bg-orange-50" : "text-gray-700"
+                          }`}
                       >
                         {option.label}
                       </button>

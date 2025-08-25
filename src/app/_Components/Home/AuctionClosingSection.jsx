@@ -10,15 +10,18 @@ import ProductRowCard from "../Card/ProductRowCard";
 
 export default function AuctionClosingSection() {
 
-  const { data, error, isLoading } = useGetClosingProductsQuery();
+  const { data, error, isLoading,refetch} = useGetClosingProductsQuery();
   const gridProducts= data?.data?.slice(0,10)
   const rowProducts= data?.data?.slice(10)
   
 console.log(data,'closing')
+const handleRefetch=()=>{
+  refetch()
+}
   const showNoProductMessage = !data?.data.length  && !isLoading;
 
   if (error) {
-    return      <div className="bg-[#FFFFFF]  gap-6 container mx-auto">
+    return      <div className="bg-[#FFFFFF]  gap-6 container mx-auto py-36">
 
       <motion.div
     initial={{ opacity: 0, y: -20 }}
@@ -30,7 +33,7 @@ console.log(data,'closing')
       {/* <Clock className="h-6 w-6 text-[#F33E0A]" /> */}
     </div>
     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-      Our New Closing<span className="text-[#F33E0A]">Auction Product</span> Are Coming Soon
+      Our New Closing <span className="text-[#F33E0A]">Auction Product</span> Are Coming Soon
     </h1>
     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
       We're working on exciting new features to enhance your bidding experience. Stay tuned for a revolutionary
@@ -65,11 +68,11 @@ console.log(data,'closing')
         No Closing Product Found
       </p>
     ) : (
-      gridProducts?.map((item, index) => <ProductCard key={item?._id ?? `auction-${index}`} item={item} index={index} />)
+      gridProducts?.map((item, index) => <ProductCard key={item?._id ?? `auction-${index}`} item={item} index={index}  refetch={handleRefetch}/>)
     )}
   </div>
 
-  {!isLoading && !showNoProductMessage && rowProducts.length > 0 && (
+  {!isLoading && !showNoProductMessage && data?.data?.length > 11 && (
     <div className="mt-8">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">More Auctions</h1>
@@ -79,6 +82,7 @@ console.log(data,'closing')
       <div className="space-y-4">
         {rowProducts?.map((item, index) => (
           <ProductRowCard
+          refetch={handleRefetch}
             key={item?._id ?? `auction-row-${index}`}
             item={item}
             index={index + 11} // Add 11 to show correct index number

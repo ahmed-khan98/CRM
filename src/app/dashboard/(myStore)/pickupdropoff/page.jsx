@@ -63,7 +63,7 @@ export default function page() {
       return data.data.filter((item) => item?.status === "completed")
     } else if (activeFilter === "cancelled") {
       return data.data.filter((item) => item?.status === "cancelled")
-    }else if (activeFilter === "draft") {
+    } else if (activeFilter === "draft") {
       return data.data.filter((item) => item?.status === "draft")
     } else {
       return data.data
@@ -158,7 +158,7 @@ export default function page() {
                         Time
                       </th>
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
-                        BOX Describe Content
+                        Appointment Notes
                       </th>
                       {/* <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         SKU Location
@@ -168,6 +168,9 @@ export default function page() {
                       </th> */}
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Appointment Type
+                      </th>
+                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                        Box Content
                       </th>
                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Box Status
@@ -205,8 +208,16 @@ export default function page() {
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{`${appointment.notes}`}</td>
                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">{`${appointment.appointmentType}`}</td>
-                        {/* <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation},${appointment.auctionWin?.product?.skuRoom},${appointment.auctionWin?.product?.skuDetail}`}</td> */}
-                        {/* <td className="px-3 py-4 whitespace-nowrap text-md text-blue-600 capitalize"><Link href={`/detailproduct/${appointment.auctionWin?.product?._id}`}>{appointment.auctionWin?.product?.name}</Link></td> */}
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600 capitalize">
+                          {!appointment?.box?.length
+                            ? "Empty Box"
+                            : appointment?.box?.map((p, i) => (
+                              <span key={i}>
+                                {`${p?.notes}`}
+                                {i < appointment?.box.length - 1 && ", "}
+                              </span>
+                            ))}
+                        </td>
                         <td className="px-3 py-4 whitespace-nowrap">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(appointment.status)}`}

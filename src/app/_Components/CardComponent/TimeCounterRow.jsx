@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { Clock, DollarSign, TrendingUp } from "lucide-react"
 
 const TimeCounterRow = ({
-    index,
+  index,
   price,
   isAuctionActive,
   remainingAuctionTime,
@@ -13,6 +13,7 @@ const TimeCounterRow = ({
   isSold,
   auctionEndTime,
   SoldDate,
+ refetch
 }) => {
   const [timeLeftToStart, setTimeLeftToStart] = useState("")
   const [timeLeftToEnd, setTimeLeftToEnd] = useState("")
@@ -57,12 +58,12 @@ const TimeCounterRow = ({
 
         // If 5 minutes or less, show minutes and seconds
         if (diff <= 5 * 60 * 1000) {
-         if(minutes){
+          if (minutes) {
             setTimeLeftToEnd(`${minutes}m ${seconds}s`)
-         }
-         else{
+          }
+          else {
             setTimeLeftToEnd(`${seconds}s`)
-         }
+          }
           setIsUrgent(true)
         }
         // If more than 5 minutes, show appropriate format
@@ -75,6 +76,7 @@ const TimeCounterRow = ({
           setIsUrgent(false)
         }
       } else {
+        refetch()
         setTimeLeftToStart("")
         setTimeLeftToEnd("Auction Ended")
         setIsUrgent(false)
@@ -84,7 +86,10 @@ const TimeCounterRow = ({
     updateCountdown()
     interval = setInterval(updateCountdown, 1000)
 
-    return () => clearInterval(interval)
+    return () => {
+      refetch()
+      clearInterval(interval)
+    }
   }, [auctionStartTime, auctionEndTime, startTime])
 
   return (
@@ -97,7 +102,7 @@ const TimeCounterRow = ({
             <Clock size={16} className={`${isUrgent ? "text-red-500" : "text-blue-500"} flex-shrink-0`} />
             <div className="min-w-0">
               <p className="text-sm text-gray-600 font-medium uppercase tracking-wide">
-                {isSold ? "Ended" : timeLeftToStart ? "Starts In" : "Time Left"}
+                {isSold ? "Ended" :  "Time Left"}
               </p>
               <p
                 className={`font-bold text-sm ${isUrgent ? "text-red-600 animate-pulse [animation-duration:0.6s]" : isSold ? "text-gray-500" : "text-blue-600"} truncate`}
@@ -119,31 +124,11 @@ const TimeCounterRow = ({
             </div>
           </div>
 
-         
+
         </div>
       </div>
 
-      {/* Debug Info Display */}
-      {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 text-xs">
-        <div className="font-semibold text-yellow-800 mb-1">🧪 Timer Debug Info:</div>
-        <div className="grid grid-cols-2 gap-1 text-yellow-700">
-          <div>
-            Remaining:{" "}
-            <span className="font-mono font-bold">
-              {debugInfo.diffInMinutes}m {debugInfo.diffInSeconds % 60}s
-            </span>
-          </div>
-          <div>
-            Elapsed: <span className="font-mono font-bold">{debugInfo.elapsedTime}s</span>
-          </div>
-          <div className="col-span-2">
-            End Time: <span className="font-mono">{debugInfo.end}</span>
-          </div>
-          <div className="col-span-2">
-            Current: <span className="font-mono">{debugInfo.now}</span>
-          </div>
-        </div>
-      </div> */}
+
     </div>
   )
 }
