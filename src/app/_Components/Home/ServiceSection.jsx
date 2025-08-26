@@ -68,7 +68,7 @@ const ServicesSection = () => {
         <Link href="/closing-products">
           <button
             className="cursor-pointer md:w-[35%] shadow text-white text-lg font-bold py-3 px-6 rounded-full transition-all bg-[#FB3B11] hover:bg-[#e03610] disabled:opacity-70">
-          CLOSING SOON
+         BROWSE AUCTION
           </button>
         </Link>
       </div>

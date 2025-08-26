@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { FaGavel } from 'react-icons/fa6'
 
 
-const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, biddingCount, price, automateBidder }) => {
+const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, biddingCount, automateBidder }) => {
   const [addBid, { isLoading: isSubmitting }] = useAddBidMutation()
   const token = Cookies.get("token")
   const userCookie = Cookies.get("currentuser");
@@ -108,7 +108,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
       {userBid &&
         <div className="px-4 py-2 bg-white">
 
-          <div className="flex justify-between items-center">{highestBid === userBid ? <span className='px-3 py-1 rounded-full text-xs font-medium border text-green-600 bg-green-200 border-green-600 '> {''}WINNIN  G</span>:
+          <div className="flex justify-between items-center">{highestBid === userBid ? <span className='px-3 py-1 rounded-full text-xs font-medium border text-green-600 bg-green-200 border-green-600 '> {''}WINNING</span>:
             <span className='px-3 py-1 rounded-full text-xs font-medium border text-gray-500 bg-[#ebbda5] border-[#f09868]'> {''}OUTBID</span>}
             <div className="flex items-center gap-1 text-gray-700">
               <FaGavel size={14} className="text-[#F33E0A]" />
@@ -116,16 +116,6 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
             </div>
             <div className="text-md font-medium">${userBid}</div>
           </div>
-
-          {/* <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <DollarSign size={16} className="text-[#F33E0A]" />
-                      <span className="text-sm text-gray-700">Retail</span>
-                    </div>
-                    <span className="text-sm font-medium">${retail || 0}</span>
-                  </div> */}
-
-
         </div>}
       <div className="relative">
 

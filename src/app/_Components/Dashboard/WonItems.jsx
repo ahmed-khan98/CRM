@@ -30,7 +30,7 @@ const WonItems = () => {
                                 <p className="py-6 text-4xl text-gray-500">
                                     No Items
                                 </p>
-                                <Link href="/auction-product">
+                                <Link href="/closing-products">
                                     <button className="orange-bg cursor-pointer w-full text-white text-lg font-bold py-3 px-6 rounded-full transition-all hover:bg-orange-700">
                                         BROWSE AUCTION
                                     </button>

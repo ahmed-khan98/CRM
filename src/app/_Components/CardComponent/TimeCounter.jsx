@@ -2,7 +2,7 @@ import { timeAgo } from "@/app/utilities/date";
 import { Clock, DollarSign } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-const TimeCounter = ({ handleRefetch,isLost, index, price, isAuctionActive, remainingAuctionTime, highestBid, auctionStartTime, isSold, auctionEndTime, SoldDate }) => {
+const TimeCounter = ({ handleRefetch, isLost, index, price, isAuctionActive, remainingAuctionTime, highestBid, auctionStartTime, isSold, auctionEndTime, SoldDate }) => {
 
   const [timeLeftToStart, setTimeLeftToStart] = useState("");
   const [timeLeftToEnd, setTimeLeftToEnd] = useState("");
@@ -55,6 +55,7 @@ const TimeCounter = ({ handleRefetch,isLost, index, price, isAuctionActive, rema
 
       // Auction has not started yet
       if (now < start) {
+
         const diff = start - now
         const hours = Math.floor(diff / (1000 * 60 * 60))
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
@@ -66,6 +67,7 @@ const TimeCounter = ({ handleRefetch,isLost, index, price, isAuctionActive, rema
         }
         setTimeLeftToEnd("")
         setIsUrgent(false)
+        
       }
       // Auction is active
       else if (now >= start && now < end) {
@@ -128,8 +130,8 @@ const TimeCounter = ({ handleRefetch,isLost, index, price, isAuctionActive, rema
     {/* Main Timer Display */}
     <div
       className={`rounded-lg p-2 min-w-0 ${isLost
-          ? "bg-[#EF4444]" // 🔴 red when lost
-          : "bg-white" // default gradient
+        ? "bg-[#EF4444]" // 🔴 red when lost
+        : "bg-white" // default gradient
         }`}
     >
       <div className="flex items-center justify-center space-x-4">
@@ -145,12 +147,12 @@ const TimeCounter = ({ handleRefetch,isLost, index, price, isAuctionActive, rema
             </p>
             <p
               className={`text-center font-bold text-sm truncate ${isLost
-                  ? "text-white"
-                  : isUrgent
-                    ? "text-red-600 animate-pulse [animation-duration:0.6s]"
-                    : isSold
-                      ? "text-gray-500"
-                      : "text-blue-600"
+                ? "text-white"
+                : isUrgent
+                  ? "text-red-600 animate-pulse [animation-duration:0.6s]"
+                  : isSold
+                    ? "text-gray-500"
+                    : "text-blue-600"
                 }`}
             >
               {isSold ? timeAgo(SoldDate) : timeLeftToStart || timeLeftToEnd}

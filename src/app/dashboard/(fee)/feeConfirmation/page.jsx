@@ -705,7 +705,7 @@ const FeeCindirmation = () => {
                 <PayPalButton
                   type={type}
                   id={getPayPalId()}
-                  amount={amount}
+                  amount={Math.round((amount*100))/100}
                   onSuccess={handlePayPalSuccess}
                   onError={handlePayPalError}
                 />
@@ -738,7 +738,7 @@ const FeeCindirmation = () => {
                       </p>
                     </div>
                     <div className="text-right ml-2">
-                      <span className="text-2xl font-bold text-gray-800">${amount}</span>
+                      <span className="text-2xl font-bold text-gray-800">${Math.round((amount*100))/100}</span>
                     </div>
                   </div>
                 </div>
@@ -746,7 +746,7 @@ const FeeCindirmation = () => {
                 <div className="bg-gray-50 rounded-lg p-4">
                   <div className="flex justify-between items-center">
                     <span className="font-semibold text-gray-800">Total Amount</span>
-                    <span className="text-2xl font-bold text-[#FB3B11]">${amount}</span>
+                    <span className="text-2xl font-bold text-[#FB3B11]">${Math.round((amount*100))/100}</span>
                   </div>
                 </div>
 

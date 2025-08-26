@@ -89,7 +89,13 @@ const ProductCard = React.memo(({index ,item ,wishlisted,handleRefetch}) => {
         biddingCount={data?.biddingCount}
       />
       <div className="flex">
-        <ProductBidding id={data?._id} isSold={data?.isSold} price={data?.price}  biddingCount={data?.biddingCount} highestBid={data?.highestBid} isAuctionActive={data?.isAuctionActive} automateBidder={data?.automateBidder}/>
+        <ProductBidding id={data?._id}
+         isSold={data?.isSold}
+           biddingCount={data?.biddingCount}
+            highestBid={data?.highestBid}
+            
+             isAuctionActive={data?.isAuctionActive}
+              automateBidder={data?.automateBidder}/>
       </div>
     </div>
   )

@@ -8,7 +8,9 @@ const page = () => {
   return (
     <>
       {/* <SortMenu/> */}
-      <div className="pt-24 md:pt-20">
+      <SortMenu/>
+
+      {/* <div className="pt-24 md:pt-20">
         <h2 className='text-center font-bold text-2xl text-[#F33E0A]'>LOT PRODUCTS AUCTION</h2>
         <div className="flex items-center justify-center gap-2 w-full my-3">
 
@@ -18,7 +20,7 @@ const page = () => {
           </h2>
           <div className="w-1/9 h-[1px] bg-gray-300"></div>
         </div>
-      </div>
+      </div> */}
       <AuctionClosingSection />
 
     </>
