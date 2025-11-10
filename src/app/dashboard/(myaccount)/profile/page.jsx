@@ -65,7 +65,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 px-4">
+    <div className="min-h-screen  py-4 px-4">
       <Toaster position="top-center" />
       <div className="max-w-5xl mx-auto pt-4">
 
@@ -84,14 +84,14 @@ const ProfilePage = () => {
         >
           <div className="relative overflow-hidden">
             {/* Decorative header */}
-            <div className="h-24 bg-gradient-to-r from-[#F33E0A] to-[#FF6B3D]"></div>
+            <div className="h-24 bg-gradient-to-r from-[#5f2781] to-[#a945fc]"></div>
 
             {/* Profile header with edit button */}
             <div className="relative px-1 md:px-8  pb-6 -mt-14">
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
                 <div className="flex items-end gap-4 mx-4 md:mx-0">
                   <div className="h-20 w-20 rounded-full bg-white shadow-md flex items-center justify-center border-4 border-white">
-                    <div className="h-full w-full rounded-full bg-[#F33E0A] flex items-center justify-center text-white text-2xl font-bold capitalize">
+                    <div className="h-full w-full rounded-full bg-[#5f2781] flex items-center justify-center text-white text-2xl font-bold capitalize">
                       {`${formData.firstName?.charAt(0)} ${formData.lastName?.charAt(0)}`  || <User size={30} />}
                     </div>
                   </div>
@@ -108,7 +108,7 @@ const ProfilePage = () => {
                   onClick={() => setIsEditable(!isEditable)}
                   className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${isEditable
                     ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    : "bg-white text-[#F33E0A] border border-[#F33E0A] hover:bg-[#F33E0A] hover:text-white"
+                    : "bg-white text-[#5f2781] border border-[#5f2781] hover:bg-[#a945fc] hover:text-white"
                     }`}
                 >
                   {isEditable ? (
@@ -143,7 +143,7 @@ const ProfilePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <User size={16} className="text-[#F33E0A]" />
+                  <User size={16} className="text-[#5f2781]" />
                   First Name
                 </label>
                 <div className="relative">
@@ -153,8 +153,8 @@ const ProfilePage = () => {
                     value={formData.firstName}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#5f2781]"
+                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200`}
                     placeholder="Your first name"
                   />
 
@@ -164,7 +164,7 @@ const ProfilePage = () => {
 
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <User size={16} className="text-[#F33E0A]" />
+                  <User size={16} className="text-[#5f2781]" />
                   Last Name
                 </label>
                 <div className="relative">
@@ -174,8 +174,8 @@ const ProfilePage = () => {
                     value={formData.lastName}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#5f2781]"
+                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200`}
                     placeholder="Your last name"
                   />
                 </div>
@@ -183,7 +183,7 @@ const ProfilePage = () => {
 
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <Mail size={16} className="text-[#F33E0A]" />
+                  <Mail size={16} className="text-[#5f2781]" />
                   Email Address
                 </label>
                 <div className="relative">
@@ -193,8 +193,8 @@ const ProfilePage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     disabled={!isEditable}
-                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#5f2781]"
+                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200`}
                     placeholder="Your email address"
                   />
                 </div>
@@ -202,7 +202,7 @@ const ProfilePage = () => {
 
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <Phone size={16} className="text-[#F33E0A]" />
+                  <Phone size={16} className="text-[#5f2781]" />
                   Phone Number
                 </label>
                 <div className="relative">
@@ -220,8 +220,8 @@ const ProfilePage = () => {
                     }}
                     placeholder="+1 (555) 123-4567"
                     disabled={!isEditable}
-                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                    className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#5f2781]"
+                      } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200`}
                     // placeholder="Your phone number"
                   />
                 </div>
@@ -241,7 +241,7 @@ const ProfilePage = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="group cursor-pointer relative overflow-hidden px-8 py-4 bg-[#F33E0A] text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70 min-w-[200px]"
+                    className="group cursor-pointer relative overflow-hidden px-8 py-4 bg-[#5f2781] text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70 min-w-[200px]"
                   >
                     <span className="relative flex items-center justify-center gap-2">
                       {isLoading ? (

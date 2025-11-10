@@ -51,7 +51,7 @@
 //       case false :
 //         return "text-yellow-600 bg-yellow-100"
 //       case "discarded":
-//         return "text-red-600 bg-red-100"
+//         return "text-[#5f2781] bg-red-100"
 //       default:
 //         return "text-gray-600 bg-gray-100"
 //     }
@@ -80,24 +80,24 @@
 
 //   if (isLoading) {
 //     return (
-//       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
+//       <div className="min-h-screen  flex items-center justify-center">
 //         <motion.div
 //           animate={{ rotate: 360 }}
 //           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-//           className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
+//           className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
 //         />
-//         <span className="ml-4 text-[#F33E0A] font-semibold">Loading your Store Items... 🚀</span>
+//         <span className="ml-4 text-[#5f2781] font-semibold">Loading your Store Items... 🚀</span>
 //       </div>
 //     )
 //   }
 
 //   return (
-//     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+//     <div className="min-h-screen  py-12 px-4">
 //       <div className="max-w-7xl mx-auto p-5 flex flex-col space-y-6">
 
 //         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
 //           <div className="flex items-center gap-3">
-//             <Store className="h-7 w-7 text-red-600" />
+//             <Store className="h-7 w-7 text-[#5f2781]" />
 //             <h3 className="text-[#242424] text-[24px] font-bold">{currentUser?.isStore ? 'My Items' :'My Store'}</h3>
 //           </div>
 
@@ -105,7 +105,7 @@
 //           <div className="flex bg-white rounded-full shadow-sm p-1">
 //             {filterData?.map(e => <button
 //               onClick={() => setActiveFilter(e)}
-//               className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+//               className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
 //                 }`}
 //             >
 //               {e}
@@ -135,33 +135,33 @@
 //             <div className="overflow-hidden rounded-2xl border border-gray-200" >
 //               <div className="overflow-x-auto">
 //                 <table className="min-w-full">
-//                   <thead className="bg-red-50">
+//                   <thead className="bg-[#5f2781]">
 //                     <tr>
-//                     <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                     <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Image
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         SKU
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         SKU Location
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Title
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Price
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Current Bid
 //                       </th>
 
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Sold Status
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Auction Status                      </th>
-//                       {/* <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       {/* <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Action
 //                       </th> */}
 //                     </tr>
@@ -175,7 +175,7 @@
 //                         initial={{ opacity: 0, x: -20 }}
 //                         animate={{ opacity: 1, x: 0 }}
 //                         transition={{ delay: index * 0.1 }}
-//                         className="hover:bg-red-50 transition-colors"
+//                         className="hover:bg-[#f7f7f7] transition-colors"
 //                       >
 //                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600"> <img
 //                           src={product?.images?.[0]}
@@ -204,7 +204,7 @@
 //                         </td>
 //                         {/* <td className="px-3 py-4 whitespace-nowrap">
 //                           {product.status ? (
-//                             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
+//                             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-[9825fd]">
 //                               💰 $5.00
 //                             </span>
 //                           ) : (
@@ -299,7 +299,7 @@
 //       case false:
 //         return "text-yellow-600 bg-yellow-100"
 //       case "discarded":
-//         return "text-red-600 bg-red-100"
+//         return "text-[#5f2781] bg-red-100"
 //       default:
 //         return "text-gray-600 bg-gray-100"
 //     }
@@ -352,13 +352,13 @@
 
 //   if (isLoading) {
 //     return (
-//       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
+//       <div className="min-h-screen  flex items-center justify-center">
 //         <motion.div
 //           animate={{ rotate: 360 }}
 //           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-//           className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
+//           className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
 //         />
-//         <span className="ml-4 text-[#F33E0A] font-semibold">Loading your Store Items... 🚀</span>
+//         <span className="ml-4 text-[#5f2781] font-semibold">Loading your Store Items... 🚀</span>
 //       </div>
 //     )
 //   }
@@ -366,7 +366,7 @@
 //   if (!currentUser?.isStore) {
 //     return (
 //       <>
-//         <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+//         <div className="min-h-screen  py-12 px-4">
 //           <div className="max-w-4xl mx-auto">
 //             <motion.div
 //               initial={{ opacity: 0, y: 30 }}
@@ -382,7 +382,7 @@
 //                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
 //                   className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6"
 //                 >
-//                   <Store className="h-12 w-12 text-red-600" />
+//                   <Store className="h-12 w-12 text-[#5f2781]" />
 //                 </motion.div>
 
 //                 {/* Main Message */}
@@ -413,11 +413,11 @@
 //                   className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-6 mb-8 border border-red-200"
 //                 >
 //                   <div className="flex items-center justify-center mb-4">
-//                     <DollarSign className="h-8 w-8 text-red-600 mr-2" />
-//                     <h3 className="text-xl font-semibold text-red-800">One-Time Setup Fee</h3>
+//                     <DollarSign className="h-8 w-8 text-[#5f2781] mr-2" />
+//                     <h3 className="text-xl font-semibold text-[9825fd]">One-Time Setup Fee</h3>
 //                   </div>
 //                   <div className="text-center">
-//                     <span className="text-4xl font-bold text-red-600">$50</span>
+//                     <span className="text-4xl font-bold text-[#5f2781]">$50</span>
 //                     <p className="text-gray-600 mt-2">
 //                       This one-time payment covers your store setup, verification, and lifetime access to our platform.
 //                     </p>
@@ -446,7 +446,7 @@
 //                     <p className="text-sm text-gray-600">Secure and fast payment processing</p>
 //                   </div>
 //                   <div className="text-center p-4">
-//                     <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+//                     <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
 //                       <span className="text-2xl">📊</span>
 //                     </div>
 //                     <h4 className="font-semibold text-gray-800 mb-2">Analytics</h4>
@@ -462,7 +462,7 @@
 //                   whileHover={{ scale: 1.05 }}
 //                   whileTap={{ scale: 0.95 }}
 //                   onClick={handleCreateStore}
-//                   className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
+//                   className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
 //                 >
 //                   <Plus className="h-5 w-5" />
 //                   Create My Store - $50
@@ -493,11 +493,11 @@
 //   }
 
 //   return (
-//     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+//     <div className="min-h-screen  py-12 px-4">
 //       <div className="max-w-7xl mx-auto p-5 flex flex-col space-y-6">
 //         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
 //           <div className="flex items-center gap-3">
-//             <Store className="h-7 w-7 text-red-600" />
+//             <Store className="h-7 w-7 text-[#5f2781]" />
 //             <h3 className="text-[#242424] text-[24px] font-bold">My Store Items</h3>
 //           </div>
 //           <div className="flex bg-white rounded-full shadow-sm p-1">
@@ -505,7 +505,7 @@
 //               <button
 //                 key={e}
 //                 onClick={() => setActiveFilter(e)}
-//                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+//                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
 //                   }`}
 //               >
 //                 {e}
@@ -533,30 +533,30 @@
 //             <div className="overflow-hidden rounded-2xl border border-gray-200">
 //               <div className="overflow-x-auto">
 //                 <table className="min-w-full">
-//                   <thead className="bg-red-50">
+//                   <thead className="bg-[#5f2781]">
 //                     <tr>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Image
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         SKU
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         SKU Location
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Title
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Price
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Current Bid
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Sold Status
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Auction Status
 //                       </th>
 //                     </tr>
@@ -570,7 +570,7 @@
 //                           initial={{ opacity: 0, x: -20 }}
 //                           animate={{ opacity: 1, x: 0 }}
 //                           transition={{ delay: index * 0.1 }}
-//                           className="hover:bg-red-50 transition-colors"
+//                           className="hover:bg-[#f7f7f7] transition-colors"
 //                         >
 //                           <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
 //                             <img
@@ -689,7 +689,7 @@
 //       case false:
 //         return "text-yellow-600 bg-yellow-100"
 //       case "discarded":
-//         return "text-red-600 bg-red-100"
+//         return "text-[#5f2781] bg-red-100"
 //       default:
 //         return "text-gray-600 bg-gray-100"
 //     }
@@ -742,13 +742,13 @@
 
 //   if (isLoading) {
 //     return (
-//       <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
+//       <div className="min-h-screen  flex items-center justify-center">
 //         <motion.div
 //           animate={{ rotate: 360 }}
 //           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-//           className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
+//           className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
 //         />
-//         <span className="ml-4 text-[#F33E0A] font-semibold">Loading your Store Items... 🚀</span>
+//         <span className="ml-4 text-[#5f2781] font-semibold">Loading your Store Items... 🚀</span>
 //       </div>
 //     )
 //   }
@@ -756,7 +756,7 @@
 //   if (!currentUser?.isStore) {
 //     return (
 //       <>
-//         <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+//         <div className="min-h-screen  py-12 px-4">
 //           <div className="max-w-4xl mx-auto">
 //             <motion.div
 //               initial={{ opacity: 0, y: 30 }}
@@ -772,7 +772,7 @@
 //                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
 //                   className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6"
 //                 >
-//                   <Store className="h-12 w-12 text-red-600" />
+//                   <Store className="h-12 w-12 text-[#5f2781]" />
 //                 </motion.div>
 
 //                 {/* Main Message */}
@@ -803,11 +803,11 @@
 //                   className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-6 mb-8 border border-red-200"
 //                 >
 //                   <div className="flex items-center justify-center mb-4">
-//                     <DollarSign className="h-8 w-8 text-red-600 mr-2" />
-//                     <h3 className="text-xl font-semibold text-red-800">One-Time Setup Fee</h3>
+//                     <DollarSign className="h-8 w-8 text-[#5f2781] mr-2" />
+//                     <h3 className="text-xl font-semibold text-[9825fd]">One-Time Setup Fee</h3>
 //                   </div>
 //                   <div className="text-center">
-//                     <span className="text-4xl font-bold text-red-600">$50</span>
+//                     <span className="text-4xl font-bold text-[#5f2781]">$50</span>
 //                     <p className="text-gray-600 mt-2">
 //                       This one-time payment covers your store setup, verification, and lifetime access to our platform.
 //                     </p>
@@ -836,7 +836,7 @@
 //                     <p className="text-sm text-gray-600">Secure and fast payment processing</p>
 //                   </div>
 //                   <div className="text-center p-4">
-//                     <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+//                     <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
 //                       <span className="text-2xl">📊</span>
 //                     </div>
 //                     <h4 className="font-semibold text-gray-800 mb-2">Analytics</h4>
@@ -852,7 +852,7 @@
 //                   whileHover={{ scale: 1.05 }}
 //                   whileTap={{ scale: 0.95 }}
 //                   onClick={handleCreateStore}
-//                   className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
+//                   className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
 //                 >
 //                   <Plus className="h-5 w-5" />
 //                   Create My Store - $50
@@ -883,11 +883,11 @@
 //   }
 
 //   return (
-//     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+//     <div className="min-h-screen  py-12 px-4">
 //       <div className="max-w-7xl mx-auto p-5 flex flex-col space-y-6">
 //         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
 //           <div className="flex items-center gap-3">
-//             <Store className="h-7 w-7 text-red-600" />
+//             <Store className="h-7 w-7 text-[#5f2781]" />
 //             <h3 className="text-[#242424] text-[24px] font-bold">My Store Items</h3>
 //           </div>
 //           <div className="flex bg-white rounded-full shadow-sm p-1">
@@ -895,7 +895,7 @@
 //               <button
 //                 key={e}
 //                 onClick={() => setActiveFilter(e)}
-//                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+//                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
 //                   }`}
 //               >
 //                 {e}
@@ -923,30 +923,30 @@
 //             <div className="overflow-hidden rounded-2xl border border-gray-200">
 //               <div className="overflow-x-auto">
 //                 <table className="min-w-full">
-//                   <thead className="bg-red-50">
+//                   <thead className="bg-[#5f2781]">
 //                     <tr>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Image
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         SKU
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         SKU Location
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Title
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Price
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Current Bid
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Sold Status
 //                       </th>
-//                       <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+//                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Auction Status
 //                       </th>
 //                     </tr>
@@ -960,7 +960,7 @@
 //                           initial={{ opacity: 0, x: -20 }}
 //                           animate={{ opacity: 1, x: 0 }}
 //                           transition={{ delay: index * 0.1 }}
-//                           className="hover:bg-red-50 transition-colors"
+//                           className="hover:bg-[#f7f7f7] transition-colors"
 //                         >
 //                           <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
 //                             <img
@@ -1151,13 +1151,13 @@ export default function Page() {
 
   if (isLoading || isStoreLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
+      <div className="min-h-screen  flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#F33E0A] font-semibold">Loading your Store Items... 🚀</span>
+        <span className="ml-4 text-[#5f2781] font-semibold">Loading your Store Items... 🚀</span>
       </div>
     )
   }
@@ -1166,7 +1166,7 @@ export default function Page() {
   if (!currentUser?.isStore) {
     return (
       <>
-        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-4">
+        <div className="min-h-screen  py-6 px-4">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -1182,7 +1182,7 @@ export default function Page() {
                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                   className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6"
                 >
-                  <Store className="h-12 w-12 text-red-600" />
+                  <Store className="h-12 w-12 text-[#5f2781]" />
                 </motion.div>
 
                 {/* Main Message */}
@@ -1213,11 +1213,11 @@ export default function Page() {
                   className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-6 mb-8 border border-red-200"
                 >
                   <div className="flex items-center justify-center mb-4">
-                    <DollarSign className="h-8 w-8 text-red-600 mr-2" />
-                    <h3 className="text-xl font-semibold text-red-800">One-Time Setup Fee</h3>
+                    <DollarSign className="h-8 w-8 text-[#5f2781] mr-2" />
+                    <h3 className="text-xl font-semibold text-[9825fd]">One-Time Setup Fee</h3>
                   </div>
                   <div className="text-center">
-                    <span className="text-4xl font-bold text-red-600">$99</span>
+                    <span className="text-4xl font-bold text-[#5f2781]">$99</span>
                     <p className="text-gray-600 mt-2">
                       This one-time payment covers your store setup, verification, and lifetime access to our platform.
                     </p>
@@ -1246,7 +1246,7 @@ export default function Page() {
                     <p className="text-sm text-gray-600">Secure and fast payment processing</p>
                   </div>
                   <div className="text-center p-4">
-                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <span className="text-2xl">📊</span>
                     </div>
                     <h4 className="font-semibold text-gray-800 mb-2">Analytics</h4>
@@ -1262,7 +1262,7 @@ export default function Page() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleCreateStore}
-                  className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
+                  className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
                 >
                   <Plus className="h-5 w-5" />
                   Create My Store - $99
@@ -1293,15 +1293,15 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-4">
+    <div className="min-h-screen  py-4 sm:px-1 md:px-4">
       <div className="max-w-7xl mx-auto p-5 flex flex-col space-y-6">
         {/* Store Header with Name and Payment Status */}
-        <div className="bg-white rounded-3xl p-6 shadow-xl border border-red-100">
+        <div className="bg-white rounded-3xl p-6 shadow-xl border border-[#f7f7f7]">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             {/* Store Name Section */}
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-red-100 to-orange-100 rounded-2xl flex items-center justify-center">
-                <Store className="h-8 w-8 text-red-600" />
+              <div className="w-16 h-16 bg-[#f7f7f7] rounded-2xl flex items-center justify-center">
+                <Store className="h-8 w-8 text-[#5f2781]" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2 capitalize">
@@ -1343,7 +1343,7 @@ export default function Page() {
                   onClick={() => router.push(`/dashboard/feeConfirmation?type=store_payment&id=${storeData?.data?._id}&amount=${99}&product=${storeData?.data?.name}`)
                   }
                   disabled={isPocessing}
-                  className="cursor-pointer w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+                  className="cursor-pointer w-full bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   {isPocessing ? (
                     <>
@@ -1372,7 +1372,7 @@ export default function Page() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => router.push('/dashboard/createListing')}
-              className="flex items-center gap-2 cursor-pointer bg-[#FB3B11] text-white px-4 rounded-full text-sm font-medium hover:bg-[#e03610] transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
             >
               <Plus className="h-4 w-4" />
               Create Listing
@@ -1382,7 +1382,7 @@ export default function Page() {
                 <button
                   key={e}
                   onClick={() => setActiveFilter(e)}
-                  className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                  className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
                     }`}
                 >
                   {e}
@@ -1419,30 +1419,30 @@ export default function Page() {
             <div className="overflow-hidden rounded-2xl border border-gray-200">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-red-50">
+                  <thead className="bg-[#f7f7f7]">
                     <tr>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         Image
                       </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         SKU
                       </th>
-                      {/* <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      {/* <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         SKU Location
                       </th> */}
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         Title
                       </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         Price
                       </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         Current Bid
                       </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         Sold Status
                       </th>
-                      <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                      <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         Auction Status
                       </th>
                     </tr>
@@ -1456,13 +1456,13 @@ export default function Page() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="hover:bg-red-50 transition-colors"
+                          className="hover:bg-[#f7f7f7] transition-colors"
                         >
                           <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
                             <img
                               src={product?.mainImage || "/placeholder.svg"}
                               alt="Product-img"
-                              className="w-20 h-15 rounded-lg object-cover"
+                              className="w-20 h-15 rounded-lg object-contain"
                             />
                           </td>
                           <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`SKU-${product?.sku}`}</td>

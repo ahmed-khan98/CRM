@@ -75,7 +75,7 @@ const page = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 px-4">
+        <div className="min-h-screen  py-4 px-4">
             <Toaster position="top-center" />
             <div className="max-w-5xl mx-auto pt-4">
 

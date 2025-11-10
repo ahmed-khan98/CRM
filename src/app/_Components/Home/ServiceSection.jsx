@@ -12,7 +12,7 @@ const ServicesSection = () => {
         key={i}
         className="animate-pulse bg-gray-100 p-6 pt-5 rounded-lg shadow-lg h-40"
       >
-        <div className="h-6 w-1/2 bg-gray-300 mx-auto mb-4 rounded"></div>
+        <div className="h-6 w-1/2 bg-gray-300 mx-auto mbg-[#5f2781] rounded"></div>
         <div className="h-4 bg-gray-300 rounded mb-2"></div>
         <div className="h-4 bg-gray-300 rounded mb-2"></div>
         <div className="h-4 bg-gray-300 rounded w-3/4 mx-auto mb-2"></div>

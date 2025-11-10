@@ -139,7 +139,7 @@
 
 
 //     return (
-//         <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-4">
+//         <div className="min-h-screen  py-6 px-4">
 //             <div className="max-w-3xl mx-auto">
 //                 <div className="flex items-center justify-between  my-10 md:my-6">
 //                     <h1 className="text-2xl font-bold text-gray-800 flex items-center">
@@ -166,7 +166,7 @@
 //                         </div>
 //                     ) : cardsData?.data?.length === 0 ? (
 //                         <div className="text-center py-10">
-//                             <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+//                             <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mbg-[#5f2781]">
 //                                 <CreditCard className="h-8 w-8 text-gray-400" />
 //                             </div>
 //                             <h3 className="text-lg font-medium text-gray-700 mb-1">No cards added yet</h3>
@@ -515,7 +515,7 @@ const FeeCindirmation = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-4">
+    <div className="min-h-screen  py-6 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between my-10 md:my-6">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center">
@@ -526,13 +526,13 @@ const FeeCindirmation = () => {
 
         {/* Payment Method Selection */}
         <div className="bg-white rounded-3xl shadow-md p-6 mb-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Choose Payment Method</h2>
+          <h2 className="text-xl font-bold text-gray-800 mbg-[#5f2781]">Choose Payment Method</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => setPaymentMethod("card")}
               className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${
-                paymentMethod === "card" ? "border-[#FB3B11] bg-red-50" : "border-gray-200 hover:border-gray-300"
+                paymentMethod === "card" ? "border-[#FB3B11] b-[#5f2781]" : "border-gray-200 hover:border-gray-300"
               }`}
             >
               <CreditCard className="h-8 w-8 mx-auto mb-2 text-[#FB3B11]" />
@@ -544,7 +544,7 @@ const FeeCindirmation = () => {
               whileTap={{ scale: 0.98 }}
               onClick={() => setPaymentMethod("stripe")}
               className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${
-                paymentMethod === "stripe" ? "border-[#FB3B11] bg-red-50" : "border-gray-200 hover:border-gray-300"
+                paymentMethod === "stripe" ? "border-[#FB3B11] b-[#5f2781]" : "border-gray-200 hover:border-gray-300"
               }`}
             >
               <div className="h-8 w-8 mx-auto mb-2 bg-blue-600 rounded flex items-center justify-center">
@@ -558,7 +558,7 @@ const FeeCindirmation = () => {
               whileTap={{ scale: 0.98 }}
               onClick={() => setPaymentMethod("paypal")}
               className={`cursor-pointer p-4 rounded-xl border-2 transition-all ${
-                paymentMethod === "paypal" ? "border-[#FB3B11] bg-red-50" : "border-gray-200 hover:border-gray-300"
+                paymentMethod === "paypal" ? "border-[#FB3B11] b-[#5f2781]" : "border-gray-200 hover:border-gray-300"
               }`}
             >
               <div className="h-8 w-8 mx-auto mb-2 bg-blue-500 rounded flex items-center justify-center">
@@ -575,7 +575,7 @@ const FeeCindirmation = () => {
           <div>
             {paymentMethod === "card" && (
               <div className="bg-white rounded-3xl shadow-md p-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Your Cards</h2>
+                <h2 className="text-xl font-bold text-gray-800 mbg-[#5f2781]">Your Cards</h2>
                 {isLoading ? (
                   <div className="space-y-4">
                     {[...Array(3)].map((_, index) => (
@@ -591,7 +591,7 @@ const FeeCindirmation = () => {
                   </div>
                 ) : cardsData?.data?.length === 0 ? (
                   <div className="text-center py-1">
-                    <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mbg-[#5f2781]">
                       <CreditCard className="h-8 w-8 text-gray-400" />
                     </div>
                     <h3 className="text-lg font-medium text-gray-700 mb-1">No cards added yet</h3>
@@ -718,7 +718,7 @@ const FeeCindirmation = () => {
             <div className="bg-white rounded-3xl shadow-md p-6">
               <h2 className="text-xl font-bold text-gray-800 mb-6">Payment Summary</h2>
               <div className="space-y-4">
-                <div className="border-b border-gray-200 pb-4">
+                <div className="border-b border-gray-200 pbg-[#5f2781]">
                   <div className="flex justify-between items-center">
                     <div>
                       <h3 className="font-medium text-gray-800">

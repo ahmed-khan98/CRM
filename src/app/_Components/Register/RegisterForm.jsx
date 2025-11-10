@@ -180,7 +180,7 @@ function GenZRegistrationPage() {
 
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-orange-50 to-white">
+    <div className="flex justify-center items-center min-h-screen ">
       <Toaster position="top-center" />
       <div className="w-full max-w-md mx-4">
         <AnimatePresence mode="wait">

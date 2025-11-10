@@ -9,6 +9,7 @@ import Tab from "@/app/_Components/Tab/page"
 import { appointmentTabs } from "@/app/utilities/tabs/page"
 import { useAllShippingRequestQuery } from "@/app/_Services/shippingRequest/page"
 import Link from "next/link"
+import { truncateWords } from "@/app/utilities/ProductTitle"
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -69,31 +70,31 @@ export default function page() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
+            <div className="min-h-screen  flex items-center justify-center">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                    className="w-12 h-12 border-4 border-[#F33E0A] border-t-transparent rounded-full"
+                    className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
                 />
-                <span className="ml-4 text-[#F33E0A] font-semibold">Loading your Shipping request... 🚀</span>
+                <span className="ml-4 text-[#5f2781] font-semibold">Loading your Shipping request... 🚀</span>
             </div>
         )
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-2">
+        <div className="min-h-screen  py-4 sm:px-1 md:px-2">
             <div className="max-w-6xl mx-auto p-5 flex flex-col space-y-6">
                 <Tab tabs={appointmentTabs} />
                 <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
                     <div className="flex items-center gap-3">
-                        <Truck className="h-7 w-7 text-red-600" />
+                        <Truck className="h-7 w-7 text-[#5f2781]" />
                         <h3 className="text-[#242424] text-[24px] font-bold">Shipping Request</h3>
                     </div>
 
                     {/* <div className="flex bg-white rounded-full shadow-sm p-1">
                         {filterData?.map(e => <button
                             onClick={() => setActiveFilter(e)}
-                            className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-red-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                            className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
                                 }`}
                         >
                             {e}
@@ -106,7 +107,7 @@ export default function page() {
 
                     {filteredNotifications()?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-                            <Truck className="h-16 w-16 text-gray-300 mb-4" />
+                            <Truck className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
                             <h3 className="text-xl font-semibold text-gray-700">No request</h3>
                             <p className="text-gray-500 mt-2">
                                 {activeFilter === "all"
@@ -128,24 +129,24 @@ export default function page() {
                         <div className="overflow-hidden rounded-2xl border border-gray-200" >
                             <div className="overflow-x-auto">
                                 <table className="min-w-full">
-                                    <thead className="bg-red-50">
+                                    <thead className="b-[#f7f7f7]">
                                         <tr>
-                                            <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                                            <th className="px-3 py-4 text-left text-sm font-semiboldtext-gray-600 uppercase tracking-wider">
                                                 Date
                                             </th>
-                                            <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                                            <th className="px-3 py-4 text-left text-sm font-semiboldtext-gray-600 uppercase tracking-wider">
                                                 Product SKU
                                             </th>
-                                            <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                                            <th className="px-3 py-4 text-left text-sm font-semiboldtext-gray-600 uppercase tracking-wider">
                                                 Product Title
                                             </th>
-                                            <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                                            <th className="px-3 py-4 text-left text-sm font-semiboldtext-gray-600 uppercase tracking-wider">
                                                 Shpping Address
                                             </th>
-                                            <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                                            <th className="px-3 py-4 text-left text-sm font-semiboldtext-gray-600 uppercase tracking-wider">
                                                 Contact NO.
                                             </th>
-                                            <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
+                                            <th className="px-3 py-4 text-left text-sm font-semiboldtext-gray-600 uppercase tracking-wider">
                                                 Status
                                             </th>
 
@@ -154,17 +155,18 @@ export default function page() {
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {filteredNotifications().map((shipping, index) => {
                                             // const lastFour = shipping.auctionWin?.product?._id.toString().slice(-4);
+                                            const truncatedName = truncateWords(shipping.auctionWin?.product?.name, 8);
                                             return (
                                                 <motion.tr
                                                     key={shipping._id}
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ delay: index * 0.1 }}
-                                                    className="hover:bg-red-50 transition-colors"
+                                                    className="hover:bg-[#f7f7f7] transition-colors"
                                                 >
                                                     <td className="px-3 py-4 whitespace-nowrap">
                                                         <div className="flex items-center gap-3">
-                                                            <Calendar className="h-4 w-4 text-red-600" />
+                                                            <Calendar className="h-4 w-4 text-[#5f2781]" />
                                                             <span className="text-sm font-semibold text-gray-900">
                                                                 {formatDate(shipping.createdAt)}
                                                             </span>
@@ -172,12 +174,12 @@ export default function page() {
                                                     </td>
 
                                                     <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`${appointment.auctionWin?.product?.skuLocation}`}</td>
-                                                    <td className="px-3 py-4 whitespace-nowrap text-md  text-blue-600 capitalize"><Link href={`/detailproduct/${shipping.auctionWin?.product?._id}`}>{shipping.auctionWin?.product?.name}</Link></td>
+                                                    <td className="px-3 py-4 whitespace-nowrap text-md  text-blue-600 capitalize"><Link href={`/detailproduct/${shipping.auctionWin?.product?._id}`}>{truncatedName}</Link></td>
                                                     <td className="px-3 py-4 whitespace-pre-line text-sm  text-gray-600">
                                                         {`${shipping.shippingAddress.street},${shipping.shippingAddress.zipCode},${shipping.shippingAddress.city},${shipping.shippingAddress.state},${shipping.shippingAddress.country}`} </td>
                                                     <td className="px-3 py-4 whitespace-nowrap">
                                                         <div className="flex items-center gap-3">
-                                                            <Phone className="h-4 w-4 text-red-600" />
+                                                            <Phone className="h-4 w-4 text-[#5f2781]" />
                                                             <span className="text-sm font-semibold text-gray-900">
                                                                 {shipping?.contactPhone}
                                                             </span>
@@ -197,7 +199,7 @@ export default function page() {
                                                             whileHover={{ scale: 1.05 }}
                                                             whileTap={{ scale: 0.95 }}
                                                             onClick={() => handleEdit(shipping)}
-                                                            className="inline-flex items-center cursor-pointer px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                                                            className="inline-flex items-center cursor-pointer px-3 py-2 bg-[#5f2781] text-white rounded-lg hover:bg-red-700 transition-colors"
                                                         >
                                                             <Edit className="h-4 w-4 mr-1" />
                                                             Edit

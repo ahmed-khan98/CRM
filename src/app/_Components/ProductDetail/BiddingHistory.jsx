@@ -75,6 +75,7 @@ const BiddingHistory = ({ history, isSold, isExtended }) => {
               const bidderLabel = isCurrentUser
                 ? "You"
                 : bidderNumberMap[bid?.bidder?._id];
+                
 
               return (
                 <div

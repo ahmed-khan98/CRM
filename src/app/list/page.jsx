@@ -173,7 +173,7 @@
 //     };
 
 //     return (
-//         <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-orange-50 to-white">
+//         <div className="flex justify-center items-center min-h-screen ">
 //             <div className="w-full max-w-xl text-center">
 //                 <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">{step === 'PREVIEW LISTING' ? 'PREVIEW LISTING' : step === 16 ? 'LAST STEP' : `STEP ${step}`}</h1>
 //                 {
@@ -242,7 +242,7 @@
 //     return (
 //         <button
 //             onClick={onNext}
-//             className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"                    >
+//             className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:b-[#5f2781]0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"                    >
 //             Login
 //         </button>
 //     );
@@ -420,7 +420,7 @@
 //             </button>
 //             <button
 //                 onClick={onNext}
-//                 className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+//                 className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:b-[#5f2781]0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
 //                 CREATE A LISTING FOR OUR SITE
 //             </button>
 
@@ -435,7 +435,7 @@
 
 
 //         <div className="space-y-4">
-//             <button className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+//             <button className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:b-[#5f2781]0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
 //                 SCAN UPC
 //             </button>
 //             <button onClick={onNext} className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
@@ -595,7 +595,7 @@
 //             <button
 //                 type="button"
 //                 onClick={handleTakePhoto}
-//                 className="flex w-full justify-center rounded-md bg-red-600 px-3 py-2.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+//                 className="flex w-full justify-center rounded-md bg-red-600 px-3 py-2.5 text-sm/6 font-semibold text-white shadow-xs hover:b-[#5f2781]0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
 //                 TAKE A PHOTO
 //             </button>
 

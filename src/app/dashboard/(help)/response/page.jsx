@@ -24,7 +24,7 @@ const ResponsesPage = () => {
 
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-orange-50 to-white py-4">
+    <div className="w-full min-h-screen  py-4">
       <div className="max-w-5xl mx-auto px-4 pt-4">
       <Tab tabs={helpTabs}/>
 
@@ -53,9 +53,9 @@ const ResponsesPage = () => {
             <div className="grid gap-4">
               {[...Array(3)].map((_, index) => (
                 <div key={index} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
+                  <div className="h-6 bg-gray-200 rounded w-1/3 mbg-[#5f2781]"></div>
                   <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3 mbg-[#5f2781]"></div>
                   <div className="flex justify-between items-center">
                     <div className="h-4 bg-gray-200 rounded w-1/4"></div>
                     <div className="h-8 bg-gray-200 rounded-full w-24"></div>
@@ -69,7 +69,7 @@ const ResponsesPage = () => {
               animate={{ opacity: 1 }}
               className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center"
             >
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mbg-[#5f2781]">
                 <MessageCircle className="h-8 w-8 text-[#F33E0A]" />
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">No conversations yet</h3>
@@ -114,7 +114,7 @@ const ResponsesPage = () => {
                         </div>
                       </div>
 
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{item.message}</p>
+                      <p className="text-gray-600 text-sm mbg-[#5f2781] line-clamp-2">{item.message}</p>
 
                       <div className="flex justify-between items-center text-xs text-gray-500">
                         <div className="flex items-center gap-1">

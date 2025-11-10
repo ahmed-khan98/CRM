@@ -19,7 +19,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
   const [bidSuccess, setBidSuccess] = useState(false)
   const [bidError, setBidError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
-  const [timeLeft, setTimeLeft] = useState(3)
+  const [timeLeft, setTimeLeft] = useState(5)
 
   // Reset success/error states after a delay
   useEffect(() => {
@@ -31,8 +31,8 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
             clearInterval(timer)
             setBidSuccess(false)
             setBidError(false)
-            setTimeLeft(3)
-            return 3
+            setTimeLeft(5)
+            return 5
           }
           return prev - 1
         })
@@ -108,7 +108,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
       {userBid &&
         <div className="px-4 py-2 bg-white">
 
-          <div className="flex justify-between items-center">{highestBid === userBid ? <span className='px-3 py-1 rounded-full text-xs font-medium border text-green-600 bg-green-200 border-green-600 '> {''}WINNING</span>:
+          <div className="flex justify-between items-center">{highestBid === userBid ? <span className='px-3 py-1 rounded-full text-xs font-medium border text-green-600 bg-green-200 border-green-600 '> {''}WINNING</span> :
             <span className='px-3 py-1 rounded-full text-xs font-medium border text-gray-500 bg-[#ebbda5] border-[#f09868]'> {''}OUTBID</span>}
             <div className="flex items-center gap-1 text-gray-700">
               <FaGavel size={14} className="text-[#F33E0A]" />
@@ -125,7 +125,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
+              className="mbg-[#5f2781] p-3 bg-green-100 text-green-800 rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
             >
               <CheckCircle size={18} />
               <div className="flex-1">Bid placed successfully!</div>
@@ -134,17 +134,17 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
           )}
 
           {bidError && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
-            >
-              <AlertCircle size={18} />
-              <div className="flex-1">{errorMessage}</div>
-              <div className="text-xs">{timeLeft}s</div>
-            </motion.div>
-          )}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mbg-[#5f2781]  m-1 p-3 bg-[#f2d9bd] border border-[#EA580C]  text-[#EA580C] rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
+          >
+            <AlertCircle size={18} />
+            <div className="flex-1"><strong>OUTBID: </strong>Another bidder has a higher <strong>Max Bid</strong> on this item. You'll need to increase your <strong>Max Bid</strong> for a chance to win</div>
+            <div className="text-xs"></div>
+          </motion.div>
+           )}
         </AnimatePresence>
       </div>
 

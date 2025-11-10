@@ -46,7 +46,7 @@ export default function page() {
     });
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 p-3 md:p-0">
+        <div className="min-h-screen  py-4 p-3 md:p-0">
             <div className="max-w-5xl mx-auto pt-4">
                 
 
@@ -65,7 +65,7 @@ export default function page() {
                         </div>
                         <form onSubmit={formik.handleSubmit} className="max-w-md items-center py-4">
 
-                            <div className="mb-4">
+                            <div className="mbg-[#5f2781]">
                                 <label className="block text-gray-700 font-medium mb-1">Current Password *</label>
                                 <input
                                     type="Password"
@@ -90,7 +90,7 @@ export default function page() {
 
                             </div>
 
-                            <div className="mb-4">
+                            <div className="mbg-[#5f2781]">
                                 <label className="block text-gray-700 font-medium mb-1">Confirm Password *</label>
                                 <input
                                     type="password"

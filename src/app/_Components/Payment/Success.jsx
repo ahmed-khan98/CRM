@@ -22,7 +22,7 @@ const PaymentSuccessComponent = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg text-center">
-        <BiCheckCircle className="text-green-500 text-7xl mx-auto mb-4" />
+        <BiCheckCircle className="text-green-500 text-7xl mx-auto mbg-[#5f2781]" />
         <h2 className="text-2xl font-semibold text-gray-800">
           Your payment was successful
         </h2>

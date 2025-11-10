@@ -182,7 +182,7 @@ const ProductInfo = ({
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-3 capitalize">{name}</h1>
 
-        <div className="flex items-center gap-4 mb-4">
+        <div className="flex items-center gap-4 mbg-[#5f2781]">
           <div className="flex items-center gap-2">
             <Rating size={20} SVGstyle={{ display: "inline-block" }} initialValue={rating ?? 0} readonly />
             <span className="text-sm text-gray-600">({rating}/5)</span>
@@ -288,7 +288,7 @@ const ProductInfo = ({
         className={`flex items-center justify-between p-2 rounded-xl ${isSold
           ? "bg-green-50 border border-green-200"
           : timeLeft <= 24
-            ? "bg-red-50 border border-red-200"
+            ? "b-[#5f2781] border border-red-200"
             : "bg-blue-50 border border-blue-200"
           }`}
       >
@@ -305,7 +305,7 @@ const ProductInfo = ({
         </div>
         {isAuctionActive && !isSold && (
           <div className="flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 b-[#5f2781]0 rounded-full animate-pulse"></div>
             LIVE
           </div>
         )}

@@ -163,7 +163,7 @@ const ProductDetail = ({ id }) => {
                       ) : (
                         <CiHeart className="cursor-pointer text-gray-700 text-xl group-hover:scale-110 transition-transform" />
                       )}
-                      {/* <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div> */}
+                      {/* <div className="absolute -top-2 -right-2 w-4 h-4 b-[#5f2781]0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div> */}
                     </button>
 
                     <button

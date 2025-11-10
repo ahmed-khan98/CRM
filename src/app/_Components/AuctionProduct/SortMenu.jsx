@@ -191,7 +191,7 @@ const SortDropdowns = () => {
         {isMobileFiltersOpen && (
           <div className="bg-white border-b border-gray-200 shadow-lg">
             <div className="px-4 py-4 space-y-4">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mbg-[#5f2781]">
                 <h3 className="text-lg font-semibold text-gray-800 flex items-center space-x-2">
                   <SortAsc size={20} />
                   <span>Filter & Sort</span>

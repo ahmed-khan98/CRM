@@ -61,9 +61,9 @@ function VerifyEmailForm() {
                         <Image src={Main} alt="Logo" height={50} />
                     </Link>
                 </div>
-                <h2 className="text-2xl font-semibold mb-4 text-center">Verify Your Email</h2>
+                <h2 className="text-2xl font-semibold mbg-[#5f2781] text-center">Verify Your Email</h2>
                 <form onSubmit={formik.handleSubmit}>
-                    <div className="mb-4">
+                    <div className="mbg-[#5f2781]">
                         <label className="block text-gray-700 font-medium mb-1">
                             Enter the Verification Code sent to your email
                         </label>

@@ -13,5 +13,5 @@ export  const myAccountTabs = [
   ]
 export  const appointmentTabs = [
     { path: "/dashboard/appointment", name: "Pick Up ", color: "bg-blue-500",icon: <Calendar className="h-4 w-4" /> },
-    { path: "/dashboard/shippingRequest", name: "Shipping Request", color: "bg-red-400",icon: <Truck className="h-4 w-4" /> },
+    { path: "/dashboard/shippingRequest", name: "Shipping Request", color: "b-[#5f2781]",icon: <Truck className="h-4 w-4" /> },
 ];

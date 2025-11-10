@@ -1,4 +1,7 @@
 export const formatDate = (dateString) => {
+   if (!dateString || dateString.trim() === '') {
+        return 'N/A';
+    }
   const date = new Date(dateString);
 
   const isMidnightUTC = date.getUTCHours() === 0 && date.getUTCMinutes() === 0;

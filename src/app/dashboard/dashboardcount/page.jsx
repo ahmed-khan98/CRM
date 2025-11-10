@@ -1,9 +1,6 @@
 "use client"
 
 import {
-  ShoppingBag,
-  TrendingUp,
-  DollarSign,
   Award,
   Eye,
   Calendar,
@@ -13,8 +10,7 @@ import {
   CalendarRangeIcon,
   Frown,
   Users,
-  Settings,
-  Box,
+  Settings,ShoppingBag,TrendingUp,DollarSign,Package,
   BoxIcon,
   Mail,
 } from "lucide-react"
@@ -26,6 +22,8 @@ import { useAllAppointmentQuery } from "@/app/_Services/appointment/page"
 import { usePenalizedProductItemsQuery } from "@/app/_Services/PenaltyFeeProduct/page"
 import { useGetBillBoardQuery } from "@/app/_Services/services/page"
 import { useAllStoreProductQuery } from "@/app/_Services/StoreProduct/page"
+import { useEffect, useState } from "react"
+import Cookies from "js-cookie"
 
 
 const cardVariants = {
@@ -48,7 +46,7 @@ const StatCard = ({ icon: Icon, title, value, subtitle, color, trend, trendValue
       className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm`}
     >
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mbg-[#5f2781]">
           <div className={`p-3 rounded-2xl bg-white bg-opacity-20`}>
             <Icon className={`h-6 w-6 text-${color}`} />
           </div>
@@ -80,7 +78,7 @@ const QuickActionCard = ({ icon: Icon, title, description, color, link }) => {
       onClick={() => router.push(link)}
       className="bg-white rounded-2xl p-4 md:p-5 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300"
     >
-      <div className={`p-3 rounded-2xl w-fit mb-4 ${color}`}>
+      <div className={`p-3 rounded-2xl w-fit mbg-[#5f2781] ${color}`}>
         <Icon className="h-6 w-6 text-white" />
       </div>
       <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
@@ -89,7 +87,8 @@ const QuickActionCard = ({ icon: Icon, title, description, color, link }) => {
 }
 
 export default function DashboardPage() {
-  // const [greeting, setGreeting] = useState("")
+  const [greeting, setGreeting] = useState("")
+  const [currentUser, setCurrentUser] = useState("")
 
   // API Queries
   const { data: billBoard, isLoading: billBoardLoading } = useGetBillBoardQuery()
@@ -101,19 +100,19 @@ export default function DashboardPage() {
   console.log(billBoard, 'billBoard')
 
 
-  // useEffect(() => {
-  //   const data = Cookies.get("currentuser")
-  //   if (data) {
-  //     const user = JSON.parse(data)
-  //     setCurrentUser(user)
-  //   }
-
-  //   // Set greeting based on time
-  //   const hour = new Date().getHours()
-  //   if (hour < 12) setGreeting("Good Morning")
-  //   else if (hour < 17) setGreeting("Good Afternoon")
-  //   else setGreeting("Good Evening")
-  // }, [])
+  useEffect(() => {
+    const data = Cookies.get("currentuser")
+    if (data) {
+      const user = JSON.parse(data)
+      setCurrentUser(user)
+    }
+    
+    // Set greeting based on time
+    const hour = new Date().getHours()
+    if (hour < 12) setGreeting("Good Morning")
+    else if (hour < 17) setGreeting("Good Afternoon")
+    else setGreeting("Good Evening")
+  }, [])
 
   const soldProducts = storeItems?.data?.filter((item) => item.isSold)?.length || 0
   const totalProducts = storeItems?.data?.length || 0
@@ -125,19 +124,19 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center">
+      <div className="min-h-screen  flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-red-600 font-semibold">Loading your dashboard... ✨</span>
+        <span className="ml-4 text-[#5f2781] font-semibold">Loading your dashboard... ✨</span>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white mt-5 px-4"> 
+    <div className="min-h-screen  mt-5 px-4"> 
     {/* {billBoard?.data?.map(e=><div className=" pt-6 p-1 md:p-4  bg-gray-200 shadow-lg rounded-2xl border-3 border-[#ffa51d] ">
         <div
           dangerouslySetInnerHTML={{ __html: e?.title }}
@@ -148,8 +147,8 @@ export default function DashboardPage() {
         />
       </div>)} */}
       
-      {/* <div className="relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-red-700 text-white rounded-lg">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-opacity-100"></div>
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#372D5C] via-[#54448a] to-[#a945fa] text-white rounded-lg">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#372D5C] via-[#54448a] to-[#a945fa] bg-opacity-100"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -157,7 +156,7 @@ export default function DashboardPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 capitalize">
+            <h1 className="text-3xl md:text-4xl font-bold mbg-[#5f2781] capitalize">
               {greeting}, {currentUser?.firstName},{currentUser?.lastName}! 👋
             </h1>
             <p className="text-xl text-white text-opacity-90 mb-2">Welcome to your personalized dashboard</p>
@@ -172,11 +171,11 @@ export default function DashboardPage() {
         </div>
         <div className="absolute top-0 left-0 w-32 h-32 md:w-64 md:h-64 bg-white bg-opacity-10 rounded-full -translate-x-16 -translate-y-16 md-translate-x-32 md:-translate-y-32"></div>
         <div className="absolute bottom-0 right-0 w-32 h-32 md:w-92 md:h-92 bg-white bg-opacity-5 rounded-full translate-x-14 translate-y-14 md:translate-x-48 md:translate-y-48"></div>
-      </div> */}
+      </div> 
 
       <div className="max-w-7xl mx-auto px-2 py-8">
         {/* Stats Grid */}
-        {/* <motion.div
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={{
@@ -204,7 +203,7 @@ export default function DashboardPage() {
             title="Purchases Made"
             value={purchasedProducts}
             subtitle="Items you've bought"
-            color="bg-gradient-to-br from-purple-500 to-purple-600"
+            color="bg-gradient-to-br from-yellow-400 to-yellow-500"
             trend="up"
             trendValue="0"
             link={'/dashboard/wonitem'}
@@ -227,7 +226,7 @@ export default function DashboardPage() {
             value={pendingFees}
             subtitle={`${pendingFees} unpaid fees`}
             color="bg-gradient-to-br from-orange-500 to-red-500"
-            trend={totalFees > 0 ? "down" : "up"}
+            trend={"down"}  
             trendValue="0"
             link={'/dashboard/UnpaidItem'}
           />
@@ -354,7 +353,7 @@ export default function DashboardPage() {
 
             {purchasedProducts > 0 && (
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                   <ShoppingBag className="h-5 w-5 text-purple-600" />
                 </div>
                 <div>
@@ -380,7 +379,7 @@ export default function DashboardPage() {
 
             {soldProducts === 0 && purchasedProducts === 0 && totalFees === 0 && (
               <div className="text-center py-8">
-                <Award className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <Award className="h-16 w-16 text-gray-300 mx-auto mbg-[#5f2781]" />
                 <h3 className="text-lg font-semibold text-gray-600 mb-2">No Recent Activity</h3>
                 <p className="text-gray-500">Start by listing your first product or making a purchase!</p>
               </div>

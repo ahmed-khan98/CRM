@@ -72,7 +72,7 @@ const ComingSoonPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12 px-4">
+    <div className="min-h-screen  py-12 px-4">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
@@ -81,10 +81,10 @@ const ComingSoonPage = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center justify-center p-2 bg-orange-100 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center p-2 bg-orange-100 rounded-full mbg-[#5f2781]">
             <Clock className="h-6 w-6 text-[#F33E0A]" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mbg-[#5f2781]">
             Our New <span className="text-[#F33E0A]">Auction Features</span> Are Coming Soon
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">

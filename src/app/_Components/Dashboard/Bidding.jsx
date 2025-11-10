@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link';
 import BiddingProductCard from '../Card/BiddingProductCard';
 import AuctionCardSkeleton from '../Skeleton/CardSkeleton';
 import AuctionTab from '../Tab/AuctionTab';
@@ -12,7 +13,7 @@ const BiddingItems = ({ text }) => {
 
     return (
         // <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]">
-        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-2">
+        <div className="min-h-screen  to-white py-6 px-2">
             <div className="max-w-6xl mx-auto">
 
                 <AuctionTab />

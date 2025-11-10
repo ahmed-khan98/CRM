@@ -30,7 +30,7 @@ const LeftNav = () => {
   ];
 
   return (
-    <div className="w-60 bg-[#F33E0A] text-white pb-5 flex flex-col justify-between">
+    <div className="w-60 bg-[#5f2781] text-white pbg-[#5f2781] flex flex-col justify-between">
       <div>
         {menuItems.map((item, index) => {
           const isActive =
@@ -43,7 +43,7 @@ const LeftNav = () => {
               key={index}
               onClick={() => router.push(item.path)}
               className={`flex pl-8 items-center space-x-3 p-3 text-sm font-semibold cursor-pointer transition-all duration-200 
-              ${isActive ? "bg-white text-[#F33E0A]" : "bg-[#F33E0A]"}`}
+              ${isActive ? "bg-white text-[#5f2781]" : "bg-[#5f2781]"}`}
             >
               <span className="text-lg">{item.icon}</span>
               <span>{item.name}</span>

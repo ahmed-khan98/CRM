@@ -11,7 +11,7 @@ import { toast, Toaster } from "react-hot-toast"
 import * as Yup from "yup"
 import { motion } from "framer-motion"
 import { AtSign, Lock, Eye, EyeOff } from "lucide-react"
-import Main from "../../../app/Assets/Main.png";
+import Main from "../../../app/Assets/logo-ppi.png";
 
 export default function GenZLoginForm() {
   const navigation = useRouter()
@@ -21,7 +21,7 @@ export default function GenZLoginForm() {
 
   const loginSchema = Yup.object({
     email: Yup.string().email("Invalid email address").required("Email is required"),
-    // password: Yup.string().required("Password is required"),
+    password: Yup.string().required("Password is required"),
   })
 
   const loginInitialValue = {
@@ -54,7 +54,7 @@ export default function GenZLoginForm() {
   })
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-orange-50 to-white">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-purple-50 to-purple-100">
       <Toaster position="top-center" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -62,28 +62,29 @@ export default function GenZLoginForm() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md mx-4"
       >
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div className="bg-white rounded-xl shadow-xl overflow-hidden">
           <div className="p-6">
             <div className="mb-6 text-center">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-30 h-30 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center"
+                className="w-64 h-24 mx-auto mb-2 rounded-full bg-[#3C3360] flex items-center justify-center"
               >
-                <Link href="/" className="mx-auto">
-                  <Image src={Main} alt="Logo" width={120} height={50} />
-                </Link>              </motion.div>
-              <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Welcome back</h2>
-              <p className="text-gray-500">Sign in to your account</p>
+                <Link href="/login" className="mx-auto">
+                  <Image src={Main} alt="Logo" width={270} height={60} />
+                </Link> 
+              </motion.div>
+              {/* <h2 className="text-2xl font-bold mb-1 text-[#5f2781]">Welcome To CMS </h2> */}
+              <p className="text-gray-500 font-normal">Sign in to Penta Prime Innovation CMS</p>
             </div>
             
 
-            <form onSubmit={formik.handleSubmit} className="space-y-5">
-              <div className="space-y-1">
+            <form onSubmit={formik.handleSubmit} className="space-y-4">
+              <div className="">
                 <div
-                  className={`relative border-2 rounded-xl transition-all duration-300 ${focusedField === "email"
-                      ? "border-[#FB3B11] shadow-sm shadow-orange-100"
+                  className={`relative border-1 rounded-xl transition-all duration-300 ${focusedField === "email"
+                      ? "border-[#5f2781] shadow-sm shadow-orange-100"
                       : formik.touched.email && formik.errors.email
                         ? "border-red-300"
                         : "border-gray-200"
@@ -96,7 +97,7 @@ export default function GenZLoginForm() {
                     type="email"
                     name="email"
                     placeholder="Email address"
-                    className="w-full pl-10 pr-4 py-3.5 rounded-xl focus:outline-none text-gray-700"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none text-gray-700"
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
@@ -117,10 +118,10 @@ export default function GenZLoginForm() {
                 )}
               </div>
 
-              <div className="space-y-1">
+              <div className="">
                 <div
-                  className={`relative border-2 rounded-xl transition-all duration-300 ${focusedField === "password"
-                      ? "border-[#FB3B11] shadow-sm shadow-orange-100"
+                  className={`relative border-1 rounded-xl transition-all duration-300 ${focusedField === "password"
+                      ? "border-[#5f2781] shadow-sm shadow-orange-100"
                       : formik.touched.password && formik.errors.password
                         ? "border-red-300"
                         : "border-gray-200"
@@ -133,7 +134,7 @@ export default function GenZLoginForm() {
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
-                    className="w-full pl-10 pr-10 py-3.5 rounded-xl focus:outline-none text-gray-700"
+                    className="w-full pl-10 pr-10 py-3 rounded-xl focus:outline-none text-gray-700"
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
@@ -166,7 +167,7 @@ export default function GenZLoginForm() {
               </div>
 
               <div className="text-right">
-                <Link href="/forget" className="text-sm text-[#FB3B11] hover:underline">
+                <Link href="/forget" className="text-sm text-[#5f2781] hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -175,11 +176,11 @@ export default function GenZLoginForm() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#FB3B11] hover:bg-[#e03610] text-white py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all cursor-pointer"
+                className="w-full bg-[#5f2781] hover:bg-[#4f1f6d] text-white py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all cursor-pointer"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
-                    <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className="h-5 w-5 border-1 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                     Signing in...
                   </div>
                 ) : (
@@ -187,12 +188,12 @@ export default function GenZLoginForm() {
                 )}
               </motion.button>
 
-              <div className="text-center text-sm text-gray-500">
+              {/* <div className="text-center text-sm text-gray-500">
                 Don't have an account?{" "}
-                <Link href="/register" className="text-[#FB3B11] font-medium hover:underline">
+                <Link href="/register" className="text-[#5f2781] font-medium hover:underline">
                   Register
                 </Link>
-              </div>
+              </div> */}
             </form>
           </div>
         </div>

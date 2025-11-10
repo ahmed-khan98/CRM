@@ -22,7 +22,7 @@ const ProductRowCard = ({ item, index,handleRefetch }) => {
 
 
     return (
-        <div className="bg-white border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-3 mb-4 border-2 hover:border-[#F33E0A]">
+        <div className="bg-white border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-3 mbg-[#5f2781] border-2 hover:border-[#F33E0A]">
             {/* mobile */}
             <div className="flex flex-col space-y-4 md:hidden">
                 {/* Product Info */}

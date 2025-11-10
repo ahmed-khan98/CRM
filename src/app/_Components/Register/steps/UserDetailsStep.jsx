@@ -68,7 +68,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
 
   const getStrengthColor = () => {
     if (passwordStrength === 0) return "bg-gray-200"
-    if (passwordStrength === 1) return "bg-red-500"
+    if (passwordStrength === 1) return "b-[#5f2781]0"
     if (passwordStrength === 2) return "bg-orange-500"
     if (passwordStrength === 3) return "bg-yellow-500"
     return "bg-green-500"

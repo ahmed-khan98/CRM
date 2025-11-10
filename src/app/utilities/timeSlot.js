@@ -19,7 +19,7 @@ export const getAvailableTimeSlots = (selectedDate) => {
     // If selected date is today, filter out past time slots
     if (selected.toDateString() === today.toDateString()) {
       const currentHour = today.getHours()
-      return allTimeSlots.filter((slot) => {
+      return allTimeSlots?.filter((slot) => {
         const slotHour = Number.parseInt(slot.value.split(":")[0])
         return slotHour > currentHour
       })

@@ -95,8 +95,6 @@
 //         </div>
 //       </div>
 
-
-
 //       {/* Bottom Copyright */}
 //       <div className="bg-gray-100 text-gray-600 text-center text-sm py-7 flex justify-center flex-wrap  gap-[50%]">
 //         <p className="">Copyright by <Link href="https://hnhsofttechsolutions.com/">HNH Soft Tech Solutions</Link> . All Rights Reserved.</p>
@@ -108,80 +106,21 @@
 
 // export default Footer;
 
-import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { useEffect } from "react";
-import Script from "next/script";
-import Link from "next/link";
-
 const Footer = () => {
-  useEffect(() => {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
-      console.error("Adsbygoogle push error:", e);
-    }
-  }, []);
-
   return (
     <>
-
-      <footer className="container mx-auto w-full mt-4 py-3 border-t border-gray-300">
-        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-800 px-6">
-          <div className="space-x-2 ">
-            <Link href="/about" className="hover:underline text-[#0578ff] ">About</Link> |
-            <Link href="/faq" className="hover:underline text-[#0578ff] "> FAQ’s</Link> |
-            <Link href="/contact" className="hover:underline text-[#0578ff] "> Contact Us</Link> |
-            <Link href="/resource" className="text-red-600 hover:underline "> Resources</Link> |
-            <Link href="/sell" className="text-green-600 hover:underline "> SELL YOUR STUFF </Link>|
-            <Link href="/becomeAffiliate" className="hover:underline text-[#0578ff]"> Become An Affiliate</Link>
-          </div>
-
-          {/* Social Icons */}
-          <div className="flex space-x-17 mt-6 md:mt-0 md:space-x-3 text-xl">
-            <div className="text-pink-500 hover:text-pink-600"><FaInstagram /></div>
-            <div className="text-blue-600 hover:text-blue-700"><FaFacebook /></div>
-            <div className="text-gray-500 hover:text-gray-600"><FaXTwitter /></div>
-            <div className="text-red-600 hover:text-red-700"><FaYoutube /></div>
-            <div className="text-blue-500 hover:text-blue-600"><FaLinkedin /></div>
-          </div>
-        </div>
-
-        {/* <Script
-          id="adsense-script"
-          async
-          strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6648219347495285"
-          crossOrigin="anonymous"
-        /> */}
-        {/* Ad Container */}
-        <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
-          <ins
-            className="adsbygoogle"
-            style={{ display: "block", width: "100%", maxWidth: "320px", height: "auto" }}
-            data-ad-client="ca-pub-6648219347495285"
-            data-ad-slot="8021679285" // 👈 replace with your actual slot
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-        </div>
-        <Script id="adsbygoogle-init" strategy="afterInteractive">
-          {`(adsbygoogle = window.adsbygoogle || []).push({});`}
-        </Script>
-        <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-700 mt-4 px-6">
-          <div className="space-x-2">
-            <Link href="/term" className="hover:underline text-[#0578ff] ">Terms & Conditions</Link> |
-            <Link href="/privacy" className="hover:underline text-[#0578ff] "> Privacy Policy</Link> |
-            <Link href="/affiliate" className="hover:underline text-[#0578ff] "> Affiliate Policy</Link>
-          </div>
-
-
-        </div>
-      </footer>
-
-      <div className="bg-[#F33E0A] mt-1 w-full text-center py-3">  <p className=" text-md text-white">
-        © Copyright 2025 <a href="https://arthurnicolas.com/" className="text-blue-600 hover:underline">ArthurNicolas.com</a>
-      </p></div>
+      <div className="bg-[#372D5C] mt-1 w-full text-center py-3">
+        {" "}
+        <p className=" text-sm text-white">
+          © Copyright 2025{" "}
+          <a
+            href="https://pentaprime-innovations.com/"
+            className="text-blue-300 hover:underline"
+          >
+            Penta Prime Innovations
+          </a>
+        </p>
+      </div>
     </>
   );
 };

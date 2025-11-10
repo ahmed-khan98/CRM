@@ -7,6 +7,7 @@ import TimeCounter from "../CardComponent/TimeCounter"
 import ProductInfo from "../CardComponent/ProductInfo"
 import ProductBidding from "../CardComponent/ProductBidding"
 import { useProductSocket } from "@/app/hooks/useSocket"
+import ProductAction from "../CardComponent/ProductAction"
 
 const ProductCard = React.memo(({index ,item ,wishlisted,handleRefetch}) => {
 
@@ -69,6 +70,8 @@ const ProductCard = React.memo(({index ,item ,wishlisted,handleRefetch}) => {
   return (
     <div className="relative bg-gray-100 border-2 border-gray-300 rounded-3xl my-2 shadow-lg flex flex-col hover:border-[#F33E0A] ">
       <ProductHeader name={data.name} id={data._id} />
+      
+      {/* <ProductAction item={data}  wishlisted={wishlisted}/> */}
       <ProductImageSection item={data}  wishlisted={wishlisted}/>
       <TimeCounter 
       handleRefetch={handleRefetch}
@@ -93,7 +96,6 @@ const ProductCard = React.memo(({index ,item ,wishlisted,handleRefetch}) => {
          isSold={data?.isSold}
            biddingCount={data?.biddingCount}
             highestBid={data?.highestBid}
-            
              isAuctionActive={data?.isAuctionActive}
               automateBidder={data?.automateBidder}/>
       </div>

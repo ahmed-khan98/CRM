@@ -48,7 +48,7 @@ const DailyAuction = () => {
 
           <div className="text-lg text-gray-900">
             <p>7440 Dean Martin Dr Suite 204</p>
-            <p className="pb-4">Las Vegas, NV</p>
+            <p className="pbg-[#5f2781]">Las Vegas, NV</p>
             <p className="font-bold">9,095 items</p>
           </div>
 

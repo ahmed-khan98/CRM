@@ -53,7 +53,7 @@ const ContactPage = () => {
 
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 p-3 md:p-0">
+    <div className="w-full min-h-screen  py-4 p-3 md:p-0">
       <Toaster position="top-center" />
 
       <div className="max-w-5xl mx-auto pt-4">

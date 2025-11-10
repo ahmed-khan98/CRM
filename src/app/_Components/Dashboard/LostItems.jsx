@@ -11,7 +11,7 @@ const lostItems = () => {
     const skeletonRows = lostItems.length || 8;
 
     return (
-   <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-4">
+   <div className="min-h-screen  py-6 px-4">
        <div className="max-w-6xl mx-auto"> 
 
          {/* <div className="flex justify-start gap-4 pt-2 md:pt-8 flex-wrap w-full bg-[#FFFFFF]"> */}

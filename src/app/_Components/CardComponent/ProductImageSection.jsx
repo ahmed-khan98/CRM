@@ -7,9 +7,10 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from "react";
 import { useAddWishlistMutation, useDeleteWishlistMutation } from "@/app/_Services/wishlist/page";
 import toast from "react-hot-toast";
+import { UserRoundCheck } from 'lucide-react';
 
-const ProductImageSection = ({ item,wishlisted}) => {
-  console.log(wishlisted,'wishlisted')
+const ProductImageSection = ({ item, wishlisted }) => {
+  console.log(wishlisted, 'wishlisted')
   const router = useRouter();
   const [loading, setLoading] = useState(false)
   const [addWishlist] = useAddWishlistMutation();
@@ -51,15 +52,38 @@ const ProductImageSection = ({ item,wishlisted}) => {
           Watcher <span className="ml-1">{item.watchers.length}</span>
         </div>
       )} */}
-      <div className="absolute top-4 left-2 h-[30px] w-[30px] bg-[#F33E0A] rounded-full shadow-2xl flex items-center justify-center">
+      <div className="absolute top-12 left-2 h-[30px] w-[30px] bg-[#F33E0A] rounded-full shadow-2xl flex items-center justify-center">
         <CiShare2 className="text-white text-lg" />
       </div>
       <div
-        className="absolute top-14 left-2 h-[30px] w-[30px] bg-white rounded-full shadow-xl flex items-center justify-center cursor-pointer"
+        className="absolute top-22 left-2 h-[30px] w-[30px] bg-white rounded-full shadow-xl flex items-center justify-center cursor-pointer"
         onClick={() => toggleWishlist(item?.isWishlisted)}
       >
         {wishlisted ? <FaHeart className="text-red-500 text-lg" /> : loading ? <Loader /> : item?.isWishlisted ? <FaHeart className="text-red-500 text-lg" /> : <CiHeart className="text-black text-lg" />}
       </div>
+      {item?.userHighestBid && (
+        <div
+          className={`absolute top-2 left-2 w-[80px] h-[30px] rounded-full shadow-2xl flex items-center justify-center cursor-pointer 
+        ${item?.userHighestBid?.bidAmount === item?.highestBid
+              ? "h-40 w-[32px] bg-green-100"
+              : "h-32 w-[28px] bg-orange-100"}`}
+        >
+          {(item?.userHighestBid?.bidAmount === item?.highestBid
+            ? "WINNING"
+            : "OUTBID"
+          ).split("").map((char, i) => (
+            <span
+              key={i}
+              className={`leading-8 ${item?.userHighestBid?.bidAmount === item?.highestBid
+                ? "text-green-600"
+                : "text-orange-600"
+                }`}
+            >
+              {char}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

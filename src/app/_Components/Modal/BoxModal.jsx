@@ -88,7 +88,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                         onClick={(e) => e.stopPropagation()}
                     >
 
-                        <div className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-6 text-white relative overflow-hidden">
+                        <div className="bg-gradient-to-r from-[#5f2781] to-[#a945fc] px-8 py-6 text-white relative overflow-hidden">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
                             <div className="relative z-10 flex items-center justify-between">
                                 <div className="flex items-center gap-4">
@@ -173,7 +173,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                         ...base,
                                                         borderRadius: "0.75rem",
                                                         padding: "0.25rem",
-                                                        borderColor: "red",
+                                                        borderColor: "#5f2781",
                                                         textTransform: "capitalize"
 
                                                     })
@@ -230,7 +230,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                 whileTap={{ scale: 0.98 }}
                                                 type="submit"
                                                 disabled={editingBox ? updateLoading : addLoading}
-                                                className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white py-3 px-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 disabled:opacity-50 transition-all"
+                                                className="flex-1 bg-gradient-to-r from-[#5f2781] to-[#a945fc] text-white py-3 px-3 rounded-xl font-semibold  hover:bg-[#4f1f6d] focus:outline-none focus:ring-4 focus:ring-red-300 disabled:opacity-50 transition-all cursor-pointer"
                                             >
                                                 {editingBox
                                                     ? (updateLoading ? (

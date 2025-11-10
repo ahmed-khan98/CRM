@@ -28,7 +28,7 @@ const MissedCard = ({ item, status }) => {
   }, [item?.biddingEndTime]);
 
   return (
-    <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
+    <div className="relative  border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col">
       <ProductHeader name={item?.name} id={item?._id} />
       <ProductImageSection item={item} />
       <TimeCounter timeLeft={daysSinceEnded} type='days' title='Ended' price={item?.price} />

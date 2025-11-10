@@ -57,14 +57,14 @@ const NotificationsPage = () => {
   const unreadCount = data?.data?.filter((item) => !item?.hasRead)?.length || 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6">
+    <div className="min-h-screen  py-6">
       <div className="max-w-5xl mx-auto p-5 flex flex-col space-y-6">
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
             <Bell className="h-7 w-7 text-red-600" />
             <h3 className="text-[#242424] text-[24px] font-bold">Notifications</h3>
             {unreadCount > 0 && (
-              <span className="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+              <span className="b-[#5f2781]0 text-white text-xs font-bold px-2.5 py-1 rounded-full">
                 {unreadCount} new
               </span>
             )}
@@ -113,7 +113,7 @@ const NotificationsPage = () => {
           </div>
         ) : filteredNotifications().length === 0 ? (
           <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-            <Bell className="h-16 w-16 text-gray-300 mb-4" />
+            <Bell className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
             <h3 className="text-xl font-semibold text-gray-700">No notifications</h3>
             <p className="text-gray-500 mt-2">
               {activeFilter === "all"
@@ -134,7 +134,7 @@ const NotificationsPage = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.2, delay: index * 0.05 }}
                   className={`relative overflow-hidden rounded-xl shadow-sm ${
-                    !item?.hasRead ? "bg-red-50 border-l-4 border-red-600" : "bg-white"
+                    !item?.hasRead ? "b-[#5f2781] border-l-4 border-red-600" : "bg-white"
                   }`}
                 >
                   {!item?.hasRead && (
@@ -142,7 +142,7 @@ const NotificationsPage = () => {
                   )}
                   <div className="p-5">
                     <h4 className="font-semibold text-lg text-gray-800 mb-2">{item?.title}</h4>
-                    <p className="text-gray-600 line-clamp-2 text-sm mb-4">
+                    <p className="text-gray-600 line-clamp-2 text-sm mbg-[#5f2781]">
                       {item?.message?.substring(0, 120)}
                       {item?.message?.length > 120 ? "..." : ""}
                     </p>

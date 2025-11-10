@@ -1,43 +1,43 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import LeftNav from "../_Components/Dashboard/LeftNav"
-import { Menu, X } from "lucide-react"
-import { usePathname } from "next/navigation"
+import { useState, useEffect } from "react";
+import LeftNav from "../_Components/Dashboard/LeftNav";
+import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const DashboardLayout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
-  const pathname = usePathname()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname();
 
   // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1024) {
-        setIsSidebarOpen(false)
-        setIsMobile(true)
+        setIsSidebarOpen(false);
+        setIsMobile(true);
       } else {
-        setIsSidebarOpen(true)
-        setIsMobile(false)
+        setIsSidebarOpen(true);
+        setIsMobile(false);
       }
-    }
+    };
 
     // Initial check
-    handleResize()
+    handleResize();
 
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Close sidebar on mobile when route changes
   useEffect(() => {
     if (isMobile) {
-      setIsSidebarOpen(false)
+      setIsSidebarOpen(false);
     }
-  }, [pathname, isMobile])
+  }, [pathname, isMobile]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex flex-col py-14 md:py-18">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 flex flex-col py-14 md:py-18">
       {/* <OfferBar /> */}
       {/* <HeadingDashboard /> */}
 
@@ -53,13 +53,22 @@ const DashboardLayout = ({ children }) => {
 
         {/* Overlay for mobile when sidebar is open */}
         {isMobile && isSidebarOpen && (
-          <div className="fixed inset-0 backdrop-blur-sm bg-black/20 z-20" onClick={() => setIsSidebarOpen(false)}></div>
+          <div
+            className="fixed inset-0 backdrop-blur-sm bg-black/20 z-20"
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
         )}
 
         {/* Sidebar */}
         <div
-          className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"} ${
-            isMobile ? "fixed top-0 left-0 h-full z-30 w-78 shadow-xl" : "lg:relative lg:w-64 xl:w-72"
+          className={`${
+            isSidebarOpen
+              ? "translate-x-0"
+              : "-translate-x-full lg:translate-x-0"
+          } ${
+            isMobile
+              ? "fixed top-0 left-0 h-full z-30 w-78 shadow-xl"
+              : "lg:relative lg:w-64 xl:w-64"
           } h-158 transition-transform duration-300 ease-in-out mt-15 md:mt-0`}
         >
           <LeftNav />
@@ -69,15 +78,17 @@ const DashboardLayout = ({ children }) => {
         <main
           className={`flex-1 transition-all duration-300 ease-in-out
             ${isMobile ? "w-full" : ""}`}
-            >
-          <div className="max-w-8xl mx-auto w-full bg-[#FFFFFF] h-auto">{children}</div>
+        >
+          <div className="w-full bg-gradient-to-b from-purple-50 to-purple-100 h-auto">
+            {children}
+          </div>
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DashboardLayout
+export default DashboardLayout;
 //    ${
 //   isSidebarOpen && !isMobile ? "lg:ml-64 xl:ml-72" : ""
-// } 
+// }

@@ -99,7 +99,7 @@ export default function GenZVerificationStep({
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="w-30 h-30 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center"
+          className="w-30 h-30 mx-auto mbg-[#5f2781] rounded-full bg-orange-100 flex items-center justify-center"
         >
   <Link href="/" className="mx-auto">
             <Image src={Main} alt="Logo"  />

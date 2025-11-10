@@ -72,12 +72,13 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
 
     return (
         <>
-            <div className="relative bg-gradient-to-b from-orange-50 to-white border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col mx-1 md:mx-3">
+            <div className="relative  border-1 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col mx-1 md:mx-3">
 
                 <ProductHeader name={item?.product?.name} id={item?.product?._id} />
                 <ProductImageSection item={item?.product} />
                 <TimeCounter
-                    type='days' title='Ended' price={item?.product?.price}
+                    type='days' title='Ended'
+                    highestBid={item?.product?.highestBid}
                     isSold={item?.product?.isSold}
                     SoldDate={item?.product?.SoldDate}
                 />
@@ -164,7 +165,7 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
                     {
                         (status == 'paid' || status == 'paid_with_penalty') ?
                             <button
-                                className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800  py-3 flex items-center justify-center ">
+                                className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-gradient-to-r from-blue-500 to-blue-500 hover:from-blue-600 hover:to-blue-6  py-3 flex items-center justify-center ">
                                 Paid
                             </button> : <button onClick={
                                 // () => addPayments(item?._id,item?.product?._id)
@@ -178,7 +179,8 @@ const PaidUnPaidCard = ({ item, status, paymentDeadline, deliveryMethod, deliver
                                     "Loading..."
                                 ) : (
                                     "Click to pay"
-                                )}                </button>}
+                                )}
+                            </button>}
                 </div>
             </div>
             <PickupScheduleModal

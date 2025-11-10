@@ -7,19 +7,19 @@ export function middleware(req) {
     const token = req.cookies.get("token")?.value; 
     const userCookie = req.cookies.get('currentuser')?.value; 
 
-    // if (!userCookie) {
-    //     return NextResponse.redirect(new URL('/login', req.url)); 
-    // }
+    if (!userCookie) {
+        return NextResponse.redirect(new URL('/login', req.url)); 
+    }
 
-    // const user = JSON.parse(userCookie); 
-    // const role = user?.role; 
-    // console.log(role, 'role');
-    // if (url.pathname.startsWith('/vendors') && role === 'USER') {
-    //     return NextResponse.redirect(new URL('/', req.url));
-    // }
-    // if (url.pathname.startsWith('/dashboard') && role === 'VENDOR') {
-    //     return NextResponse.redirect(new URL('/', req.url));
-    // }
+    const user = JSON.parse(userCookie); 
+    const role = user?.role; 
+    console.log(role, 'role');
+    if (url.pathname.startsWith('/vendors') && role === 'USER') {
+        return NextResponse.redirect(new URL('/', req.url));
+    }
+    if (url.pathname.startsWith('/dashboard') && role === 'VENDOR') {
+        return NextResponse.redirect(new URL('/', req.url));
+    }
 
     return NextResponse.next();
 }

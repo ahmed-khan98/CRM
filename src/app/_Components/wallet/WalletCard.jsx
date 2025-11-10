@@ -48,7 +48,7 @@ console.log(defaultCard,'defaultCard')
                 <span className="text-xs font-medium">Active</span>
               </div>
             ) : (
-              <div className="flex items-center bg-red-500 bg-opacity-20 px-3 py-1 rounded-full">
+              <div className="flex items-center b-[#5f2781]0 bg-opacity-20 px-3 py-1 rounded-full">
                 <AlertCircle className="h-4 w-4 mr-1 text-red-300" />
                 <span className="text-xs font-medium">Inactive</span>
               </div>

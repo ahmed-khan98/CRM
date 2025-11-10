@@ -19,7 +19,7 @@ const authenticationsApi = createApiAuction.injectEndpoints({
     }),
     login: builder.mutation({
       query: (formData) => ({
-        url: 'userLogin',
+        url: 'adminLogin',
         method: 'POST',
         body: formData,
       }),

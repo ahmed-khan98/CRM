@@ -19,14 +19,14 @@ const PaymentFailComponent = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full border-b-4 border-red-500 max-w-md p-6 bg-white rounded-lg shadow-lg text-center">
-        <BiErrorCircle className="text-red-500 text-7xl mx-auto mb-4" />
+      <div className="w-full border-bg-[#5f2781] border-red-500 max-w-md p-6 bg-white rounded-lg shadow-lg text-center">
+        <BiErrorCircle className="text-red-500 text-7xl mx-auto mbg-[#5f2781]" />
         <h2 className="text-2xl font-semibold text-gray-800">Your payment failed</h2>
         <p className="text-gray-600 mt-2">Try again later</p>
 
         <button
           onClick={() => router.push("/dashboard/wonitem")}
-          className="cursor-pointer mt-6 px-6 py-2 bg-red-500 text-white font-semibold text-lg rounded-lg shadow-md hover:bg-red-600 transition duration-300"
+          className="cursor-pointer mt-6 px-6 py-2 b-[#5f2781]0 text-white font-semibold text-lg rounded-lg shadow-md hover:bg-red-600 transition duration-300"
         >
           Go to dashboard
         </button>

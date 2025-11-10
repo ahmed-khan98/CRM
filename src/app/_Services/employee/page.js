@@ -1,0 +1,59 @@
+import { createApiAuction } from "@/redux/createApi";
+
+const employeeApi = createApiAuction.injectEndpoints({
+  endpoints: (builder) => ({
+    createEmployee: builder.mutation({
+      query: (formData) => {
+        return {
+          url: "employee/add",
+          method: "POST",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["allEmployees"],
+    }),
+    updateEmployee: builder.mutation({
+      query: ({ id, body }) => {
+        console.log(body, "updateData");
+        return {
+          url: `employee/${id}`,
+          method: "PATCH",
+          body,
+        };
+      },
+      invalidatesTags: ["allEmployees"],
+    }),
+    deleteEmployee: builder.mutation({
+      query: (id) => {
+        return {
+          url: `employee/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["allEmployees"],
+    }),
+    getdepartmentsEmployee: builder.query({
+      query: (id) => {
+        return {
+          url: `employee/${id}/departmentEmployee`,
+          method: "GET",
+        };
+      },
+      invalidatesTags: ["allEmployees"],
+    }),
+    allEmployees: builder.query({
+      query: (data) => `employee/`,
+      providesTags: ["allEmployees"],
+      keepUnusedDataFor: 180,
+      refetchOnMountOrArgChange: false,
+    }),
+  }),
+});
+
+export const {
+  useAllEmployeesQuery,
+  useCreateEmployeeMutation,
+  useUpdateEmployeeMutation,
+  useDeleteEmployeeMutation,
+  useGetdepartmentsEmployeeQuery
+} = employeeApi;

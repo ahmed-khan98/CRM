@@ -26,12 +26,12 @@ const validationSchema = Yup.object({
   ownerPhone: Yup.string()
     .matches(phoneRegExp, "Owner phone must be a valid US phone number")
     .required("Owner phone is required"),
-  storeStreet: Yup.string().required("Store street is required"),
+  storeStreet: Yup.string().required("Store street address is required"),
   storeCity: Yup.string().required("Store city is required"),
   storeState: Yup.string().required("Store state is required"),
   storeZipCode: Yup.string().required("Store ZIP code is required"),
   storeCountry: Yup.string().required("Store country is required"),
-  ownerStreet: Yup.string().required("Owner street is required"),
+  ownerStreet: Yup.string().required("Owner street address is required"),
   ownerCity: Yup.string().required("Owner city is required"),
   ownerState: Yup.string().required("Owner state is required"),
   ownerZipCode: Yup.string().required("Owner ZIP code is required"),
@@ -143,7 +143,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         name="name"
                         placeholder="Enter your store name (e.g., John's Electronics)"
                         className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.name && touched.name
-                          ? "border-red-300 bg-red-50"
+                          ? "border-red-300 b-[#5f2781]"
                           : "border-gray-300 bg-white"
                           }`}
                       />
@@ -172,7 +172,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         rows={3}
                         placeholder="Describe your store, what you sell, and what makes you unique..."
                         className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none ${errors.description && touched.description
-                          ? "border-red-300 bg-red-50"
+                          ? "border-red-300 b-[#5f2781]"
                           : "border-gray-300 bg-white"
                           }`}
                       />
@@ -201,7 +201,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         id="ein"
                         name="ein"
                         placeholder="Employer Identification Number"
-                        className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ein && touched.ein ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                        className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ein && touched.ein ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                           }`}
                       />
                       <ErrorMessage name="ein" component="div" className="mt-1 text-sm text-red-600" />
@@ -217,7 +217,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         id="ownerName"
                         name="ownerName"
                         placeholder="Enter owner's full name"
-                        className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerName && touched.ownerName ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                        className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerName && touched.ownerName ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                           }`}
                       />
                       <ErrorMessage name="ownerName" component="div" className="mt-1 text-sm text-red-600" />
@@ -233,7 +233,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="storeStreet" className="block text-sm text-gray-800 mb-2">Street *</label>
                         <Field
                           name="storeStreet"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeStreet && touched.storeStreet ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeStreet && touched.storeStreet ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="storeStreet" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -243,7 +243,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="storeCity" className="block text-sm text-gray-800 mb-2">City *</label>
                         <Field
                           name="storeCity"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeCity && touched.storeCity ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeCity && touched.storeCity ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="storeCity" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -253,7 +253,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="storeState" className="block text-sm text-gray-800 mb-2">State *</label>
                         <Field
                           name="storeState"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeState && touched.storeState ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeState && touched.storeState ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="storeState" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -263,7 +263,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="storeZipCode" className="block text-sm text-gray-800 mb-2">ZIP Code *</label>
                         <Field
                           name="storeZipCode"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeZipCode && touched.storeZipCode ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeZipCode && touched.storeZipCode ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="storeZipCode" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -273,7 +273,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="storeCountry" className="block text-sm text-gray-800 mb-2">Country *</label>
                         <Field
                           name="storeCountry"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeCountry && touched.storeCountry ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.storeCountry && touched.storeCountry ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="storeCountry" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -289,7 +289,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="ownerStreet" className="block text-sm text-gray-800 mb-2">Street *</label>
                         <Field
                           name="ownerStreet"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerStreet && touched.ownerStreet ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerStreet && touched.ownerStreet ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="ownerStreet" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -299,7 +299,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="ownerCity" className="block text-sm text-gray-800 mb-2">City *</label>
                         <Field
                           name="ownerCity"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerCity && touched.ownerCity ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerCity && touched.ownerCity ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="ownerCity" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -309,7 +309,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="ownerState" className="block text-sm text-gray-800 mb-2">State *</label>
                         <Field
                           name="ownerState"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerState && touched.ownerState ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerState && touched.ownerState ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="ownerState" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -319,7 +319,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="ownerZipCode" className="block text-sm text-gray-800 mb-2">ZIP Code *</label>
                         <Field
                           name="ownerZipCode"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerZipCode && touched.ownerZipCode ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerZipCode && touched.ownerZipCode ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="ownerZipCode" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -329,7 +329,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <label htmlFor="ownerCountry" className="block text-sm text-gray-800 mb-2">Country *</label>
                         <Field
                           name="ownerCountry"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerCountry && touched.ownerCountry ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerCountry && touched.ownerCountry ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                         <ErrorMessage name="ownerCountry" component="div" className="text-[120px] text-red-600 mt-1" />
@@ -347,7 +347,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         id="businessPhone"
                         name="businessPhone"
                         placeholder="(123) 456-7890"
-                        className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.businessPhone && touched.businessPhone ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                        className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.businessPhone && touched.businessPhone ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                           }`}
                       />
                       <ErrorMessage name="businessPhone" component="div" className="mt-1 text-sm text-red-600" />
@@ -363,7 +363,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         id="ownerPhone"
                         name="ownerPhone"
                         placeholder="(123) 456-7890"
-                        className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerPhone && touched.ownerPhone ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                        className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.ownerPhone && touched.ownerPhone ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                           }`}
                       />
                       <ErrorMessage name="ownerPhone" component="div" className="mt-1 text-sm text-red-600" />
@@ -376,7 +376,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <Field
                           name="sellerPremium"
                           disabled
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.sellerPremium && touched.sellerPremium ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.sellerPremium && touched.sellerPremium ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                       </div>
@@ -386,7 +386,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <Field
                           disabled
                           name="listingFee"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.listingFee && touched.listingFee ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.listingFee && touched.listingFee ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                       </div>
@@ -396,7 +396,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <Field
                           disabled
                           name="advertisingFee"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.advertisingFee && touched.advertisingFee ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.advertisingFee && touched.advertisingFee ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                       </div>
@@ -406,7 +406,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <Field
                           disabled
                           name="JunkItemFee"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.JunkItemFee && touched.JunkItemFee ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.JunkItemFee && touched.JunkItemFee ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                       </div>
@@ -416,7 +416,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                         <Field
                           disabled
                           name="packagingFee"
-                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.packagingFee && touched.packagingFee ? "border-red-300 bg-red-50" : "border-gray-300 bg-white"
+                          className={`w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${errors.packagingFee && touched.packagingFee ? "border-red-300 b-[#5f2781]" : "border-gray-300 bg-white"
                             }`}
                         />
                       </div>

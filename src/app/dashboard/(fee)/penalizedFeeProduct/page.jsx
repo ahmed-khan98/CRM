@@ -10,6 +10,7 @@ import toast from "react-hot-toast"
 import FeeTab from "@/app/_Components/Tab/FeeTab"
 import { usePenalizedProductItemsQuery } from "@/app/_Services/PenaltyFeeProduct/page"
 import { useRouter } from "next/navigation"
+import { truncateWords } from "@/app/utilities/ProductTitle"
 
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -25,7 +26,7 @@ export default function page() {
     const { data, error: isError, isLoading } = usePenalizedProductItemsQuery();
     const [addPayment, { isLoading: isPocessing }] = useAddPaymentMutation()
 
-  const router = useRouter()
+    const router = useRouter()
 
     const filteredNotifications = () => {
         return data.data.filter((item) => (item?.paymentStatus === 'unpaid'))
@@ -47,7 +48,7 @@ export default function page() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center">
+            <div className="min-h-screen  flex items-center justify-center">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
@@ -59,7 +60,7 @@ export default function page() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-4 sm:px-1 md:px-2">
+        <div className="min-h-screen  py-4 sm:px-1 md:px-2">
             <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-6">
                 {/* <Tab tabs={appointmentTabs} /> */}
                 <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
@@ -80,7 +81,7 @@ export default function page() {
 
                     {filteredNotifications()?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-                            <Calendar className="h-16 w-16 text-gray-300 mb-4" />
+                            <Calendar className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
                             <h3 className="text-lg md:text-xl font-semibold text-gray-700">No Penalized Products</h3>
                             <p className="text-gray-500 mt-2">
                                 You don't have any penalized products fees.
@@ -90,7 +91,7 @@ export default function page() {
                         <div className="overflow-hidden rounded-2xl border border-gray-200" >
                             <div className="overflow-x-auto">
                                 <table className="min-w-full">
-                                    <thead className="bg-red-50">
+                                    <thead className="b-[#5f2781]">
                                         <tr>
                                             {/* <th className="px-3 py-4 text-left text-sm font-bold text-red-800 uppercase tracking-wider">
                         Date
@@ -118,17 +119,17 @@ export default function page() {
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {filteredNotifications().map((e, index) => {
-                                            const lastFour = e?.product?._id.toString().slice(-4);
+                                            const truncatedName = truncateWords(e?.product?.name, 8);
                                             return (<motion.tr
                                                 key={e?._id}
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: index * 0.1 }}
-                                                className="hover:bg-red-50 transition-colors"
+                                                className="hover:b-[#5f2781] transition-colors"
                                             >
                                                 <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{`${e?.product?.sku}`}</td>
                                                 {/* <td className="px-3 py-4 whitespace-pre-line text-sm text-gray-600">{`${e.auctionWin?.product?.skuLocation},${e.auctionWin?.product?.skuRoom},${e.auctionWin?.product?.skuDetail}`}</td> */}
-                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-blue-600 capitalize"><Link href={`/detailproduct/${e?.product?._id}`}>{e?.product?.name}</Link></td>
+                                                <td className="px-3 py-4 whitespace-nowrap text-sm text-blue-600 capitalize"><Link href={`/detailproduct/${e?.product?._id}`}>{truncatedName}</Link></td>
                                                 <td className="px-3 py-4 whitespace-nowrap">
                                                     <span
                                                         className={`px-3 py-1 rounded-full text-xs font-medium text-red-600 bg-red-100`}
@@ -138,7 +139,7 @@ export default function page() {
                                                 </td>
                                                 <td className="px-3 py-4 whitespace-nowrap">
                                                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
-                                                        💰 {Math.round((e?.penaltyAmount*100))/100}
+                                                        💰 {Math.round((e?.penaltyAmount * 100)) / 100}
                                                     </span>
                                                 </td>
                                                 <td className="px-3 py-4 whitespace-nowrap">
@@ -160,7 +161,7 @@ export default function page() {
                                                         ) : (
                                                             <>
                                                                 <CreditCard className="h-4 w-4" />
-                                                                Pay ${Math.round((e?.penaltyAmount*100))/100}
+                                                                Pay ${Math.round((e?.penaltyAmount * 100)) / 100}
                                                             </>
                                                         )}
                                                     </button>

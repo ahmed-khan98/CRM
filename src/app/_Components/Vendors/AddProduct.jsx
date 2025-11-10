@@ -85,10 +85,10 @@ const AddProduct = () => {
     })
 
     return (
-        <div className="w-full pb-5   ">
+        <div className="w-full pbg-[#5f2781]   ">
             <form onSubmit={formik.handleSubmit}>
                 <div className=" px-10 ">
-                    <h2 className="text-3xl font-bold mb-4 border-b border-[#EDEDED] pb-4 text-[#242424] ">Add New Product</h2>
+                    <h2 className="text-3xl font-bold mbg-[#5f2781] border-b border-[#EDEDED] pbg-[#5f2781] text-[#242424] ">Add New Product</h2>
 
                     <div className="grid grid-cols-3 gap-6">
                         {/* Left Section (Inputs) */}

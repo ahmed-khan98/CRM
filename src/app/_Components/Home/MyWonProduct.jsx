@@ -23,11 +23,11 @@ const MyWonProduct = ({ item }) => {
         if (!str) return "";
         const words = str.split(" ");
         return words.length > limit
-          ? words.slice(0, limit).join(" ") + "..."
-          : str;
-      };
-      
-      const truncatedName = truncateWords(item.product?.name, 8);
+            ? words.slice(0, limit).join(" ") + "..."
+            : str;
+    };
+
+    const truncatedName = truncateWords(item.product?.name, 8);
 
     return (
         <div className="relative bg-gradient-to-b from-green-50 to-white border-2 border-gray-300 rounded-3xl my-4 shadow-lg flex flex-col hover:border-green-600  ">
@@ -120,11 +120,17 @@ const MyWonProduct = ({ item }) => {
 
             <div className="flex flex-row">
 
-                <button onClick={
+                
+                {
+                    item?.paymentStatus === 'paid' ?
+                        <button
+                            className="rounded-br-3xl rounded-bl-3xl w-full font-bold  text-white bg-blue-500 py-3 flex items-center justify-center ">
+                            Paid
+                        </button> : <button onClick={
                     // () => addPayments(item?._id,item?.product?._id)
                     () => {
                         setLoadingStates((prev) => ({ ...prev, [item?.product?._id]: true }));
-                        router.push(`/dashboard/feeConfirmation?type=auction_payment&id=${item?._id}&amount=${item?.winningBid}&product=${item?.product?.name}&sku=${item?.product?.sku}&productId=${item?.product?._id}`)
+                        router.push(`/dashboard/feeConfirmation?type=auction_payment&id=${item?._id}&amount=${item?.product?.highestBid}&product=${item?.product?.name}&sku=${item?.product?.sku}&productId=${item?.product?._id}`)
                     }}
                     disabled={loadingStates[item?.product?._id]}
                     className="rounded-br-3xl rounded-bl-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 py-3 flex items-center justify-center ">
@@ -132,20 +138,7 @@ const MyWonProduct = ({ item }) => {
                         "Loading..."
                     ) : (
                         "Click to pay"
-                    )}                </button>
-                {/* {
-                    item?.paymentStatus === 'Completed' ?
-                        <button
-                            className="rounded-br-3xl w-full font-bold  text-white bg-gradient-to-r from-blue-300 to-blue-400 py-3 flex items-center justify-center ">
-                            Paid
-                        </button> : <button onClick={() => addPayments(item?.product?._id)}
-                            disabled={loadingStates[item?.product?._id]}
-                            className="rounded-br-3xl w-full font-bold cursor-pointer  text-white bg-gradient-to-r from-blue-500 to-blue-400  hover:from-blue-400 hover:to-blue-500 py-3 flex items-center justify-center ">
-                            {loadingStates[item?.product?._id] ? (
-                                "Loading..."
-                            ) : (
-                                "Pay Now"
-                            )}                </button>} */}
+                    )}                </button>}
             </div>
 
         </div>

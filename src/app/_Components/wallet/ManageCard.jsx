@@ -58,7 +58,7 @@ const ManageCards = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-6 px-4">
+    <div className="min-h-screen  py-6 px-4">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between  my-10 md:my-6">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center">
@@ -93,7 +93,7 @@ const ManageCards = () => {
             </div>
           ) : cardsData?.data?.length === 0 ? (
             <div className="text-center py-10">
-              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mbg-[#5f2781]">
                 <CreditCard className="h-8 w-8 text-gray-400" />
               </div>
               <h3 className="text-lg font-medium text-gray-700 mb-1">No cards added yet</h3>
@@ -123,7 +123,7 @@ const ManageCards = () => {
                       <div className="text-center p-4">
                         <AlertCircle className="h-10 w-10 text-red-500 mx-auto mb-2" />
                         <h3 className="text-lg font-bold text-gray-800 mb-1">Remove this card?</h3>
-                        <p className="text-gray-600 mb-4">This action cannot be undone.</p>
+                        <p className="text-gray-600 mbg-[#5f2781]">This action cannot be undone.</p>
                         <div className="flex justify-center space-x-3">
                           <motion.button
                             whileTap={{ scale: 0.95 }}
@@ -136,7 +136,7 @@ const ManageCards = () => {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleDeleteCard(card._id)}
                             disabled={isDeleting}
-                            className="cursor-pointer px-4 py-2 bg-red-500 text-white rounded-full text-sm font-medium flex items-center"
+                            className="cursor-pointer px-4 py-2 b-[#5f2781]0 text-white rounded-full text-sm font-medium flex items-center"
                           >
                             {isDeleting ? (
                               <>
@@ -187,7 +187,7 @@ const ManageCards = () => {
                       <motion.button
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setConfirmDelete(card._id)}
-                        className="cursor-pointer text-gray-500 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors"
+                        className="cursor-pointer text-gray-500 hover:text-red-500 hover:b-[#5f2781] p-2 rounded-full transition-colors"
                         title="Remove card"
                       >
                         <Trash2 className="h-5 w-5" />
@@ -201,7 +201,7 @@ const ManageCards = () => {
         </div>
 
         {/* <div className="bg-white rounded-3xl shadow-md p-6 mt-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Card Security</h2>
+          <h2 className="text-xl font-bold text-gray-800 mbg-[#5f2781]">Card Security</h2>
           <p className="text-gray-600 mb-6">
             Your card information is securely stored and processed according to PCI DSS standards. We never store your full card number or CVV.
           </p>
