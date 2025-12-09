@@ -81,7 +81,7 @@ export default function page() {
 
   return (
     <div className="min-h-screen  py-6 md:py-2 px-2">
-      <div className=" mx-auto max-w-6xl">
+      <div className=" mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
