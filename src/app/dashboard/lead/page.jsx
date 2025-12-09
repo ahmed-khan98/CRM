@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect, Suspense } from "react";
 import { ChartBar, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
