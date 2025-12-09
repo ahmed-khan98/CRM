@@ -89,7 +89,6 @@ const PayPalButton = ({ type, id, amount, onSuccess, onError, className = "" }) 
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                   },
-
                   body: JSON.stringify(payload),
                 })
 
@@ -218,7 +217,7 @@ const PayPalButton = ({ type, id, amount, onSuccess, onError, className = "" }) 
   return (
     <div className={`relative ${className}`}>
       {/* Amount Display */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mbg-[#5f2781]">
+      {/* <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 my-2 mbg-[#5f2781]">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-sm font-medium text-blue-800">Payment Amount</h3>
@@ -236,7 +235,7 @@ const PayPalButton = ({ type, id, amount, onSuccess, onError, className = "" }) 
             <span className="text-2xl font-bold text-blue-800">${amount}</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* PayPal Button Container */}
       <div className="relative">

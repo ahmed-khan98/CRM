@@ -65,10 +65,10 @@ export default function page() {
   return (
     <div className="min-h-screen  py-4 mx-1">
       <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-5 justify-between items-center md:flex-row">
-          <div className="flex items-center gap-3">
-            <List className="h-7 w-7 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-[24px] font-bold">
+        <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
+          <div className="flex items-center gap-2">
+            <List className="h-5 w-5 text-[#5f2781]" />
+            <h3 className="text-[#242424] text-xl font-bold">
               All Email List
             </h3>
           </div>

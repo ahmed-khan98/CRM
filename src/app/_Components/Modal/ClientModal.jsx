@@ -9,7 +9,7 @@ import {
   useUpdateClientMutation,
 } from "@/app/_Services/Client/page";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react"; 
 import { clientSchema } from "@/app/schema/client";
 import { useGetdepartmentsEmployeeQuery } from "@/app/_Services/employee/page";
 import { useGetDepartmentBrandQuery } from "@/app/_Services/brand/page";
@@ -333,7 +333,7 @@ const ClientModal = ({ isOpen, closeModal, data, refetch }) => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Company Name
+                            Company Name / Brand Name
                           </label>
                           <Field
                             type="text"
@@ -440,7 +440,7 @@ const ClientModal = ({ isOpen, closeModal, data, refetch }) => {
                         {/* Signup Type */}
                         <FormikSelect
                           name="signupType"
-                          label="SignUp Type Brand"
+                          label="SignUp Type "
                           options={signupOptions}
                           value={values.signupType}
                           setFieldValue={setFieldValue}
@@ -453,7 +453,7 @@ const ClientModal = ({ isOpen, closeModal, data, refetch }) => {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-800 mb-1">
-                          address
+                          Address
                         </label>
                         <Field
                           as="textarea"

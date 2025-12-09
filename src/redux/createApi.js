@@ -19,16 +19,13 @@ const baseQueryWithAuthHandling = async (args, api, extraOptions) => {
   const result = await rawBaseQuery(args, api, extraOptions);
   console.log('API Result:', result);
   if (
-    result?.error?.status === 401 ||
-    result?.data?.statusCode === 401 || result?.error?.status === 403 ||
-    result?.data?.statusCode === 403
+    result?.error?.status === 401 ||  result?.error?.status === 403 ||
+    result?.error?.data?.statusCode === 401 || result?.error?.data?.statusCode === 403 
   ) {
     Cookies.remove("token");
     Cookies.remove("currentuser");
-
-    // window.location.href = '/login';
+    window.location.href = '/login';
   }
-
   return result;
 };
 

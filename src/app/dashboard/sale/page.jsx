@@ -43,18 +43,16 @@ export default function Client() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "draft":
-        return "text-gray-600 bg-gray-200";
-      case "pending":
-        return "text-yellow-700 bg-yellow-200";
       case "paid":
         return "text-green-700 bg-green-200";
-      case "partial":
-        return "text-blue-700 bg-blue-200";
-      case "failed":
+      case "charge back":
         return "text-red-700 bg-red-200";
-      case "refunded":
-        return "text-purple-700 bg-purple-200";
+      case "refund":
+        return "text-red-700 bg-red-200";
+      case "FRESH":
+        return "text-blue-700 bg-blue-200";
+      case "UP SELL":
+        return "text-blue-700 bg-blue-200";
       default:
         return "text-gray-700 bg-gray-100";
     }
@@ -75,10 +73,10 @@ export default function Client() {
     try {
       await deleteSale(confirmDelete).unwrap();
       setConfirmDelete(null);
-      toast.success("Client deleted successfully");
+      toast.success("Sale deleted successfully");
       refetch();
     } catch (error) {
-      toast.error(error.data?.message || "Failed to delete Client");
+      toast.error(error.data?.message || "Failed to delete sale");
     }
   };
 
@@ -104,10 +102,10 @@ export default function Client() {
   return (
     <div className="min-h-screen  py-4 mx-1">
       <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-5 justify-between items-center md:flex-row">
+        <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
-            <Users className="h-7 w-7 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-[24px] font-bold">All Sales</h3>
+            <Users className="h-5 w-5 text-[#5f2781]" />
+            <h3 className="text-[#242424] text-xl font-bold">All Sales</h3>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -159,33 +157,45 @@ export default function Client() {
                   <thead className="bg-[#F7F7F7]">
                     <tr>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        title{" "}
+                        Name{" "}
                       </th>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Description{" "}
+                        Email{" "}
                       </th>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Client{" "}
+                        Phone No.{" "}
                       </th>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Department{" "}
-                      </th>
-
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Agent{" "}
+                        Serial No.{" "}
                       </th>
 
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Amount
+                        Brand Name{" "}
+                      </th>
+
+                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                        Brand Mark
                       </th>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Currency{" "}
+                        Department
+                      </th>
+                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                        Agent
+                      </th>
+                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                        Type{" "}
+                      </th>
+                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                        Fronter{" "}
+                      </th>
+                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                        Amount{" "}
                       </th>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Status{" "}
                       </th>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        CreatedAt{" "}
+                        Date{" "}
                       </th>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Action
@@ -202,27 +212,25 @@ export default function Client() {
                         className="hover:bg-[#f7f7f7] transition-colors"
                       >
                         <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          {emp?.title || "-"}
+                          {emp?.name || "-"}
                         </td>
 
-                        <td className="px-2 py-3 whitespace-normal text-[13px] text-gray-600 capitalize">
-                          {emp?.description || "-"}
+                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 ">
+                          {emp?.email || "-"}
+                        </td>
+                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                          {emp?.phoneNo || "-"}
+                        </td>
+                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                          {emp?.serialNo || "-"}
+                        </td>
+                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                          {emp?.brandName || "-"}
+                        </td>
+                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                          {emp?.brandMark || "-"}
                         </td>
 
-                        <td className="px-2 py-3 whitespace-nowrap capitalize">
-                          {emp?.clientId ? (
-                            <span
-                              className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
-                                emp?.clientId?.name
-                              )}`}
-                            >
-                              {emp.clientId.name ? `${emp.clientId.name}` : "-"}
-                            </span>
-                          ) : (
-                            "-" 
-                          )}
-                        </td>
-                        
                         <td className="px-2 py-3 whitespace-nowrap capitalize">
                           {emp?.departmentId?.name ? (
                             <span
@@ -241,9 +249,7 @@ export default function Client() {
                         <td className="px-2 py-3 whitespace-nowrap capitalize">
                           {emp?.agent ? (
                             <span
-                              className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
-                                emp?.agent?.fullName
-                              )}`}
+                              className={`px-2 py-1 rounded text-xs font-medium `}
                             >
                               {emp.agent.fullName
                                 ? `${emp.agent.fullName}`
@@ -253,22 +259,39 @@ export default function Client() {
                             "-" // if no handleBy
                           )}
                         </td>
+                         <td className="px-2 py-3 whitespace-nowrap">
+                          <div className="flex items-center gap-3">
+                            <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
+                                emp?.type
+                              )}`}>
+                              {emp?.type}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-2 py-3 whitespace-nowrap capitalize">
+                          {emp?.fronter ? (
+                            <span
+                              className={`px-2 py-1 rounded text-xs font-medium`}
+                            >
+                              {emp.fronter.fullName
+                                ? `${emp.fronter.fullName}`
+                                : "-"}
+                            </span>
+                          ) : (
+                            "-" // if no handleBy
+                          )}
+                        </td>
+                        
 
                         <td className="px-2 py-3 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
+                          {/* <div className="flex items-center gap-3"> */}
                             <span className="text-sm  text-gray-600">
                               {emp?.amount}
                             </span>
-                          </div>
+                          {/* </div> */}
                         </td>
 
-                        <td className="px-2 py-3 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm  text-gray-600">
-                              {emp?.currency}
-                            </span>
-                          </div>
-                        </td>
+                       
 
                         <td className="px-3 py-4 whitespace-nowrap">
                           <span
@@ -281,11 +304,11 @@ export default function Client() {
                           </span>
                         </td>
 
-                        <td className="px-2 py-3 whitespace-normal">
+                        <td className="px-2 py-3 whitespace-nowrap">
                           {/* <div className="flex items-center gap-3"> */}
-                            <span className="text-[12px]  text-gray-600 break-words">
-                              {emp?.createdAt ? formatDate(emp.createdAt) : "-"}
-                            </span>
+                          <span className="text-[12px]  text-gray-600 ">
+                            {emp?.createdAt ? formatDate(emp.createdAt) : "-"}
+                          </span>
                           {/* </div> */}
                         </td>
 

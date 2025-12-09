@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react"; // <-- useState import kiya
 import { motion } from "framer-motion";
 import { formatDate } from "@/app/utilities/date";
 import {
@@ -9,6 +9,8 @@ import {
   Mail,
   Pencil,
   Trash2,
+  Check,
+  Eye, // <-- New icon for 'Copied' state
 } from "lucide-react";
 import {
   Menu,
@@ -18,12 +20,41 @@ import {
   Transition,
 } from "@headlessui/react";
 import { useRouter } from "next/navigation";
-import { BiDetail } from "react-icons/bi";
 import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
 
 export const LinkRow = memo(
-  function LeadRow({ emp, onEdit, setConfirmDelete }) {
+  function LeadRow({ emp, setConfirmDelete }) {
+
     const router = useRouter();
+
+    const [isCopied, setIsCopied] = useState(false);
+
+    // 2. Updated onCopy function defined inside the component
+    const onCopy = (employeeId) => {
+      if (!employeeId) {
+        console.error("Employee ID is missing.");
+        return;
+      }
+
+      const baseUrl = "http://localhost:3000/pay/";
+      const fullUrl = `${baseUrl}${employeeId}`;
+
+      navigator.clipboard
+        .writeText(fullUrl)
+        .then(() => {
+          // Set state to show 'Copied' text
+          setIsCopied(true);
+
+          // Reset state after 3 seconds
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 3000); // 3000 milliseconds = 3 seconds
+        })
+        .catch((err) => {
+          console.error("Failed to copy URL: ", err);
+          // Optional: show a temporary error message
+        });
+    };
 
     return (
       <motion.tr
@@ -33,19 +64,19 @@ export const LinkRow = memo(
         transition={{ duration: 0.2 }}
         className="hover:bg-gray-50 transition-colors relative "
       >
-        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-medium text-gray-600 capitalize cursor-pointer">
+        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
           {emp?.name || "-"}
         </td>
 
-        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-medium text-gray-600 cursor-pointer">
+        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-normal text-gray-600">
           {emp?.email || "-"}
         </td>
 
-        <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800 cursor-pointer">
+        <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800">
           {emp?.phoneNo || "-"}
         </td>
 
-        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-medium text-gray-600 capitalize cursor-pointer">
+        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
           {emp?.brandId?.name || "-"}
         </td>
 
@@ -55,7 +86,7 @@ export const LinkRow = memo(
               emp.service.map((tagItem, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium capitalize"
+                  className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium capitalize whitespace-nowrap"
                 >
                   {tagItem}
                 </span>
@@ -64,17 +95,17 @@ export const LinkRow = memo(
               <span className="text-[12px] text-gray-600">No Service</span>
             )
           ) : (
-            <span className="capitalize inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+            <span className="capitalize inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
               {emp?.service || "No Service"}
             </span>
           )}
         </td>
 
-        <td className="px-2 py-3  whitespace-nowrap">
+        <td className="px-2 py-3  whitespace-nowrap">
           <span className="text-[12px] text-gray-600">{emp?.merchantType}</span>
         </td>
 
-        <td className="px-3  whitespace-nowrap">
+        <td className="px-3  whitespace-nowrap">
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
               emp?.paymentStatus
@@ -91,17 +122,15 @@ export const LinkRow = memo(
             💰 ${emp?.amount}
           </span>
         </td>
-        <td className="px-2 py-3  whitespace-nowrap">
-          <span className="text-[12px] text-gray-600">
-            {emp?.createdAt && (
-              <span className="text-[12px] text-gray-600">
-                {formatDate(emp.createdAt)}
-              </span>
-            )}
-          </span>
+        <td className="px-2 py-3  whitespace-nowrap">
+          {emp?.createdAt && (
+            <span className="text-[12px] text-gray-600">
+              {formatDate(emp.createdAt)}
+            </span>
+          )}
         </td>
 
-        <td className="pl-2  whitespace-nowrap">
+        <td className="pl-2  whitespace-nowrap">
           <div className="relative inline-block">
             {" "}
             {/* important: relative container */}
@@ -127,16 +156,39 @@ export const LinkRow = memo(
                     <MenuItem>
                       {({ active }) => (
                         <button
-                          onClick={() => onEdit(emp)}
+                          onClick={() => router.push(`/pay/${emp?._id}`)}
                           className={`${
                             active ? "bg-gray-100" : ""
-                          } cursor-pointer flex w-full items-center gap-2 px-2 py-2 text-[12px] text-blue-700`}
+                          } cursor-pointer flex w-full items-center gap-2 px-2 py-2 text-[12px] text-gray-800`}
                         >
-                          <Copy className="h-4 w-4" />
-                          Copy Link
+                          <Eye className="h-4 w-4" />
+                          View
                         </button>
                       )}
                     </MenuItem>
+                    {/* *** Yahaan changes kiye gaye hain *** */}
+                    <MenuItem>
+                      {({ active }) => (
+                        <button
+                          onClick={() => onCopy(emp?._id)} // Updated to use local onCopy
+                          className={`${
+                            active ? "bg-gray-100" : ""
+                          } cursor-pointer flex w-full items-center gap-2 px-2 py-2 text-[12px] ${
+                            isCopied ? "text-green-600" : "text-blue-700" // Text color change
+                          }`}
+                        >
+                          {/* Icon change based on state */}
+                          {isCopied ? (
+                            <Check className="h-4 w-4 text-green-600" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                          {/* Text change based on state */}
+                          {isCopied ? "Copied!" : "Copy Link"}{" "}
+                        </button>
+                      )}
+                    </MenuItem>
+                    {/* *** Changes end here *** */}
                     <MenuItem>
                       {({ active }) => (
                         <button

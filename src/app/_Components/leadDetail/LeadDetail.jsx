@@ -36,15 +36,34 @@ const LeadDetail = ({ id }) => {
   const { data, error, isLoading } = useGetLeadByIdQuery({ id });
   const [showAllComments, setShowAllComments] = useState(false);
 
- const commentsToShow = useMemo(() => {
+  const commentsToShow = useMemo(() => {
     const leadComments = data?.data?.leadComment || [];
 
-    return showAllComments
-      ? leadComments
-      : leadComments.slice(0, 3);
+    return showAllComments ? leadComments : leadComments.slice(0, 3);
   }, [showAllComments, data?.data?.leadComment]);
 
   const totalComments = data?.data?.leadComment?.length || 0;
+
+  const lastCommentArray = data?.data?.leadComment;
+  const hasComments =
+    Array.isArray(lastCommentArray) && lastCommentArray.length > 0;
+
+  let displayLastAction;
+  let displayActionDate;
+  let displayScheduleDate;
+
+  if (hasComments) {
+    const lastComment = lastCommentArray[0];
+
+    displayLastAction = lastComment.lastAction;
+    displayActionDate = lastComment.createdAt;
+
+    displayScheduleDate = lastComment.scheduleDate || "";
+  } else {
+    displayLastAction = data?.data?.lastAction;
+    displayActionDate = data?.data?.lastActionDate;
+    displayScheduleDate = data?.data?.scheduleDate || "";
+  }
 
   if (isLoading)
     return (
@@ -110,27 +129,27 @@ const LeadDetail = ({ id }) => {
               {/* Status Info */}
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <p className="text-gray-500 font-medium uppercase tracking-wider">
+                  <p className="text-gray-500  uppercase tracking-wider">
                     Last Action
                   </p>
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ring-1 ${getActionStatusColor(
-                      data?.data?.lastAction
+                      displayLastAction // <-- Use calculated variable
                     )}`}
                   >
-                    {data?.data?.lastAction === "schedule"
-                      ? `Schedule on ${formatDate(data?.data?.scheduleDate||'')}`
-                      : data?.data?.lastAction.charAt(0).toUpperCase() +
-                          data?.data?.lastAction.slice(1) || "NO ACTION"}
+                    {displayLastAction === "schedule"
+                      ? `Schedule on ${formatDate(displayScheduleDate)}` // Use displayScheduleDate
+                      : displayLastAction?.charAt(0).toUpperCase() +
+                          displayLastAction?.slice(1) || "NO ACTION"}
                   </span>
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-gray-500 font-medium uppercase tracking-wider pt-3">
+                  <p className="text-gray-500 uppercase tracking-wider pt-3">
                     Action Date
                   </p>
                   <p className="text-gray-900 font-semibold">
-                    {formatDate(data?.data?.lastActionDate || '')}
+                    {formatDate(displayActionDate || "")}{" "}
                   </p>
                 </div>
               </div>
@@ -138,7 +157,7 @@ const LeadDetail = ({ id }) => {
               {/* Payment & Brand Info */}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <p className="text-gray-500 font-medium uppercase tracking-wider">
+                  <p className="text-gray-500  uppercase tracking-wider">
                     Payment Status
                   </p>
                   <span
@@ -151,7 +170,7 @@ const LeadDetail = ({ id }) => {
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-gray-500 font-medium uppercase tracking-wider pt-3">
+                  <p className="text-gray-500  uppercase tracking-wider pt-3">
                     Brand Mark
                   </p>
                   <p className="text-gray-900 font-semibold">
@@ -199,8 +218,14 @@ const LeadDetail = ({ id }) => {
             </h2>
 
             <div className="relative border-l border-gray-200 ml-1 space-y-6">
-                {commentsToShow?.map((comment) => (
-                <Comment id={comment?._id} lastComment={comment?.lastComment} lastAction={comment?.lastAction} username={comment?.userId?.username} createdAt={comment?.createdAt || comment?.createdAtAt || ''}/>
+              {commentsToShow?.map((comment) => (
+                <Comment
+                  id={comment?._id}
+                  lastComment={comment?.lastComment}
+                  lastAction={comment?.lastAction}
+                  username={comment?.userId?.username}
+                  createdAt={comment?.createdAt || comment?.createdAtAt || ""}
+                />
               ))}
 
               {/* See More / See Less Button */}

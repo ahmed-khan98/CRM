@@ -46,7 +46,7 @@ export default function GenZLoginForm() {
         }
       } catch (error) {
         if (error?.data.statusCode === 403 && error?.data?.data?.email) {
-          navigation.push(`/register`)
+          navigation.push(`/login`)
         }
         toast.error(error.data.message)
       }

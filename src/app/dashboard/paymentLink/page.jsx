@@ -7,18 +7,13 @@ import { toast } from "react-hot-toast";
 
 import {
   useBrandLeadQuery,
-  useDeleteLeadMutation,
 } from "@/app/_Services/lead/page";
 
 import { useAllBrandsQuery } from "@/app/_Services/brand/page";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
-import ExportLeadModal from "@/app/_Components/Modal/ExportLeadModal";
-import LeadModal from "@/app/_Components/Modal/LeadModel";
-import LeadActionModal from "@/app/_Components/Modal/LeadActionModal";
 import Pagination from "@/app/_Components/PaginationComponent/Pagination";
-import { LeadRow } from "@/app/_Components/table/tableRow/LeadRow";
 import { PAYMENTLINKHEADERS } from "@/app/_Components/table/tableRow/tableHeader/paymentlinkHeader";
-import { useAllPaymentLinksQuery } from "@/app/_Services/paymentLink/page";
+import { useAllPaymentLinksQuery, useDeletePaymentLinkMutation } from "@/app/_Services/paymentLink/page";
 import { useRouter } from "next/navigation";
 import { LinkRow } from "@/app/_Components/table/tableRow/LinkRow";
 
@@ -35,7 +30,7 @@ export default function Paymentlink() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const router = useRouter();
   
-  const [deleteSale, { isLoading: isDeleting }] = useDeleteLeadMutation();
+  const [deletePaymentLink, { isLoading: isDeleting }] = useDeletePaymentLinkMutation();
 
   // pagination state
   const [page, setPage] = useState(1);
@@ -72,16 +67,11 @@ export default function Paymentlink() {
 
   const isLoading = activeFilter === "all" ? isAllLoading : isBrandLeadLoading;
 
-  const handleAction = useCallback((emp) => {
-    setEditingAppointment(emp);
-    setIsActionOpen(true);
-  }, []);
-
   const onPageChange = useCallback((p) => setPage(p), []);
 
   const handleDelete = useCallback(async () => {
     try {
-      await deleteSale(confirmDelete).unwrap();
+      await deletePaymentLink(confirmDelete).unwrap();
       setConfirmDelete(null);
       toast.success("Lead deleted successfully");
       if (activeFilter === "all") refetchAll();
@@ -89,7 +79,7 @@ export default function Paymentlink() {
     } catch (error) {
       toast.error(error?.data?.message || "Failed to delete Lead");
     }
-  }, [confirmDelete, deleteSale, refetchAll, refetchBrand, activeFilter]);
+  }, [confirmDelete, deletePaymentLink, refetchAll, refetchBrand, activeFilter]);
 
   if (isLoading) {
     return (
@@ -108,18 +98,18 @@ export default function Paymentlink() {
 
   return (
     <div className="min-h-screen py-4 mx-1">
-      <div className="max-w-6xl mx-auto p-1 flex flex-col space-y-2">
+      <div className=" mx-auto p-1 flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
-            <Link className="h-7 w-7 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-[24px] font-bold">All Payment Link</h3>
+            <Link className="h-5 w-5 text-[#5f2781]" />
+            <h3 className="text-[#242424] text-xl font-bold">All Payment Link</h3>
           </div>
 
           <div className="flex flex-wrap gap-2">
             <motion.button
               whileTap={{ scale: 0.95 }}
             onClick={() => router.push("/dashboard/paymentLink/createPaymentLink")}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-full text-sm font-normal hover:bg-[#4f1f6d] transition-colors"
             >
               <Plus className="h-4 w-4 text--white" />
               Create Payment Link
@@ -160,7 +150,7 @@ export default function Paymentlink() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {items?.map((emp) => (
-                      <LinkRow key={emp?._id} emp={emp} onEdit={handleAction} setConfirmDelete={setConfirmDelete} />
+                      <LinkRow key={emp?._id} emp={emp} setConfirmDelete={setConfirmDelete} />
                     ))}
                   </tbody>
                 </table>

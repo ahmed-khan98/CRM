@@ -12,6 +12,7 @@ import { useDepartmentsCLientQuery } from "@/app/_Services/Client/page";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import { saleSchema } from "@/app/schema/sale";
 import { useGetdepartmentsEmployeeQuery } from "@/app/_Services/employee/page";
+import FormikSelect from "./formikSelect";
 
 const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
   const [createSale] = useCreateSaleMutation();
@@ -64,14 +65,45 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
     },
   };
 
+  const currencyType = [
+    { id: "USD", name: "USD" },
+    { id: "PKR", name: "PKR" },
+  ];
+  const saleType = [
+    { id: "FRESH", name: "FRESH" },
+    { id: "UP SELL", name: "UP SELL" },
+  ];
+
   const initialValues = {
     departmentId: data?.departmentId?._id || "",
     agent: data?.agent?._id || "",
-    clientId: data?.clientId?._id || "",
-    title: data?.title || "",
+    fronter: data?.fronter?._id || "",
+    name: data?.name || "",
+    email: data?.email || "",
+    phoneNo: data?.phoneNo || "",
+    serialNo: data?.serialNo || "",
+    brandMark: data?.brandMark || "",
+    brandName: data?.brandName || "",
     amount: data?.amount || "",
     currency: data?.currency || "",
-    description: data?.description || "",
+    type: data?.type || "",
+  };
+
+  const handleDepartmentChange = (newDeptId) => {
+    setFieldValue("departmentId", newDeptId);
+  };
+  const handleAgentChange = (newDeptId) => {
+    setFieldValue("agent", newDeptId);
+  };
+  const handleFronterChange = (newDeptId) => {
+    setFieldValue("fronter", newDeptId);
+  };
+
+  const handleCurrencyChange = (ser) => {
+    setFieldValue("currency", ser);
+  };
+  const handleTypeChange = (ser) => {
+    setFieldValue("type", ser);
   };
 
   return (
@@ -125,18 +157,18 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                 onSubmit={handleSubmit}
                 enableReinitialize
               >
-                {({ errors, touched, isSubmitting, values, setFieldValue }) => {
+                {({
+                  errors,
+                  touched,
+                  isSubmitting,
+                  values,
+                  setFieldValue,
+                  setFieldTouched,
+                }) => {
                   console.log(errors, "errors---->>>>");
                   // if (values.type !== selectedMethod) {
                   //     setSelectedMethod(values.type)
                   // }
-                  const {
-                    data: departClient,
-                    error: isDepartClientError,
-                    isLoading: isDepartClientLoading,
-                  } = useDepartmentsCLientQuery(values.departmentId, {
-                    skip: !values.departmentId,
-                  });
                   const {
                     data: departEmployee,
                     error,
@@ -145,46 +177,156 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                     skip: !values.departmentId,
                   });
 
+                  const deptOptions =
+                    departments?.data?.map((d) => ({
+                      value: d?._id,
+                      label: d?.name,
+                    })) ?? [];
+
+                  const empOptions =
+                    departEmployee?.data?.map((d) => ({
+                      value: d?._id,
+                      label: d?.fullName,
+                    })) ?? [];
+
+                  const currencyOptions =
+                    currencyType?.map((b) => ({
+                      value: b?.id,
+                      label: b?.name,
+                    })) ?? [];
+
+                  const saleOptions =
+                    saleType?.map((b) => ({
+                      value: b?.id,
+                      label: b?.name,
+                    })) ?? [];
+
                   return (
                     <Form className="space-y-3">
-                      <div className="grid grid-cols-1 gap-4 mb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Title{" "}
+                            Client Name
                           </label>
                           <Field
                             type="text"
-                            name="title"
+                            name="name"
                             className={`w-full px-4 py-2 border-1 ${
-                              errors.title && touched.title
+                              errors.name && touched.name
                                 ? "border-[#5f2781] focus:border-[#5f2781]"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           ></Field>
                           <ErrorMessage
-                            name="title"
+                            name="name"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-800 mb-1">
+                            Client Email
+                          </label>
+                          <Field
+                            type="email"
+                            name="email"
+                            className={`w-full px-4 py-2 border-1 ${
+                              errors.email && touched.email
+                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                : "border-gray-200 focus:border-blue-500"
+                            } rounded-xl focus:outline-none transition-colors`}
+                          ></Field>
+                          <ErrorMessage
+                            name="email"
                             component="div"
                             className="text-red-500 text-sm mt-1"
                           />
                         </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-800 mb-1">
-                          Description
-                        </label>
-                        <Field
-                          as="textarea"
-                          name="description"
-                          rows="3"
-                          placeholder="description..."
-                          className="w-full px-4 py-2 border-1 border-gray-200 focus:border-blue-500 rounded-xl focus:outline-none transition-colors resize-none"
-                        />
-                        <ErrorMessage
-                          name="description"
-                          component="div"
-                          className="text-red-500 text-sm mt-1"
-                        />
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-800 mb-1">
+                            Client Phone No.
+                          </label>
+                          <Field
+                            type="text"
+                            name="phoneNo"
+                            // placeholder="0300-1234567"
+                            className={`w-full px-4 py-2 border-1 ${
+                              errors.phoneNo && touched.phoneNo
+                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                : "border-gray-200 focus:border-blue-500"
+                            } rounded-xl focus:outline-none transition-colors`}
+                          ></Field>
+                          <ErrorMessage
+                            name="phoneNo"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-800 mb-1">
+                            Serial No
+                          </label>
+                          <Field
+                            type="text"
+                            name="serialNo"
+                            className={`w-full px-4 py-2 border-1 ${
+                              errors.serialNo && touched.serialNo
+                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                : "border-gray-200 focus:border-blue-500"
+                            } rounded-xl focus:outline-none transition-colors`}
+                          ></Field>
+                          <ErrorMessage
+                            name="serialNo"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
                       </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2  gap-4 mb-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-800 mb-1">
+                            Brand Name
+                          </label>
+                          <Field
+                            type="text"
+                            name="brandName"
+                            className={`w-full px-4 py-2 border-1 ${
+                              errors.brandName && touched.brandName
+                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                : "border-gray-200 focus:border-blue-500"
+                            } rounded-xl focus:outline-none transition-colors`}
+                          ></Field>
+                          <ErrorMessage
+                            name="brandName"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-800 mb-1">
+                            Brand Mark
+                          </label>
+                          <Field
+                            type="text"
+                            name="brandMark"
+                            className={`w-full px-4 py-2 border-1 ${
+                              errors.brandMark && touched.brandMark
+                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                : "border-gray-200 focus:border-blue-500"
+                            } rounded-xl focus:outline-none transition-colors`}
+                          ></Field>
+                          <ErrorMessage
+                            name="brandMark"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                      </div>
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-800 mb-1">
@@ -205,119 +347,75 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                             className="text-red-500 text-sm mt-1"
                           />
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Currency
-                          </label>
-                          <Field
-                            type="text"
-                            name="currency"
-                            // placeholder="0300-1234567"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.currency && touched.currency
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="currency"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
+                        <FormikSelect
+                          name="currency"
+                          label="Select Currency Type"
+                          options={currencyOptions}
+                          value={values.currency}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          error={errors.currency}
+                          touched={touched.currency}
+                          placeholder="currency"
+                          onChangeExtra={handleCurrencyChange}
+                        />
+                       
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-1">
-                            Select Department{" "}
-                          </label>
-                          <Field
-                            as="select"
-                            name="departmentId"
-                            className={`w-full px-4 py-2 cursor-pointer border-1 ${
-                              errors.departmentId && touched.departmentId
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
-                                : "border-gray-200 focus:border-[#5f2781]"
-                            } capitalize rounded-2xl focus:outline-none transition-colors bg-white text-gray-900`}
-                          >
-                            <option value="">Select Department </option>
-                            {departments?.data?.map((e) => (
-                              <option
-                                key={e?._id}
-                                value={e?._id}
-                                className="capitalize cursor-pointer"
-                              >
-                                {e?.name}
-                              </option>
-                            ))}
-                          </Field>
-                          <ErrorMessage
-                            name="departmentId"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-1">
-                            Sale Agent{" "}
-                          </label>
-                          <Field
-                            as="select"
-                            name="agent"
-                            className={`w-full px-4 py-2 cursor-pointer border-1 ${
-                              errors.agent && touched.agent
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
-                                : "border-gray-200 focus:border-[#5f2781]"
-                            } capitalize rounded-2xl focus:outline-none transition-colors bg-white text-gray-900`}
-                          >
-                            <option value="">Select Agent </option>
-                            {departEmployee?.data?.map((e) => (
-                              <option
-                                key={e?._id}
-                                value={e?._id}
-                                className="capitalize cursor-pointer"
-                              >
-                                {`${e?.fullName}`}
-                              </option>
-                            ))}
-                          </Field>
-                          <ErrorMessage
-                            name="agent"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-gray-800 mb-1">
-                            Select Client{" "}
-                          </label>
-                          <Field
-                            as="select"
-                            name="clientId"
-                            className={`w-full px-4 py-2 cursor-pointer border-1 ${
-                              errors.agent && touched.agent
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
-                                : "border-gray-200 focus:border-[#5f2781]"
-                            } capitalize rounded-2xl focus:outline-none transition-colors bg-white text-gray-900`}
-                          >
-                            <option value="">Select Client </option>
-                            {departClient?.data?.map((e) => (
-                              <option
-                                key={e?._id}
-                                value={e?._id}
-                                className="capitalize cursor-pointer"
-                              >
-                                {`${e?.firstName} ${e?.lastName}`}
-                              </option>
-                            ))}
-                          </Field>
-                          <ErrorMessage
-                            name="clientId"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
+                        <FormikSelect
+                          name="departmentId"
+                          label="Select Department"
+                          options={deptOptions}
+                          value={values.departmentId}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          error={errors.departmentId}
+                          touched={touched.departmentId}
+                          placeholder="Select Department"
+                          onChangeExtra={handleDepartmentChange}
+                        />
+                        <FormikSelect
+                          name="agent"
+                          label="Select sale agent"
+                          options={empOptions}
+                          value={values.agent}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          error={errors.agent}
+                          touched={touched.agent}
+                          placeholder="Select agent"
+                          onChangeExtra={handleAgentChange}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                         <FormikSelect
+                          name="type"
+                          label="Select Sale Type"
+                          options={saleOptions}
+                          value={values.type}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          error={errors.type}
+                          touched={touched.type}
+                          placeholder="select type"
+                          onChangeExtra={handleTypeChange}
+                        />
+                        {values?.type === "FRESH" && (
+                            <FormikSelect
+                          name="fronter"
+                          label="Select Sale Fronter"
+                          options={empOptions}
+                          value={values.fronter}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          error={errors.fronter}
+                          touched={touched.fronter}
+                          placeholder="Select fronter"
+                          onChangeExtra={handleFronterChange}
+                        />
+                        )}
                       </div>
 
                       <div className="flex gap-2 md:gap-4 pt-2">

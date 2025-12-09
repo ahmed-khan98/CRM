@@ -68,6 +68,29 @@ function LeadPayment() {
     { id: "paypal1", name: "Paypal 1" },
     { id: "paypal2", name: "Paypal 2" },
   ];
+
+  const services = [
+  "Seo Services",
+  "Logo Design",
+  "Website Design",
+  "Stationery Design",
+  "Brochure Design",
+  "Website Development",
+  "Project Status",
+  "Content Writing",
+  "Social Media Design",
+  "Copy Right Design",
+  "Video Production",
+  "Client Questionnaire",
+  "Email Marketing Questionnaire",
+  "SEO Questionnaire",
+  "Academic Writing Questionnaire",
+  "Illustrations",
+  "Other",
+  "No Package"
+];
+
+
   const currencyType = [
     { id: "USD", name: "USD" },
     { id: "PKR", name: "PKR" },
@@ -99,7 +122,7 @@ function LeadPayment() {
 
   return (
     <div className="min-h-screen  py-6 md:py-2 px-2">
-      <div className="max-w-5xl">
+      <div className="max-w-5xl  mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -140,6 +163,12 @@ function LeadPayment() {
                     label: b?.name,
                   })) ?? [];
 
+                const serviceOptions =
+                  services?.map((b) => ({
+                    value: b,
+                    label: b,
+                  })) ?? [];
+
                 const currencyOptions =
                   currencyType?.map((b) => ({
                     value: b?.id,
@@ -170,7 +199,7 @@ function LeadPayment() {
                         <Field
                           type="text"
                           name="name"
-                          readOnly={data?.data?.name ? true : false}
+                          // readOnly={data?.data?.name ? true : false}
                           className={`w-full px-4 py-2 text-sm border-1 capitalize ${
                             errors.name && touched.name
                               ? "border-[#5f2781] focus:border-[#5f2781]"
@@ -254,7 +283,7 @@ function LeadPayment() {
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.brandId}
-                        isDisabled={true}
+                        // isDisabled={true}
                         touched={touched.brandId}
                         placeholder="Select Brand"
                         onChangeExtra={handleBrandChange}
@@ -265,12 +294,13 @@ function LeadPayment() {
                       <FormikSelect
                         name="service"
                         label="Select Services"
-                        options={merchantOptions}
+                        options={serviceOptions}
                         value={values.service}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.service}
                         touched={touched.service}
+                        isMulti={true}
                         placeholder="Select Service"
                         onChangeExtra={handleServiceChange}
                       />

@@ -44,7 +44,7 @@ export default function Lead() {
   const activeFilter = searchParams.get("filter") || "all";
   const page = Number(searchParams.get("page")) || 1;
   // const [page, setPage] = useState(1);
-  const limit = 1;
+  const limit = 10;
 
   const createQueryString = useCallback(
     (name, value) => {
@@ -136,7 +136,7 @@ export default function Lead() {
     }
   }, [confirmDelete, deleteSale, refetchAll, refetchBrand, activeFilter]);
 
-  if (isLoading) {
+  if ( isAllLoading ||isBrandLeadLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div
@@ -157,11 +157,11 @@ export default function Lead() {
 
   return (
     <div className="min-h-screen py-4 mx-1">
-      <div className="max-w-6xl mx-auto p-1 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-5 justify-between items-center md:flex-row">
+      <div className="mx-auto p-1 flex flex-col space-y-2">
+        <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
-            <ChartBar className="h-7 w-7 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-[24px] font-bold">All Leads</h3>
+            <ChartBar className="h-5 w-5 text-[#5f2781]" />
+            <h3 className="text-[#242424] text-xl font-bold">All Leads</h3>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -235,7 +235,7 @@ export default function Lead() {
                       {LEADHEADERS?.map((h) => (
                         <th
                           key={h}
-                          className="px-2 py-3 text-start text-xs font-medium text-gray-800 capitalize"
+                          className="px-3 py-3 text-start text-xs font-medium text-gray-800 capitalize"
                         >
                           {h}
                         </th>
@@ -244,7 +244,7 @@ export default function Lead() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {items?.map((emp) => (
-                      <LeadRow key={emp?._id} emp={emp} onEdit={handleAction} />
+                      <LeadRow key={emp?._id} emp={emp} onEdit={handleAction} setConfirmDelete={setConfirmDelete} />
                     ))}
                   </tbody>
                 </table>

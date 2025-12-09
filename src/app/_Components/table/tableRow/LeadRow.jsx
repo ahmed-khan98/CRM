@@ -14,7 +14,7 @@ import { BiDetail } from "react-icons/bi";
 import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
 
 export const LeadRow = memo(
-  function LeadRow({ emp, onEdit }) {
+  function LeadRow({ emp, onEdit,setConfirmDelete }) {
     const router = useRouter();
 
     return (
@@ -26,7 +26,7 @@ export const LeadRow = memo(
         className="hover:bg-purple-50 transition-colors relative "
       >
         <td
-          className="px-2 py-2 whitespace-nowrap text-[13px] text-gray-600 capitalize cursor-pointer"
+          className="px-4 py-2 whitespace-nowrap text-[13px] text-gray-600 capitalize cursor-pointer"
           onClick={() => router.push(`/dashboard/lead/detail/${emp?._id}`)}
         >
           {emp?.name || "-"}
@@ -60,7 +60,7 @@ export const LeadRow = memo(
 
         <td className="px-2 py-2 whitespace-nowrap">
           <div className="flex flex-col items-start gap-1 bg-gray-100 shadow p-2 rounded-md">
-            {emp?.lastComment &&  <span className="text-xs text-gray-700 capitalize">
+            {emp?.lastComment &&  <span className="text-xs text-gray-700 ">
              {emp?.lastComment}
           </span>}
             <span
@@ -191,7 +191,7 @@ export const LeadRow = memo(
                     <MenuItem>
                       {({ active }) => (
                         <button
-                          onClick={() => {}}
+                          onClick={() => setConfirmDelete(emp?._id)}
                           className={`${
                             active ? "bg-gray-100" : ""
                           } cursor-pointer flex w-full items-center gap-2 px-2 py-2 text-[12px] text-red-600`}

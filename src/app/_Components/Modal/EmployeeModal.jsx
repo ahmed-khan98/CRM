@@ -33,7 +33,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
       payload.append("id", data?._id);
       payload.append("image", values?.image);
       payload.append("fullName", values?.fullName);
-      // payload.append("lastName", values?.lastName);
+      payload.append("password", values?.password);
       payload.append("email", values?.email);
       payload.append("joiningDate", values?.joiningDate);
       payload.append("address", values?.address);
@@ -113,6 +113,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
     phoneNo: data?.phoneNo || "",
     address: data?.address || "",
     image: data?.image || "",
+      isEdit: !!data, 
   };
 
   return (
@@ -167,7 +168,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                 enableReinitialize
               >
                 {({
-                  errors,
+                  errors, 
                   touched,
                   isSubmitting,
                   values,
@@ -179,7 +180,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                       value: d?._id,
                       label: d?.name,
                     })) ?? [];
-                  console.log(errors, "errors---->>>>");
+                  console.log(errors.password, "errors---->>>>");
                   // if (values.type !== selectedMethod) {
                   //     setSelectedMethod(values.type)
                   // }
@@ -422,6 +423,30 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                           />
                         </div>
                       </div>
+                      {!isEdit &&
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Password
+                          </label>
+                          <Field
+                            type="text"
+                            name="password"
+                            placeholder="********"
+                            className={`w-full px-4 py-2 border-1 ${
+                              errors.password && touched.password
+                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                : "border-gray-200 focus:border-blue-500"
+                            } rounded-xl focus:outline-none transition-colors`}
+                          ></Field>
+                          <ErrorMessage
+                            name="password"
+                            component="div"
+                            className="text-red-500 text-sm mt-1"
+                          />
+                        </div>
+                     
+                      </div>}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Address

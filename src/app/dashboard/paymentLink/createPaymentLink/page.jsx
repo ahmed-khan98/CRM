@@ -58,9 +58,30 @@ export default function page() {
     { id: "PKR", name: "PKR" },
   ];
 
+    const services = [
+  "Seo Services",
+  "Logo Design",
+  "Website Design",
+  "Stationery Design",
+  "Brochure Design",
+  "Website Development",
+  "Project Status",
+  "Content Writing",
+  "Social Media Design",
+  "Copy Right Design",
+  "Video Production",
+  "Client Questionnaire",
+  "Email Marketing Questionnaire",
+  "SEO Questionnaire",
+  "Academic Writing Questionnaire",
+  "Illustrations",
+  "Other",
+  "No Package"
+];
+
   return (
     <div className="min-h-screen  py-6 md:py-2 px-2">
-      <div className="max-w-6xl">
+      <div className=" mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -100,6 +121,12 @@ export default function page() {
                   merchant?.map((b) => ({
                     value: b?.id,
                     label: b?.name,
+                  })) ?? [];
+
+                  const serviceOptions =
+                  services?.map((b) => ({
+                    value: b,
+                    label: b,
                   })) ?? [];
 
                 const currencyOptions =
@@ -204,7 +231,7 @@ export default function page() {
                       <FormikSelect
                         name="service"
                         label="Select Services"
-                        options={merchantOptions}
+                        options={serviceOptions}
                         value={values.service}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}

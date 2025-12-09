@@ -75,8 +75,8 @@ export default function AppointmentBooking() {
       <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-6">
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
-            <Home className="h-7 w-7 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-[24px] font-bold">
+            <Home className="h-6 w-6 text-[#5f2781]" />
+            <h3 className="text-[#242424] text-[20px] font-bold">
               All Brand
             </h3>
           </div>
@@ -90,7 +90,7 @@ export default function AppointmentBooking() {
               <Plus className="h-4 w-4" />
               Create
             </motion.button>
-          
+
           </div>
         </div>
 

@@ -18,7 +18,6 @@ const LeadApi = createApiAuction.injectEndpoints({
       invalidatesTags: ["allPaymentlinks"],
     }),
 
-
     updatePaymentLink: builder.mutation({
       query: (formData) => ({
         url: `paymentlink/${formData?.id}`,

@@ -117,10 +117,10 @@ export default function AppointmentBooking() {
   return (
     <div className="min-h-screen  py-4 mx-1">
       <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-5 justify-between items-center md:flex-row">
-          <div className="flex items-center gap-3">
-            <Users className="h-7 w-7 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-[24px] font-bold">
+        <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-[#5f2781]" />
+            <h3 className="text-[#242424] text-xl font-bold">
               All Employees
             </h3>
           </div>
@@ -271,9 +271,9 @@ export default function AppointmentBooking() {
                         </td>
 
                         {/* Joining Date */}
-                        <td className="px-2 py-3 whitespace-nowrap">
+                        <td className="p-2 whitespace-nowrap">
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-semibold text-gray-900">
+                            <span className="text-[12px] text-gray-600">
                               {emp?.joiningDate
                                 ? formatDate(emp.joiningDate)
                                 : "-"}

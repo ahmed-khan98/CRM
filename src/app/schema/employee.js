@@ -5,6 +5,9 @@ export const empSchema = Yup.object().shape({
   joiningDate: Yup.date().required("Joining date is required"),
   designation: Yup.string().required("designation is required"),
   fullName: Yup.string().required("full name is required"),
+  email: Yup.string()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
   // lastName: Yup.string().required("last name time is required"),
   phoneNo: Yup.string()
     .required("Phone number is required")
@@ -36,4 +39,12 @@ export const empSchema = Yup.object().shape({
       return v.size <= 2 * 1024 * 1024;
     }),
   address: Yup.string().max(500, "address must be less than 500 characters"),
+  password: Yup.string().when("$isEdit", {
+    is: true, // edit mode
+    then: (schema) => schema.notRequired(),
+    otherwise: (schema) =>
+      schema
+        .required("Password is required")
+        .min(8, "Password must be at least 8 characters"),
+  }),
 });
