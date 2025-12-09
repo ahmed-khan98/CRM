@@ -27,8 +27,7 @@ const itemVariants = {
 };
 
 const MemoPagination = React.memo(Pagination);
-
-export default function Lead() {
+function Leads() {
   // const [activeFilter, setActiveFilter] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isActionOpen, setIsActionOpen] = useState(false);
@@ -284,5 +283,13 @@ export default function Lead() {
         />
       </div>
     </div>
+  );
+}
+
+export default function Lead() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Leads />
+    </Suspense>
   );
 }
