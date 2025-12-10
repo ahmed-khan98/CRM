@@ -15,6 +15,7 @@ import LeftNav from "../Dashboard/LeftNav"
 const Navbar = () => {
   const router = useRouter()
   const token = Cookies.get("token")
+  
   const filteredProducts = useSelector((state) => state.filter.filteredProducts)
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)

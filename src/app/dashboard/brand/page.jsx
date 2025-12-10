@@ -9,6 +9,7 @@ import {
 } from "@/app/_Services/brand/page";
 import BrandModal from "@/app/_Components/Modal/brandModal";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
+import Image from "next/image";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -26,8 +27,7 @@ export default function AppointmentBooking() {
 
   const { data, error: isError, isLoading, refetch } = useAllBrandsQuery();
 
-  const [deleteBrand, { isLoading: isDeleting }] =
-    useDeleteBrandMutation();
+  const [deleteBrand, { isLoading: isDeleting }] = useDeleteBrandMutation();
 
   const handleEdit = (br) => {
     setEditingBrand(br);
@@ -38,7 +38,6 @@ export default function AppointmentBooking() {
     setIsModalOpen(false);
     setEditingBrand(null);
   };
-
 
   const handleDelete = async () => {
     try {
@@ -76,9 +75,7 @@ export default function AppointmentBooking() {
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
             <Home className="h-6 w-6 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-[20px] font-bold">
-              All Brand
-            </h3>
+            <h3 className="text-[#242424] text-[20px] font-bold">All Brand</h3>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -90,7 +87,6 @@ export default function AppointmentBooking() {
               <Plus className="h-4 w-4" />
               Create
             </motion.button>
-
           </div>
         </div>
 
@@ -101,9 +97,7 @@ export default function AppointmentBooking() {
           {data?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <Home className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                No Brand
-              </h3>
+              <h3 className="text-xl font-semibold text-gray-700">No Brand</h3>
               <p className="text-gray-500 mt-2">
                 You don't have any Brand yet.
               </p>
@@ -115,10 +109,10 @@ export default function AppointmentBooking() {
                   <thead className="bg-[#F7F7F7]">
                     <tr>
                       <th className="px-4 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
-                       Brand Name{" "}
+                        Brand Name{" "}
                       </th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
-                       Department Name{" "}
+                        Department Name{" "}
                       </th>
                       <th className="px-2 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Action
@@ -134,6 +128,20 @@ export default function AppointmentBooking() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-[#f7f7f7] transition-colors"
                       >
+                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600">
+                          <div className=" w-25 h-25">
+                            {" "}
+                            {/* 96x96 container */}
+                            <Image
+                              src={br?.image || "/placeholder.svg"}
+                              alt="brand-logo"
+                              // fill
+                              width="100"
+                              height="80"
+                              className="rounded object-cover border border-purple-300"
+                            />
+                          </div>
+                        </td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 capitalize">
                           {br?.name}
                         </td>
@@ -174,7 +182,7 @@ export default function AppointmentBooking() {
           <WarningModal
             setConfirmDelete={setConfirmDelete}
             isDeleting={isDeleting}
-            message='brand'
+            message="brand"
             handleDelete={handleDelete}
           />
         )}

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import LeftNav from "../_Components/Dashboard/LeftNav";
-import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const DashboardLayout = ({ children }) => {
@@ -10,7 +9,6 @@ const DashboardLayout = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
 
-  // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1024) {
@@ -29,7 +27,6 @@ const DashboardLayout = ({ children }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close sidebar on mobile when route changes
   useEffect(() => {
     if (isMobile) {
       setIsSidebarOpen(false);
@@ -38,18 +35,10 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 flex flex-col py-14 md:py-18">
-      {/* <OfferBar /> */}
-      {/* <HeadingDashboard /> */}
+
 
       <div className="flex flex-1 relative">
-        {/* Sidebar Toggle Button for Mobile */}
-        {/* <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="lg:hidden fixed bottom-6 right-6 z-50 bg-[#F33E0A] text-white p-3 rounded-full shadow-lg hover:bg-[#E03500] transition-all duration-300"
-          aria-label={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
-        >
-          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-        </button> */}
+
 
         {/* Overlay for mobile when sidebar is open */}
         {isMobile && isSidebarOpen && (

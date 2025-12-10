@@ -7,6 +7,7 @@ import { CreditCard, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import PayPalButton from "@/app/_Components/PayPalButton";
 import { useGetPaymentLinkByIdQuery } from "@/app/_Services/paymentLink/page";
+import Image from "next/image";
 
 const PaymentDetail = ({ id }) => {
   const router = useRouter();
@@ -17,7 +18,6 @@ const PaymentDetail = ({ id }) => {
   const type = searchParams.get("type");
   //   const id = searchParams.get("id")
   const amount = searchParams.get("amount");
-
 
   const handlePayPalSuccess = (paymentData) => {
     console.log("PayPal payment successful:", paymentData);
@@ -82,13 +82,23 @@ const PaymentDetail = ({ id }) => {
   return (
     <div className="min-h-screen  py-6 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between my-10 md:my-6">
+        <div className="flex items-center justify-between my-4">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-            <CreditCard className="mr-2 h-6 w-6 text-[#5f2781]" />
+            <CreditCard className="mr-2 h-8 w-8 text-[#5f2781]" />
             Payment Confirmation
           </h1>
         </div>
 
+        {/* <div className=" w-25 h-25"> */}
+          <Image
+            src={data?.data?.brandId?.image || "/placeholder.svg"}
+            alt="brand-logo"
+            // fill
+            width="200"
+            height="100"
+            className="rounded object-cover p-3"
+          />
+        {/* </div> */}
         <div className="grid lg:grid-cols-2 gap-3">
           {/* Left Column - Payment Method Content */}
           <div className="bg-white rounded-2xl shadow-md p-5">
