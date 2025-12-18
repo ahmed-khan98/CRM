@@ -34,7 +34,7 @@ function Leads() {
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [editingAppointment, setEditingAppointment] = useState(null);
-  const [deleteSale, { isLoading: isDeleting }] = useDeleteLeadMutation();
+  const [deleteLead, { isLoading: isDeleting }] = useDeleteLeadMutation();
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -82,18 +82,20 @@ function Leads() {
   //   setPage(1);
   // }, [activeFilter]);
 
-  const { data: brandsResp, isLoading: isBrandLoading } = useAllBrandsQuery();
+  const { data: brandsResp,  } = useAllBrandsQuery();
   const brandList = brandsResp?.data ?? [];
 
   const {
     data: allResp,
-    isLoading: isAllLoading,
+   isLoading: isAllLoading,
+    isFetching: isAllFetching,
     refetch: refetchAll,
   } = useAllLeadsQuery({ page, limit }, { skip: activeFilter !== "all" });
 
   const {
     data: brandResp,
-    isLoading: isBrandLeadLoading,
+   isLoading: isBrandLoading,
+    isFetching: isBrandFetching,
     refetch: refetchBrand,
   } = useBrandLeadQuery(
     { id: activeFilter, page, limit },
@@ -104,7 +106,13 @@ function Leads() {
   const items = activeResp?.data?.items ?? [];
   const meta = activeResp?.data?.meta;
 
-  const isLoading = activeFilter === "all" ? isAllLoading : isBrandLeadLoading;
+    const isInitialLoading =
+    isAllLoading || isBrandLoading;
+
+  const isPaginationLoading =
+    isAllFetching || isBrandFetching;
+
+  // const isLoading = activeFilter === "all" ? isAllLoading : isBrandLeadLoading;
 
   const handleEdit = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => setIsModalOpen(false), []);
@@ -124,18 +132,17 @@ function Leads() {
 
   const handleDelete = useCallback(async () => {
     try {
-      await deleteSale(confirmDelete).unwrap();
+      await deleteLead(confirmDelete).unwrap();
       setConfirmDelete(null);
       toast.success("Lead deleted successfully");
-      if (activeFilter === "all") 
-      refetchAll();
+      if (activeFilter === "all") refetchAll();
       else refetchBrand();
     } catch (error) {
       toast.error(error?.data?.message || "Failed to delete Lead");
     }
-  }, [confirmDelete, deleteSale, refetchAll, refetchBrand, activeFilter]);
+  }, [confirmDelete, deleteLead, refetchAll, refetchBrand, activeFilter]);
 
-  if ( isAllLoading ||isBrandLeadLoading) {
+  if ( isInitialLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div
@@ -213,8 +220,21 @@ function Leads() {
 
         <motion.div
           variants={itemVariants}
-          className="bg-white rounded-2xl mx-1 md:mx-0 p-2 shadow-xl border border-purple-100"
+          className="bg-white rounded-2xl mx-1 md:mx-0 p-2 shadow-xl border border-purple-100 relative"
         >
+           {isPaginationLoading && (
+            <div className="absolute inset-0 bg-white/70 z-10 flex items-center justify-center rounded-2xl border border-gray-200">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                className="w-8 h-8 border-3 border-[#5f2781] border-t-transparent rounded-full"
+              />
+            </div>
+          )}
           {items?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <ChartBar className="h-16 w-16 text-gray-300" />
@@ -234,7 +254,7 @@ function Leads() {
                       {LEADHEADERS?.map((h) => (
                         <th
                           key={h}
-                          className="px-3 py-3 text-start text-xs font-medium text-gray-800 capitalize"
+                          className="px-1 py-3 text-start text-xs font-medium text-gray-800 capitalize"
                         >
                           {h}
                         </th>
@@ -242,8 +262,8 @@ function Leads() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {items?.map((emp) => (
-                      <LeadRow key={emp?._id} emp={emp} onEdit={handleAction} setConfirmDelete={setConfirmDelete} />
+                    {items?.map((emp,i) => (
+                      <LeadRow index={i + 1} emp={emp} onEdit={handleAction} setConfirmDelete={setConfirmDelete} />
                     ))}
                   </tbody>
                 </table>

@@ -156,48 +156,48 @@ export default function Client() {
                 <table className="min-w-full">
                   <thead className="bg-[#F7F7F7]">
                     <tr>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Name{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Email{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Phone No.{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Serial No.{" "}
                       </th>
 
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Brand Name{" "}
                       </th>
 
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Brand Mark
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Department
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Agent
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Type{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Fronter{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Amount{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Status{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Date{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Action
                       </th>
                     </tr>
@@ -211,27 +211,27 @@ export default function Client() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-[#f7f7f7] transition-colors"
                       >
-                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600 capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
                           {emp?.name || "-"}
                         </td>
 
-                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 ">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 ">
                           {emp?.email || "-"}
                         </td>
-                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.phoneNo || "-"}
                         </td>
-                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.serialNo || "-"}
                         </td>
-                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.brandName || "-"}
                         </td>
-                        <td className="px-2 py-3 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.brandMark || "-"}
                         </td>
 
-                        <td className="px-2 py-3 whitespace-nowrap capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
                           {emp?.departmentId?.name ? (
                             <span
                               className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
@@ -246,10 +246,10 @@ export default function Client() {
                           )}
                         </td>
 
-                        <td className="px-2 py-3 whitespace-nowrap capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
                           {emp?.agent ? (
                             <span
-                              className={`px-2 py-1 rounded text-xs font-medium `}
+                              className={` text-xs font-medium `}
                             >
                               {emp.agent.fullName
                                 ? `${emp.agent.fullName}`
@@ -259,7 +259,7 @@ export default function Client() {
                             "-" // if no handleBy
                           )}
                         </td>
-                         <td className="px-2 py-3 whitespace-nowrap">
+                         <td className="px-2 py-1.5 whitespace-nowrap">
                           <div className="flex items-center gap-3">
                             <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
                                 emp?.type
@@ -268,10 +268,10 @@ export default function Client() {
                             </span>
                           </div>
                         </td>
-                        <td className="px-2 py-3 whitespace-nowrap capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
                           {emp?.fronter ? (
                             <span
-                              className={`px-2 py-1 rounded text-xs font-medium`}
+                              className={` text-xs font-medium`}
                             >
                               {emp.fronter.fullName
                                 ? `${emp.fronter.fullName}`
@@ -283,7 +283,7 @@ export default function Client() {
                         </td>
                         
 
-                        <td className="px-2 py-3 whitespace-nowrap">
+                        <td className="px-2 py-1.5 whitespace-nowrap">
                           {/* <div className="flex items-center gap-3"> */}
                             <span className="text-sm  text-gray-600">
                               {emp?.amount}
@@ -304,7 +304,7 @@ export default function Client() {
                           </span>
                         </td>
 
-                        <td className="px-2 py-3 whitespace-nowrap">
+                        <td className="px-2 py-1.5 whitespace-nowrap">
                           {/* <div className="flex items-center gap-3"> */}
                           <span className="text-[12px]  text-gray-600 ">
                             {emp?.createdAt ? formatDate(emp.createdAt) : "-"}
@@ -312,7 +312,7 @@ export default function Client() {
                           {/* </div> */}
                         </td>
 
-                        <td className="pr-2 py-3 whitespace-nowrap">
+                        <td className="pr-2 py-1.5 whitespace-nowrap">
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}

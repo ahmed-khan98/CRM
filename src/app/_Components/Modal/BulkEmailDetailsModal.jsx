@@ -54,8 +54,8 @@ const BulkEmailDetailsModal = ({ isOpen, onClose, email }) => {
             <User size={20} className="text-[#5f2781]" />
             <div className="flex flex-col">
               <span className="text-xs text-gray-500">Send By:</span>
-              <span className="font-medium text-gray-800">
-                {email.senderId?.username}{" "}
+              <span className="font-medium text-gray-800 capitalize">
+                {email.senderId?.fullName}{" "}
               </span>
             </div>
           </div>

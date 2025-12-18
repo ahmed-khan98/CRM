@@ -49,8 +49,8 @@ export default function page() {
   };
 
   const merchant = [
-    { id: "paypal1", name: "Paypal 1" },
-    { id: "paypal penta prime", name: "Paypal Penta Prime" },
+    { id: "paypal", name: "Paypal" },
+    { id: "PPI paypal", name: "PPI Paypal" },
   ];
 
   const currencyType = [

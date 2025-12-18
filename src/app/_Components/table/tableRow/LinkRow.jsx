@@ -64,23 +64,23 @@ export const LinkRow = memo(
         transition={{ duration: 0.2 }}
         className="hover:bg-gray-50 transition-colors relative "
       >
-        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
+        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
           {emp?.name || "-"}
         </td>
 
-        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-normal text-gray-600">
+        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600">
           {emp?.email || "-"}
         </td>
 
-        <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800">
+        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
           {emp?.phoneNo || "-"}
         </td>
 
-        <td className="px-2 py-3 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
+        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
           {emp?.brandId?.name || "-"}
         </td>
 
-        <td className="px-2 py-3 ">
+        <td className="px-2 py-1.5 ">
           {Array.isArray(emp?.service) ? (
             emp.service.length > 0 ? (
               emp.service.map((tagItem, index) => (
@@ -101,7 +101,7 @@ export const LinkRow = memo(
           )}
         </td>
 
-        <td className="px-2 py-3  whitespace-nowrap">
+        <td className="px-2 py-1.5  whitespace-nowrap">
           <span className="text-[12px] text-gray-600">{emp?.merchantType}</span>
         </td>
 
@@ -117,12 +117,12 @@ export const LinkRow = memo(
               : "-"}
           </span>
         </td>
-        <td className="px-2 py-3 whitespace-nowrap">
+        <td className="px-2 py-1.5 whitespace-nowrap">
           <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
             💰 ${emp?.amount}
           </span>
         </td>
-        <td className="px-2 py-3  whitespace-nowrap">
+        <td className="px-2 py-1.5  whitespace-nowrap">
           {emp?.createdAt && (
             <span className="text-[12px] text-gray-600">
               {formatDate(emp.createdAt)}
@@ -159,7 +159,7 @@ export const LinkRow = memo(
                           onClick={() => router.push(`/pay/${emp?._id}`)}
                           className={`${
                             active ? "bg-gray-100" : ""
-                          } cursor-pointer flex w-full items-center gap-2 px-2 py-2 text-[12px] text-gray-800`}
+                          } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-gray-800`}
                         >
                           <Eye className="h-4 w-4" />
                           View
@@ -173,7 +173,7 @@ export const LinkRow = memo(
                           onClick={() => onCopy(emp?._id)} // Updated to use local onCopy
                           className={`${
                             active ? "bg-gray-100" : ""
-                          } cursor-pointer flex w-full items-center gap-2 px-2 py-2 text-[12px] ${
+                          } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] ${
                             isCopied ? "text-green-600" : "text-blue-700" // Text color change
                           }`}
                         >
@@ -195,7 +195,7 @@ export const LinkRow = memo(
                           onClick={() => setConfirmDelete(emp?._id)}
                           className={`${
                             active ? "bg-gray-100" : ""
-                          } cursor-pointer flex w-full items-center gap-2 px-2 py-2 text-[12px] text-red-600`}
+                          } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-red-600`}
                         >
                           <Trash2 className="h-4 w-4" />
                           Delete

@@ -164,35 +164,35 @@ export default function Client() {
                 <table className="min-w-full">
                   <thead className="bg-[#F7F7F7]">
                     <tr>
-                      <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Img
                       </th>
 
-                      <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Name{" "}
                       </th>
-                      <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Email{" "}
                       </th>
-                      {/* <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      {/* <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Company{" "}
                       </th> */}
 
-                      <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Phone No.{" "}
                       </th>
 
-                      <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Brand
                       </th>
 
-                      <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Department
                       </th>
-                      <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Handle By
                       </th>
-                      <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
+                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
                         Action
                       </th>
                     </tr>
@@ -206,8 +206,8 @@ export default function Client() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-[#f7f7f7] transition-colors"
                       >
-                        <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800">
-                          <div className="relative w-10 h-10">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
+                          <div className="relative w-8 h-8">
                             {" "}
                             <Image
                               src={emp?.image || "/placeholder.svg"}
@@ -218,27 +218,27 @@ export default function Client() {
                           </div>
                         </td>
 
-                        <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800 capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800 capitalize">
                           {emp?.name ? `${emp.name}` : "-"}
                         </td>
 
                         {/* Email */}
-                        <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
                           {emp?.email || "-"}
                         </td>
 
                         {/* companyName */}
-                        {/* <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800 capitalize">
+                        {/* <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800 capitalize">
                           {emp?.companyName || "-"}
                         </td> */}
 
                         {/* Phone */}
-                        <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
                           {emp?.phoneNo || "-"}
                         </td>
 
                         {/* Department */}
-                        <td className="px-2 py-3 capitalize">
+                        <td className="px-2 py-1.5 capitalize">
                           {emp?.brandId?.name ? (
                             <span
                               className={`px-2 py-1 text-center rounded-full text-[12px] font-medium ${getStatusColor(
@@ -252,7 +252,7 @@ export default function Client() {
                             "-"
                           )}
                         </td>
-                        <td className="px-2 py-3 whitespace-nowrap capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
                           {emp?.departmentId?.name ? (
                             <span
                               className={`px-2 py-1 text-center rounded-full text-[12px] font-medium ${getStatusColor(
@@ -266,7 +266,7 @@ export default function Client() {
                             "-" // if no department
                           )}
                         </td>
-                        <td className="px-2 py-3 whitespace-nowrap capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
                           {emp?.handleBy ? (
                             <span
                               className={`px-2 py-1 text-center rounded-full text-[12px] font-medium ${getStatusColor(

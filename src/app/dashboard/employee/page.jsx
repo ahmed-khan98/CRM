@@ -215,8 +215,8 @@ export default function AppointmentBooking() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-[#f7f7f7] transition-colors"
                       >
-                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600">
-                          <div className="relative w-10 h-10">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
+                          <div className="relative w-8 h-8">
                             {" "}
                             {/* 96x96 container */}
                             <Image
@@ -228,34 +228,34 @@ export default function AppointmentBooking() {
                           </div>
                         </td>
 
-                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600 capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600 capitalize">
                           {emp?.fullName
                             ? `${emp.fullName}`
                             : "-"}
                         </td>
 
                         {/* Email */}
-                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
                           {emp?.email || "-"}
                         </td>
 
                         {/* Designation */}
-                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
                           {emp?.designation || "-"}
                         </td>
 
                         {/* CNIC */}
-                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
                           {emp?.CNIC || "-"}
                         </td>
 
                         {/* Phone */}
-                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
                           {emp?.phoneNo || "-"}
                         </td>
 
                         {/* Department */}
-                        <td className="px-2 py-3 whitespace-nowrap capitalize">
+                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
                           {emp?.departmentId?.name ? (
                             <span
                               className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
@@ -272,7 +272,7 @@ export default function AppointmentBooking() {
 
                         {/* Joining Date */}
                         <td className="p-2 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1">
                             <span className="text-[12px] text-gray-600">
                               {emp?.joiningDate
                                 ? formatDate(emp.joiningDate)
@@ -281,7 +281,7 @@ export default function AppointmentBooking() {
                           </div>
                         </td>
 
-                        <td className="pl-2 py-3 whitespace-nowrap">
+                        <td className="pl-2 py-1.5 whitespace-nowrap">
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}

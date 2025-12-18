@@ -109,6 +109,9 @@ export default function AppointmentBooking() {
                   <thead className="bg-[#F7F7F7]">
                     <tr>
                       <th className="px-4 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
+                        Brand Logo{" "}
+                      </th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Brand Name{" "}
                       </th>
                       <th className="px-4 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
@@ -128,28 +131,28 @@ export default function AppointmentBooking() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-[#f7f7f7] transition-colors"
                       >
-                        <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-600">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-sm text-gray-600">
                           <div className=" w-25 h-25">
                             {" "}
                             {/* 96x96 container */}
                             <Image
                               src={br?.image || "/placeholder.svg"}
                               alt="brand-logo"
-                              // fill
+                              
                               width="100"
-                              height="80"
-                              className="rounded object-cover border border-purple-300"
+                              height="0"
+                              className="rounded object-contain border border-purple-300"
                             />
                           </div>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 capitalize">
+                        <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
                           {br?.name}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 capitalize">
+                        <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
                           {br?.departmentId?.name}
                         </td>
 
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-1.5 whitespace-nowrap">
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}

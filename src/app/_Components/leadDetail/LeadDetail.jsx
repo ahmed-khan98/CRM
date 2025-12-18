@@ -217,13 +217,13 @@ const LeadDetail = ({ id }) => {
               Activity & Comments ({totalComments})
             </h2>
 
-            <div className="relative border-l border-gray-200 ml-1 space-y-6">
+            <div className="relative border-l border-gray-200 ml-1 space-y-3">
               {commentsToShow?.map((comment) => (
                 <Comment
                   id={comment?._id}
                   lastComment={comment?.lastComment}
                   lastAction={comment?.lastAction}
-                  username={comment?.userId?.username}
+                  username={comment?.userId?.fullName}
                   createdAt={comment?.createdAt || comment?.createdAtAt || ""}
                 />
               ))}
@@ -233,7 +233,7 @@ const LeadDetail = ({ id }) => {
                 <div className="pt-2 pl-6">
                   <button
                     onClick={() => setShowAllComments(!showAllComments)}
-                    className="cursor-pointer text-sm font-semibold text-[#5f2781] hover:text-indigo-800 transition duration-150"
+                    className="cursor-pointer text-xs font-semibold text-[#5f2781] hover:text-indigo-800 transition duration-150"
                   >
                     {showAllComments
                       ? "See Less"

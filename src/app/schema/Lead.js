@@ -15,7 +15,7 @@ const LAST_ACTIONS = [
   "no action",
   "no answer",
   "interested",
-  "non interested",
+  "not interested",
   "in loop",
   "invalid",
   "schedule",

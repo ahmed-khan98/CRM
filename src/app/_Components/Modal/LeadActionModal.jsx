@@ -147,17 +147,11 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
                         </div>
                       </td>
                       <td className="px-2 py-3 whitespace-nowrap capitalize">
-                        {data?.agent ? (
+                        {data?.userId ? (
                           <span
                             className={`px-2 py-1 rounded text-xs font-medium `}
                           >
-                            {data.agent.firstName
-                              ? `${data.agent.firstName}${
-                                  data.agent.lastName
-                                    ? " " + data.agent.lastName
-                                    : ""
-                                }`
-                              : "-"}
+                            {data?.userId}
                           </span>
                         ) : (
                           "-"
@@ -210,7 +204,7 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
                       "no action",
                       "no answer",
                       "interested",
-                      "non interested",
+                      "not interested",
                       "in loop",
                       "invalid",
                       "schedule",

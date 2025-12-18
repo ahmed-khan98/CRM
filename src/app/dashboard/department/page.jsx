@@ -130,11 +130,11 @@ export default function AppointmentBooking() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-[#f7f7f7] transition-colors"
                       >
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 capitalize">
+                        <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
                           {depart?.name}
                         </td>
 
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-1.5 whitespace-nowrap">
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
