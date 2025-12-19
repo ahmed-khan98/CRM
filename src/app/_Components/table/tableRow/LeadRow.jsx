@@ -77,7 +77,7 @@ console.log(index,'index')
           className="px-2 py-1 w-[360px] min-w-[200px] cursor-pointer"
           onClick={() => router.push(`/dashboard/lead/detail/${emp?._id}`)}
         >
-          <div className="bg-gray-100 shadow p-2 rounded-md">
+          <div className="bg-gray-100 shadow p-1.5 rounded-md">
             {emp?.lastComment && (
               <div
                 title={emp.lastComment}
