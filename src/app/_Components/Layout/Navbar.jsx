@@ -20,7 +20,7 @@ const Navbar = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
-
+  
   const handleLogout = () => {
     setIsMenuOpen(!isMenuOpen)
     Cookies.remove("token")
