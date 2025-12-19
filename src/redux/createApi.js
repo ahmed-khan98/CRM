@@ -5,14 +5,14 @@ import Cookies from 'js-cookie';
 // Step 1: Original base query
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: BaseUrl,
-  credentials: 'include',
-  // prepareHeaders: (headers) => {
-  //   const token = Cookies.get("token");
-  //   if (token) {
-  //     headers.set('Authorization', `Bearer ${token}`);
-  //   }
-  //   return headers;
-  // }
+  // credentials: 'include',
+  prepareHeaders: (headers) => {
+    const token = Cookies.get("token");
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  }
 });
 
 // Step 2: Wrap it with custom error handling
