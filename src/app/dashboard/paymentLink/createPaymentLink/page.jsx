@@ -49,8 +49,9 @@ export default function page() {
   };
 
   const merchant = [
-    { id: "paypal", name: "Paypal" },
-    { id: "PPI paypal", name: "PPI Paypal" },
+    { id: "Kinatech Business Solutions LLC", name: "Kinatech Business Solutions LLC" },
+    { id: "Pay Kinetic", name: "Pay Kinetic" },
+    { id: "SA Pro Solution LLC", name: "SA Pro Solution LLC" },
   ];
 
   const currencyType = [

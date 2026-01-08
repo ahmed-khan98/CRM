@@ -1,44 +1,35 @@
 "use client";
-import React, { useEffect, Suspense } from "react";
-import { usePaymentfaildMutation } from "@/app/_Services/payment/page";
-import { useSearchParams, useRouter } from "next/navigation";
-import { BiErrorCircle } from "react-icons/bi";
 
-const PaymentFailComponent = () => {
-  const searchParams = useSearchParams();  
-  const session_id = searchParams.get("session_id");  
-  const router = useRouter();
-
-  const [paymentfaild] = usePaymentfaildMutation();
-
-  useEffect(() => {
-    if (session_id) {
-      paymentfaild({ session_id });
-    }
-  }, [session_id, paymentfaild]);
-
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full border-bg-[#5f2781] border-red-500 max-w-md p-6 bg-white rounded-lg shadow-lg text-center">
-        <BiErrorCircle className="text-red-500 text-7xl mx-auto mbg-[#5f2781]" />
-        <h2 className="text-2xl font-semibold text-gray-800">Your payment failed</h2>
-        <p className="text-gray-600 mt-2">Try again later</p>
-
-        <button
-          onClick={() => router.push("/dashboard/wonitem")}
-          className="cursor-pointer mt-6 px-6 py-2 b-[#5f2781]0 text-white font-semibold text-lg rounded-lg shadow-md hover:bg-red-600 transition duration-300"
-        >
-          Go to dashboard
-        </button>
-      </div>
-    </div>
-  );
-};
+import { AlertCircle,  } from "lucide-react";
 
 export default function Faild() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <PaymentFailComponent />
-    </Suspense>
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-red-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Failed Icon with Animation */}
+        <div className="flex justify-center mb-12">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-rose-400 rounded-full blur-2xl opacity-40 animate-pulse" />
+            <div className="relative bg-gradient-to-br from-red-400 to-rose-500 rounded-full p-3 animate-bounce-in shadow-xl">
+              <AlertCircle className="w-14 h-14 text-white stroke-[3]" />
+            </div>
+          </div>
+        </div>
+
+        {/* Main Card */}
+        <div className="bg-white rounded-2xl shadow-2xl p-8 animate-slide-up border border-gray-100">
+          {/* Headline */}
+          <h1 className="text-3xl font-bold text-center text-gray-900 mb-3 text-balance">
+            Payment Failed!
+          </h1>
+
+          {/* Subheading */}
+          <p className="text-center text-gray-600 mb-8 text-pretty">
+            Unfortunately, your payment could not be processed. Please try again
+            or contact support.
+          </p>
+        </div>
+      </div>
+    </main>
   );
 }

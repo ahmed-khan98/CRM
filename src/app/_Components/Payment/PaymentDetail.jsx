@@ -36,20 +36,19 @@ const PaymentDetail = ({ id }) => {
 
   const handlePayPalError = (error) => {
     console.error("PayPal payment error:", error);
-    toast.error("PayPal payment failed. Please try again.");
+    // toast.error("PayPal payment failed. Please try again.");
   };
 
-  const getPayPalId = () => {
-    if (type === "auction_payment") {
-      // For auction payment, we need both productId and auctionWonId
-      const searchId = searchParams.get("productId");
-      return {
-        productId: searchId,
-        auctionWonId: id,
-      };
-    }
-    return id;
-  };
+  // const getPayPalId = () => {
+  //   if (type === "auction_payment") {
+  //     const searchId = searchParams.get("productId");
+  //     return {
+  //       productId: searchId,
+  //       auctionWonId: id,
+  //     };
+  //   }
+  //   return id;
+  // };
 
   if (isLoading)
     return (
@@ -81,7 +80,7 @@ const PaymentDetail = ({ id }) => {
 
   return (
     <div className="min-h-screen  py-6 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto space-y-4">
         <div className="flex items-center justify-between my-4">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center">
             <CreditCard className="mr-2 h-8 w-8 text-[#5f2781]" />
@@ -96,16 +95,16 @@ const PaymentDetail = ({ id }) => {
             // fill
             width="200"
             height="100"
-            className="rounded object-cover p-3"
+            className="rounded object-cover p-3 m-"
           />
         {/* </div> */}
         <div className="grid lg:grid-cols-2 gap-3">
           {/* Left Column - Payment Method Content */}
           <div className="bg-white rounded-2xl shadow-md p-5">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-5">
               Here's your invoice info
             </h2>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="border-b border-gray-200 ">
                 <div className="flex justify-between items-center">
                   <div>
@@ -165,13 +164,13 @@ const PaymentDetail = ({ id }) => {
                     </h6>
                   </div>
                   <div className="text-right ml-2">
-                    <p className="text-sm text-gray-500 mt-1 ">
+                    <p className="text-sm text-gray-500">
                       {Array.isArray(data?.data?.service) ? (
                         data?.data?.service.length > 0 ? (
                           data?.data?.service.map((tagItem, index) => (
                             <span
                               key={index}
-                              className="inline-flex items-center m-1 gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium capitalize whitespace-nowrap "
+                              className="inline-flex items-center m-0.5 gap-0.5 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium capitalize whitespace-nowrap "
                             >
                               {tagItem}
                             </span>
@@ -182,7 +181,7 @@ const PaymentDetail = ({ id }) => {
                           </span>
                         )
                       ) : (
-                        <span className="capitalize inline-flex items-center m-1 gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                        <span className="capitalize inline-flex items-center m-0.5 gap-0.5 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
                           {data?.data?.service || "No Service"}
                         </span>
                       )}
@@ -239,7 +238,7 @@ const PaymentDetail = ({ id }) => {
                 </div>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <div className="flex items-start">
                   <AlertCircle className="h-4 w-4 text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
                   <div>
@@ -250,7 +249,7 @@ const PaymentDetail = ({ id }) => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -262,7 +261,8 @@ const PaymentDetail = ({ id }) => {
             </h2>
             <PayPalButton
               type={type}
-              id={getPayPalId()}
+              id={data?.data?._id}
+              paypalClientId={data?.data?.paypalClientId}
               amount={Math.round(amount * 100) / 100}
               onSuccess={handlePayPalSuccess}
               onError={handlePayPalError}

@@ -65,8 +65,9 @@ function LeadPayment() {
   };
 
   const merchant = [
-    { id: "paypal1", name: "Paypal 1" },
-    { id: "paypal2", name: "Paypal 2" },
+    { id: "Kinatech Business Solutions LLC", name: "Kinatech Business Solutions LLC" },
+    { id: "Pay Kinetic", name: "Pay Kinetic" },
+    { id: "SA Pro Solution LLC", name: "SA Pro Solution LLC" },
   ];
 
   const services = [
