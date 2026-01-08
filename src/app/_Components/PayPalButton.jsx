@@ -1,7 +1,9 @@
 "use client";
+import { BaseUrl } from '@/app/_Services/baseUrl';
 import { useEffect, useRef, useState } from "react";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import toast from "react-hot-toast";
+
 import Cookies from "js-cookie";
 import { useAddPaypalPaymentMutation } from "../_Services/payment/page";
 import { useRouter } from "next/navigation";
@@ -71,7 +73,7 @@ const PayPalButton = ({
                 let payload = { id };
 
                 const response = await fetch(
-                  "http://localhost:8000/api/v1/user/paymentlink/pay-with-paypal",
+                  `${BaseUrl}paymentlink/pay-with-paypal`,
                   {
                     method: "POST",
                     headers: {
@@ -105,7 +107,7 @@ const PayPalButton = ({
                 const token = Cookies.get("token");
                 let payload = { id };
                 const response = await fetch(
-                  `http://localhost:8000/api/v1/user/paymentlink/pay-with-paypal/${data.orderID}/charge`,
+                  `${BaseUrl}paymentlink/pay-with-paypal/${data.orderID}/charge`,
                   {
                     method: "POST",
                     // headers: {
