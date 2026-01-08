@@ -36,7 +36,7 @@ export const LinkRow = memo(
         return;
       }
 
-      const baseUrl = "http://localhost:3000/pay/";
+      const baseUrl = "https://crm-virid-nine-17.vercel.app/pay/";
       const fullUrl = `${baseUrl}${employeeId}`;
 
       navigator.clipboard
