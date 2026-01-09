@@ -8,6 +8,7 @@ import { formatDate } from "@/app/utilities/date";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import CreateTemplateModal from "@/app/_Components/Modal/CreateTemplateModal";
 import { useAllEmailTemplatesQuery, useDeleteEmailTemplateMutation } from "@/app/_Services/emailTemplate/page";
+import toast from "react-hot-toast";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },

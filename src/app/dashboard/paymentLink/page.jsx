@@ -77,6 +77,7 @@ export default function Paymentlink() {
       if (activeFilter === "all") refetchAll();
       else refetchBrand();
     } catch (error) {
+      
       toast.error(error?.data?.message || "Failed to delete Lead");
     }
   }, [confirmDelete, deletePaymentLink, refetchAll, refetchBrand, activeFilter]);

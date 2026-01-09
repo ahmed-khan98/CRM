@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Users, Edit, Plus, DeleteIcon, MoreVertical } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/app/utilities/date";
@@ -12,6 +12,7 @@ import ClientModal from "@/app/_Components/Modal/ClientModal";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import Image from "next/image";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
+import toast from "react-hot-toast";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -67,16 +68,17 @@ export default function Client() {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     try {
       await deleteClient(confirmDelete).unwrap();
       setConfirmDelete(null);
       toast.success("Client deleted successfully");
       refetch();
     } catch (error) {
+      console.log(error?.data?.message,'clienterror')
       toast.error(error.data?.message || "Failed to delete Client");
     }
-  };
+  },[confirmDelete,deleteClient,refetch,activeFilter])
 
   const {
     data: departments,
@@ -308,6 +310,7 @@ export default function Client() {
             </div>
           )}
         </motion.div>
+        
         {confirmDelete && (
           <WarningModal
             message="client"

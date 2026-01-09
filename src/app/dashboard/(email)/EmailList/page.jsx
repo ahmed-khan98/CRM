@@ -9,6 +9,7 @@ import {
   useDeleteEmailListMutation,
 } from "@/app/_Services/emaillist/page";
 import EmailListModal from "@/app/_Components/Modal/EmaillistModal";
+import toast from "react-hot-toast";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },

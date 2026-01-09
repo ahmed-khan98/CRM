@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import BrandEmailModal from "@/app/_Components/Modal/BrandEmailModal";
 import { useAllBrandEmailsQuery, useDeleteBrandEmailMutation } from "@/app/_Services/domain/page";
+import toast from "react-hot-toast";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
