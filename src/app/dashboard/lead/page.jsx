@@ -165,33 +165,33 @@ function Leads() {
     <div className="min-h-screen py-4 mx-1">
       <div className="max-w-6xl mx-auto p-1 flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <ChartBar className="h-5 w-5 text-[#5f2781]" />
             <h3 className="text-[#242424] text-xl font-bold">All Leads</h3>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleEdit}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-1 cursor-pointer bg-[#5f2781] text-white px-2.5 py-2 shadow-lg rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
             >
-              <Plus className="h-4 w-4 text--white" />
+              <Plus className="h-4 w-4 text-white" />
               Add New Lead
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsImportOpen(true)}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-1 cursor-pointer bg-[#5f2781] text-white px-2.5 shadow-lg py-2 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
             >
-              <Plus className="h-4 w-4 text--white" />
+              <Plus className="h-4 w-4 text-white" />
               Import
             </motion.button>
           </div>
         </div>
 
         {/* Brand filter chips */}
-        <div className="flex flex-wrap gap-2 items-center">
+        <div className="flex flex-wrap gap-1 items-center">
           <button
             onClick={() => onFilterChange("all")}
             className={`cursor-pointer px-3 py-1 text-xs rounded-full border transition ${

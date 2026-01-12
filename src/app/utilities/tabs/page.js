@@ -7,9 +7,9 @@ export const helpTabs = [
 export  const myAccountTabs = [
     { name: "Profile", path: "/dashboard/profile", icon: <User className="h-4 w-4" /> },
     { name: "Change Password", path: "/dashboard/changepassword", icon: <Lock className="h-4 w-4" /> },
-    { name: "Address", path: "/dashboard/address", icon: <MapPin className="h-4 w-4" /> },
-    { name: "Username", path: "/dashboard/username", icon: <User className="h-4 w-4" /> },
-    { name: "Print Account Info", path: "/dashboard/printAccountInfo", icon: <Printer className="h-4 w-4" /> },
+    // { name: "Address", path: "/dashboard/address", icon: <MapPin className="h-4 w-4" /> },
+    // { name: "Username", path: "/dashboard/username", icon: <User className="h-4 w-4" /> },
+    // { name: "Print Account Info", path: "/dashboard/printAccountInfo", icon: <Printer className="h-4 w-4" /> },
   ]
 export  const appointmentTabs = [
     { path: "/dashboard/appointment", name: "Pick Up ", color: "bg-blue-500",icon: <Calendar className="h-4 w-4" /> },

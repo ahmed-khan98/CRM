@@ -21,26 +21,25 @@ export const empSchema = Yup.object().shape({
       /^\d{5}-\d{7}-\d{1}$/,
       "CNIC must be in the format 40000-1234567-8"
     ),
+    address: Yup.string().max(500, "address must be less than 500 characters"),
   image: Yup.mixed()
     .nullable()
     // Required only on create
     .test("required-on-create", "Employee image is required", (v, ctx) => {
       const isEdit = !!ctx?.options?.context?.isEdit;
       if (isEdit) return true;
-      return !!v; // must provide something on create
+      return !!v; 
     })
-    // Allow string (existing URL) in edit; otherwise must be a File of allowed type
     .test("fileType", "Only JPG/PNG files are allowed", (v) => {
-      if (!v || typeof v === "string") return true; // URL allowed; empty handled above
+      if (!v || typeof v === "string") return true; 
       return ["image/jpeg", "image/png"].includes(v.type);
     })
     .test("fileSize", "File size must be less than 2MB", (v) => {
       if (!v || typeof v === "string") return true;
       return v.size <= 2 * 1024 * 1024;
     }),
-  address: Yup.string().max(500, "address must be less than 500 characters"),
   password: Yup.string().when("$isEdit", {
-    is: true, // edit mode
+    is: true, 
     then: (schema) => schema.notRequired(),
     otherwise: (schema) =>
       schema

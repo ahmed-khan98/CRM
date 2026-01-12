@@ -175,6 +175,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                   setFieldValue,
                   setFieldTouched,
                 }) => {
+                  console.log(errors,'emplyeeerrors')
                   const deptOptions =
                     departments?.data?.map((d) => ({
                       value: d?._id,

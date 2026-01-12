@@ -92,9 +92,9 @@ const LeadDetail = ({ id }) => {
   return (
     <div className="p-6 sm:p-6 font-sans text-gray-900">
       <header className="mb-4 border-b border-gray-200 pb-4">
-        <h1 className="text-xl font-bold tracking-tight text-gray-900 capitalize">
-          Lead Detail: {data?.data?.name || "N/A"}
-        </h1>
+        <p className="text-lg font-semibold tracking-tight text-gray-800 capitalize">
+          Lead Detail: <span className="text-gray-600 font-normal">{data?.data?.name || "N/A"}</span>
+        </p>
       </header>
 
       {/* MAIN CONTENT GRID */}
