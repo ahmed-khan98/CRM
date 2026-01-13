@@ -104,6 +104,7 @@ const PayPalButton = ({
 
             onApprove: async (data) => {  
               try {
+                console.log(data,'--->>>onApprove')
                 const token = Cookies.get("token");
                 let payload = { id };
                 const response = await fetch(
@@ -187,7 +188,7 @@ const PayPalButton = ({
         paypalRef.current.innerHTML = "";
       }
     };
-  }, [type, id, onSuccess, onError]);
+  }, [paypalClientId, type, id, onSuccess, onError]);
 
   if (error) {
     return (

@@ -81,12 +81,12 @@ const PaymentDetail = ({ id }) => {
   return (
     <div className="min-h-screen  py-6 px-4">
       <div className="max-w-5xl mx-auto space-y-4">
-        <div className="flex items-center justify-between my-4">
+        {/* <div className="flex items-center justify-between my-4">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center">
             <CreditCard className="mr-2 h-8 w-8 text-[#5f2781]" />
             Payment Confirmation
           </h1>
-        </div>
+        </div> */}
 
         {/* <div className=" w-25 h-25"> */}
           <Image
@@ -104,6 +104,7 @@ const PaymentDetail = ({ id }) => {
             <h2 className="text-xl font-bold text-gray-800 mb-5">
               Here's your invoice info
             </h2>
+            {/* (737) 336-9867 */}
             <div className="space-y-4">
               <div className="border-b border-gray-200 ">
                 <div className="flex justify-between items-center">
@@ -232,7 +233,7 @@ const PaymentDetail = ({ id }) => {
                   <span className="font-semibold text-gray-800">
                     Total Amount
                   </span>
-                  <span className="text-2xl font-bold text-[#5f2781]">
+                  <span className="text-xl font-semibold text-gray-600">
                     ${Math.round(data?.data?.amount * 100) / 100}
                   </span>
                 </div>
