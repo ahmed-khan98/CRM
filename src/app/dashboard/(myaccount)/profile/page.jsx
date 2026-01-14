@@ -8,12 +8,14 @@ import {
   User,
   Mail,
   Phone,
-  MapPin,
   Edit2,
   Save,
   CheckCircle,
   Loader2,
   Calendar,
+  Building,  
+  IdCard,
+  ShieldUser
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Tab from "@/app/_Components/Tab/page";
@@ -101,10 +103,8 @@ const ProfilePage = () => {
           className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mx-2 "
         >
           <div className="relative overflow-hidden">
-            {/* Decorative header */}
             <div className="h-18 bg-gradient-to-r from-[#5f2781] to-[#a945fc]"></div>
 
-            {/* Profile header with edit button */}
             <div className="relative px-1 md:px-4  pb-6 -mt-12">
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2">
                 <div className="flex items-end gap-4 mx-4 md:mx-0">
@@ -163,7 +163,7 @@ const ProfilePage = () => {
           <form onSubmit={handleSubmit} className="p-2 px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
+                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
                   <User size={16} className="text-[#5f2781]" />
                   Full Name
                 </label>
@@ -185,8 +185,8 @@ const ProfilePage = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <User size={16} className="text-[#5f2781]" />
+                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
+                  <IdCard   size={18} className="text-[#5f2781]" />
                   CNIC
                 </label>
                 <div className="relative">
@@ -207,7 +207,7 @@ const ProfilePage = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
+                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
                   <Mail size={16} className="text-[#5f2781]" />
                   Email Address
                 </label>
@@ -229,7 +229,7 @@ const ProfilePage = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
+                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
                   <Phone size={16} className="text-[#5f2781]" />
                   Phone Number
                 </label>
@@ -259,8 +259,8 @@ const ProfilePage = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <Phone size={16} className="text-[#5f2781]" />
+                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
+                  <ShieldUser  size={16} className="text-[#5f2781]" />
                   Designation
                 </label>
                 <div className="relative">
@@ -287,8 +287,8 @@ const ProfilePage = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
-                  <Phone size={16} className="text-[#5f2781]" />
+                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
+                  <Building size={16} className="text-[#5f2781]" />
                   Department
                 </label>
                 <div className="relative">
@@ -314,7 +314,7 @@ const ProfilePage = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4">
+                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
                   <Calendar size={16} className="text-[#5f2781]" />
                   Joining Date
                 </label>

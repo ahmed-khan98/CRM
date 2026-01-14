@@ -3,13 +3,9 @@ import { BaseUrl } from '@/app/_Services/baseUrl';
 import { useEffect, useRef, useState } from "react";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import toast from "react-hot-toast";
-
 import Cookies from "js-cookie";
-import { useAddPaypalPaymentMutation } from "../_Services/payment/page";
-import { useRouter } from "next/navigation";
 
 const PayPalButton = ({
-  type,
   id,
   paypalClientId,
   amount,
@@ -17,9 +13,6 @@ const PayPalButton = ({
   onError,
   className = "",
 }) => {
-  const [addPaypalPayment, { isLoading: isPaymentLoading }] =
-    useAddPaypalPaymentMutation();
-  const router = useRouter();
 
   const paypalRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -148,7 +141,8 @@ const PayPalButton = ({
             },
 
             onError: (err) => {
-              toast.error(error?.data?.message, "---------------->>>>");
+              console.log('on error',error)
+              toast.error(error?.data?.message || 'on error toast', "---------------->>>>");
               setIsProcessing(false);
 
               if (onError) {
@@ -188,7 +182,7 @@ const PayPalButton = ({
         paypalRef.current.innerHTML = "";
       }
     };
-  }, [paypalClientId, type, id, onSuccess, onError]);
+  }, [paypalClientId, id, onSuccess, onError]);
 
   if (error) {
     return (

@@ -1,10 +1,6 @@
 "use client";
-import { useEffect, useState, Suspense } from "react";
 import { motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
-import { CreditCard, AlertCircle } from "lucide-react";
-
-import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import PayPalButton from "@/app/_Components/PayPalButton";
 import { useGetPaymentLinkByIdQuery } from "@/app/_Services/paymentLink/page";
 import Image from "next/image";
@@ -13,30 +9,15 @@ const PaymentDetail = ({ id }) => {
   const router = useRouter();
 
   const { data, error, isLoading } = useGetPaymentLinkByIdQuery({ id });
-  console.log(data, "data");
-  const searchParams = useSearchParams();
-  const type = searchParams.get("type");
-  //   const id = searchParams.get("id")
-  const amount = searchParams.get("amount");
 
   const handlePayPalSuccess = (paymentData) => {
     console.log("PayPal payment successful:", paymentData);
-
-    // Navigate based on payment type
-    if (type === "missed_appointment_payment") {
-      router.push("/dashboard/missedAppointment");
-    } else if (type === "auction_payment") {
-      router.push("/dashboard/UnpaidItem");
-    } else if (type === "penalized_product_payment") {
-      router.push("/dashboard/penalizedFeeProduct");
-    } else {
-      router.push("/dashboard/myItem");
-    }
+      router.push("/payment-success");
   };
 
   const handlePayPalError = (error) => {
     console.error("PayPal payment error:", error);
-    // toast.error("PayPal payment failed. Please try again.");
+     router.push("/payment-failed");
   };
 
   // const getPayPalId = () => {
@@ -261,10 +242,9 @@ const PaymentDetail = ({ id }) => {
               Choose a way to Pay
             </h2>
             <PayPalButton
-              type={type}
               id={data?.data?._id}
               paypalClientId={data?.data?.paypalClientId}
-              amount={Math.round(amount * 100) / 100}
+              // amount={Math.round(amount * 100) / 100}
               onSuccess={handlePayPalSuccess}
               onError={handlePayPalError}
             />

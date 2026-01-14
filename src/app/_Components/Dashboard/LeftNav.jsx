@@ -465,6 +465,7 @@ const LeftNav = ({ set }) => {
   // ✨ ROLE-BASED FILTERING LOGIC
   // =========================================================================
   const USER_ALLOWED_TABS = [
+    "Dashboard",
     "Client", 
     "leads", 
     "Email",

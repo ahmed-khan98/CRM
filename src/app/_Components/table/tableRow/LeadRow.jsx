@@ -39,7 +39,7 @@ console.log(index,'index')
           {`${index}.`}
         </td>
         <td
-          className="px-2 py-1 whitespace-nowrap text-[13px] text-gray-600 capitalize cursor-pointer"
+          className="w-[360px] min-w-[200px] px-2 py-1 text-[12px] text-gray-600 capitalize cursor-pointer leading-4"
           onClick={() => router.push(`/dashboard/lead/detail/${emp?._id}`)}
         >
           {emp?.name || "-"}
@@ -109,7 +109,7 @@ console.log(index,'index')
         </td>
 
         <td className="px-2 py-1 whitespace-nowrap">
-          <span className="text-[12px] text-gray-600">
+          <span className="text-[11px] text-gray-600">
             {emp?.signupDate ? formatDate(emp.signupDate) : "-"}
           </span>
         </td>

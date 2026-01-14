@@ -290,7 +290,7 @@ export default function DashboardPage() {
         </motion.div>
 
         {/* Quick Actions */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
@@ -375,7 +375,7 @@ export default function DashboardPage() {
               link={"/dashboard/contactform"}
             />
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* Recent Activity */}
         <motion.div
