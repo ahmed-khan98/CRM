@@ -78,7 +78,7 @@ const StatCard = ({
             </div>
           )}
         </div>
-        <div className="text-3xl font-bold text-white mb-1">{value}</div>
+        <div className="text-3xl font-bold text-white my-1">{value}</div>
         <div className="text-white text-opacity-80 font-medium">{title}</div>
         {subtitle && (
           <div className="text-white text-opacity-60 text-sm mt-1">
@@ -242,9 +242,9 @@ export default function DashboardPage() {
         >
           <StatCard
             icon={Package}
-            title="Products Watchlist"
+            title="Total Lead"
             value={totalProducts}
-            subtitle="Items in your watchlist"
+            // subtitle="Items in your watchlist"
             color="bg-gradient-to-br from-blue-500 to-blue-600"
             trend="up"
             trendValue="0"
@@ -253,9 +253,9 @@ export default function DashboardPage() {
 
           <StatCard
             icon={ShoppingBag}
-            title="Purchases Made"
+            title="Total Client"
             value={purchasedProducts}
-            subtitle="Items you've bought"
+            // subtitle="Items you've bought"
             color="bg-gradient-to-br from-yellow-400 to-yellow-500"
             trend="up"
             trendValue="0"
@@ -264,13 +264,13 @@ export default function DashboardPage() {
 
           <StatCard
             icon={TrendingUp}
-            title="Products Lost"
+            title="Total Sale"
             value={soldProducts}
-            subtitle={`${
-              totalProducts > 0
-                ? Math.round((soldProducts / totalProducts) * 100)
-                : 0
-            }% success rate`}
+            // subtitle={`${
+            //   totalProducts > 0
+            //     ? Math.round((soldProducts / totalProducts) * 100)
+            //     : 0
+            // }% success rate`}
             color="bg-gradient-to-br from-green-500 to-emerald-600"
             emerald="up"
             trendValue="0"
@@ -279,9 +279,9 @@ export default function DashboardPage() {
 
           <StatCard
             icon={DollarSign}
-            title="Pending Fees"
+            title="Pending Payment Link"
             value={pendingFees}
-            subtitle={`${pendingFees} unpaid fees`}
+            // subtitle={`${pendingFees} unpaid fees`}
             color="bg-gradient-to-br from-orange-500 to-red-500"
             trend={"down"}
             trendValue="0"
