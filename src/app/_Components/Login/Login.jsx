@@ -123,7 +123,7 @@ export default function GenZLoginForm() {
                     type="email"
                     name="email"
                     placeholder="Email address"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none text-gray-700"
+                    className="w-full pl-9 pr-2 py-3 rounded-xl focus:outline-none text-gray-700 text-sm"
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={(e) => {

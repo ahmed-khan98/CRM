@@ -23,41 +23,37 @@ const employeeApi = createApiAuction.injectEndpoints({
       },
       invalidatesTags: ["allEmployees"],
     }),
-      updateStatus: builder.mutation({
-        query: ({ id }) => {
-          console.log(id, "updateStatusID");
-          return {
-            url: `employee/change-status/${id}`,
-            method: "PATCH",
-          };
-        },
-        async onQueryStarted(
-      { id },
-      { dispatch, queryFulfilled }
-    ) {
-      const patchResult = dispatch(
-        employeeApi.util.updateQueryData(
-          "getEmployees",
-          undefined,
-          (draft) => {
-            const emp = draft.find((e) => e._id === id);
-            if (emp) {
-              emp.status =
-                emp.status === "active" ? "inactive" : "active";
-            }
-          }
-        )
-      );
+    updateStatus: builder.mutation({
+      query: ({ id }) => {
+        console.log(id, "updateStatusID");
+        return {
+          url: `employee/change-status/${id}`,
+          method: "PATCH",
+        };
+      },
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          employeeApi.util.updateQueryData(
+            "getEmployees",
+            undefined,
+            (draft) => {
+              const emp = draft.find((e) => e._id === id);
+              if (emp) {
+                emp.status = emp.status === "active" ? "inactive" : "active";
+              }
+            },
+          ),
+        );
 
-      try {
-        await queryFulfilled; 
-      } catch {
-        patchResult.undo();
-      }
-    },
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
 
-        invalidatesTags: ["allEmployees"],
-      }),
+      invalidatesTags: ["allEmployees"],
+    }),
     deleteEmployee: builder.mutation({
       query: (id) => {
         return {
@@ -82,6 +78,23 @@ const employeeApi = createApiAuction.injectEndpoints({
       keepUnusedDataFor: 180,
       refetchOnMountOrArgChange: false,
     }),
+    breakIn: builder.mutation({
+      query: (formData) => {
+        return {
+          url: "employee/breakIn",
+          method: "POST",
+          body: formData,
+        };
+      },
+    }),
+    breakOut: builder.mutation({
+      query: (formData) => {
+        return {
+          url: "employee/breakOut",
+          method: "POST",
+        };
+      },
+    }),
   }),
 });
 
@@ -91,5 +104,7 @@ export const {
   useUpdateEmployeeMutation,
   useDeleteEmployeeMutation,
   useGetdepartmentsEmployeeQuery,
-  useUpdateStatusMutation
+  useUpdateStatusMutation,
+  useBreakInMutation,
+  useBreakOutMutation
 } = employeeApi;

@@ -13,19 +13,29 @@ import {
   CheckCircle,
   Loader2,
   Calendar,
-  Building,  
+  Building,
   IdCard,
-  ShieldUser
+  ShieldUser,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Tab from "@/app/_Components/Tab/page";
 import { myAccountTabs } from "@/app/utilities/tabs/page";
 import { formatPhoneNumber } from "@/app/utilities/phoneFormat";
+import { useDispatch } from "react-redux";
+import { setActivity } from "@/redux/filterSlice";
 
 const ProfilePage = () => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const [isEditable, setIsEditable] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const dispatch = useDispatch();
+
+  const hanldeBreakIn=()=>{
+    dispatch(setActivity({
+      status:'idle',
+      lastBreakInTime: new Date().toISOString()
+    }));
+  }
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -81,7 +91,7 @@ const ProfilePage = () => {
     }
   };
 
-  const name = formData?.fullName?.split(' ')
+  const name = formData?.fullName?.split(" ");
   return (
     <div className="min-h-screen  py-2 mx-1 ">
       <Toaster position="top-center" />
@@ -110,7 +120,9 @@ const ProfilePage = () => {
                 <div className="flex items-end gap-4 mx-4 md:mx-0">
                   <div className="h-18 w-18 rounded-full bg-white shadow-md flex items-center justify-center border-3 border-white">
                     <div className="h-full w-full rounded-full bg-[#5f2781] flex items-center justify-center text-white text-xl font-bold capitalize">
-                      {name?.map(e=>`${e?.charAt(0)}`)  || <User size={30} />}
+                      {name?.map((e) => `${e?.charAt(0)}`) || (
+                        <User size={30} />
+                      )}
                     </div>
                   </div>
                   <div>
@@ -138,6 +150,13 @@ const ProfilePage = () => {
                     </>
                   )}
                 </button>
+                {/* <button
+                  type="button"
+                  onClick={() => hanldeBreakIn()}
+                  className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${"bg-white text-[#5f2781] border border-[#5f2781] hover:bg-[#a945fc] hover:text-white"}`}
+                >
+                  Break In
+                </button> */}
               </div>
             </div>
           </div>
@@ -186,7 +205,7 @@ const ProfilePage = () => {
 
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <IdCard   size={18} className="text-[#5f2781]" />
+                  <IdCard size={18} className="text-[#5f2781]" />
                   CNIC
                 </label>
                 <div className="relative">
@@ -260,7 +279,7 @@ const ProfilePage = () => {
 
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <ShieldUser  size={16} className="text-[#5f2781]" />
+                  <ShieldUser size={16} className="text-[#5f2781]" />
                   Designation
                 </label>
                 <div className="relative">
