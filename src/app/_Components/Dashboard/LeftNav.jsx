@@ -74,7 +74,7 @@
 //       name: "Payment Link",
 //       icon: <Link className="w-5 h-5" />,
 //       path: ["/dashboard/paymentLink","/dashboard/createLeadPayment","/dashboard/createPaymentLink"],
-      
+
 //     },
 //     {
 //       name: "Email",
@@ -412,8 +412,11 @@ const LeftNav = ({ set }) => {
     {
       name: "Payment Link",
       icon: <Link className="w-5 h-5" />,
-      path: ["/dashboard/paymentLink","/dashboard/createLeadPayment","/dashboard/createPaymentLink"],
-      
+      path: [
+        "/dashboard/paymentLink",
+        "/dashboard/createLeadPayment",
+        "/dashboard/createPaymentLink",
+      ],
     },
     {
       name: "Email",
@@ -466,19 +469,32 @@ const LeftNav = ({ set }) => {
   // =========================================================================
   const USER_ALLOWED_TABS = [
     "Dashboard",
-    "Client", 
-    "leads", 
+    "Client",
+    "leads",
     "Email",
-    "Payment Link", 
-    "Sales", 
-    "My Account"
+    "Payment Link",
+    "Sales",
+    "My Account",
+  ];
+  
+  const SUBADMIN_ALLOWED_TABS = [
+    "Dashboard",
+    "Employee",
+    "Brand",
+    "Client",
+    "leads",
+    "Email",
+    "Payment Link",
+    "Sales",
+    "My Account",
   ];
 
-  const filteredMenuItems = user?.role === "USER"
-    ? menuItems.filter(item => USER_ALLOWED_TABS.includes(item.name))
-    : menuItems; // Show all tabs if role is ADMIN or undefined
-  // =========================================================================
-
+  const filteredMenuItems =
+    user?.role === "USER"
+      ? menuItems.filter((item) => USER_ALLOWED_TABS.includes(item.name))
+      : user?.role === "SUBADMIN"
+        ? menuItems.filter((item) => SUBADMIN_ALLOWED_TABS.includes(item.name))
+        : menuItems;
 
   const handleLogout = () => {
     if (set) {

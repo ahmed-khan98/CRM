@@ -15,8 +15,14 @@ const ACTION_STATUS_CLASS = {
   "in loop": "text-purple-700 bg-purple-200",
   general: "text-yellow-700 bg-yellow-200",
   interested: "text-green-700 bg-green-200",
+  active: "text-green-700 bg-green-200",
   "not interested": "text-red-700 bg-red-200",
   schedule: "text-blue-700 bg-blue-200",
+  active: "text-green-700 bg-green-200",
+  'de active': "text-red-700 bg-red-200",
+  'SUBADMIN': "text-yellow-700 bg-yellow-200",
+  'USER': "text-blue-700 bg-blue-200",
+  
 };
 export const getActionStatusColor = (s) =>ACTION_STATUS_CLASS[s] || ACTION_STATUS_CLASS.default;
 

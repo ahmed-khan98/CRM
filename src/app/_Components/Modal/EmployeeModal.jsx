@@ -38,6 +38,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
       payload.append("joiningDate", values?.joiningDate);
       payload.append("address", values?.address);
       payload.append("departmentId", values?.departmentId);
+      payload.append("role", values?.role);
       payload.append("CNIC", values?.CNIC);
       payload.append("phoneNo", values?.phoneNo);
       payload.append("designation", values?.designation);
@@ -54,6 +55,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                     address: values?.address,
                     departmentId: values?.departmentId,
                     CNIC: values?.CNIC,
+                    role: values?.role,
                     phoneNo: values?.phoneNo,
                     designation: values?.designation,
                   },
@@ -62,7 +64,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
               : {
                   id: data?._id,
                   body: payload,
-                }
+                },
           ).unwrap()
         : createEmployee(payload).unwrap());
       console.log(response, "response");
@@ -70,7 +72,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
         toast.success(
           isEdit
             ? "Employee updated successfully!"
-            : "Employee created successfully!"
+            : "Employee created successfully!",
         );
       } else {
         toast.error(response.message || "Failed to process Employee");
@@ -110,11 +112,18 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
     designation: data?.designation || "",
     email: data?.email || "",
     CNIC: data?.CNIC || "",
+    status: data?.status || "",
+    role: data?.role || "USER",
     phoneNo: data?.phoneNo || "",
     address: data?.address || "",
     image: data?.image || "",
-      isEdit: !!data, 
+    isEdit: !!data,
   };
+
+  const roleOption = [
+    { name: "User", value: "USER" },
+    { name: "department Admin", value: "SUBADMIN" },
+  ];
 
   return (
     <AnimatePresence>
@@ -168,17 +177,22 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                 enableReinitialize
               >
                 {({
-                  errors, 
+                  errors,
                   touched,
                   isSubmitting,
                   values,
                   setFieldValue,
                   setFieldTouched,
                 }) => {
-                  console.log(errors,'emplyeeerrors')
+                  console.log(errors, "emplyeeerrors");
                   const deptOptions =
                     departments?.data?.map((d) => ({
                       value: d?._id,
+                      label: d?.name,
+                    })) ?? [];
+                  const roleOptions =
+                    roleOption?.map((d) => ({
+                      value: d?.value,
                       label: d?.name,
                     })) ?? [];
                   console.log(errors.password, "errors---->>>>");
@@ -322,25 +336,6 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                             className="text-red-500 text-sm mt-1"
                           />
                         </div>
-                        {/* <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Last Name
-                          </label>
-                          <Field
-                            type="text"
-                            name="lastName"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.lastName && touched.lastName
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="lastName"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div> */}
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
@@ -424,30 +419,45 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                           />
                         </div>
                       </div>
-                      {!isEdit &&
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        {!isEdit && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Password
+                            </label>
+                            <Field
+                              type="text"
+                              name="password"
+                              placeholder="********"
+                              className={`w-full px-4 py-2 border-1 ${
+                                errors.password && touched.password
+                                  ? "border-[#5f2781] focus:border-[#5f2781]"
+                                  : "border-gray-200 focus:border-blue-500"
+                              } rounded-xl focus:outline-none transition-colors`}
+                            ></Field>
+                            <ErrorMessage
+                              name="password"
+                              component="div"
+                              className="text-red-500 text-sm mt-1"
+                            />
+                          </div>
+                        )}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Password
-                          </label>
-                          <Field
-                            type="text"
-                            name="password"
-                            placeholder="********"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.password && touched.password
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="password"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
+                          <FormikSelect
+                            name="role"
+                            label="Select user role"
+                            options={roleOptions}
+                            value={values.role}
+                            setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
+                            error={errors.role}
+                            touched={touched.role}
+                            placeholder="user , sub admin"
+                            //   onChangeExtra={handleDepartmentChange}
                           />
                         </div>
-                     
-                      </div>}
+                      </div>
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Address

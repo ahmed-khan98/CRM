@@ -1,22 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Users,
-  Edit,
-  Plus,
-  DeleteIcon,
-} from "lucide-react";
+import { Users, Edit, Plus, DeleteIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/app/utilities/date";
 import {
   useAllEmployeesQuery,
   useDeleteEmployeeMutation,
+  useUpdateStatusMutation,
 } from "@/app/_Services/employee/page";
 import EmployeeModal from "@/app/_Components/Modal/EmployeeModal";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import Image from "next/image";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
+import { getActionStatusColor } from "@/app/utilities/color";
+import toast from "react-hot-toast";
+
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -37,6 +36,8 @@ export default function AppointmentBooking() {
   const [deleteEmployee, { isLoading: isDeleting }] =
     useDeleteEmployeeMutation();
 
+  const [updateStatus] = useUpdateStatusMutation();
+
   const handleEdit = (emp) => {
     setEditingAppointment(emp);
     setIsModalOpen(true);
@@ -45,6 +46,26 @@ export default function AppointmentBooking() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingAppointment(null);
+  };
+
+  const handleStatus = async (id) => {
+    try {
+      const response = await updateStatus({ id }).unwrap();
+      console.log(response, "response");
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message || "Failed to changed status");
+      }
+      refetch();
+    } catch (error) {
+      const msg =
+        error?.response?.data?.message ||
+        error?.message ||
+        error?.data?.message ||
+        "Failed to create department";
+      toast.error(msg);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -66,7 +87,7 @@ export default function AppointmentBooking() {
     if (!data?.data) return [];
     if (activeFilter !== "all") {
       return data.data.filter(
-        (item) => item?.departmentId?.name === activeFilter
+        (item) => item?.departmentId?.name === activeFilter,
       );
     } else {
       return data.data;
@@ -117,9 +138,7 @@ export default function AppointmentBooking() {
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-xl font-bold">
-              All Employees
-            </h3>
+            <h3 className="text-[#242424] text-xl font-bold">All Employees</h3>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -173,6 +192,9 @@ export default function AppointmentBooking() {
                   <thead className="bg-[#F7F7F7] py-0">
                     <tr>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+ Sr
+                      </th>
+                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Img
                       </th>
 
@@ -192,8 +214,14 @@ export default function AppointmentBooking() {
                         Phone No.{" "}
                       </th>
 
-                      <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-1 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Department
+                      </th>
+                      <th className="px-1 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                        Role
+                      </th>
+                      <th className="px-5 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
+                        Status
                       </th>
                       <th className="px-2 py-3 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
                         Joining
@@ -212,6 +240,9 @@ export default function AppointmentBooking() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-[#f7f7f7] transition-colors"
                       >
+                         <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600 capitalize">
+                          {index+1}
+                        </td>
                         <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
                           <div className="relative w-8 h-8">
                             {" "}
@@ -226,9 +257,7 @@ export default function AppointmentBooking() {
                         </td>
 
                         <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600 capitalize">
-                          {emp?.fullName
-                            ? `${emp.fullName}`
-                            : "-"}
+                          {emp?.fullName ? `${emp.fullName}` : "-"}
                         </td>
 
                         {/* Email */}
@@ -252,11 +281,11 @@ export default function AppointmentBooking() {
                         </td>
 
                         {/* Department */}
-                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
+                        <td className="px-1 py-1.5 whitespace-nowrap capitalize">
                           {emp?.departmentId?.name ? (
                             <span
-                              className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
-                                emp?.departmentId?.name
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                                emp?.departmentId?.name,
                               )}`}
                             >
                               {emp?.departmentId?.name.charAt(0).toUpperCase() +
@@ -266,8 +295,32 @@ export default function AppointmentBooking() {
                             "-" // if no department
                           )}
                         </td>
+                        <td className="px-1  whitespace-nowrap">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${getActionStatusColor(
+                              emp?.role,
+                            )}`}
+                          >
+                            {emp?.role
+                              ? emp.role.charAt(0).toUpperCase() +
+                                emp.role.slice(1)
+                              : "-"}
+                          </span>
+                        </td>
+                        <td className="px-1  whitespace-normal">
+                          <span 
+                          onClick={()=>handleStatus(emp?._id)}
+                            className={`cursor-pointer px-2 py-1 shadow-sm rounded text-xs font-medium ${getActionStatusColor(
+                              emp?.status,
+                            )}`}
+                          >
+                            {emp?.status
+                              ? emp.status.charAt(0).toUpperCase() +
+                                emp.status.slice(1)
+                              : "-"}
+                          </span>
+                        </td>
 
-                        {/* Joining Date */}
                         <td className="p-2 whitespace-nowrap">
                           <div className="flex items-center gap-1">
                             <span className="text-[12px] text-gray-600">

@@ -1,33 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useLoginMutation } from "@/app/_Services/authentication/page"
-import { useFormik } from "formik"
-import Cookies from "js-cookie"
-import Link from "next/link"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { toast, Toaster } from "react-hot-toast"
-import * as Yup from "yup"
-import { motion } from "framer-motion"
-import { AtSign, Lock, Eye, EyeOff } from "lucide-react"
+import { useState } from "react";
+import { useLoginMutation } from "@/app/_Services/authentication/page";
+import { useFormik } from "formik";
+import Cookies from "js-cookie";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast, Toaster } from "react-hot-toast";
+import * as Yup from "yup";
+import { motion } from "framer-motion";
+import { AtSign, Lock, Eye, EyeOff } from "lucide-react";
 import Main from "../../../app/Assets/logo-ppi.png";
 
 export default function GenZLoginForm() {
-  const navigation = useRouter()
-  const [loginForm, { isLoading: isSubmitting }] = useLoginMutation()
-  const [showPassword, setShowPassword] = useState(false)
-  const [focusedField, setFocusedField] = useState(null)
+  const navigation = useRouter();
+  const [loginForm, { isLoading: isSubmitting }] = useLoginMutation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
 
   const loginSchema = Yup.object({
-    email: Yup.string().email("Invalid email address").required("Email is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
     password: Yup.string().required("Password is required"),
-  })
+  });
 
   const loginInitialValue = {
     email: "",
     password: "",
-  }
+  };
 
   const formik = useFormik({
     initialValues: loginInitialValue,
@@ -35,23 +37,45 @@ export default function GenZLoginForm() {
     validationSchema: loginSchema,
     onSubmit: async (values) => {
       try {
-        const response = await loginForm(values).unwrap()
+        const response = await loginForm(values).unwrap();
         if (response.statusCode === 200) {
-          const { accessToken } = response?.data
-          const user = response?.data?.user
-          Cookies.set("token", accessToken, { expires: 7, secure: true })
-          Cookies.set("currentuser", JSON.stringify(user), { expires: 7, secure: true })
-          toast.success(response.message)
-          navigation.push("/dashboard/dashboardcount")
+          const { accessToken } = response?.data;
+          const user = response?.data?.user;
+
+          if (window.chrome && chrome.runtime) {
+            chrome.runtime.sendMessage(
+              MY_EXTENSION_ID,
+              {
+                type: "LOGIN_SUCCESS",
+                userId: user._id,
+                token: accessToken,
+              },
+              (response) => {
+                if (chrome.runtime.lastError) {
+                  console.log("Extension not installed or ID wrong.");
+                } else {
+                  console.log("Extension Linked!");
+                }
+              }
+            );
+          }
+
+          Cookies.set("token", accessToken, { expires: 7, secure: true });
+          Cookies.set("currentuser", JSON.stringify(user), {
+            expires: 7,
+            secure: true,
+          });
+          toast.success(response.message);
+          navigation.push("/dashboard/dashboardcount");
         }
       } catch (error) {
         if (error?.data.statusCode === 403 && error?.data?.data?.email) {
-          navigation.push(`/login`)
+          navigation.push(`/login`);
         }
-        toast.error(error.data.message)
+        toast.error(error.data.message);
       }
     },
-  })
+  });
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-purple-50 to-purple-100">
@@ -73,22 +97,24 @@ export default function GenZLoginForm() {
               >
                 <Link href="/login" className="mx-auto">
                   <Image src={Main} alt="Logo" width={270} height={60} />
-                </Link> 
+                </Link>
               </motion.div>
               {/* <h2 className="text-2xl font-bold mb-1 text-[#5f2781]">Welcome To CMS </h2> */}
-              <p className="text-gray-500 font-normal">Sign in to Penta Prime Innovation CMS</p>
+              <p className="text-gray-500 font-normal">
+                Sign in to Penta Prime Innovation CMS
+              </p>
             </div>
-            
 
             <form onSubmit={formik.handleSubmit} className="space-y-4">
               <div className="">
                 <div
-                  className={`relative border-1 rounded-xl transition-all duration-300 ${focusedField === "email"
+                  className={`relative border-1 rounded-xl transition-all duration-300 ${
+                    focusedField === "email"
                       ? "border-[#5f2781] shadow-sm shadow-orange-100"
                       : formik.touched.email && formik.errors.email
-                        ? "border-red-300"
-                        : "border-gray-200"
-                    }`}
+                      ? "border-red-300"
+                      : "border-gray-200"
+                  }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
                     <AtSign className="h-5 w-5 text-gray-400" />
@@ -101,8 +127,8 @@ export default function GenZLoginForm() {
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
-                      formik.handleBlur(e)
-                      setFocusedField(null)
+                      formik.handleBlur(e);
+                      setFocusedField(null);
                     }}
                     onFocus={() => setFocusedField("email")}
                   />
@@ -120,12 +146,13 @@ export default function GenZLoginForm() {
 
               <div className="">
                 <div
-                  className={`relative border-1 rounded-xl transition-all duration-300 ${focusedField === "password"
+                  className={`relative border-1 rounded-xl transition-all duration-300 ${
+                    focusedField === "password"
                       ? "border-[#5f2781] shadow-sm shadow-orange-100"
                       : formik.touched.password && formik.errors.password
-                        ? "border-red-300"
-                        : "border-gray-200"
-                    }`}
+                      ? "border-red-300"
+                      : "border-gray-200"
+                  }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
                     <Lock className="h-5 w-5 text-gray-400" />
@@ -138,8 +165,8 @@ export default function GenZLoginForm() {
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
-                      formik.handleBlur(e)
-                      setFocusedField(null)
+                      formik.handleBlur(e);
+                      setFocusedField(null);
                     }}
                     onFocus={() => setFocusedField("password")}
                   />
@@ -167,7 +194,10 @@ export default function GenZLoginForm() {
               </div>
 
               <div className="text-right">
-                <Link href="/forget" className="text-sm text-[#5f2781] hover:underline">
+                <Link
+                  href="/forget"
+                  className="text-sm text-[#5f2781] hover:underline"
+                >
                   Forgot password?
                 </Link>
               </div>
@@ -199,5 +229,5 @@ export default function GenZLoginForm() {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
