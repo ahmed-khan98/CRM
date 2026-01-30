@@ -1,31 +1,21 @@
 "use client";
-import { Mail, Send } from "lucide-react";
+import { Mails, Send } from "lucide-react";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import toast from "react-hot-toast";
 import FormikSelect from "@/app/_Components/Modal/formikSelect";
 import { useAllEmailTemplatesQuery } from "@/app/_Services/emailTemplate/page";
-import {
-  useAllBrandEmailsQuery,
-  useGetBrandEmailByBrandIdQuery,
-} from "@/app/_Services/domain/page";
+import { useGetBrandEmailByBrandIdQuery } from "@/app/_Services/domain/page";
 import TinyEditor from "@/app/_Components/TinyEditor";
-import { sendEmailSchema } from "@/app/schema/sendEmail";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-import { useCreateSentEmailMutation } from "@/app/_Services/sentEmail/page";
+import { bulkEmailSchema } from "@/app/schema/bulkEmail";
+import { useSentTmBulkEmailMutation } from "@/app/_Services/sentTmBulkEmail/page";
+import { useAllTmEmailListsQuery } from "@/app/_Services/TmEmailList/page";
 import { useAllBrandsQuery } from "@/app/_Services/brand/page";
 
-function Sent() {
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email");
-  const name = searchParams.get("name");
-  const brand = searchParams.get("brand");
-  const leadId = searchParams.get("leadId");
-  const { data: BrandData, error, isLoading: isBrandLoading } = useAllBrandsQuery();
-
-  const [createSentEmail] = useCreateSentEmailMutation();
+export default function page() {
+  const [sentBulkEmail] = useSentTmBulkEmailMutation();
+  const { data: Brand, error, isLoading: isBrandLoading } = useAllBrandsQuery();
 
   const {
     data: templates,
@@ -33,27 +23,29 @@ function Sent() {
     isLoading: isTemplateLoading,
   } = useAllEmailTemplatesQuery();
 
+  const {
+    data: lists,
+    error: isListError,
+    isLoading: isListLoading,
+  } = useAllTmEmailListsQuery();
+
   const initialValues = {
-    brandId:
-      BrandData?.data?.find((option) => option.name === brand)?._id || "",
-    domainId:"",
-      // brandEmail?.data?.find((option) => option.name === brand)?._id || "",
-    fromemail:'',
-      // brandEmail?.data?.find((option) => option.name === brand)?.email || "",
+    compaignName: "",
+    brandId: "",
+    fromemail: "",
+    domainId: "",
+    listId: "",
     templateId: "",
-    name: name || "",
-    email: email || "",
     subject: "Hi ",
     body: "",
-    leadId: leadId,
   };
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const response = await createSentEmail({ ...values }).unwrap();
+      const response = await sentBulkEmail({ ...values }).unwrap();
       console.log(response, "response");
       if (response.success) {
-        toast.success("Email sent successfully!");
+        toast.success(response?.message);
       } else {
         toast.error(response.message || "Failed to process sending email");
       }
@@ -76,13 +68,13 @@ function Sent() {
           <div className="bg-white rounded-3xl shadow-md p-6 mt-3">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-700 flex items-center">
-                <Mail className="mr-2 h-6 w-6 text-[#5f2781]" />
-                Send Email
+                <Mails className="mr-2 h-6 w-6 text-[#5f2781]" />
+                New Compaign Bulk Email
               </h2>
             </div>
             <Formik
               initialValues={initialValues}
-              validationSchema={sendEmailSchema}
+              validationSchema={bulkEmailSchema}
               onSubmit={handleSubmit}
               enableReinitialize
             >
@@ -94,9 +86,8 @@ function Sent() {
                 setFieldValue,
                 setFieldTouched,
               }) => {
-                console.log(values, "values---->>>>");
-                console.log(errors, "errors---->>>>");
 
+                console.log(values,'values')
                 const {
                   data: brandEmail,
                   error,
@@ -106,7 +97,7 @@ function Sent() {
                 });
 
                 const brandOptions =
-                  BrandData?.data?.map((b) => ({
+                  Brand?.data?.map((b) => ({
                     value: b?._id,
                     label: b?.name,
                   })) ?? [];
@@ -123,7 +114,13 @@ function Sent() {
                     label: b?.name,
                   })) ?? [];
 
-                  const handleBrandChange = (newDeptId) => {
+                const listsOptions =
+                  lists?.data?.map((b) => ({
+                    value: b?._id,
+                    label: b?.listName,
+                  })) ?? [];
+
+                const handleBrandChange = (newDeptId) => {
                   setFieldValue("brandId", newDeptId);
                   setFieldValue(
                     "fromemail",
@@ -137,11 +134,17 @@ function Sent() {
 
                 const handleDomainChange = (newDeptId) => {
                   setFieldValue("domainId", newDeptId);
+
                   setFieldValue(
                     "fromemail",
                     brandEmail?.data?.find((option) => option._id === newDeptId)
-                      ?.email || ""
+                      ?.email ||''
                   );
+                  // setFieldValue(
+                  //   "domainId",
+                  //   brandEmail?.data?.find((option) => option._id === newDeptId)
+                  //     ?.name || ''
+                  // );
                 };
 
                 const handleTemplateChange = (newTempId) => {
@@ -165,53 +168,29 @@ function Sent() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-800 mb-1">
-                          To Name
+                          Compaign Name
                         </label>
                         <Field
                           type="text"
-                          name="name"
-                          readOnly={name ? true : false}
-                          className={`w-full px-4 py-2 text-sm border-1 capitalize ${
-                            errors.name && touched.name
-                              ? "border-[#5f2781] focus:border-[#5f2781]"
-                              : "border-gray-200 focus:border-[#5f2781]"
-                          } rounded-xl focus:outline-none transition-colors`}
-                        ></Field>
-                        <ErrorMessage
-                          name="name"
-                          component="div"
-                          className="text-red-500 text-sm mt-1"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-800 mb-1">
-                          To Email
-                        </label>
-                        <Field
-                          type="email"
-                          name="email"
-                          //    readOnly={email ? true : false}
+                          name="compaignName"
+                          //   readOnly={values?.compaignName ? true : false}
                           className={`w-full px-4 py-2 text-sm border-1 ${
-                            errors.email && touched.email
+                            errors.compaignName && touched.compaignName
                               ? "border-[#5f2781] focus:border-[#5f2781]"
                               : "border-gray-200 focus:border-[#5f2781]"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
-                          name="email"
+                          name="compaignName"
                           component="div"
                           className="text-red-500 text-sm mt-1"
                         />
                       </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      
                       <FormikSelect
                         name="brandId"
                         label="Select Brand"
                         options={brandOptions}
-                        value={values.brandId}
+                        value={values?.brandId}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.brandId}
@@ -219,20 +198,7 @@ function Sent() {
                         placeholder="Select Brand"
                         onChangeExtra={handleBrandChange}
                       />
-                        <FormikSelect
-                        name="domainId"
-                        label="Sending Domain"
-                        options={brandEmailOptions}
-                        value={values.domainId}
-                        setFieldValue={setFieldValue}
-                        setFieldTouched={setFieldTouched}
-                        error={errors.domainId}
-                        touched={touched.domainId}
-                        placeholder="Select Domain"
-                        onChangeExtra={handleDomainChange}
-                      />
                     </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-800 mb-1">
@@ -241,7 +207,7 @@ function Sent() {
                         <Field
                           type="email"
                           name="fromemail"
-                          // readOnly={values?.fromemail ? true : false}
+                          //   readOnly={values?.fromemail ? true : false}
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.fromemail && touched.fromemail
                               ? "border-[#5f2781] focus:border-[#5f2781]"
@@ -254,18 +220,43 @@ function Sent() {
                           className="text-red-500 text-sm mt-1"
                         />
                       </div>
+                      <FormikSelect
+                        name="domainId"
+                        label="Sending Domain"
+                        options={brandEmailOptions}
+                        value={values?.domainId}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.domainId}
+                        touched={touched.domainId}
+                        placeholder="Select Domain"
+                        onChangeExtra={handleDomainChange}
+                      />
+                    </div>
 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <FormikSelect
                         name="templateId"
                         label="Select Email Template"
                         options={templatesOptions}
-                        value={values.templateId}
+                        value={values?.templateId}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}
                         error={errors.templateId}
                         touched={touched.templateId}
                         placeholder="Select Template"
                         onChangeExtra={handleTemplateChange}
+                      />
+                      <FormikSelect
+                        name="listId"
+                        label="Select Email List"
+                        options={listsOptions}
+                        value={values?.listId}
+                        setFieldValue={setFieldValue}
+                        setFieldTouched={setFieldTouched}
+                        error={errors.listId}
+                        touched={touched.listId}
+                        placeholder="Select Email List"
                       />
                     </div>
                     <div className="gap-4 mb-4">
@@ -294,7 +285,7 @@ function Sent() {
                         Body
                       </label>
                       <TinyEditor
-                        value={values.body}
+                        value={values?.body}
                         onChange={(html) => setFieldValue("body", html)}
                       />
                       <ErrorMessage
@@ -336,13 +327,5 @@ function Sent() {
         </motion.div>
       </div>
     </div>
-  );
-}
-
-export default function SentMail() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Sent />
-    </Suspense>
   );
 }

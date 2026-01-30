@@ -23,6 +23,13 @@ const authenticationsApi = createApiAuction.injectEndpoints({
         method: 'POST',
         body: formData,
       }),
+      invalidatesTags: ["todayUserAttendence"],
+    }),
+    logout: builder.mutation({
+      query: (formData) => ({
+        url: 'logout',
+        method: 'POST',
+      }),
     }),
     sendVerificationCode: builder.mutation({
       query: (formData) => ({
@@ -79,4 +86,4 @@ const authenticationsApi = createApiAuction.injectEndpoints({
   }),
 })
 
-export const { useCheckUsernameMutation,useReferralLinkQuery,useRegisterMutation,useSendVerificationCodeMutation,useLoginMutation,useVerifyCodeMutation,useResendMutation,useForgetMutation,useResetMutation ,useUpdateProfileMutation,useChangePasswordMutation} = authenticationsApi
+export const {useLogoutMutation, useCheckUsernameMutation,useReferralLinkQuery,useRegisterMutation,useSendVerificationCodeMutation,useLoginMutation,useVerifyCodeMutation,useResendMutation,useForgetMutation,useResetMutation ,useUpdateProfileMutation,useChangePasswordMutation} = authenticationsApi

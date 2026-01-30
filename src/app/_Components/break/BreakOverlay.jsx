@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const BreakOverlay = ({ startTime, onBreakOut }) => {
   const [duration, setDuration] = useState('');
+  const breakTime = useSelector((state) => state.filter.lastBreakInTime);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -24,10 +26,10 @@ const BreakOverlay = ({ startTime, onBreakOut }) => {
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'
     }}>
       <h1>🚫 System Idle (On Break)</h1>
-      <p>Aapne 5 minute se koi activity nahi ki.</p>
-      <h2 style={{ fontSize: '3rem', color: '#764ba2' }}>{duration}</h2>
+<p>No activity detected since {new Date(breakTime).toLocaleTimeString()}.</p> 
+     <h2 style={{ fontSize: '3rem', color: '#764ba2' }}>{duration}</h2>
       <button 
-        onClick={onBreakOut}
+        onClick={()=>onBreakOut()}
         style={{ padding: '10px 20px', cursor: 'pointer', borderRadius: '5px' }}
       >
         I am Back! (Resume Work)

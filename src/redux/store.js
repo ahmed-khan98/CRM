@@ -1,20 +1,32 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/query';
-import { createApiAuction } from './createApi';
-import filterReducer from './filterSlice';
-import uploadReducer from './uploadSlice';
+import { configureStore,combineReducers } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import { setupListeners } from "@reduxjs/toolkit/query";
+import { createApiAuction } from "./createApi";
+import filterReducer from "./filterSlice";
+import uploadReducer from "./uploadSlice";
 
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["filter"], 
+};
+
+const rootReducer = combineReducers({
+  [createApiAuction.reducerPath]: createApiAuction.reducer,
+  filter: filterReducer,
+  upload: uploadReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    [createApiAuction.reducerPath]: createApiAuction.reducer,
-    filter: filterReducer, 
-    upload: uploadReducer,
-
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(createApiAuction.middleware),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(createApiAuction.middleware),
 });
 
 setupListeners(store.dispatch);
-export default store;
+export const persistor = persistStore(store);

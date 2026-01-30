@@ -1,7 +1,7 @@
 import { createApiAuction } from "@/redux/createApi";
 import {
-  setLeadImportProgress,
-  resetLeadImportProgress,
+  setTmImportProgress,
+  resetTmImportProgress,
 } from "@/redux/uploadSlice";
 import { BaseUrl } from "@/app/_Services/baseUrl";
 import Cookies from "js-cookie";
@@ -9,12 +9,12 @@ import Cookies from "js-cookie";
 const EmailListApi = createApiAuction.injectEndpoints({
   overrideExisting: process.env.NODE_ENV !== "production",
   endpoints: (builder) => ({
-    importEmailList: builder.mutation({
+    importTmEmailList: builder.mutation({
       async queryFn(formData, api) {
         try {
-          api.dispatch(setLeadImportProgress(0));
+          api.dispatch(setTmImportProgress(0));
           const token = Cookies.get("token");
-          const url = `${BaseUrl.replace(/\/$/, "")}/emailList/importEmailList`;
+          const url = `${BaseUrl.replace(/\/$/, "")}/tmEmailList/importEmailList`;
 
           // If we're not in the browser (SSR/Edge), fall back to fetch (no progress)
           if (typeof window === "undefined") {
@@ -25,8 +25,8 @@ const EmailListApi = createApiAuction.injectEndpoints({
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) return { error: { status: res.status, data } };
-            api.dispatch(setLeadImportProgress(100));
-            setTimeout(() => api.dispatch(resetLeadImportProgress()), 800);
+            api.dispatch(setTmImportProgress(100));
+            setTimeout(() => api.dispatch(resetTmImportProgress()), 800);
             return { data };
           }
 
@@ -41,12 +41,12 @@ const EmailListApi = createApiAuction.injectEndpoints({
             onUploadProgress: (evt) => {
               if (!evt?.total) return;
               const percent = Math.round((evt.loaded * 100) / evt.total);
-              api.dispatch(setLeadImportProgress(percent));
+              api.dispatch(setTmImportProgress(percent));
             },
           });
 
-          api.dispatch(setLeadImportProgress(100));
-          setTimeout(() => api.dispatch(resetLeadImportProgress()), 800);
+          api.dispatch(setTmImportProgress(100));
+          setTimeout(() => api.dispatch(resetTmImportProgress()), 800);
           return { data: res.data };
         } catch (error) {
           // Normalize error for RTKQ
@@ -57,24 +57,28 @@ const EmailListApi = createApiAuction.injectEndpoints({
           return { error: { status, data } };
         }
       },
-      invalidatesTags: ["allEmailLists"],
+      invalidatesTags: ["allTmEmailLists"],
     }),
-    
-    allEmailLists: builder.query({
-      query: () => `emailList`,
-      providesTags: ["allEmailLists"],
+
+    allTmEmailLists: builder.query({
+      query: () => `tmEmailList`,
+      providesTags: ["allTmEmailLists"],
       keepUnusedDataFor: 180,
       refetchOnMountOrArgChange: false,
     }),
 
-     deleteEmailList: builder.mutation({
+    deleteTmEmailList: builder.mutation({
       query: (id) => ({
-        url: `emailList/${id}`,
+        url: `tmEmailList/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["allEmailLists"],
+      invalidatesTags: ["allTmEmailLists"],
     }),
   }),
 });
 
-export const { useAllEmailListsQuery, useImportEmailListMutation,useDeleteEmailListMutation } = EmailListApi;
+export const {
+  useAllTmEmailListsQuery,
+  useImportTmEmailListMutation,
+  useDeleteTmEmailListMutation,
+} = EmailListApi;

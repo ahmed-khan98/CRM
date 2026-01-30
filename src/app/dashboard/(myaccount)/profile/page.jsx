@@ -21,21 +21,37 @@ import { motion, AnimatePresence } from "framer-motion";
 import Tab from "@/app/_Components/Tab/page";
 import { myAccountTabs } from "@/app/utilities/tabs/page";
 import { formatPhoneNumber } from "@/app/utilities/phoneFormat";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setActivity } from "@/redux/filterSlice";
+import { useBreakInMutation } from "@/app/_Services/employee/page";
 
 const ProfilePage = () => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+  const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
   const [isEditable, setIsEditable] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+      const { attendence } = useSelector((state) => state.filter);
+
+  
   const dispatch = useDispatch();
 
-  const hanldeBreakIn=()=>{
-    dispatch(setActivity({
-      status:'idle',
-      lastBreakInTime: new Date().toISOString()
-    }));
-  }
+
+  const handleBreakIn = async () => {
+    try {
+      const res = await breakIn({attendanceId:attendence?._id}).unwrap();
+      console.log(res, "-------->>>res");
+      if (res.success) {
+        dispatch(
+          setActivity({
+            activityStatus: "idle",
+            lastBreakInTime: new Date().toISOString(),
+          }),
+        );
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || "Update failed");
+    }
+  };
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -150,13 +166,13 @@ const ProfilePage = () => {
                     </>
                   )}
                 </button>
-                {/* <button
+                <button
                   type="button"
-                  onClick={() => hanldeBreakIn()}
+                  onClick={() => handleBreakIn()}
                   className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${"bg-white text-[#5f2781] border border-[#5f2781] hover:bg-[#a945fc] hover:text-white"}`}
                 >
                   Break In
-                </button> */}
+                </button>
               </div>
             </div>
           </div>

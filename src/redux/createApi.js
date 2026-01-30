@@ -18,7 +18,7 @@ const rawBaseQuery = fetchBaseQuery({
 // Step 2: Wrap it with custom error handling
 const baseQueryWithAuthHandling = async (args, api, extraOptions) => {
   const result = await rawBaseQuery(args, api, extraOptions);
-  console.log('API Result:', result);
+  // console.log('API Result:', result);
   if (
     result?.error?.status === 401 || 
     result?.error?.data?.statusCode === 401 

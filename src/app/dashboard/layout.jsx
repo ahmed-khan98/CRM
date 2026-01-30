@@ -4,33 +4,63 @@ import { useState, useEffect } from "react";
 import LeftNav from "../_Components/Dashboard/LeftNav";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { resumeWork } from "@/redux/filterSlice";
+import { resumeWork, setActivity } from "@/redux/filterSlice";
 import BreakOverlay from "../_Components/break/BreakOverlay";
+import {
+  useBreakInMutation,
+  useBreakOutMutation,
+} from "../_Services/employee/page";
+import toast from "react-hot-toast";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
 
+  const [breakOut] = useBreakOutMutation();
+  const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
+
   const dispatch = useDispatch();
-  const { activityStatus, lastBreakInTime } = useSelector(
+  const { activityStatus, lastBreakInTime,attendence } = useSelector(
     (state) => state.filter,
   );
 
-console.log('activityStatus, lastBreakInTime',activityStatus, lastBreakInTime)
+
+  console.log(
+    "attendence", attendence
+  );
+  console.log(
+    "activityStatus", activityStatus
+  );
 
   const handleBreakOut = async () => {
-    // try {
-    //   // 1. Backend call karein
-    //   await axios.post('/api/user/manual-break-out');
-      
-      // 2. Redux state update karein
-      dispatch(resumeWork());
-      
-    //   toast.success("Welcome back!");
-    // } catch (err) {
-    //   toast.error("Failed to resume work");
-    // }
+    try {
+      const res = await breakOut({ attendanceId: attendence?._id }).unwrap();
+      if (res.success) {
+        dispatch(resumeWork());
+        toast.success(res?.message);
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || "Update failed");
+    }
+  };
+
+  const handleBreakIn = async () => {
+    try {
+      const res = await breakIn({ attendanceId: attendence?._id }).unwrap();
+
+      if (res.success) {
+        dispatch(
+          setActivity({
+            activityStatus: "idle",
+            lastBreakInTime: new Date().toISOString(),
+          }),
+        );
+      }
+    } catch (err) {
+      console.log("breakINError", err);
+      toast.error(err?.data?.message || "Update failed");
+    }
   };
 
   useEffect(() => {
@@ -56,6 +86,30 @@ console.log('activityStatus, lastBreakInTime',activityStatus, lastBreakInTime)
       setIsSidebarOpen(false);
     }
   }, [pathname, isMobile]);
+
+  useEffect(() => {
+    const messageListener = (event) => {
+      // Check karein ke message Extension se hi aa raha hai
+      if (event.data && event.data.type === "STATUS_CHANGED") {
+        console.log("REACT RECEIVED:", event.data);
+
+        if (window.location.pathname === "/") {
+          return;
+        }
+
+        if (event.data.status === "idle" && activityStatus !== "idle" && attendence?.timeIn) {
+          console.log("activityStatus", activityStatus);
+          console.log("extension ne kaha break in kro");
+          handleBreakIn();
+        } else if (event.data.status === "active") {
+          handleBreakOut();
+        }
+      }
+    };
+
+    window.addEventListener("message", messageListener);
+    return () => window.removeEventListener("message", messageListener);
+  }, [dispatch, activityStatus]);
 
   return (
     <div className="app-container">
@@ -83,7 +137,7 @@ console.log('activityStatus, lastBreakInTime',activityStatus, lastBreakInTime)
                 isMobile
                   ? "fixed top-0 left-0 h-full z-30 w-78 shadow-xl"
                   : "lg:relative lg:w-64 xl:w-64"
-              } h-158 transition-transform duration-300 ease-in-out mt-15 md:mt-0`}
+              } h-158 transition-transform duration-300 ease-in-out mt-15 md:mt-1`}
             >
               <LeftNav />
             </div>

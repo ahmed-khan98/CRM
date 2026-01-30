@@ -12,12 +12,15 @@ import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { AtSign, Lock, Eye, EyeOff } from "lucide-react";
 import Main from "../../../app/Assets/logo-ppi.png";
+import { useDispatch } from "react-redux";
+import { setActivity } from "@/redux/filterSlice";
 
 export default function GenZLoginForm() {
   const navigation = useRouter();
   const [loginForm, { isLoading: isSubmitting }] = useLoginMutation();
   const [showPassword, setShowPassword] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const dispatch = useDispatch();
 
   const loginSchema = Yup.object({
     email: Yup.string()
@@ -44,7 +47,7 @@ export default function GenZLoginForm() {
 
           if (window.chrome && chrome.runtime) {
             chrome.runtime.sendMessage(
-              MY_EXTENSION_ID,
+              "ipmkoccmjmjepnnepibolhakgijemoed",
               {
                 type: "LOGIN_SUCCESS",
                 userId: user._id,
@@ -56,9 +59,16 @@ export default function GenZLoginForm() {
                 } else {
                   console.log("Extension Linked!");
                 }
-              }
+              },
             );
           }
+
+          dispatch(
+            setActivity({
+              activityStatus: user?.activityStatus,
+              lastBreakInTime: user?.lastBreakInTime,
+            }),
+          );
 
           Cookies.set("token", accessToken, { expires: 7, secure: true });
           Cookies.set("currentuser", JSON.stringify(user), {
@@ -112,8 +122,8 @@ export default function GenZLoginForm() {
                     focusedField === "email"
                       ? "border-[#5f2781] shadow-sm shadow-orange-100"
                       : formik.touched.email && formik.errors.email
-                      ? "border-red-300"
-                      : "border-gray-200"
+                        ? "border-red-300"
+                        : "border-gray-200"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
@@ -150,8 +160,8 @@ export default function GenZLoginForm() {
                     focusedField === "password"
                       ? "border-[#5f2781] shadow-sm shadow-orange-100"
                       : formik.touched.password && formik.errors.password
-                      ? "border-red-300"
-                      : "border-gray-200"
+                        ? "border-red-300"
+                        : "border-gray-200"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">

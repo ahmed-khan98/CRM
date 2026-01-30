@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   allProducts: [],
   filteredProducts: [],
+  attendence: {},
   activityStatus: "active",
   lastBreakInTime: null,
 };
@@ -96,13 +97,19 @@ const filterSlice = createSlice({
       }
     },
     setActivity: (state, action) => {
-      state.activityStatus = action.payload.status; 
-      state.lastBreakInTime = action.payload.lastBreakInTime;
+      console.log('action payload',action.payload)
+      state.activityStatus = action.payload.activityStatus; 
+      state.lastBreakInTime = null;
     },
-    // Manual break out ke liye
     resumeWork: (state) => {
       state.activityStatus = "active";
       state.lastBreakInTime = null;
+    },
+    setAttendence: (state, action) => {
+      state.attendence = action?.payload || {}; 
+    },
+    removeAttendence: (state) => {
+      state.attendence = {};
     },
   },
 });
@@ -116,6 +123,8 @@ export const {
   filterByCategory,
   clearFilteredProducts,
   setActivity,
-  resumeWork
+  resumeWork,
+  setAttendence,
+  removeAttendence
 } = filterSlice.actions;
 export default filterSlice.reducer;

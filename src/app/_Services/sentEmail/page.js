@@ -1,10 +1,5 @@
 import { createApiAuction } from "@/redux/createApi";
-import {
-  setLeadImportProgress,
-  resetLeadImportProgress,
-} from "@/redux/uploadSlice";
-import { BaseUrl } from "@/app/_Services/baseUrl";
-import Cookies from "js-cookie";
+
 
 const SentEmailApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({

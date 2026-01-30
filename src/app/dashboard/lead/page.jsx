@@ -77,10 +77,6 @@ function Leads() {
     [router, pathname, createQueryString]
   );
 
-  // reset page when brand filter changes
-  // useEffect(() => {
-  //   setPage(1);
-  // }, [activeFilter]);
 
   const { data: brandsResp,  } = useAllBrandsQuery();
   const brandList = brandsResp?.data ?? [];
@@ -162,7 +158,7 @@ function Leads() {
   }
 
   return (
-    <div className="min-h-screen py-4 mx-1">
+    <div className="min-h-screen py-2 mx-1">
       <div className="max-w-6xl mx-auto p-1 flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">

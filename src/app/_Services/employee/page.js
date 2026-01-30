@@ -92,8 +92,10 @@ const employeeApi = createApiAuction.injectEndpoints({
         return {
           url: "employee/breakOut",
           method: "POST",
+          body: formData,
         };
       },
+      invalidatesTags: ["todayUserAttendence"],
     }),
   }),
 });
@@ -106,5 +108,5 @@ export const {
   useGetdepartmentsEmployeeQuery,
   useUpdateStatusMutation,
   useBreakInMutation,
-  useBreakOutMutation
+  useBreakOutMutation,
 } = employeeApi;
