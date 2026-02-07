@@ -35,7 +35,14 @@ const attendenceApi = createApiAuction.injectEndpoints({
       }),
       providesTags: ["allAttendance"],
     }),
+    getDepartEmployeeAttendance: builder.query({
+      query: (params) => ({
+        url: "attendence/employee-attendance",
+        params: params, 
+      }),
+      providesTags: ["allAttendance"],
+    }),
   }),
 });
 
-export const { useTimeInMutation, useTimeOutMutation,useTodayUserAttendenceQuery,useGetAttendanceQuery } = attendenceApi;
+export const { useTimeInMutation, useTimeOutMutation,useTodayUserAttendenceQuery,useGetAttendanceQuery,useGetDepartEmployeeAttendanceQuery } = attendenceApi;

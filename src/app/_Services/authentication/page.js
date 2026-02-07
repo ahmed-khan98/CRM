@@ -75,7 +75,7 @@ const authenticationsApi = createApiAuction.injectEndpoints({
     }),
     changePassword: builder.mutation({
       query: (formData) => ({
-        url: '/change-  ',
+        url: '/change-password',
         method: 'POST',
         body: formData,
       }),

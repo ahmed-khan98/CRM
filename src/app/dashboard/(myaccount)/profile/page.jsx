@@ -39,12 +39,12 @@ const ProfilePage = () => {
   const handleBreakIn = async () => {
     try {
       const res = await breakIn({attendanceId:attendence?._id}).unwrap();
-      console.log(res, "-------->>>res");
       if (res.success) {
+        console.log(res, "-------->>>res");
         dispatch(
           setActivity({
-            activityStatus: "idle",
-            lastBreakInTime: new Date().toISOString(),
+            activityStatus: res?.data?.activityStatus,
+            lastBreakInTime: res?.data?.lastBreakInTime
           }),
         );
       }

@@ -5,15 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import {
   Home,
-  ShoppingCart,
   Calendar,
-  Store,
-  Wallet,
-  Bell,
   User,
   Users,
-  DollarSign,
-  HelpCircle,
   LogOut,
   ChevronRight,
   ChevronDown,
@@ -137,6 +131,25 @@ const LeftNav = ({ set }) => {
       icon: <User className="w-5 h-5" />,
       path: ["/dashboard/profile", "/dashboard/changepassword"],
     },
+    {
+      name: "Attendance",
+      icon: <Calendar className="w-5 h-5" />,
+      path: [
+        "/dashboard/attendance",
+        "/dashboard/attendance/departmentAttendence",
+
+      ],
+      submenu: [
+        {
+          name: "My Attendance",
+          path: "/dashboard/attendance",
+        },
+        {
+          name: "Team Attendance",
+          path: "/dashboard/attendance/departmentAttendence",
+        },
+      ],
+    },
   ];
 
   const USER_ALLOWED_TABS = [
@@ -147,6 +160,7 @@ const LeftNav = ({ set }) => {
     "Payment Link",
     "Sales",
     "My Account",
+    "Attendance",
   ];
 
   const SUBADMIN_ALLOWED_TABS = [
@@ -159,6 +173,7 @@ const LeftNav = ({ set }) => {
     "Payment Link",
     "Sales",
     "My Account",
+    "Attendance",
   ];
 
   const filteredMenuItems =

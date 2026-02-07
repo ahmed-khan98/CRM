@@ -97,16 +97,23 @@ const filterSlice = createSlice({
       }
     },
     setActivity: (state, action) => {
-      console.log('action payload',action.payload)
-      state.activityStatus = action.payload.activityStatus; 
-      state.lastBreakInTime = null;
+      console.log("action payload", action.payload);
+      if (action.payload) {
+        if (action.payload.activityStatus !== undefined) {
+          state.activityStatus = action.payload.activityStatus;
+        }
+
+        if (action.payload.lastBreakInTime !== undefined) {
+          state.lastBreakInTime = action.payload.lastBreakInTime;
+        }
+      }
     },
     resumeWork: (state) => {
       state.activityStatus = "active";
       state.lastBreakInTime = null;
     },
     setAttendence: (state, action) => {
-      state.attendence = action?.payload || {}; 
+      state.attendence = action?.payload || {};
     },
     removeAttendence: (state) => {
       state.attendence = {};
@@ -125,6 +132,6 @@ export const {
   setActivity,
   resumeWork,
   setAttendence,
-  removeAttendence
+  removeAttendence,
 } = filterSlice.actions;
 export default filterSlice.reducer;

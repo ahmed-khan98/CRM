@@ -109,7 +109,7 @@
 const Footer = () => {
   return (
     <>
-      <div className="bg-[#372D5C] mt-1 w-full text-center py-3">
+      <div className="bg-[#372D5C] w-full text-center py-3">
         {" "}
         <p className=" text-sm text-white">
           © Copyright 2025{" "}

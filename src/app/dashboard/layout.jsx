@@ -30,7 +30,7 @@ const DashboardLayout = ({ children }) => {
     "attendence", attendence
   );
   console.log(
-    "activityStatus", activityStatus
+    "activityStatus lastBreakInTime", activityStatus,lastBreakInTime
   );
 
   const handleBreakOut = async () => {
@@ -52,8 +52,8 @@ const DashboardLayout = ({ children }) => {
       if (res.success) {
         dispatch(
           setActivity({
-            activityStatus: "idle",
-            lastBreakInTime: new Date().toISOString(),
+            activityStatus: res?.data?.activityStatus,
+            lastBreakInTime: res?.data?.lastBreakInTime,
           }),
         );
       }
