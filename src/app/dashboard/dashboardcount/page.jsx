@@ -187,7 +187,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen  mt-5 px-4">
+    <div className="min-h-screen px-4">
       {/* {billBoard?.data?.map(e=><div className=" pt-6 p-1 md:p-4  bg-gray-200 shadow-lg rounded-2xl border-3 border-[#ffa51d] ">
         <div
           dangerouslySetInnerHTML={{ __html: e?.title }}
@@ -200,7 +200,7 @@ export default function DashboardPage() {
 
       <div className="relative overflow-hidden bg-gradient-to-r from-[#372D5C] via-[#54448a] to-[#a945fa] text-white rounded-lg">
         <div className="absolute inset-0 bg-gradient-to-r from-[#372D5C] via-[#54448a] to-[#a945fa] bg-opacity-100"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        <div className="relative z-10 w-full mx-auto px-6 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -226,7 +226,7 @@ export default function DashboardPage() {
         <div className="absolute bottom-0 right-0 w-32 h-32 md:w-92 md:h-92 bg-white bg-opacity-5 rounded-full translate-x-14 translate-y-14 md:translate-x-48 md:translate-y-48"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-2 py-8">
+      <div className="w-full mx-auto px-2 py-8">
         {/* Stats Grid */}
         <motion.div
           initial="hidden"

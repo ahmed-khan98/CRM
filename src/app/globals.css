@@ -69,3 +69,21 @@ ol, ul, menu {
   color:#0578ff !important
 } */
 
+
+/* Tailwind CSS utility to hide scrollbar */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
+.stop-scrolling {
+  height: 100%;
+  overflow: hidden !important;
+  position: fixed; /* Ye har qism ki scrolling rok deta hai */
+  width: 100%;
+}

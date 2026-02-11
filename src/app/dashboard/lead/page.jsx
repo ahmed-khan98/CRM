@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect, Suspense } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  Suspense,
+} from "react";
 import { ChartBar, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
@@ -54,7 +60,7 @@ function Leads() {
       }
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   const onFilterChange = useCallback(
@@ -67,46 +73,43 @@ function Leads() {
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [router, pathname]
+    [router, pathname],
   );
 
   const onPageChange = useCallback(
     (newPage) => {
       router.push(`${pathname}?${createQueryString("page", newPage)}`);
     },
-    [router, pathname, createQueryString]
+    [router, pathname, createQueryString],
   );
 
-
-  const { data: brandsResp,  } = useAllBrandsQuery();
+  const { data: brandsResp } = useAllBrandsQuery();
   const brandList = brandsResp?.data ?? [];
 
   const {
     data: allResp,
-   isLoading: isAllLoading,
+    isLoading: isAllLoading,
     isFetching: isAllFetching,
     refetch: refetchAll,
   } = useAllLeadsQuery({ page, limit }, { skip: activeFilter !== "all" });
 
   const {
     data: brandResp,
-   isLoading: isBrandLoading,
+    isLoading: isBrandLoading,
     isFetching: isBrandFetching,
     refetch: refetchBrand,
   } = useBrandLeadQuery(
     { id: activeFilter, page, limit },
-    { skip: activeFilter === "all" }
+    { skip: activeFilter === "all" },
   );
 
   const activeResp = activeFilter === "all" ? allResp : brandResp;
   const items = activeResp?.data?.items ?? [];
   const meta = activeResp?.data?.meta;
 
-    const isInitialLoading =
-    isAllLoading || isBrandLoading;
+  const isInitialLoading = isAllLoading || isBrandLoading;
 
-  const isPaginationLoading =
-    isAllFetching || isBrandFetching;
+  const isPaginationLoading = isAllFetching || isBrandFetching;
 
   // const isLoading = activeFilter === "all" ? isAllLoading : isBrandLeadLoading;
 
@@ -138,7 +141,7 @@ function Leads() {
     }
   }, [confirmDelete, deleteLead, refetchAll, refetchBrand, activeFilter]);
 
-  if ( isInitialLoading) {
+  if (isInitialLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div
@@ -158,11 +161,12 @@ function Leads() {
   }
 
   return (
-    <div className="min-h-screen py-2 mx-1">
-      <div className="max-w-6xl mx-auto p-1 flex flex-col space-y-2">
+    <div className="min-h-screen  mx-1">
+      <div className="max-full mx-auto p-1  flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
             <ChartBar className="h-5 w-5 text-[#5f2781]" />
+
             <h3 className="text-[#242424] text-xl font-bold">All Leads</h3>
           </div>
 
@@ -175,6 +179,7 @@ function Leads() {
               <Plus className="h-4 w-4 text-white" />
               Add New Lead
             </motion.button>
+
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsImportOpen(true)}
@@ -187,6 +192,7 @@ function Leads() {
         </div>
 
         {/* Brand filter chips */}
+
         <div className="flex flex-wrap gap-1 items-center">
           <button
             onClick={() => onFilterChange("all")}
@@ -218,23 +224,28 @@ function Leads() {
           variants={itemVariants}
           className="bg-white rounded-2xl mx-1 md:mx-0 p-2 shadow-xl border border-purple-100 relative"
         >
-           {isPaginationLoading && (
+          {isPaginationLoading && (
             <div className="absolute inset-0 bg-white/70 z-10 flex items-center justify-center rounded-2xl border border-gray-200">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{
                   duration: 0.8,
+
                   repeat: Infinity,
+
                   ease: "linear",
                 }}
                 className="w-8 h-8 border-3 border-[#5f2781] border-t-transparent rounded-full"
               />
             </div>
           )}
+
           {items?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <ChartBar className="h-16 w-16 text-gray-300" />
+
               <h3 className="text-xl font-semibold text-gray-700">No Lead</h3>
+
               <p className="text-gray-500 mt-2">
                 {activeFilter === "all"
                   ? "You don't have any Leads yet."
@@ -257,9 +268,15 @@ function Leads() {
                       ))}
                     </tr>
                   </thead>
+
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {items?.map((emp,i) => (
-                      <LeadRow index={i + 1} emp={emp} onEdit={handleAction} setConfirmDelete={setConfirmDelete} />
+                    {items?.map((emp, i) => (
+                      <LeadRow
+                        index={i + 1}
+                        emp={emp}
+                        onEdit={handleAction}
+                        setConfirmDelete={setConfirmDelete}
+                      />
                     ))}
                   </tbody>
                 </table>

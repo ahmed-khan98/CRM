@@ -70,8 +70,8 @@ export default function AttendancePage() {
 
   return (
     // h-screen overflow-hidden poore page ka scroll rok deta hai
-    <div className="h-screen overflow-hidden py-3 mx-1  flex flex-col bg-gray-50/50 ">
-      <div className="max-w-7xl w-full mx-auto p-3 flex flex-col h-full space-y-4">
+    <div className="h-screen overflow-hidden py-1 mx-1  flex flex-col bg-gray-50/50 ">
+      <div className=" w-full mx-auto p-1 flex flex-col h-full space-y-4">
         {/* Header Section (Fixed) */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
           <div className="flex items-center gap-2">

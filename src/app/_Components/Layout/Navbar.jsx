@@ -209,7 +209,7 @@ import {
   resumeWork,
   setAttendence,
 } from "@/redux/filterSlice";
-import WarningModal from "../Modal/WarningModal";
+import TimeOutModal from "../Modal/TimeOutModal";
 
 const Navbar = () => {
   const router = useRouter();
@@ -331,7 +331,7 @@ const Navbar = () => {
         <button
           onClick={handleTimeIn}
           disabled={isTimeIn}
-          className="cursor-pointer  flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-bold transition-all disabled:opacity-50"
+          className="cursor-pointer  flex items-center gap-2 bg-green-500 hover:bg-green-600 shadow-green-100 text-white px-4 py-2 rounded-md text-sm font-bold transition-all disabled:opacity-50"
         >
           {isTimeIn ? "..." : "Time In"}
         </button>
@@ -339,7 +339,7 @@ const Navbar = () => {
         <button
           onClick={() => setConfirmDelete(true)}
           disabled={isTimeOut}
-          className="cursor-pointer flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-bold transition-all disabled:opacity-50"
+          className="cursor-pointer flex items-center gap-2 bg-red-500 hover:bg-red-600 shadow-red-100 text-white px-4 py-2 rounded-md text-sm font-bold transition-all disabled:opacity-50"
         >
           {isTimeOut ? "..." : "Time Out"}
         </button>
@@ -352,7 +352,7 @@ const Navbar = () => {
       {token && (
         <button
           onClick={handleLogout}
-          className="cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-all"
+          className="cursor-pointer bg-[#5f2781] shadow-purple-100 text-white px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-all"
         >
           Logout
         </button>
@@ -509,7 +509,7 @@ const Navbar = () => {
         </div>
       </div>
       {confirmDelete && (
-        <WarningModal
+        <TimeOutModal
           setConfirmDelete={setConfirmDelete}
           isDeleting={isTimeOut}
           handleDelete={handleTimeOut}

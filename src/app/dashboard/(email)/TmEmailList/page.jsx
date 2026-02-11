@@ -62,7 +62,7 @@ export default function page() {
 
   return (
     <div className="min-h-screen  py-4 mx-1">
-      <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-2">
+      <div className="w-full mx-auto p-3 flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
             <List className="h-5 w-5 text-[#5f2781]" />

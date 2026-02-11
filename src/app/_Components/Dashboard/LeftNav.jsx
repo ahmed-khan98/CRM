@@ -243,7 +243,7 @@ const LeftNav = ({ set }) => {
   };
 
   return (
-    <div className="h-full bg-white overflow-y-auto m-0 md:m-2 shadow-xl rounded-2xl border border-gray-100 ">
+    <div className="h-full bg-white overflow-y-auto mx-2 pb-2 drop-shadow-lg rounded-2xl border border-gray-100 ">
       <div className="py-2 ">
         {/* Use the filteredMenuItems array for mapping */}
         {filteredMenuItems.map((item, index) => {
@@ -252,7 +252,7 @@ const LeftNav = ({ set }) => {
           const isExpanded = expandedMenus[index] || isActive;
 
           return (
-            <div key={index} className="mb-0">
+            <div key={index} className="mb-0 ">
               <div
                 onClick={() => {
                   if (hasSubmenu) {
@@ -264,13 +264,13 @@ const LeftNav = ({ set }) => {
                     }
                   }
                 }}
-                className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-200 ${
+                className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-200  ${
                   isActive
                     ? "bg-[#f7f7f7] text-[#5f2781] border-l-4 border-[#5f2781]"
                     : "text-gray-700 hover:bg-[#f7f7f7] hover:text-[#5f2781]"
                 }`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 ">
                   <span
                     className={isActive ? "text-[#5f2781]" : "text-gray-500"}
                   >
@@ -335,7 +335,7 @@ const LeftNav = ({ set }) => {
 
         <div
           onClick={() => handleLogout()}
-          className="flex items-center gap-3 px-4 py-3 mt-4 text-[#5f2781] hover:b-[#4f1f6d] cursor-pointer transition-all duration-200"
+          className="flex items-center gap-3 px-4 py-2 mt-4 text-[#5f2781] hover:b-[#4f1f6d] cursor-pointer transition-all duration-200"
         >
           <LogOut className="w-5 h-5" />
           <span className="font-medium text-sm">Out</span>

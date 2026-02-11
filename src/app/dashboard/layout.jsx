@@ -21,16 +21,8 @@ const DashboardLayout = ({ children }) => {
   const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
 
   const dispatch = useDispatch();
-  const { activityStatus, lastBreakInTime,attendence } = useSelector(
+  const { activityStatus, lastBreakInTime, attendence } = useSelector(
     (state) => state.filter,
-  );
-
-
-  console.log(
-    "attendence", attendence
-  );
-  console.log(
-    "activityStatus lastBreakInTime", activityStatus,lastBreakInTime
   );
 
   const handleBreakOut = async () => {
@@ -89,7 +81,6 @@ const DashboardLayout = ({ children }) => {
 
   useEffect(() => {
     const messageListener = (event) => {
-      // Check karein ke message Extension se hi aa raha hai
       if (event.data && event.data.type === "STATUS_CHANGED") {
         console.log("REACT RECEIVED:", event.data);
 
@@ -97,7 +88,11 @@ const DashboardLayout = ({ children }) => {
           return;
         }
 
-        if (event.data.status === "idle" && activityStatus !== "idle" && attendence?.timeIn) {
+        if (
+          event.data.status === "idle" &&
+          activityStatus !== "idle" &&
+          attendence?.timeIn
+        ) {
           console.log("activityStatus", activityStatus);
           console.log("extension ne kaha break in kro");
           handleBreakIn();
@@ -113,12 +108,11 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className="app-container">
-      {/* Agar status idle hai toh sirf overlay dikhayen, children (CRM) ko render hi na karein */}
       {activityStatus === "idle" ? (
         <BreakOverlay startTime={lastBreakInTime} onBreakOut={handleBreakOut} />
       ) : (
-        <div className="min-h-screen bg-gradient-to-b from-purple-50 to-purple-100 flex flex-col py-14 md:py-18">
-          <div className="flex flex-1 relative">
+        <div className="min-h-screen bg-[#F8F9FC] flex flex-col pt-14 md:pt-20">
+          <div className="flex flex-1 relative overflow-hidden">
             {/* Overlay for mobile when sidebar is open */}
             {isMobile && isSidebarOpen && (
               <div
@@ -127,7 +121,7 @@ const DashboardLayout = ({ children }) => {
               ></div>
             )}
 
-            {/* Sidebar */}
+            {/* Sidebar - Fixed on desktop, overlay on mobile */}
             <div
               className={`${
                 isSidebarOpen
@@ -135,19 +129,19 @@ const DashboardLayout = ({ children }) => {
                   : "-translate-x-full lg:translate-x-0"
               } ${
                 isMobile
-                  ? "fixed top-0 left-0 h-full z-30 w-78 shadow-xl"
-                  : "lg:relative lg:w-64 xl:w-64"
-              } h-158 transition-transform duration-300 ease-in-out mt-15 md:mt-1`}
+                  ? "fixed top-0 left-0 h-full z-30 w-78 shadow-xl overflow-y-auto"
+                  : "lg:relative lg:w-52 xl:w-64 lg:sticky lg:top-0 h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] overflow-y-auto"
+              } transition-transform duration-300 ease-in-out`}
             >
               <LeftNav />
             </div>
 
-            {/* Main Content */}
+            {/* Main Content - Scrollable */}
             <main
-              className={`flex-1 transition-all duration-300 ease-in-out
+              className={`flex-1 overflow-y-auto h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] transition-all duration-300 ease-in-out px-2 md:px-2
             ${isMobile ? "w-full" : ""}`}
             >
-              <div className="w-full bg-gradient-to-b from-purple-50 to-purple-100 h-auto">
+              <div className="w-full bg-[#F8F9FC] h-auto py-2">
                 {children}
               </div>
             </main>
@@ -159,6 +153,3 @@ const DashboardLayout = ({ children }) => {
 };
 
 export default DashboardLayout;
-//    ${
-//   isSidebarOpen && !isMobile ? "lg:ml-64 xl:ml-72" : ""
-// }

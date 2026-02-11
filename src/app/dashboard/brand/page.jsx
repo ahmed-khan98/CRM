@@ -70,8 +70,8 @@ export default function AppointmentBooking() {
   }
 
   return (
-    <div className="min-h-screen  py-4 mx-1">
-      <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-6">
+    <div className="min-h-screen  py-1 mx-1">
+      <div className="w-full mx-auto p-1 flex flex-col space-y-6">
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
             <Home className="h-6 w-6 text-[#5f2781]" />

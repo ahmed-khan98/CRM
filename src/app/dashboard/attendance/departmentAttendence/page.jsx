@@ -6,7 +6,7 @@ import {
   Users,
   UserCheck,
   UserX,
-  Clock,
+  BedDouble   ,
   XCircle,
   AlertCircle,
 } from "lucide-react";
@@ -230,8 +230,8 @@ export default function SubadminMasterDashboard() {
   console.log(finalDisplayData, "finalDisplayData");
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50/50 p-2 lg:p-5 overflow-hidden">
-      <div className="grid grid-cols-4 gap-2 md:gap-4 mb-4 shrink-0">
+    <div className="h-screen flex flex-col bg-gray-50/50 p-0 overflow-hidden">
+      <div className={`grid ${viewType === 'today' ? 'grid-cols-3' : 'grid-cols-4'} gap-2 md:gap-4 mb-4 shrink-0`}>
         <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-purple-500">
           <div className="flex justify-between items-center mb-1">
             <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
@@ -263,15 +263,16 @@ export default function SubadminMasterDashboard() {
           </div>
           <p className="text-2xl font-black text-gray-800">{stats.absent}</p>
         </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-red-500">
+        {viewType !== 'today' &&
+        <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-gray-500">
           <div className="flex justify-between items-center mb-1">
             <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
               Weekend
             </span>
-            <UserX className="text-gray-500" size={18} />
+            <BedDouble   className="text-gray-500" size={18} />
           </div>
           <p className="text-2xl font-black text-gray-800">{stats.weekend}</p>
-        </div>
+        </div>}
       </div>
 
       <div className="bg-white p-3 rounded-2xl shadow-sm mb-4 flex flex-wrap items-end gap-3 shrink-0">
@@ -401,37 +402,45 @@ export default function SubadminMasterDashboard() {
                   const isAbsent = item?.isAbsent;
                   const isWeekend = record?.status === "weekend"; // Weekend check
 
-                // --- SMART SHIFT-AWARE LOGIC ---
-const now = moment().tz("Asia/Karachi");
+                  // --- SMART SHIFT-AWARE LOGIC ---
+                  const now = moment().tz("Asia/Karachi");
 
-// Agar raat ke 12 se subah 5 ke darmiyan hai, toh shift abhi bhi pichle din ki hai
-const shiftEffectiveDate = now.hour() < 5 
-  ? now.clone().subtract(1, "days").format("YYYY-MM-DD") 
-  : now.format("YYYY-MM-DD");
+                  // Agar raat ke 12 se subah 5 ke darmiyan hai, toh shift abhi bhi pichle din ki hai
+                  const shiftEffectiveDate =
+                    now.hour() < 5
+                      ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
+                      : now.format("YYYY-MM-DD");
 
-const recordDateStr = moment(record?.shiftDate).format("YYYY-MM-DD");
+                  const recordDateStr = moment(record?.shiftDate).format(
+                    "YYYY-MM-DD",
+                  );
 
-// Ab 'isToday' calendar par nahi, shift timing par depend karega
-const isToday = recordDateStr === shiftEffectiveDate;
+                  // Ab 'isToday' calendar par nahi, shift timing par depend karega
+                  const isToday = recordDateStr === shiftEffectiveDate;
 
-const timeInMoment = record?.timeIn ? moment(record.timeIn).tz("Asia/Karachi") : null;
-const hoursSinceIn = timeInMoment ? now.diff(timeInMoment, "hours", true) : 0;
+                  const timeInMoment = record?.timeIn
+                    ? moment(record.timeIn).tz("Asia/Karachi")
+                    : null;
+                  const hoursSinceIn = timeInMoment
+                    ? now.diff(timeInMoment, "hours", true)
+                    : 0;
 
-// DISCREPANCY tab jab:
-// 1. TimeOut missing ho 
-// 2. AUR (Ya toh 20 ghante guzar gaye hon YAA record ki date shiftEffectiveDate se purani ho)
-const isDiscrepancy = 
-  record?.timeIn && 
-  !record?.timeOut && 
-  (hoursSinceIn > 20 || moment(recordDateStr).isBefore(shiftEffectiveDate));
+                  // DISCREPANCY tab jab:
+                  // 1. TimeOut missing ho
+                  // 2. AUR (Ya toh 20 ghante guzar gaye hon YAA record ki date shiftEffectiveDate se purani ho)
+                  const isDiscrepancy =
+                    record?.timeIn &&
+                    !record?.timeOut &&
+                    (hoursSinceIn > 20 ||
+                      moment(recordDateStr).isBefore(shiftEffectiveDate));
 
-// ACTIVE tab jab:
-// Record aaj ki shift ka ho aur discrepancy na ho
-const isActive = 
-  record?.timeIn && 
-  !record?.timeOut && 
-  isToday && 
-  !isDiscrepancy;
+                  // ACTIVE tab jab:
+                  // Record aaj ki shift ka ho aur discrepancy na ho
+                  const isActive =
+                    record?.timeIn &&
+                    !record?.timeOut &&
+                    isToday &&
+                    !isDiscrepancy;
 
                   const uniqueRowKey =
                     record?._id ||
@@ -457,7 +466,7 @@ const isActive =
                             <span className="text-sm font-bold text-gray-700 capitalize">
                               {emp?.fullName || "Unknown"}
                             </span>
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-gray-500 font-medium capitalize">
                               {emp?.designation}
                             </span>
                           </div>

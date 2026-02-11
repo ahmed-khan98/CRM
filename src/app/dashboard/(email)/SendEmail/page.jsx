@@ -68,7 +68,7 @@ function Sent() {
 
   return (
     <div className="min-h-screen  py-6 md:py-2 px-2">
-      <div className="max-w-5xl">
+      <div className="w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

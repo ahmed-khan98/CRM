@@ -109,9 +109,9 @@ const ProfilePage = () => {
 
   const name = formData?.fullName?.split(" ");
   return (
-    <div className="min-h-screen  py-2 mx-1 ">
+    <div className="min-h-screen  py-1 mx-1 ">
       <Toaster position="top-center" />
-      <div className="max-w-5xl mx-auto md:mx-10 pt-2">
+      <div className="max-w-7xl mx-auto">
         <Tab tabs={myAccountTabs} />
         <div className="my-4 mx-2">
           <h1 className="text-lg md:text-lg font-bold text-gray-800">

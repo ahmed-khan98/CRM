@@ -50,8 +50,8 @@ export default function page() {
   });
 
   return (
-    <div className="min-h-screen  py-4 p-3 md:p-0">
-      <div className="max-w-5xl mx-auto pt-4">
+    <div className="min-h-screen  py-1 p-1 md:p-0">
+      <div className="max-w-7xl mx-auto">
         <Tab tabs={myAccountTabs} />
 
         <motion.div

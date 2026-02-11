@@ -55,12 +55,12 @@ const BulkEmailsPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen py-6 px-2 md:px-4 font-sans antialiased">
+    <div className="min-h-screen py-2 px-2 font-sans antialiased">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-7xl mx-auto"
+        className="w-full mx-auto"
       >
         {/* Header bm */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">

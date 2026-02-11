@@ -1,7 +1,14 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Users, Edit, Plus, DeleteIcon, MoreVertical } from "lucide-react";
+import {
+  Users,
+  Edit,
+  Plus,
+  DeleteIcon,
+  MoreVertical,
+  Search,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/app/utilities/date";
 import {
@@ -61,7 +68,7 @@ export default function Client() {
     if (!data?.data) return [];
     if (activeFilter !== "all") {
       return data.data.filter(
-        (item) => item?.departmentId?.name === activeFilter
+        (item) => item?.departmentId?.name === activeFilter,
       );
     } else {
       return data.data;
@@ -75,10 +82,10 @@ export default function Client() {
       toast.success("Client deleted successfully");
       refetch();
     } catch (error) {
-      console.log(error?.data?.message,'clienterror')
+      console.log(error?.data?.message, "clienterror");
       toast.error(error.data?.message || "Failed to delete Client");
     }
-  },[confirmDelete,deleteClient,refetch,activeFilter])
+  }, [confirmDelete, deleteClient, refetch, activeFilter]);
 
   const {
     data: departments,
@@ -108,41 +115,57 @@ export default function Client() {
   }
 
   return (
-    <div className="min-h-screen  py-4 mx-1">
-      <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
-          <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-[#5f2781]" />
-            <h3 className="text-[#242424] text-xl font-bold">
-              All Clients
-            </h3>
+    <div className="min-h-screen py-2 bg-[#F8F9FC]">
+      {/* Container: Bari screen pe max-w-full aur 1600px tak jayega */}
+      <div className="w-full max-w-[1600px] mx-auto px-2  flex flex-col space-y-4">
+        {/* 1. Header Section */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between bg-white p-3 rounded-3xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-purple-50 rounded-2xl">
+              <Users className="h-6 w-6 text-[#5f2781]" />
+            </div>
+            <div>
+              <h3 className="text-[#242424] text-lg font-black tracking-tight leading-none">
+                All Clients
+              </h3>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                Management Hub
+              </p>
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-full text-[12px] font-medium hover:bg-[#4f1f6d] transition-colors"
-            >
-              <Plus className="h-4 w-4 text--white" />
-              Add
-            </motion.button>
-          </div>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => handleEdit()}
+            className="flex items-center justify-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-3 rounded-2xl text-[13px] font-bold shadow-lg shadow-purple-100 hover:bg-[#4f1f6d] transition-all"
+          >
+            <Plus className="h-5 w-5" />
+            Add New Client
+          </motion.button>
         </div>
-        <div className="flex flex-wrap gap-1">
-          <div className="flex bg-white rounded-full shadow-sm p-1">
-            {filterData?.map((e) => (
-              <button
-                onClick={() => setActiveFilter(e)}
-                className={`px-3 py-1.5 text-[12px] font-medium rounded-full cursor-pointer transition-all capitalize ${
-                  activeFilter === e
-                    ? "bg-[#5f2781] text-white shadow-md"
-                    : "text-gray-800 hover:bg-gray-100"
-                }`}
-              >
-                {e}
-              </button>
-            ))}
+
+        {/* 2. Smart Filters: Laptop pe fit, Mobile pe scrollable */}
+        <div className="relative w-fit max-w-full overflow-hidden group">
+          {/* Mobile-only Indicator (Fade) */}
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#F8F9FC] to-transparent z-10 pointer-events-none md:hidden" />
+
+          <div className="flex bg-white/70 backdrop-blur-sm rounded-2xl p-1 border border-gray-200 overflow-x-auto no-scrollbar">
+            <div className="flex gap-1 pr-6 md:pr-1">
+              {filterData?.map((e) => (
+                <button
+                  key={e}
+                  onClick={() => setActiveFilter(e)}
+                  className={`px-5 py-2 text-[12px] font-bold rounded-xl cursor-pointer transition-all capitalize whitespace-nowrap ${
+                    activeFilter === e
+                      ? "bg-[#5f2781] text-white shadow-md shadow-purple-100"
+                      : "text-gray-500 hover:bg-white hover:text-[#5f2781]"
+                  }`}
+                >
+                  {e}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -161,146 +184,122 @@ export default function Client() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-gray-200">
+            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
               <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead className="bg-[#F7F7F7]">
+                <table className="min-w-full border-separate border-spacing-0">
+                  <thead className="bg-[#F9FAFB]">
                     <tr>
-                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Img
+                      {/* Sticky Name Column */}
+                      <th className=" px-4 py-4 text-left text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                        Client Info
                       </th>
-
-                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Name{" "}
+                      <th className="px-4 py-4 text-left text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                        Company
                       </th>
-                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Email{" "}
+                      <th className="px-4 py-4 text-left text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                        Contact Details
                       </th>
-                      {/* <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Company{" "}
-                      </th> */}
-
-                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Phone No.{" "}
+                      <th className="px-4 py-4 text-center text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                        Tags
                       </th>
-
-                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Brand
+                      <th className="px-4 py-4 text-left text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                        Handled By
                       </th>
-
-                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Department
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Handle By
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Action
+                      {/* Sticky Action Column */}
+                      <th className="px-4 py-4 text-center text-[13px] font-bold text-gray-600 border-b border-gray-100 shadow-[-10px_0_15px_-3px_rgba(0,0,0,0.02)]">
+                        Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+
+                  <tbody className="bg-white">
                     {filteredNotifications().map((emp, index) => (
                       <motion.tr
                         key={emp?._id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="hover:bg-[#f7f7f7] transition-colors"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="group hover:bg-purple-50/30 transition-all duration-200"
                       >
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
-                          <div className="relative w-8 h-8">
-                            {" "}
-                            <Image
-                              src={emp?.image || "/placeholder.svg"}
-                              alt="Client-img"
-                              fill
-                              className="rounded-full object-cover"
-                            />
+                        {/* Sticky Client Info (Image + Name + Email) */}
+                        <td className="px-4 py-3 border-b border-gray-50 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
+                              <Image
+                                src={emp?.image || "/placeholder.svg"}
+                                alt="Client"
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-bold text-gray-800 leading-none capitalize">
+                                {emp?.name || "Unknown"}
+                              </span>
+                              <span className="text-[12px] text-gray-500 mt-1">
+                                {emp?.email || "-"}
+                              </span>
+                            </div>
                           </div>
                         </td>
 
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800 capitalize">
-                          {emp?.name ? `${emp.name}` : "-"}
+                        {/* Company */}
+                        <td className="px-4 py-3 border-b border-gray-50 whitespace-nowrap">
+                          <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-md">
+                            {emp?.companyName || "No Company"}
+                          </span>
                         </td>
-
-                        {/* Email */}
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
-                          {emp?.email || "-"}
-                        </td>
-
-                        {/* companyName */}
-                        {/* <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800 capitalize">
-                          {emp?.companyName || "-"}
-                        </td> */}
 
                         {/* Phone */}
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
+                        <td className="px-4 py-3 border-b border-gray-50 whitespace-nowrap text-xs text-gray-500 font-medium">
                           {emp?.phoneNo || "-"}
                         </td>
 
-                        {/* Department */}
-                        <td className="px-2 py-1.5 capitalize">
-                          {emp?.brandId?.name ? (
-                            <span
-                              className={`px-2 py-1 text-center rounded-full text-[12px] font-medium ${getStatusColor(
-                                emp?.brandId?.name
-                              )}`}
-                            >
-                              {emp?.brandId?.name.charAt(0).toUpperCase() +
-                                emp?.brandId?.name.slice(1)}
-                            </span>
-                          ) : (
-                            "-"
-                          )}
-                        </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
-                          {emp?.departmentId?.name ? (
-                            <span
-                              className={`px-2 py-1 text-center rounded-full text-[12px] font-medium ${getStatusColor(
-                                emp?.departmentId?.name
-                              )}`}
-                            >
-                              {emp?.departmentId?.name.charAt(0).toUpperCase() +
-                                emp?.departmentId?.name.slice(1)}
-                            </span>
-                          ) : (
-                            "-" // if no department
-                          )}
-                        </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
-                          {emp?.handleBy ? (
-                            <span
-                              className={`px-2 py-1 text-center rounded-full text-[12px] font-medium ${getStatusColor(
-                                emp?.handleBy?.fullName
-                              )}`}
-                            >
-                              {emp.handleBy.fullName
-                                ? `${emp.handleBy.fullName}`
-                                : "-"}
-                            </span>
-                          ) : (
-                            "-" // if no handleBy
-                          )}
+                        {/* Combined Tags (Brand + Department) */}
+                        <td className="px-4 py-3 border-b border-gray-50">
+                          <div className="flex flex-wrap justify-center gap-1.5">
+                            {emp?.brandId?.name && (
+                              <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-tighter bg-blue-50 text-blue-600 border border-blue-100">
+                                {emp.brandId.name}
+                              </span>
+                            )}
+                            {emp?.departmentId?.name && (
+                              <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-tighter bg-purple-50 text-purple-600 border border-purple-100">
+                                {emp.departmentId.name}
+                              </span>
+                            )}
+                          </div>
                         </td>
 
-                        <td className="pl-2 py-3 whitespace-nowrap">
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleEdit(emp)}
-                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-[#5f2781] text-white rounded-lg hover:bg-[#4f1f6d] transition-colors"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setConfirmDelete(emp._id)}
-                            className="inline-flex items-center cursor-pointer p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                          >
-                            <DeleteIcon className="h-4 w-4" />
-                          </motion.button>
+                        {/* Handle By */}
+                        <td className="px-4 py-3 border-b border-gray-50">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-gray-600 font-medium capitalize">
+                              {emp?.handleBy?.fullName || "-"}
+                            </span>
+                          </div>
+                        </td>
+
+                        {/* Sticky Actions */}
+                        <td className=" px-4 py-3 border-b border-gray-50 ">
+                          <div className="flex items-center justify-center gap-2">
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleEdit(emp)}
+                              className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => setConfirmDelete(emp._id)}
+                              className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                            >
+                              <DeleteIcon className="h-4 w-4" />
+                            </motion.button>
+                          </div>
                         </td>
                       </motion.tr>
                     ))}
@@ -310,7 +309,7 @@ export default function Client() {
             </div>
           )}
         </motion.div>
-        
+
         {confirmDelete && (
           <WarningModal
             message="client"

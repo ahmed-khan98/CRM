@@ -133,8 +133,8 @@ export default function AppointmentBooking() {
   }
 
   return (
-    <div className="min-h-screen  py-2 mx-1">
-      <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-2">
+    <div className="min-h-screen  py-1 mx-1">
+      <div className="w-full mx-auto p-1 flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-[#5f2781]" />
@@ -331,27 +331,26 @@ export default function AppointmentBooking() {
                           </div>
                         </td>
 
-                        <td className="pl-2 py-1.5 whitespace-nowrap">
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleEdit(emp)}
-                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-[#5f2781] text-white rounded-lg hover:bg-[#4f1f6d] transition-colors"
-                          >
-                            <Edit className="h-4 w-4" />
-                            {/* Edit */}
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setConfirmDelete(emp._id)}
-                            className="inline-flex items-center cursor-pointer p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                          >
-                            <DeleteIcon className="h-4 w-4" />
-
-                            {/* Edit */}
-                          </motion.button>
-                        </td>
+                        <td className=" px-4 py-3">
+              <div className="flex items-center justify-center gap-2">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => handleEdit(emp)}
+                  className="cursor-pointer p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
+                >
+                  <Edit className="h-4 w-4" />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setConfirmDelete(emp._id)}
+                  className="cursor-pointer p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                >
+                  <DeleteIcon className="h-4 w-4" />
+                </motion.button>
+              </div>
+            </td>
                       </motion.tr>
                     ))}
                   </tbody>
