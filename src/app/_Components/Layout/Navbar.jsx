@@ -195,7 +195,16 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment-timezone";
 import Main from "../../../app/Assets/logo-ppi.png";
-import { X, Menu, Clock, Timer, Activity } from "lucide-react";
+import {
+  X,
+  Menu,
+  Clock,
+  Timer,
+  Activity,
+  CheckCircle,
+  LogOut,
+  PowerOff,
+} from "lucide-react";
 import LeftNav from "../Dashboard/LeftNav";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
@@ -331,17 +340,69 @@ const Navbar = () => {
         <button
           onClick={handleTimeIn}
           disabled={isTimeIn}
-          className="cursor-pointer  flex items-center gap-2 bg-green-500 hover:bg-green-600 shadow-green-100 text-white px-4 py-2 rounded-md text-sm font-bold transition-all disabled:opacity-50"
+          className="cursor-pointer flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-100 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
         >
-          {isTimeIn ? "..." : "Time In"}
+          {isTimeIn ? (
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          ) : (
+            <>
+              <Clock size={18} />
+              <span>Time In</span>
+            </>
+          )}
         </button>
       ) : !attendence?.timeOut ? (
         <button
           onClick={() => setConfirmDelete(true)}
           disabled={isTimeOut}
-          className="cursor-pointer flex items-center gap-2 bg-red-500 hover:bg-red-600 shadow-red-100 text-white px-4 py-2 rounded-md text-sm font-bold transition-all disabled:opacity-50"
+          className="cursor-pointer flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-100 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
         >
-          {isTimeOut ? "..." : "Time Out"}
+          {isTimeOut ? (
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          ) : (
+            <>
+              <PowerOff size={18} />
+              <span>Time Out</span>
+            </>
+          )}
         </button>
       ) : (
         <span className="bg-gray-200 text-gray-600 px-4 py-2 rounded-md text-sm font-bold">
@@ -352,9 +413,12 @@ const Navbar = () => {
       {token && (
         <button
           onClick={handleLogout}
-          className="cursor-pointer bg-[#5f2781] shadow-purple-100 text-white px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-all"
+          className="cursor-pointer flex items-center justify-center gap-2 bg-[#5f2781] hover:bg-purple-900 shadow-purple-100 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
         >
-          Logout
+          <>
+            <LogOut size={18} />
+            <span>Log Out</span>
+          </>
         </button>
       )}
     </div>
@@ -368,9 +432,7 @@ const Navbar = () => {
             <Image src={Main} alt="Logo" height={50} width={150} priority />
           </Link>
 
-          {/* --- LIVE ATTENDANCE INFO PANEL --- */}
           {attendence?.timeIn && !attendence?.timeOut ? (
-            // Jab user Timed In ho (Puraana wala Panel)
             <div className="hidden lg:flex items-center space-x-8 bg-gray-50 border border-gray-100 px-6 py-1.5 rounded-full shadow-sm">
               <div className="flex flex-col items-center border-r pr-6 border-gray-200">
                 <div className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-wider">
@@ -403,8 +465,21 @@ const Navbar = () => {
                 </span>
               </div>
             </div>
+          ) : attendence?.timeIn && attendence?.timeOut ? (
+            <div className="hidden lg:flex items-center gap-3 bg-green-50 border border-green-100 px-5 py-2 rounded-full">
+              <div className="bg-green-500 p-1.5 rounded-full text-white">
+                <CheckCircle size={16} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-green-700 uppercase tracking-widest">
+                  Shift Completed
+                </span>
+                <span className="text-[12px] font-medium text-gray-600">
+                  Great work today! See you in the next shift.
+                </span>
+              </div>
+            </div>
           ) : (
-            // --- JAB TIME IN NAHI KIYA (USER NOTIFICATION) ---
             <div className="hidden lg:flex items-center gap-3 bg-red-50 border border-red-100 px-5 py-2 rounded-lg animate-pulse">
               <div className="bg-red-500 p-1.5 rounded-full text-white">
                 <Clock size={16} />
