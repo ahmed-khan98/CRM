@@ -125,6 +125,7 @@ export default function AppointmentBooking() {
           }}
           className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
         />
+        
         <span className="ml-4 text-[#5f2781] font-semibold">
           Loading your Employees... 🚀
         </span>
