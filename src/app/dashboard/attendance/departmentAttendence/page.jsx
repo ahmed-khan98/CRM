@@ -6,9 +6,10 @@ import {
   Users,
   UserCheck,
   UserX,
-  BedDouble   ,
+  BedDouble,
   XCircle,
   AlertCircle,
+  Edit3,
 } from "lucide-react";
 import { useGetDepartEmployeeAttendanceQuery } from "@/app/_Services/attendence/page";
 import moment from "moment-timezone";
@@ -19,11 +20,13 @@ import {
   getStatusClasses,
   Tooltip,
 } from "@/app/utilities/attendence";
+import AttendanceModal from "@/app/_Components/Modal/AttendanceModal";
 
 export default function SubadminMasterDashboard() {
   const [viewType, setViewType] = useState("today");
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [customRange, setCustomRange] = useState({ start: "", end: "" });
+  const [modalConfig, setModalConfig] = useState({ isOpen: false, data: null });
 
   const queryParams = useMemo(() => {
     const params = {
@@ -229,9 +232,26 @@ export default function SubadminMasterDashboard() {
   console.log(stats, "stats");
   console.log(finalDisplayData, "finalDisplayData");
 
+  // 2. Handler function
+  const handleOpenModal = (emp, record, date) => {
+    setModalConfig({
+      isOpen: true,
+      data: { emp, record, date: record?.shiftDate || date },
+    });
+  };
+
+  const handleSaveAttendance = async (data) => {
+    console.log("Saving to Backend:", data);
+    // Yahan aap apni API call karenge:
+    // if (data.attendanceId) { await updateAttendance(data) } else { await createAttendance(data) }
+    setModalConfig({ isOpen: false, data: null });
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gray-50/50 p-0 overflow-hidden">
-      <div className={`grid ${viewType === 'today' ? 'grid-cols-3' : 'grid-cols-4'} gap-2 md:gap-4 mb-4 shrink-0`}>
+      <div
+        className={`grid ${viewType === "today" ? "grid-cols-3" : "grid-cols-4"} gap-2 md:gap-4 mb-4 shrink-0`}
+      >
         <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-purple-500">
           <div className="flex justify-between items-center mb-1">
             <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
@@ -263,16 +283,17 @@ export default function SubadminMasterDashboard() {
           </div>
           <p className="text-2xl font-black text-gray-800">{stats.absent}</p>
         </div>
-        {viewType !== 'today' &&
-        <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-gray-500">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
-              Weekend
-            </span>
-            <BedDouble   className="text-gray-500" size={18} />
+        {viewType !== "today" && (
+          <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-gray-500">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
+                Weekend
+              </span>
+              <BedDouble className="text-gray-500" size={18} />
+            </div>
+            <p className="text-2xl font-black text-gray-800">{stats.weekend}</p>
           </div>
-          <p className="text-2xl font-black text-gray-800">{stats.weekend}</p>
-        </div>}
+        )}
       </div>
 
       <div className="bg-white p-3 rounded-2xl shadow-sm mb-4 flex flex-wrap items-end gap-3 shrink-0">
@@ -382,6 +403,9 @@ export default function SubadminMasterDashboard() {
                 </th>
                 <th className="sticky top-0 p-4 text-[10px] font-bold text-gray-500 uppercase bg-gray-100 text-center">
                   Status
+                </th>
+                <th className="sticky top-0 p-4 text-[10px] font-bold text-gray-500 uppercase bg-gray-100 text-center">
+                  Action
                 </th>
               </tr>
             </thead>
@@ -569,19 +593,35 @@ export default function SubadminMasterDashboard() {
                           <span className="inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border border-gray-200 bg-gray-50 text-gray-400">
                             WEEKEND
                           </span>
+                        ) : (
+                          <span
+                            className={`inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border shadow-sm ${getStatusClasses(record?.status || "absent")}`}
+                          >
+                            {record?.status || "absent"}
+                          </span>
+                        )}
+                      </td>
+                      <td className="p-4 text-center">
+                        {isWeekend ? (
+                          <span className="inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border border-gray-200 bg-gray-50 text-gray-400">
+                            WEEKEND
+                          </span>
                         ) : isAbsent ? (
                           <button
-                            onClick={() => handleMarkAttendance(emp)}
-                            className="text-[10px] font-black text-purple-600 hover:text-white hover:bg-purple-600 border border-purple-200 px-3 py-1.5 rounded-xl transition-all"
+                            onClick={() => handleOpenModal(emp, record)}
+                            className="cursor-pointer text-[10px] font-black text-purple-600 hover:text-white hover:bg-purple-600 border border-purple-200 px-3 py-1.5 rounded-xl transition-all"
                           >
                             MARK PRESENT
                           </button>
                         ) : (
-                          <span
-                            className={`inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border shadow-sm ${getStatusClasses(record?.status)}`}
+                          <button
+                            onClick={() =>
+                              handleOpenModal(emp, record,record.shiftDate)
+                            }
+                            className="cursor-pointer text-gray-400 hover:text-purple-600 transition-colors p-1"
                           >
-                            {record?.status}
-                          </span>
+                            <Edit3 size={14} />
+                          </button>
                         )}
                       </td>
                     </tr>
@@ -620,6 +660,12 @@ export default function SubadminMasterDashboard() {
           </table>
         </div>
       </div>
+      <AttendanceModal 
+  isOpen={modalConfig.isOpen} 
+  onClose={() => setModalConfig({ isOpen: false, data: null })}
+  selectedData={modalConfig.data}
+  onSave={handleSaveAttendance}
+/>
     </div>
   );
 }
