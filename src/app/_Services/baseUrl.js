@@ -4,7 +4,7 @@
 
 
 
-export const BaseUrl ='https://crm-backend-production-3f73.up.railway.app/api/v1/user/'
+export const BaseUrl ='http://192.168.18.3:8000/api/v1/user/'
 // 'http://192.168.18.3:8000/api/v1/user/'
 // 'https://crm-backend-production-3f73.up.railway.app/api/v1/user/'
 
