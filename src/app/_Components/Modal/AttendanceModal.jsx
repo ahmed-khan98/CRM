@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { X, Clock, Calendar, Save } from "lucide-react";
 import moment from "moment";
 
-export default function AttendanceModal({ isOpen, onClose, selectedData, onSave }) {
+export default function AttendanceModal({ isOpen, onClose, selectedData, onSave,isSubmitting }) {
   console.log(selectedData,'selectedData')
   const [formData, setFormData] = useState({
     timeIn: "",
@@ -40,10 +40,10 @@ export default function AttendanceModal({ isOpen, onClose, selectedData, onSave 
         {/* Header */}
         <div className="bg-purple-600 p-6 text-white flex justify-between items-center">
           <div>
-            <h3 className="text-xl font-bold">{selectedData.record?.status !== 'absent' ? "Update" : "Mark"} Attendance</h3>
+            <h3 className="text-xl font-bold">{selectedData.record ? "Update" : "Mark"} Attendance</h3>
             <p className="text-purple-100 text-xs mt-1 capitalize">{selectedData.emp.fullName}</p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+          <button onClick={onClose} className="cursor-pointer p-2 hover:bg-white/10 rounded-full transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -107,16 +107,36 @@ export default function AttendanceModal({ isOpen, onClose, selectedData, onSave 
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-500 text-sm font-bold hover:bg-gray-50 transition-all"
+              className="cursor-pointer flex-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-500 text-sm font-bold hover:bg-gray-50 transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 bg-purple-600 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-700 shadow-lg shadow-purple-200 flex items-center justify-center gap-2 transition-all"
+              className="cursor-pointer flex-1 bg-purple-600 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-700 shadow-lg shadow-purple-200 flex items-center justify-center gap-2 transition-all"
             >
-              <Save size={18} />
-              Save Changes
+             {isSubmitting?
+             <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg> :<Save size={18} />} 
+             
             </button>
           </div>
         </form>

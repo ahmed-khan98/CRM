@@ -11,7 +11,10 @@ import {
   AlertCircle,
   Edit3,
 } from "lucide-react";
-import { useGetDepartEmployeeAttendanceQuery } from "@/app/_Services/attendence/page";
+import {
+  useGetDepartEmployeeAttendanceQuery,
+  useUpdateTeamAttendenceMutation,
+} from "@/app/_Services/attendence/page";
 import moment from "moment-timezone";
 import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
 import {
@@ -21,8 +24,9 @@ import {
   Tooltip,
 } from "@/app/utilities/attendence";
 import AttendanceModal from "@/app/_Components/Modal/AttendanceModal";
+import toast from "react-hot-toast";
 
-export default function SubadminMasterDashboard() {
+export default function TeamAttendence() {
   const [viewType, setViewType] = useState("today");
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [customRange, setCustomRange] = useState({ start: "", end: "" });
@@ -51,9 +55,11 @@ export default function SubadminMasterDashboard() {
     return params;
   }, [viewType, selectedEmployee, customRange]);
 
+  const [updateTeamAttendence, { isLoading }] =
+    useUpdateTeamAttendenceMutation();
   const { data: employees, isFetching } = useAllEmployeesQuery();
 
-  const { data: attendanceData } =
+  const { data: attendanceData, refetch } =
     useGetDepartEmployeeAttendanceQuery(queryParams);
 
   const employeeOptions = useMemo(() => {
@@ -67,7 +73,6 @@ export default function SubadminMasterDashboard() {
     return [{ value: "", label: "All Employees (Department)" }, ...options];
   }, [employees]);
 
-  // Custom Styles for Dropdown
   const customSelectStyles = {
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
     menu: (base) => ({
@@ -229,11 +234,9 @@ export default function SubadminMasterDashboard() {
     return { total, present, absent: total - present - weekend, weekend };
   }, [attendanceData]);
 
-  console.log(stats, "stats");
-  console.log(finalDisplayData, "finalDisplayData");
-
   // 2. Handler function
   const handleOpenModal = (emp, record, date) => {
+    console.log(emp, record, date, "modal data");
     setModalConfig({
       isOpen: true,
       data: { emp, record, date: record?.shiftDate || date },
@@ -242,9 +245,18 @@ export default function SubadminMasterDashboard() {
 
   const handleSaveAttendance = async (data) => {
     console.log("Saving to Backend:", data);
-    // Yahan aap apni API call karenge:
-    // if (data.attendanceId) { await updateAttendance(data) } else { await createAttendance(data) }
-    setModalConfig({ isOpen: false, data: null });
+    try {
+      const res = await updateTeamAttendence(data).unwrap();
+      if (res.success) {
+        refetch();
+        setModalConfig({ isOpen: false, data: null });
+        toast.success(
+          `Attendance ${data?.record ? "updated" : "marked"} successfully`,
+        );
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || "Update failed");
+    }
   };
 
   return (
@@ -608,7 +620,13 @@ export default function SubadminMasterDashboard() {
                           </span>
                         ) : isAbsent ? (
                           <button
-                            onClick={() => handleOpenModal(emp, record)}
+                            onClick={() =>
+                              handleOpenModal(
+                                emp,
+                                record,
+                                queryParams?.startDate,
+                              )
+                            }
                             className="cursor-pointer text-[10px] font-black text-purple-600 hover:text-white hover:bg-purple-600 border border-purple-200 px-3 py-1.5 rounded-xl transition-all"
                           >
                             MARK PRESENT
@@ -616,7 +634,7 @@ export default function SubadminMasterDashboard() {
                         ) : (
                           <button
                             onClick={() =>
-                              handleOpenModal(emp, record,record.shiftDate)
+                              handleOpenModal(emp, record, record.shiftDate)
                             }
                             className="cursor-pointer text-gray-400 hover:text-purple-600 transition-colors p-1"
                           >
@@ -660,12 +678,13 @@ export default function SubadminMasterDashboard() {
           </table>
         </div>
       </div>
-      <AttendanceModal 
-  isOpen={modalConfig.isOpen} 
-  onClose={() => setModalConfig({ isOpen: false, data: null })}
-  selectedData={modalConfig.data}
-  onSave={handleSaveAttendance}
-/>
+      <AttendanceModal
+        isOpen={modalConfig.isOpen}
+        onClose={() => setModalConfig({ isOpen: false, data: null })}
+        selectedData={modalConfig.data}
+        onSave={handleSaveAttendance}
+        isSubmitting={isLoading}
+      />
     </div>
   );
 }
