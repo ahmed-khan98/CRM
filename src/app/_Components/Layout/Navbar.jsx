@@ -37,7 +37,7 @@
 //       window.chrome &&
 //       window.chrome.runtime
 //     ) {
-//       window.chrome.runtime.sendMessage(
+//       window.window.postMessage(
 //         "ipmkoccmjmjepnnepibolhakgijemoed",
 //         { type: "LOGOUT" },
 //         (res) => {
@@ -284,15 +284,14 @@ const Navbar = () => {
       window.chrome &&
       window.chrome.runtime
     ) {
-      window.chrome.runtime.sendMessage(
-        "ipmkoccmjmjepnnepibolhakgijemoed",
-        { type: "LOGOUT" },
-        (res) => {
-          console.log("SUCCESS! Extension replied:", res);
-          // finalizeLogout(response.message);
-          router.push("/");
+      window.postMessage(
+        {
+          type: "LOGOUT",
         },
+        "*",
       );
+
+      router.push("/");
     } else {
       console.log("Chrome Extension API not found");
       // finalizeLogout(response.message);
@@ -320,17 +319,16 @@ const Navbar = () => {
       const response = await logout().unwrap();
       if (response.statusCode === 200) {
         toast.success("Logged out successfully");
+           Cookies.remove("token", { path: "/" });
+      Cookies.remove("currentuser", { path: "/" });
+      clearExtensionAndRedirect();
+      dispatch(resumeWork());
+      dispatch(removeAttendence());
       }
     } catch (error) {
       toast.error(error?.message);
       console.error("Logout API failed:", error);
-    } finally {
-      router.push("/");
-      Cookies.remove("token");
-      Cookies.remove("currentuser");
-      dispatch(resumeWork());
-      dispatch(removeAttendence());
-    }
+    } 
   };
 
   const renderAuthButtons = () => (

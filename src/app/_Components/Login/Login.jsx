@@ -44,22 +44,15 @@ export default function GenZLoginForm() {
         if (response.statusCode === 200) {
           const { accessToken } = response?.data;
           const user = response?.data?.user;
-
-          if (window.chrome && chrome.runtime) {
-            chrome.runtime.sendMessage(
-              "ipmkoccmjmjepnnepibolhakgijemoed",
+          console.log("Login successful:", response?.data);
+          if (window.chrome) {
+            window.postMessage(
               {
                 type: "LOGIN_SUCCESS",
                 userId: user._id,
                 token: accessToken,
               },
-              (response) => {
-                if (chrome.runtime.lastError) {
-                  console.log("Extension not installed or ID wrong.");
-                } else {
-                  console.log("Extension Linked!");
-                }
-              },
+              "*", 
             );
           }
 
@@ -79,6 +72,7 @@ export default function GenZLoginForm() {
           navigation.push("/dashboard/dashboardcount");
         }
       } catch (error) {
+        console.log("Login error:", error);
         if (error?.data.statusCode === 403 && error?.data?.data?.email) {
           navigation.push(`/login`);
         }

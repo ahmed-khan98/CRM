@@ -24,9 +24,12 @@ import {
 } from "lucide-react";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
+import { removeAttendence, resumeWork } from "@/redux/filterSlice";
+import { useDispatch } from "react-redux";
 
 const LeftNav = ({ set }) => {
   const pathname = usePathname();
+  const dispatch = useDispatch();
   const router = useRouter();
   const sidebars = [];
   const [expandedMenus, setExpandedMenus] = useState({});
@@ -137,7 +140,6 @@ const LeftNav = ({ set }) => {
       path: [
         "/dashboard/attendance",
         "/dashboard/attendance/departmentAttendence",
-
       ],
       submenu: [
         {
@@ -189,15 +191,25 @@ const LeftNav = ({ set }) => {
       window.chrome &&
       window.chrome.runtime
     ) {
-      window.chrome.runtime.sendMessage(
-        "ipmkoccmjmjepnnepibolhakgijemoed",
-        { type: "LOGOUT" },
-        (res) => {
-          console.log("SUCCESS! Extension replied:", res);
-          // finalizeLogout(response.message);
-          router.push("/");
+      window.postMessage(
+        {
+          type: "LOGOUT",
         },
+        "*",
       );
+      router.push("/");
+      // window.postMessage(
+      //   // "ipmkoccmjmjepnnepibolhakgijemoed",
+      //   { type: "LOGOUT",
+      // userId: user._id,
+      // token: accessToken, },
+      //   "*",
+      //   (res) => {
+      //     console.log("SUCCESS! Extension replied:", res);
+      //     // finalizeLogout(response.message);
+      //     router.push("/");
+      //   },
+      // );
     } else {
       console.log("Chrome Extension API not found");
       // finalizeLogout(response.message);
@@ -209,6 +221,8 @@ const LeftNav = ({ set }) => {
     console.log("Finalizing Logout - Removing Cookies...");
     Cookies.remove("token", { path: "/" });
     Cookies.remove("currentuser", { path: "/" });
+    dispatch(resumeWork());
+    dispatch(removeAttendence());
     toast.success(msg);
     clearExtensionAndRedirect();
   };

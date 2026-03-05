@@ -2,34 +2,82 @@
 
 import { useState, useEffect } from "react";
 import LeftNav from "../_Components/Dashboard/LeftNav";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { resumeWork, setActivity } from "@/redux/filterSlice";
+import Cookies from "js-cookie";
+import { removeAttendence, resumeWork, setActivity } from "@/redux/filterSlice";
 import BreakOverlay from "../_Components/break/BreakOverlay";
 import {
   useBreakInMutation,
   useBreakOutMutation,
 } from "../_Services/employee/page";
 import toast from "react-hot-toast";
+import { useLogoutMutation } from "../_Services/authentication/page";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const pathname = usePathname();
+  const dispatch = useDispatch();
+  const router = useRouter();
 
+  const [logout] = useLogoutMutation();
   const [breakOut] = useBreakOutMutation();
   const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
 
-  const dispatch = useDispatch();
   const { activityStatus, lastBreakInTime, attendence } = useSelector(
     (state) => state.filter,
   );
+  console.log("DashboardLayout Rendered with activityStatus:", activityStatus);
+
+  const clearExtensionAndRedirect = (response) => {
+    if (
+      typeof window !== "undefined" &&
+      window.chrome &&
+      window.chrome.runtime
+    ) {
+      window.postMessage(
+        {
+          type: "LOGOUT",
+        },
+        "*",
+      );
+
+      router.push("/");
+    } else {
+      console.log("Chrome Extension API not found");
+      // finalizeLogout(response.message);
+      router.push("/");
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await logout().unwrap();
+      if (response.statusCode === 200) {
+        toast.success("Logged out successfully");
+        Cookies.remove("token", { path: "/" });
+        Cookies.remove("currentuser", { path: "/" });
+        clearExtensionAndRedirect();
+        dispatch(resumeWork());
+        dispatch(removeAttendence());
+      }
+    } catch (error) {
+      toast.error(error?.message);
+      console.error("Logout API failed:", error);
+    }
+  };
 
   const handleBreakOut = async () => {
     try {
       const res = await breakOut({ attendanceId: attendence?._id }).unwrap();
       if (res.success) {
+        console.log("breakOutResponse", res);
         dispatch(resumeWork());
+        if (res.data?.mustLogout) {
+          console.log("backend ne kaha logout kro");
+          handleLogout();
+        }
         toast.success(res?.message);
       }
     } catch (err) {
@@ -83,18 +131,19 @@ const DashboardLayout = ({ children }) => {
     const messageListener = (event) => {
       if (event.data && event.data.type === "STATUS_CHANGED") {
         console.log("REACT RECEIVED:", event.data);
-
+        
         if (window.location.pathname === "/") {
           return;
         }
+        console.log("event.data.status, activityStatus,attendence?.timeIn", event.data.status, activityStatus, attendence?.timeIn);
 
         if (
           event.data.status === "idle" &&
-          activityStatus !== "idle" &&
+          activityStatus === "active" &&
           attendence?.timeIn
         ) {
-          console.log("activityStatus", activityStatus);
-          console.log("extension ne kaha break in kro");
+                  console.log("extension ne kaha time kro");
+
           handleBreakIn();
         } else if (event.data.status === "active") {
           handleBreakOut();
@@ -130,7 +179,7 @@ const DashboardLayout = ({ children }) => {
               } ${
                 isMobile
                   ? "fixed top-0 left-0 h-full z-30 w-78 shadow-xl overflow-y-auto"
-                  : "lg:relative lg:w-52 xl:w-64 lg:sticky lg:top-0 h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] overflow-y-auto"
+                  : "lg:relative lg:w-52 xl:w-64 lg:top-0 h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] overflow-y-auto"
               } transition-transform duration-300 ease-in-out`}
             >
               <LeftNav />
@@ -141,9 +190,7 @@ const DashboardLayout = ({ children }) => {
               className={`flex-1 overflow-y-auto h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] transition-all duration-300 ease-in-out px-2 md:px-2
             ${isMobile ? "w-full" : ""}`}
             >
-              <div className="w-full bg-[#F8F9FC] h-auto py-2">
-                {children}
-              </div>
+              <div className="w-full bg-[#F8F9FC] h-auto py-2">{children}</div>
             </main>
           </div>
         </div>
