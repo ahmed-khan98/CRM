@@ -29,6 +29,7 @@ const DashboardLayout = ({ children }) => {
     (state) => state.filter,
   );
   console.log("DashboardLayout Rendered with activityStatus:", activityStatus);
+  console.log("attendence in layout:", attendence);
 
   const clearExtensionAndRedirect = (response) => {
     if (
