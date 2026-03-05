@@ -5,7 +5,7 @@ import LeftNav from "../_Components/Dashboard/LeftNav";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { removeAttendence, resumeWork, setActivity } from "@/redux/filterSlice";
+import { removeAttendence, resumeWork, setActivity, setAttendence } from "@/redux/filterSlice";
 import BreakOverlay from "../_Components/break/BreakOverlay";
 import {
   useBreakInMutation,
@@ -13,6 +13,7 @@ import {
 } from "../_Services/employee/page";
 import toast from "react-hot-toast";
 import { useLogoutMutation } from "../_Services/authentication/page";
+import { useTodayUserAttendenceQuery } from "../_Services/attendence/page";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -24,6 +25,17 @@ const DashboardLayout = ({ children }) => {
   const [logout] = useLogoutMutation();
   const [breakOut] = useBreakOutMutation();
   const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
+
+    const {
+      data,
+      error: isError,
+      isLoading,
+      refetch,
+    } = useTodayUserAttendenceQuery();
+  
+    useEffect(() => {
+      dispatch(setAttendence(data?.data));
+    }, [data]);
 
   const { activityStatus, lastBreakInTime, attendence } = useSelector(
     (state) => state.filter,

@@ -234,16 +234,7 @@ const Navbar = () => {
   const [TimeIn, { isLoading: isTimeIn }] = useTimeInMutation();
   const [TimeOut, { isLoading: isTimeOut }] = useTimeOutMutation();
 
-  const {
-    data,
-    error: isError,
-    isLoading,
-    refetch,
-  } = useTodayUserAttendenceQuery();
 
-  useEffect(() => {
-    dispatch(setAttendence(data?.data));
-  }, [data]);
 
   useEffect(() => {
     let interval;
