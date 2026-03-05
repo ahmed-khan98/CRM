@@ -35,7 +35,7 @@ const DashboardLayout = ({ children }) => {
   
     useEffect(() => {
       dispatch(setAttendence(data?.data));
-    }, [data]);
+    }, [data,dispatch]);
 
   const { activityStatus, lastBreakInTime, attendence } = useSelector(
     (state) => state.filter,
@@ -166,7 +166,7 @@ const DashboardLayout = ({ children }) => {
 
     window.addEventListener("message", messageListener);
     return () => window.removeEventListener("message", messageListener);
-  }, [dispatch, activityStatus]);
+  }, [dispatch, activityStatus,attendence]);
 
   return (
     <div className="app-container">
