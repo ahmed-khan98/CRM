@@ -21,6 +21,20 @@ export const Tooltip = ({ text, children }) => (
     return hours > 0 || minutes > 0 ? `${hours}h ${minutes}m` : "-";
   };
 
+  export const onlyWorkingHours =(inTime, outTime,totalBreakMinutes) => {
+        if (!inTime || !outTime) return "0h 0m";
+        
+        const totalMinutes = moment(outTime).diff(moment(inTime), 'minutes');
+        const breakMinutes = totalBreakMinutes || 0;
+        const workingMinutes = totalMinutes - breakMinutes;
+        
+        if (workingMinutes <= 0) return "0h 0m";
+        
+        const hours = Math.floor(workingMinutes / 60);
+        const mins = workingMinutes % 60;
+        return `${hours}h ${mins}m`;
+      }
+
   // Updated Status Classes to handle new logic
   export const getStatusClasses = (status) => {
     switch (status) {

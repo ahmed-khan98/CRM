@@ -144,6 +144,7 @@ import {
   calculateDuration,
   formatTimeOnly,
   getStatusClasses,
+  onlyWorkingHours,
   Tooltip,
 } from "@/app/utilities/attendence";
 
@@ -239,6 +240,10 @@ const AttendanceRow = ({ row }) => {
 
       <td className="px-6 py-3 text-xs font-bold text-gray-700">
         {calculateDuration(record?.timeIn, record?.timeOut)}
+      </td>
+
+      <td className="px-6 py-3 text-xs font-bold text-gray-700">
+        {onlyWorkingHours(record?.timeIn, record?.timeOut, record?.totalBreakMinutes)}
       </td>
 
       <td className="px-6 py-3 text-xs font-bold text-gray-700">

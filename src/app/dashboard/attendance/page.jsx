@@ -192,7 +192,7 @@ import { useGetAttendanceQuery } from "@/app/_Services/attendence/page";
 import moment from "moment-timezone";
 import AttendanceRow from "@/app/_Components/attendence/AttendanceRow";
 
-const TABLE_HEADERS = ["Date", "In/Out", "Working Hours", "Break", "Status"];
+const TABLE_HEADERS = ["Date", "In/Out", "Total Hours","Working Hours", "Break", "Status"];
 
 export default function AttendancePage() {
   const [viewType, setViewType] = useState("current_month");

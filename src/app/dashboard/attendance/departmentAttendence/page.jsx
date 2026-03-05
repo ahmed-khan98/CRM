@@ -21,6 +21,7 @@ import {
   calculateDuration,
   formatTimeOnly,
   getStatusClasses,
+  onlyWorkingHours,
   Tooltip,
 } from "@/app/utilities/attendence";
 import AttendanceModal from "@/app/_Components/Modal/AttendanceModal";
@@ -568,35 +569,37 @@ export default function TeamAttendence() {
                             -- : --
                           </span>
                         ) : (
-                          <div className="flex flex-col gap-1">
-                            <div className="flex items-center justify-between min-w-[120px]">
-                              <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
-                                Total:
-                              </span>
-                              <span className="text-[10px] font-bold text-gray-700">
-                                {calculateDuration(
-                                  record?.timeIn,
-                                  record?.timeOut,
-                                )}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
-                                Working:
-                              </span>
-                              <span className="text-[10px] font-bold text-blue-600">
-                                {record?.workingHours || "0.0"}h
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
-                                Break:
-                              </span>
-                              <span className="text-[10px] font-bold text-yellow-600">
-                                {record?.totalBreakMinutes || "0"}min
-                              </span>
-                            </div>
-                          </div>
+                         <div className="flex flex-col gap-1">
+  {/* 1. Total Time (TimeIn se TimeOut tak) */}
+  <div className="flex items-center justify-between min-w-[120px]">
+    <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
+      Total:
+    </span>
+    <span className="text-[10px] font-bold text-gray-700">
+      {calculateDuration(record?.timeIn, record?.timeOut)}
+    </span>
+  </div>
+
+  {/* 2. Working Time (Total Time - Break Time) */}
+  <div className="flex items-center justify-between">
+    <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
+      Working:
+    </span>
+    <span className="text-[10px] font-bold text-blue-600">
+      {onlyWorkingHours(record?.timeIn, record?.timeOut, record?.totalBreakMinutes  )}
+    </span>
+  </div>
+
+  {/* 3. Break Time */}
+  <div className="flex items-center justify-between">
+    <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
+      Break:
+    </span>
+    <span className="text-[10px] font-bold text-yellow-600">
+      {record?.totalBreakMinutes >= 0 ? `${record.totalBreakMinutes}min` : "0min"}
+    </span>
+  </div>
+</div>
                         )}
                       </td>
 
