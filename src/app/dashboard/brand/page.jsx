@@ -60,9 +60,9 @@ export default function AppointmentBooking() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-gray-800 font-semibold">
           Loading your departments... 🚀
         </span>
       </div>
@@ -70,11 +70,11 @@ export default function AppointmentBooking() {
   }
 
   return (
-    <div className="min-h-screen  py-1 mx-1">
+    <div className="min-h-screen mx-1">
       <div className="w-full mx-auto p-1 flex flex-col space-y-6">
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
-            <Home className="h-6 w-6 text-[#5f2781]" />
+            <Home className="h-6 w-6 text-gray-800" />
             <h3 className="text-[#242424] text-[20px] font-bold">All Brand</h3>
           </div>
 
@@ -82,7 +82,7 @@ export default function AppointmentBooking() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
             >
               <Plus className="h-4 w-4" />
               Create
@@ -92,32 +92,32 @@ export default function AppointmentBooking() {
 
         <motion.div
           variants={itemVariants}
-          className="bg-white rounded-3xl mx-1 md:mx-0 p-4 shadow-xl border border-purple-100"
+          className="shadow-lg rounded-2xl"
         >
           {data?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Home className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+              <Home className="h-16 w-16 text-gray-300 mbg-zinc-800" />
               <h3 className="text-xl font-semibold text-gray-700">No Brand</h3>
               <p className="text-gray-500 mt-2">
                 You don't have any Brand yet.
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-gray-200">
+            <div className="overflow-hidden rounded-2xl ">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-[#F7F7F7]">
+                  <thead className="bg-zinc-800">
                     <tr>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
                         Brand Logo{" "}
                       </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
                         Brand Name{" "}
                       </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
                         Department Name{" "}
                       </th>
-                      <th className="px-2 py-3 text-left text-sm font-medium text-gray-800 capitalize tracking-wider">
+                      <th className="px-2 py-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
                         Action
                       </th>
                     </tr>
@@ -129,7 +129,7 @@ export default function AppointmentBooking() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="hover:bg-[#f7f7f7] transition-colors"
+                        className="hover:bg-zinc-50 transition-colors"
                       >
                         <td className="px-2 py-1.5 whitespace-nowrap text-sm text-gray-600">
                           <div className=" w-25 h-25">
@@ -157,7 +157,7 @@ export default function AppointmentBooking() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleEdit(br)}
-                            className="inline-flex items-center cursor-pointer mx-1 px-3 py-2 bg-[#5f2781] text-white rounded-lg hover:bg-[#4f1f6d] transition-colors"
+                            className="inline-flex items-center cursor-pointer mx-1 px-3 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-900 transition-colors"
                           >
                             <Edit className="h-4 w-4" />
                             {/* Edit */}

@@ -39,7 +39,7 @@ const BiddingHistory = ({ history, isSold, isExtended }) => {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between gap-3 mb-2">
-        <div className="flex gap-2"> <h3 className="text-md font-bold text-gray-900">Bid History</h3>
+        <div className="flex gap-2"> <h3 className="text-md font-bold bg-zinc-800">Bid History</h3>
           <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
             {history?.length} bids
           </span></div>

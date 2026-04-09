@@ -37,21 +37,21 @@ const BulkEmailDetailsModal = ({ isOpen, onClose, email }) => {
         >
           <X size={24} />
         </button>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
           <Mail size={24} />
           <span>Campaign Details</span>
         </h2>
 
         <div className="space-y-4">
           <div className="flex items-center gap-4 text-gray-600">
-            <User size={20} className="text-[#5f2781]" />
+            <User size={20} className="text-gray-800" />
             <div className="flex flex-col">
               <span className="text-xs text-gray-500">From:</span>
               <span className="font-medium text-gray-800">{`${email.from} ${email?.brandId?.name ? `(${email?.brandId?.name})` :''}`}</span>
             </div>
           </div>
           <div className="flex items-center gap-4 text-gray-600">
-            <User size={20} className="text-[#5f2781]" />
+            <User size={20} className="text-gray-800" />
             <div className="flex flex-col">
               <span className="text-xs text-gray-500">Send By:</span>
               <span className="font-medium text-gray-800 capitalize">
@@ -60,7 +60,7 @@ const BulkEmailDetailsModal = ({ isOpen, onClose, email }) => {
             </div>
           </div>
           <div className="flex items-center gap-4 text-gray-600">
-            <Users size={20} className="text-[#5f2781]" />
+            <Users size={20} className="text-gray-800" />
             <div className="flex flex-col">
               <span className="text-xs text-gray-500">Recipients:</span>
               {email?.recipient ? (
@@ -76,7 +76,7 @@ const BulkEmailDetailsModal = ({ isOpen, onClose, email }) => {
           </div>
           {email?.listId && (
             <div className="flex items-center gap-4 text-gray-600">
-              <List size={20} className="text-[#5f2781]" />
+              <List size={20} className="text-gray-800" />
               <div className="flex flex-col">
                 <span className="text-xs text-gray-500">list Name:</span>
                 <span className="font-medium text-gray-800">
@@ -87,7 +87,7 @@ const BulkEmailDetailsModal = ({ isOpen, onClose, email }) => {
           )}
 
           <div className="flex items-center gap-4 text-gray-600">
-            <Clock size={20} className="text-[#5f2781]" />
+            <Clock size={20} className="text-gray-800" />
             <div className="flex flex-col">
               <span className="text-xs text-gray-500">Sent On:</span>
               <span className="font-medium text-gray-800">

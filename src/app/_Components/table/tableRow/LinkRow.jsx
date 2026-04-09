@@ -64,7 +64,7 @@ export const LinkRow = memo(
         transition={{ duration: 0.2 }}
         className="hover:bg-gray-50 transition-colors relative "
       >
-        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
+        <td className="px-4 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
           {emp?.name || "-"}
         </td>
 
@@ -118,7 +118,7 @@ export const LinkRow = memo(
           </span>
         </td>
         <td className="px-2 py-1.5 whitespace-nowrap">
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-zinc-200 text-zinc-800">
             💰 ${emp?.amount}
           </span>
         </td>
@@ -135,7 +135,7 @@ export const LinkRow = memo(
             {" "}
             {/* important: relative container */}
             <Menu>
-              <MenuButton className="inline-flex cursor-pointer items-center justify-center rounded-md p-1 border-1 border-gray-200 hover:bg-purple-100">
+              <MenuButton className="inline-flex cursor-pointer items-center justify-center rounded-md p-1 border-1 border-gray-200 hover:bg-zinc-200">
                 <EllipsisVertical className="h-4 w-4 text-gray-700" />
               </MenuButton>
 

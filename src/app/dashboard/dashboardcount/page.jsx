@@ -57,7 +57,7 @@ const StatCard = ({
       className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm`}
     >
       <div className="relative z-10">
-        <div className="flex items-center justify-between mbg-[#5f2781]">
+        <div className="flex items-center justify-between mbg-zinc-800">
           <div className={`p-3 rounded-2xl bg-white bg-opacity-20`}>
             <Icon className={`h-6 w-6 text-${color}`} />
           </div>
@@ -101,7 +101,7 @@ const QuickActionCard = ({ icon: Icon, title, description, color, link }) => {
       // onClick={() => router.push(link)}
       className="bg-white rounded-2xl p-4 md:p-5 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300"
     >
-      <div className={`p-3 rounded-2xl w-fit mbg-[#5f2781] ${color}`}>
+      <div className={`p-3 rounded-2xl w-fit mbg-zinc-800 ${color}`}>
         <Icon className="h-6 w-6 text-white" />
       </div>
       <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
@@ -177,9 +177,9 @@ export default function DashboardPage() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-gray-800 font-semibold">
           Loading your dashboard... ✨
         </span>
       </div>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen px-4">
+    <div className="min-h-screen px-2">
       {/* {billBoard?.data?.map(e=><div className=" pt-6 p-1 md:p-4  bg-gray-200 shadow-lg rounded-2xl border-3 border-[#ffa51d] ">
         <div
           dangerouslySetInnerHTML={{ __html: e?.title }}
@@ -198,8 +198,8 @@ export default function DashboardPage() {
         />
       </div>)} */}
 
-      <div className="relative overflow-hidden bg-gradient-to-r from-[#372D5C] via-[#54448a] to-[#a945fa] text-white rounded-lg">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#372D5C] via-[#54448a] to-[#a945fa] bg-opacity-100"></div>
+      <div className="relative overflow-hidden bg-gradient-to-r from-zinc-800 via-zinc-700 to-zinc-800 text-white rounded-lg">
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-700 to-zinc-800 bg-opacity-100"></div>
         <div className="relative z-10 w-full mx-auto px-6 py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -207,14 +207,14 @@ export default function DashboardPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h1 className="text-3xl md:text-4xl font-bold mbg-[#5f2781] capitalize">
+            <h1 className="text-3xl md:text-4xl font-bold mbg-zinc-800 capitalize">
               {greeting}, {currentUser?.fullName}! 👋
             </h1>
-            <p className="text-xl text-white text-opacity-90 mb-2">
+            <p className="text-xl text-white text-opacity-90 my-2">
               Welcome to your personalized dashboard
             </p>
             <p className="text-white text-opacity-70">
-              Track your sales, purchases, and account activity all in one place
+              Track your Attendance, Leads, Sales and account activity all in one place
             </p>
           </motion.div>
         </div>
@@ -245,7 +245,7 @@ export default function DashboardPage() {
             title="Total Lead"
             value={totalProducts}
             // subtitle="Items in your watchlist"
-            color="bg-gradient-to-br from-blue-500 to-blue-600"
+            color="bg-gradient-to-br from-blue-700 to-blue-800"
             trend="up"
             trendValue="0"
             link={"/dashboard/wishlist"}
@@ -256,7 +256,7 @@ export default function DashboardPage() {
             title="Total Client"
             value={purchasedProducts}
             // subtitle="Items you've bought"
-            color="bg-gradient-to-br from-yellow-400 to-yellow-500"
+            color="bg-gradient-to-br from-yellow-600 to-yellow-700"
             trend="up"
             trendValue="0"
             link={"/dashboard/wonitem"}
@@ -271,7 +271,7 @@ export default function DashboardPage() {
             //     ? Math.round((soldProducts / totalProducts) * 100)
             //     : 0
             // }% success rate`}
-            color="bg-gradient-to-br from-green-500 to-emerald-600"
+            color="bg-gradient-to-br from-green-600 to-emerald-700"
             emerald="up"
             trendValue="0"
             link={"/dashboard/lostitem"}
@@ -282,7 +282,7 @@ export default function DashboardPage() {
             title="Pending Payment Link"
             value={pendingFees}
             // subtitle={`${pendingFees} unpaid fees`}
-            color="bg-gradient-to-br from-orange-500 to-red-500"
+            color="bg-gradient-to-br from-orange-600 to-red-700"
             trend={"down"}
             trendValue="0"
             link={"/dashboard/UnpaidItem"}
@@ -440,7 +440,7 @@ export default function DashboardPage() {
               purchasedProducts === 0 &&
               totalFees === 0 && (
                 <div className="text-center py-8">
-                  <Award className="h-16 w-16 text-gray-300 mx-auto mbg-[#5f2781]" />
+                  <Award className="h-16 w-16 text-gray-300 mx-auto mbg-zinc-800" />
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">
                     No Recent Activity
                   </h3>

@@ -71,9 +71,9 @@ export default function Page() {
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                    className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+                    className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
                 />
-                <span className="ml-4 text-[#5f2781] font-semibold">Loading your Product Box... 🚀</span>
+                <span className="ml-4 text-gray-800 font-semibold">Loading your Product Box... 🚀</span>
             </div>
         )
     }
@@ -83,7 +83,7 @@ export default function Page() {
             <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-6">
                 <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
                     <div className="flex items-center gap-3">
-                        <BoxIcon className="h-7 w-7 text-[#5f2781]" />
+                        <BoxIcon className="h-7 w-7 text-gray-800" />
                         <h3 className="text-[#242424] text-[24px] font-bold">Product Boxes</h3>
                     </div>
 
@@ -91,7 +91,7 @@ export default function Page() {
                         <motion.button
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setIsModalOpen(true)}
-                            className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 rounded-full text-sm font-medium hover:bg-[#a945fc] transition-colors"
+                            className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 rounded-full text-sm font-medium hover:bg-[#a945fc] transition-colors"
                         >
                             <Plus className="h-4 w-4" />
                             Create Box
@@ -99,7 +99,7 @@ export default function Page() {
                         <div className="flex bg-white rounded-full shadow-sm p-1">
                             {filterData?.map(e => <button
                                 onClick={() => setActiveFilter(e)}
-                                className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                                className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-zinc-800 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
                                     }`}
                             >
                                 {e}
@@ -111,15 +111,15 @@ export default function Page() {
 
                 <motion.div variants={itemVariants} className="bg-white rounded-3xl mx-1 md:mx-0 p-4 md:p-8 shadow-xl border border-red-100">
                     <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-                        <div className="p-3 bg-[#f7f7f7] rounded-2xl">
-                            <BoxIcon className="w-6 h-6 text-[#5f2781]" />
+                        <div className="p-3 bg-zinc-200 rounded-2xl">
+                            <BoxIcon className="w-6 h-6 text-gray-800" />
                         </div>
                         All Box
                     </h3>
 
                     {filteredNotifications()?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-                            <Calendar className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+                            <Calendar className="h-16 w-16 text-gray-300 mbg-zinc-800" />
                             <h3 className="text-xl font-semibold text-gray-700">No Box</h3>
                             <p className="text-gray-500 mt-2">
                                 {activeFilter === "all"
@@ -135,7 +135,7 @@ export default function Page() {
                         <div className="overflow-hidden rounded-2xl border border-gray-200" >
                             <div className="overflow-x-auto">
                                 <table className="min-w-full">
-                                    <thead className="bg-[#f7f7f7]">
+                                    <thead className="bg-zinc-100">
                                         <tr>
                                             <th className="px-3 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
                                                 Date
@@ -168,12 +168,12 @@ export default function Page() {
                                                 initial={{ opacity: 0, x: -20 }}
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: index * 0.1 }}
-                                                className="hover:bg-[#f7f7f7] transition-colors"
+                                                className="hover:bg-zinc-200 transition-colors"
                                             >
                                                 <td className="px-3 py-4 whitespace-nowrap">
                                                     <div className="flex items-center gap-3">
-                                                        <Calendar className="h-4 w-4 text-[#5f2781]" />
-                                                        <span className="text-sm font-semibold text-gray-900">
+                                                        <Calendar className="h-4 w-4 text-gray-800" />
+                                                        <span className="text-sm font-semibold bg-zinc-800">
                                                             {formatDate(e.createdAt)}
                                                         </span>
                                                     </div>
@@ -208,7 +208,7 @@ export default function Page() {
                                                             setEditingBox(e)
                                                             handleEdit()
                                                         }}
-                                                        className="inline-flex items-center cursor-pointer px-3 py-2 bg-[#5f2781] text-white rounded-lg  hover:bg-[#4f1f6d] transition-colors"
+                                                        className="inline-flex items-center cursor-pointer px-3 py-2 bg-zinc-800 text-white rounded-lg  hover:bg-zinc-900 transition-colors"
                                                     >
                                                         <Edit className="h-4 w-4 mr-1" />
                                                         Edit

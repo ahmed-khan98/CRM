@@ -7,7 +7,7 @@ const AssignmentItem = ({ icon: Icon, label, value }) => {
       <Icon className="w-4 h-4" />
       <p className="text-sm ">{label}</p>
     </div>
-    <p className="font-medium capitalize text-gray-900 text-[14px] mt-1">
+    <p className="font-medium capitalize text-[14px] mt-1">
       {value || "N/A"}
     </p>
   </div>

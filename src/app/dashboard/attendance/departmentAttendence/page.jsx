@@ -261,11 +261,11 @@ export default function TeamAttendence() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50/50 p-0 overflow-hidden">
+    <div className="h-screen flex flex-col  overflow-hidden mx-2">
       <div
         className={`grid ${viewType === "today" ? "grid-cols-3" : "grid-cols-4"} gap-2 md:gap-4 mb-4 shrink-0`}
       >
-        <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-purple-500">
+        <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-zinc-800">
           <div className="flex justify-between items-center mb-1">
             <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
               Total Records
@@ -311,7 +311,7 @@ export default function TeamAttendence() {
 
       <div className="bg-white p-3 rounded-2xl shadow-sm mb-4 flex flex-wrap items-end gap-3 shrink-0">
         <div className="flex flex-col gap-1 w-full sm:w-auto grow sm:grow-0">
-          <label className="text-[10px] font-bold text-purple-600 uppercase ml-1">
+          <label className="text-[10px] font-bold text-zinc-800 uppercase ml-1">
             Search Employee
           </label>
           <Select
@@ -333,7 +333,7 @@ export default function TeamAttendence() {
 
         {/* 2. Time Period Buttons */}
         <div className="flex flex-col gap-1">
-          <label className="text-[10px] font-bold text-purple-600 uppercase ml-1">
+          <label className="text-[10px] font-bold text-zinc-800 uppercase ml-1">
             Time Period
           </label>
           <div className="flex bg-gray-100 p-1 rounded-xl h-[38px] items-center">
@@ -343,7 +343,7 @@ export default function TeamAttendence() {
                 onClick={() => setViewType(type)}
                 className={`cursor-pointer px-4 py-1.5 h-full text-[10px] font-bold rounded-lg capitalize transition-all ${
                   viewType === type
-                    ? "bg-white shadow-sm text-purple-600"
+                    ? "bg-white shadow-sm text-zinc-800"
                     : "text-gray-500"
                 }`}
               >
@@ -356,7 +356,7 @@ export default function TeamAttendence() {
         {/* 3. Custom Range Inputs (Only shows if 'custom' selected) */}
         {viewType === "custom" && (
           <div className="flex flex-col gap-1 w-full sm:w-auto">
-            <label className="text-[10px] font-bold text-purple-600 uppercase ml-1">
+            <label className="text-[10px] font-bold text-zinc-800 uppercase ml-1">
               Select Range
             </label>
             <div className="flex items-center gap-2 h-[38px]">
@@ -397,27 +397,27 @@ export default function TeamAttendence() {
       </div>
 
       {/* 3. ATTENDANCE TABLE - STICKY & SCROLLABLE */}
-      <div className="flex-1 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden flex flex-col">
+      <div className="flex-1 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden flex flex-col">
         <div className="overflow-x-auto overflow-y-auto w-full">
           <table className="w-full text-left border-separate border-spacing-0">
-            <thead className="sticky top-0 z-20">
+            <thead className="sticky top-0 z-20 ">
               <tr>
-                <th className="sticky top-0 p-4 text-[10px] font-bold text-gray-500 uppercase bg-gray-100">
+                <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800">
                   Employee Name
                 </th>
-                <th className="sticky top-0 p-4 text-[10px] font-bold text-gray-500 uppercase bg-gray-100">
+                <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800">
                   Shift Date
                 </th>
-                <th className="sticky top-0 p-4 text-[10px] font-bold text-gray-500 uppercase bg-gray-100">
+                <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800">
                   In / Out
                 </th>
-                <th className="sticky top-0 p-4 text-[10px] font-bold text-gray-500 uppercase bg-gray-100">
+                <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800">
                   Work Hours
                 </th>
-                <th className="sticky top-0 p-4 text-[10px] font-bold text-gray-500 uppercase bg-gray-100 text-center">
+                <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800 text-center">
                   Status
                 </th>
-                <th className="sticky top-0 p-4 text-[10px] font-bold text-gray-500 uppercase bg-gray-100 text-center">
+                <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800 text-center">
                   Action
                 </th>
               </tr>
@@ -496,7 +496,7 @@ export default function TeamAttendence() {
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="capitalize w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs">
+                          <div className="capitalize w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-700 font-bold text-xs">
                             {emp?.fullName?.charAt(0) || "U"}
                           </div>
                           <div className="flex flex-col">
@@ -551,7 +551,7 @@ export default function TeamAttendence() {
                                 </span>
                               </Tooltip>
                             ) : isActive ? (
-                              <span className="bg-purple-50 text-purple-600 px-2 py-0.5 rounded text-[9px] font-black animate-pulse border border-purple-100">
+                              <span className="bg-purple-50 text-blue-600 px-2 py-0.5 rounded text-[9px] font-black animate-pulse border border-blue-200">
                                 ACTIVE
                               </span>
                             ) : (
@@ -572,7 +572,7 @@ export default function TeamAttendence() {
                          <div className="flex flex-col gap-1">
   {/* 1. Total Time (TimeIn se TimeOut tak) */}
   <div className="flex items-center justify-between min-w-[120px]">
-    <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
+    <span className="text-[9px] text-gray-600 uppercase font-bold tracking-tighter">
       Total:
     </span>
     <span className="text-[10px] font-bold text-gray-700">
@@ -582,7 +582,7 @@ export default function TeamAttendence() {
 
   {/* 2. Working Time (Total Time - Break Time) */}
   <div className="flex items-center justify-between">
-    <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
+    <span className="text-[9px] text-gray-600 uppercase font-bold tracking-tighter">
       Working:
     </span>
     <span className="text-[10px] font-bold text-blue-600">
@@ -592,7 +592,7 @@ export default function TeamAttendence() {
 
   {/* 3. Break Time */}
   <div className="flex items-center justify-between">
-    <span className="text-[9px] text-gray-400 uppercase font-bold tracking-tighter">
+    <span className="text-[9px] text-gray-600 uppercase font-bold tracking-tighter">
       Break:
     </span>
     <span className="text-[10px] font-bold text-yellow-600">
@@ -630,7 +630,7 @@ export default function TeamAttendence() {
                                 queryParams?.startDate,
                               )
                             }
-                            className="cursor-pointer text-[10px] font-black text-purple-600 hover:text-white hover:bg-purple-600 border border-purple-200 px-3 py-1.5 rounded-xl transition-all"
+                            className="cursor-pointer text-[10px] font-black text-zinc-700 hover:text-white hover:bg-zinc-800 border border-zinc-200 px-3 py-1.5 rounded-xl transition-all"
                           >
                             MARK PRESENT
                           </button>

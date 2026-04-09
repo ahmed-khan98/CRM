@@ -81,7 +81,7 @@ export default function page() {
 
                     {filteredNotifications()?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-                            <Calendar className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+                            <Calendar className="h-16 w-16 text-gray-300 mbg-zinc-800" />
                             <h3 className="text-lg md:text-xl font-semibold text-gray-700">No Penalized Products</h3>
                             <p className="text-gray-500 mt-2">
                                 You don't have any penalized products fees.

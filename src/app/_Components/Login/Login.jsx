@@ -11,7 +11,7 @@ import { toast, Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { AtSign, Lock, Eye, EyeOff } from "lucide-react";
-import Main from "../../../app/Assets/logo-ppi.png";
+import Main from "../../../app/Assets/zytronlogo.png";
 import { useDispatch } from "react-redux";
 import { setActivity } from "@/redux/filterSlice";
 
@@ -28,6 +28,12 @@ export default function GenZLoginForm() {
       .required("Email is required"),
     password: Yup.string().required("Password is required"),
   });
+
+//   fetch('http://185.199.52.245:8000/api/v1/user/userLogin', {
+//   method: 'POST',
+//   headers: {'Content-Type': 'application/json'},
+//   body: JSON.stringify({email: 'ahmedkhn015@gmail.com', password: '11223344'})
+// }).then(r => r.text()).then(console.log)
 
   const loginInitialValue = {
     email: "",
@@ -82,7 +88,7 @@ export default function GenZLoginForm() {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-purple-50 to-purple-100">
+    <div className="flex justify-center items-center min-h-screen bg-zinc-900">
       <Toaster position="top-center" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -90,22 +96,22 @@ export default function GenZLoginForm() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md mx-4"
       >
-        <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+        <div className="overflow-hidden bg-zinc-800/40 rounded-3xl shadow-xl">
           <div className="p-6">
-            <div className="mb-6 text-center">
+            <div className="mb-6 text-center ">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-64 h-24 mx-auto mb-2 rounded-full bg-[#3C3360] flex items-center justify-center"
+                className="w-78 h-18 mx-auto mb-2 rounded-full  flex items-center justify-center"
               >
                 <Link href="/login" className="mx-auto">
                   <Image src={Main} alt="Logo" width={270} height={60} />
                 </Link>
               </motion.div>
-              {/* <h2 className="text-2xl font-bold mb-1 text-[#5f2781]">Welcome To CMS </h2> */}
-              <p className="text-gray-500 font-normal">
-                Sign in to Penta Prime Innovation CMS
+              {/* <h2 className="text-2xl font-bold mb-1 text-gray-800">Welcome To CMS </h2> */}
+              <p className="text-zinc-400 font-normal">
+                Sign in to ZYTRON WORLD CRM
               </p>
             </div>
 
@@ -114,20 +120,20 @@ export default function GenZLoginForm() {
                 <div
                   className={`relative border-1 rounded-xl transition-all duration-300 ${
                     focusedField === "email"
-                      ? "border-[#5f2781] shadow-sm shadow-orange-100"
+                      ? "border-zinc-800"
                       : formik.touched.email && formik.errors.email
-                        ? "border-red-300"
-                        : "border-gray-200"
+                        ? "border-red-500"
+                        : "border-zinc-800"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
-                    <AtSign className="h-5 w-5 text-gray-400" />
+                    <AtSign className="h-5 w-5 text-zinc-400" />
                   </div>
                   <input
                     type="email"
                     name="email"
                     placeholder="Email address"
-                    className="w-full pl-9 pr-2 py-3 rounded-xl focus:outline-none text-gray-700 text-sm"
+                    className="w-full pl-9 pr-2 py-3 rounded-xl shadow focus:outline-none text-zinc-400 text-sm"
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
@@ -141,7 +147,7 @@ export default function GenZLoginForm() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm ml-2"
+                    className="text-red-500 text-[11px] ml-2"
                   >
                     {formik.errors.email}
                   </motion.p>
@@ -152,20 +158,20 @@ export default function GenZLoginForm() {
                 <div
                   className={`relative border-1 rounded-xl transition-all duration-300 ${
                     focusedField === "password"
-                      ? "border-[#5f2781] shadow-sm shadow-orange-100"
+                      ? "border-zinc-800 "
                       : formik.touched.password && formik.errors.password
-                        ? "border-red-300"
-                        : "border-gray-200"
+                        ? "border-red-500"
+                        : "border-zinc-800"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
-                    <Lock className="h-5 w-5 text-gray-400" />
+                    <Lock className="h-5 w-5 text-zinc-400" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
-                    className="w-full pl-10 pr-10 py-3 rounded-xl focus:outline-none text-gray-700"
+                    className="w-full pl-10 shadow pr-10 py-3 rounded-xl focus:outline-none text-zinc-400"
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
@@ -180,9 +186,9 @@ export default function GenZLoginForm() {
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-gray-400" />
+                      <EyeOff className="h-5 w-5 text-zinc-400" />
                     ) : (
-                      <Eye className="h-5 w-5 text-gray-400" />
+                      <Eye className="h-5 w-5 text-zinc-400" />
                     )}
                   </button>
                 </div>
@@ -190,7 +196,7 @@ export default function GenZLoginForm() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm ml-2"
+                    className="text-red-500 text-[11px] ml-2"
                   >
                     {formik.errors.password}
                   </motion.p>
@@ -200,7 +206,7 @@ export default function GenZLoginForm() {
               <div className="text-right">
                 <Link
                   href="/forget"
-                  className="text-sm text-[#5f2781] hover:underline"
+                  className="text-sm text-zinc-400 hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -210,11 +216,11 @@ export default function GenZLoginForm() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#5f2781] hover:bg-[#4f1f6d] text-white py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all cursor-pointer"
+                className="w-full bg-zinc-800 shadow-lime-700 hover:bg-zinc-900 text-zinc-400 py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all cursor-pointer"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
-                    <div className="h-5 w-5 border-1 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className="h-5 w-5 border-1  border-zinc-800 border-t-transparent rounded-full animate-spin mr-2"></div>
                     Signing in...
                   </div>
                 ) : (
@@ -224,7 +230,7 @@ export default function GenZLoginForm() {
 
               {/* <div className="text-center text-sm text-gray-500">
                 Don't have an account?{" "}
-                <Link href="/register" className="text-[#5f2781] font-medium hover:underline">
+                <Link href="/register" className="text-gray-800 font-medium hover:underline">
                   Register
                 </Link>
               </div> */}

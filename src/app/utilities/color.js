@@ -1,9 +1,16 @@
+
 const STATUS_CLASS = {
   draft: "text-gray-600 bg-gray-200",
+  cancelled: "text-gray-600 bg-gray-200",
   pending: "text-yellow-700 bg-yellow-200",
   paid: "text-green-700 bg-green-200",
+  completed: "text-green-700 bg-green-200",
+  active: "text-green-700 bg-green-200",
   partial: "text-blue-700 bg-blue-200",
+  scheduled: "text-blue-700 bg-blue-200",
+  missed: "text-red-700 bg-red-200",
   failed: "text-red-700 bg-red-200",
+  deactive: "text-red-700 bg-red-200",
   refunded: "text-purple-700 bg-purple-200",
   default: "text-gray-700 bg-gray-100",
 };

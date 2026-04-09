@@ -38,10 +38,10 @@ export default function AttendanceModal({ isOpen, onClose, selectedData, onSave,
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
         {/* Header */}
-        <div className="bg-purple-600 p-6 text-white flex justify-between items-center">
+        <div className="bg-zinc-800 p-6 text-white flex justify-between items-center">
           <div>
             <h3 className="text-xl font-bold">{selectedData.record ? "Update" : "Mark"} Attendance</h3>
-            <p className="text-purple-100 text-xs mt-1 capitalize">{selectedData.emp.fullName}</p>
+            <p className="text-zinc-400 text-xs mt-1 capitalize">{selectedData.emp.fullName}</p>
           </div>
           <button onClick={onClose} className="cursor-pointer p-2 hover:bg-white/10 rounded-full transition-colors">
             <X size={20} />
@@ -53,7 +53,7 @@ export default function AttendanceModal({ isOpen, onClose, selectedData, onSave,
           <div className="space-y-1">
             <label className="text-[10px] font-bold text-gray-400 uppercase ml-1">Shift Date</label>
             <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100">
-              <Calendar size={18} className="text-purple-500" />
+              <Calendar size={18} className="text-zinc-600" />
               <span className="text-sm font-semibold text-gray-700">
                 {moment(formData.shiftDate).format("DD MMMM, YYYY (dddd)")}
               </span>
@@ -113,7 +113,7 @@ export default function AttendanceModal({ isOpen, onClose, selectedData, onSave,
             </button>
             <button
               type="submit"
-              className="cursor-pointer flex-1 bg-purple-600 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-700 shadow-lg shadow-purple-200 flex items-center justify-center gap-2 transition-all"
+              className="cursor-pointer flex-1 bg-zinc-800 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-zinc-700 shadow-lg shadow-zinc-200 flex items-center justify-center gap-2 transition-all"
             >
              {isSubmitting?
              <svg

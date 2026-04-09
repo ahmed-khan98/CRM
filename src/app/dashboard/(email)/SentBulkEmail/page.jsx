@@ -66,11 +66,15 @@ export default function page() {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="bg-white rounded-3xl shadow-md p-6 mt-3">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-700 flex items-center">
-                <Mails className="mr-2 h-6 w-6 text-[#5f2781]" />
-                New Compaign Bulk Email
-              </h2>
+            <div className="flex items-center gap-4 mb-4 md:mb-0">
+              <div className="bg-zinc-200 p-2 rounded-full">
+                <Mails className="h-7 w-7 text-zinc-800" />
+              </div>
+              <div>
+                <h1 className="text-lg md:text-xl font-bold ">
+                  New Compaign Bulk Email
+                </h1>
+              </div>
             </div>
             <Formik
               initialValues={initialValues}
@@ -86,8 +90,7 @@ export default function page() {
                 setFieldValue,
                 setFieldTouched,
               }) => {
-
-                console.log(values,'values')
+                console.log(values, "values");
                 const {
                   data: brandEmail,
                   error,
@@ -122,14 +125,8 @@ export default function page() {
 
                 const handleBrandChange = (newDeptId) => {
                   setFieldValue("brandId", newDeptId);
-                  setFieldValue(
-                    "fromemail",
-                  ''
-                  );
-                  setFieldValue(
-                    "domainId",
-                   ''
-                  );
+                  setFieldValue("fromemail", "");
+                  setFieldValue("domainId", "");
                 };
 
                 const handleDomainChange = (newDeptId) => {
@@ -138,7 +135,7 @@ export default function page() {
                   setFieldValue(
                     "fromemail",
                     brandEmail?.data?.find((option) => option._id === newDeptId)
-                      ?.email ||''
+                      ?.email || "",
                   );
                   // setFieldValue(
                   //   "domainId",
@@ -157,7 +154,7 @@ export default function page() {
                   }
 
                   const temp = templates?.data?.find(
-                    (t) => t._id === newTempId
+                    (t) => t._id === newTempId,
                   );
                   setFieldValue("subject", temp?.subject || "");
                   setFieldValue("body", temp?.content || "");
@@ -165,7 +162,7 @@ export default function page() {
 
                 return (
                   <Form className="space-y-3">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-2">
                       <div>
                         <label className="block text-sm font-medium text-gray-800 mb-1">
                           Compaign Name
@@ -176,8 +173,8 @@ export default function page() {
                           //   readOnly={values?.compaignName ? true : false}
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.compaignName && touched.compaignName
-                              ? "border-[#5f2781] focus:border-[#5f2781]"
-                              : "border-gray-200 focus:border-[#5f2781]"
+                              ? "border-zinc-500 focus:border-zinc-500"
+                              : "border-gray-200 focus:border-zinc-800"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
@@ -210,8 +207,8 @@ export default function page() {
                           //   readOnly={values?.fromemail ? true : false}
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.fromemail && touched.fromemail
-                              ? "border-[#5f2781] focus:border-[#5f2781]"
-                              : "border-gray-200 focus:border-[#5f2781]"
+                              ? "border-zinc-500 focus:border-zinc-500"
+                              : "border-gray-200 focus:border-zinc-800"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
@@ -269,8 +266,8 @@ export default function page() {
                           name="subject"
                           className={`w-full px-4 py-2 border-1 text-sm ${
                             errors.subject && touched.subject
-                              ? "border-[#5f2781] focus:border-[#5f2781]"
-                              : "border-gray-200 focus:border-[#5f2781]"
+                              ? "border-zinc-500 focus:border-zinc-500"
+                              : "border-gray-200 focus:border-zinc-800"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
@@ -305,7 +302,7 @@ export default function page() {
                         disabled={isSubmitting}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="flex items-center gap-2 px-2 md:px-4 py-2 cursor-pointer bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] text-white rounded-xl text-sm font-semibold  hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                        className="flex items-center gap-2 px-2 md:px-4 py-2 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-xl text-sm font-semibold  hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center gap-2">

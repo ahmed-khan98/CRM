@@ -75,7 +75,7 @@
 //         {/* Header Section (Fixed) */}
 //         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
 //           <div className="flex items-center gap-2">
-//             <div className="p-2 bg-purple-100 rounded-lg text-[#5f2781]">
+//             <div className="p-2 bg-purple-100 rounded-lg text-gray-800">
 //               <Calendar className="h-5 w-5" />
 //             </div>
 //             <h3 className="text-xl font-bold text-gray-800 tracking-tight">
@@ -90,7 +90,7 @@
 //                   onClick={() => setViewType(t)}
 //                   className={`flex-1 sm:flex-none px-3 py-1 text-[11px] rounded-lg transition-all capitalize font-bold ${
 //                     viewType === t
-//                       ? "bg-white text-[#5f2781] shadow-sm"
+//                       ? "bg-white text-gray-800 shadow-sm"
 //                       : "text-gray-500"
 //                   }`}
 //                 >
@@ -266,13 +266,13 @@ export default function AttendancePage() {
   const showClearButton = viewType !== "current_month" || customRange.start;
 
   return (
-    <div className="h-screen overflow-hidden py-1 mx-1 flex flex-col bg-gray-50/50">
+    <div className="h-screen overflow-hidden mx-1 flex flex-col ">
       <div className="w-full mx-auto p-1 flex flex-col h-full space-y-4">
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-purple-100 rounded-lg text-[#5f2781]">
+            <div className="p-2 bg-zinc-200 rounded-lg text-gray-800">
               <Calendar className="h-5 w-5" />
             </div>
             <h3 className="text-xl font-bold text-gray-800 tracking-tight">
@@ -291,7 +291,7 @@ export default function AttendancePage() {
                   onClick={() => setViewType(type)}
                   className={`cursor-pointer flex-1 sm:flex-none px-3 py-1 text-[11px] rounded-lg transition-all capitalize font-bold ${
                     viewType === type
-                      ? "bg-white text-[#5f2781] shadow-sm"
+                      ? "bg-white text-gray-800 shadow-sm"
                       : "text-gray-500"
                   }`}
                 >
@@ -336,16 +336,16 @@ export default function AttendancePage() {
         </div>
 
         {/* Table */}
-        <div className="flex-1 bg-white rounded-2xl shadow-xl border border-purple-100 flex flex-col overflow-hidden min-h-0">
+        <div className="flex-1  rounded-2xl shadow-lg border border-zinc-100 flex flex-col overflow-hidden min-h-0">
           <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-purple-100">
             <table className="w-full text-left border-collapse">
               
-              <thead className="sticky top-0 z-20 bg-gray-50 border-b border-gray-100">
+              <thead className="sticky top-0 z-20 ">
                 <tr>
                   {TABLE_HEADERS.map((header) => (
                     <th
                       key={header}
-                      className="p-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+                      className="p-4 text-[10px] bg-zinc-800 font-bold text-zinc-300 uppercase tracking-widest"
                     >
                       {header}
                     </th>

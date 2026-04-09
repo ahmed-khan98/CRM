@@ -66,11 +66,11 @@ const LeadSentEmail = ({ id }) => {
         {/* Header Section */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b border-gray-200 pb-1 md:pb-3">
           <div className="flex items-center gap-4 mb-4 md:mb-0">
-            <div className="bg-purple-100 p-3 rounded-full">
-              <Mails className="h-7 w-7 text-[#5f2781]" />
+            <div className="bg-zinc-200 p-3 rounded-full">
+              <Mails className="h-7 w-7 text-gray-800" />
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold text-gray-900">
+              <h1 className="text-lg md:text-xl font-bold ">
                 All Email
               </h1>
             </div>

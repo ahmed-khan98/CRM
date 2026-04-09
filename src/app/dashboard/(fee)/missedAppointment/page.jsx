@@ -83,7 +83,7 @@ export default function AppointmentBooking() {
 
           {filteredNotifications()?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Calendar className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+              <Calendar className="h-16 w-16 text-gray-300 mbg-zinc-800" />
               <h3 className="text-xl font-semibold text-gray-700">No Missed appointments</h3>
               <p className="text-gray-500 mt-2">
                 You don't have any missed appointments.
@@ -135,7 +135,7 @@ export default function AppointmentBooking() {
                         <td className="px-3 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-3">
                             <Calendar className="h-4 w-4 text-red-600" />
-                            <span className="text-sm font-semibold text-gray-900">
+                            <span className="text-sm font-semibold bg-zinc-800">
                               {formatDate(appointment.appointmentDate)}
                             </span>
                           </div>

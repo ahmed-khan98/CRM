@@ -75,9 +75,9 @@ const LeadDetail = ({ id }) => {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-gray-800 font-semibold">
           Loading ... 🚀
         </span>
       </div>
@@ -90,7 +90,7 @@ const LeadDetail = ({ id }) => {
     return <div className="p-10 text-center text-gray-600">No Lead Found.</div>;
 
   return (
-    <div className="p-6 sm:p-6 font-sans text-gray-900">
+    <div className="p-6 sm:p-6 font-sans bg-zinc-100">
       <header className="mb-4 border-b border-gray-200 pb-4">
         <p className="text-lg font-semibold tracking-tight text-gray-800 capitalize">
           Lead Detail: <span className="text-gray-600 font-normal">{data?.data?.name || "N/A"}</span>
@@ -101,7 +101,7 @@ const LeadDetail = ({ id }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <section className="lg:col-span-2 space-y-8">
           <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-indigo-200/50 transition duration-300 border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+            <h2 className="text-xl font-bold = mb-6">
               Lead Overview
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-6 gap-x-8 text-sm">
@@ -148,7 +148,7 @@ const LeadDetail = ({ id }) => {
                   <p className="text-gray-500 uppercase tracking-wider pt-3">
                     Action Date
                   </p>
-                  <p className="text-gray-900 font-semibold">
+                  <p className=" font-semibold">
                     {formatDate(displayActionDate || "")}{" "}
                   </p>
                 </div>
@@ -173,7 +173,7 @@ const LeadDetail = ({ id }) => {
                   <p className="text-gray-500  uppercase tracking-wider pt-3">
                     Brand Mark
                   </p>
-                  <p className="text-gray-900 font-semibold">
+                  <p className="font-semibold">
                     {data?.data?.brandMark || "N/A"}
                   </p>
                 </div>
@@ -182,7 +182,7 @@ const LeadDetail = ({ id }) => {
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-md hover:shadow-indigo-200/50 transition duration-300 border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+            <h2 className="text-xl font-bold  mb-6">
               Assignment Details
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
@@ -213,7 +213,7 @@ const LeadDetail = ({ id }) => {
 
         <section className="lg:col-span-1">
           <div className="bg-white p-5 rounded-2xl shadow-md hover:shadow-indigo-200/50 transition duration-300 border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+            <h2 className="text-xl font-bold mb-6">
               Activity & Comments ({totalComments})
             </h2>
 
@@ -233,7 +233,7 @@ const LeadDetail = ({ id }) => {
                 <div className="pt-2 pl-6">
                   <button
                     onClick={() => setShowAllComments(!showAllComments)}
-                    className="cursor-pointer text-xs font-semibold text-[#5f2781] hover:text-indigo-800 transition duration-150"
+                    className="cursor-pointer text-xs font-semibold text-gray-800 hover:text-indigo-800 transition duration-150"
                   >
                     {showAllComments
                       ? "See Less"

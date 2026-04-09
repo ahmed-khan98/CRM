@@ -36,7 +36,7 @@ function Pagination({ meta, onPageChange }) {
   const goLast = () => onPageChange?.(totalPages);
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full mt-3">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 w-full p-2">
       <div className="text-xs text-gray-700">
         Showing <span className="font-medium">{start}</span>–
         {/* <span className="font-medium">{end}</span>  */}

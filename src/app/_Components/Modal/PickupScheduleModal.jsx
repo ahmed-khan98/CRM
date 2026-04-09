@@ -150,7 +150,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] px-2 md:px-8 py-6 text-white relative overflow-hidden">
+                        <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-2 md:px-8 py-6 text-white relative overflow-hidden">
                             <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
                             <div className="relative z-10 flex items-center justify-between">
                                 <div className="flex items-center gap-1 md:gap-4">
@@ -178,7 +178,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                             <div className="px-8 py-3 b-[#5f2781] border-b border-red-100">
                                 <div className="flex items-center gap-4">
                                     <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center">
-                                        {/* <Package className="w-8 h-8 text-[#5f2781]" /> */}
+                                        {/* <Package className="w-8 h-8 text-gray-800" /> */}
                                         <img
                                             src={auctionWin?.product?.images?.[0]}
                                             alt="Product-img"
@@ -186,8 +186,8 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                         />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900">{auctionWin.product?.name}</h3>
-                                        <p className="text-[#5f2781] font-semibold">Won for ${auctionWin.product.highestBid}</p>
+                                        <h3 className="font-bold bg-zinc-800">{auctionWin.product?.name}</h3>
+                                        <p className="text-gray-800 font-semibold">Won for ${auctionWin.product.highestBid}</p>
                                     </div>
                                 </div>
                             </div>
@@ -221,9 +221,9 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                     as="select"
                                                     name="deliveryMethod"
                                                     className={`w-full px-4 py-3 border-2 ${errors.deliveryMethod && touched.deliveryMethod
-                                                        ? "border-[#5f2781] focus:border-[#5f2781]"
-                                                        : "border-gray-200 focus:border-[#5f2781]"
-                                                        } rounded-2xl focus:outline-none transition-colors bg-white text-gray-900`}
+                                                        ? "border-zinc-500 focus:border-zinc-500"
+                                                        : "border-gray-200 focus:border-zinc-800"
+                                                        } rounded-2xl focus:outline-none transition-colors bg-white bg-zinc-800`}
                                                 >
                                                     <option value="">Select delivery method...</option>
                                                     <option value="pickup">🏪 Pickup from Store</option>
@@ -243,12 +243,12 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                         className="space-y-6"
                                                     >
                                                         <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">
-                                                            <h3 className="font-bold text-blue-900 mbg-[#5f2781] flex items-center gap-2">
+                                                            <h3 className="font-bold text-blue-900 mbg-zinc-800 flex items-center gap-2">
                                                                 <Calendar className="w-5 h-5" />
                                                                 Schedule Pickup Appointment
                                                             </h3>
 
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mbg-[#5f2781]">
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mbg-zinc-800">
                                                                 <div>
                                                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                                                         <Calendar className="inline w-4 h-4 mr-1" />
@@ -259,7 +259,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                         name="appointmentDate"
                                                                         min={new Date().toISOString().split("T")[0]}
                                                                         className={`w-full px-4 py-3 border-2 ${errors.appointmentDate && touched.appointmentDate
-                                                                            ? "border-[#5f2781] focus:border-[#5f2781]"
+                                                                            ? "border-zinc-500 focus:border-zinc-500"
                                                                             : "border-gray-200 focus:border-blue-500"
                                                                             } rounded-xl focus:outline-none transition-colors`}
                                                                     />
@@ -279,7 +279,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                         as="select"
                                                                         name="appointmentTime"
                                                                         className={`w-full px-4 py-3 border-2 ${errors.appointmentTime && touched.appointmentTime
-                                                                            ? "border-[#5f2781] focus:border-[#5f2781]"
+                                                                            ? "border-zinc-500 focus:border-zinc-500"
                                                                             : "border-gray-200 focus:border-blue-500"
                                                                             } rounded-xl focus:outline-none transition-colors`}
                                                                     >
@@ -325,7 +325,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                         className="space-y-6"
                                                     >
                                                         <div className="bg-green-50 rounded-2xl p-6 border border-green-200">
-                                                            <h3 className="font-bold text-green-900 mbg-[#5f2781] flex items-center gap-2">
+                                                            <h3 className="font-bold text-green-900 mbg-zinc-800 flex items-center gap-2">
                                                                 <MapPin className="w-5 h-5" />
                                                                 Shipping Address
                                                             </h3>
@@ -338,7 +338,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                         name="street"
                                                                         placeholder="Enter your street address"
                                                                         className={`w-full px-4 py-3 border-2 ${errors.street && touched.street
-                                                                            ? "border-[#5f2781] focus:border-[#5f2781]"
+                                                                            ? "border-zinc-500 focus:border-zinc-500"
                                                                             : "border-gray-200 focus:border-green-500"
                                                                             } rounded-xl focus:outline-none transition-colors`}
                                                                     />
@@ -353,7 +353,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                             name="city"
                                                                             placeholder="Enter city"
                                                                             className={`w-full px-4 py-3 border-2 ${errors.city && touched.city
-                                                                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                                                                ? "border-zinc-500 focus:border-zinc-500"
                                                                                 : "border-gray-200 focus:border-green-500"
                                                                                 } rounded-xl focus:outline-none transition-colors`}
                                                                         />
@@ -367,7 +367,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                             name="state"
                                                                             placeholder="Enter state"
                                                                             className={`w-full px-4 py-3 border-2 ${errors.state && touched.state
-                                                                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                                                                ? "border-zinc-500 focus:border-zinc-500"
                                                                                 : "border-gray-200 focus:border-green-500"
                                                                                 } rounded-xl focus:outline-none transition-colors`}
                                                                         />
@@ -383,7 +383,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                             name="zipCode"
                                                                             placeholder="12345"
                                                                             className={`w-full px-4 py-3 border-2 ${errors.zipCode && touched.zipCode
-                                                                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                                                                ? "border-zinc-500 focus:border-zinc-500"
                                                                                 : "border-gray-200 focus:border-green-500"
                                                                                 } rounded-xl focus:outline-none transition-colors`}
                                                                         />
@@ -407,7 +407,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                                         }}
                                                                         placeholder="+1 (555) 123-4567"
                                                                         className={`w-full px-4 py-3 border-2 ${errors.contactPhone && touched.contactPhone
-                                                                            ? "border-[#5f2781] focus:border-[#5f2781]"
+                                                                            ? "border-zinc-500 focus:border-zinc-500"
                                                                             : "border-gray-200 focus:border-green-500"
                                                                             } rounded-xl focus:outline-none transition-colors`}
                                                                     />
@@ -441,7 +441,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                     disabled={isSubmitting || !selectedMethod}
                                                     whileHover={{ scale: 1.02 }}
                                                     whileTap={{ scale: 0.98 }}
-                                                    className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] text-white rounded-2xl font-semibold hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                                                    className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700  disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"
                                                 >
                                                     {isSubmitting ? (
                                                         <div className="flex items-center justify-center gap-2">

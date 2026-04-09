@@ -124,10 +124,10 @@ const ReferralDashboard = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center justify-center p-2 bg-orange-100 rounded-full mbg-[#5f2781]">
+          <div className="inline-flex items-center justify-center p-2 bg-orange-100 rounded-full mbg-zinc-800">
             {/* <Clock className="h-6 w-6 text-[#F33E0A]" /> */}
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mbg-[#5f2781]">
+          <h1 className="text-4xl md:text-5xl font-bold bg-zinc-800 mbg-zinc-800">
           Referral <span className="text-[#F33E0A]">Empire </span> 
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -147,7 +147,7 @@ const ReferralDashboard = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-[#F33E0A] opacity-5"></div>
             <div className="relative z-10">
-              <div className="flex items-center justify-between mbg-[#5f2781]">
+              <div className="flex items-center justify-between mbg-zinc-800">
                 <div className="p-3 bg-red-100 rounded-2xl">
                   <FiHome className="w-8 h-8 text-[#F33E0A]" />
                 </div>
@@ -182,7 +182,7 @@ const ReferralDashboard = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-300 to-cyan-400 opacity-5"></div>
             <div className="relative z-10">
-              <div className="flex items-center justify-between mbg-[#5f2781]">
+              <div className="flex items-center justify-between mbg-zinc-800">
                 <div className="p-3 bg-cyan-100 rounded-2xl">
                   <HiMiniBuildingLibrary  className="w-8 h-8 text-cyan-400" />
                 </div>
@@ -212,7 +212,7 @@ const ReferralDashboard = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 opacity-5"></div>
             <div className="relative z-10">
-              <div className="flex items-center justify-between mbg-[#5f2781]">
+              <div className="flex items-center justify-between mbg-zinc-800">
                 <div className="p-3 bg-red-100 rounded-2xl">
                   <Hash className="w-8 h-8 text-purple-600" />
                 </div>
@@ -241,7 +241,7 @@ const ReferralDashboard = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 opacity-5"></div>
             <div className="relative z-10">
-              <div className="flex items-center justify-between mbg-[#5f2781]">
+              <div className="flex items-center justify-between mbg-zinc-800">
                 <div className="p-3 bg-green-100 rounded-2xl">
                   <DollarSign className="w-8 h-8 text-green-600" />
                 </div>
@@ -408,7 +408,7 @@ const ReferralDashboard = () => {
               >
                 🚀
               </motion.div>
-              <h4 className="text-2xl font-bold text-gray-800 mbg-[#5f2781]">Ready to Launch? 🌟</h4>
+              <h4 className="text-2xl font-bold text-gray-800 mbg-zinc-800">Ready to Launch? 🌟</h4>
               <p className="text-lg text-gray-600 mb-6 max-w-md mx-auto">
                 Your referral empire starts here! Share your link and watch the magic happen ✨
               </p>
@@ -466,7 +466,7 @@ const ReferralDashboard = () => {
                                 S
                               </span>
                             </div>
-                            <span className="text-sm font-semibold text-gray-900 capitalize">
+                            <span className="text-sm font-semibold bg-zinc-800 capitalize">
                              {`Squad ${index+1}`}
                             </span>
                           </div>

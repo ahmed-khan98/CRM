@@ -13,6 +13,7 @@ import Image from "next/image";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import SaleModal from "@/app/_Components/Modal/SaleModal";
 import toast from "react-hot-toast";
+import { SALEHEADERS } from "@/app/_Components/table/tableRow/tableHeader/saleHeader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -63,7 +64,7 @@ export default function Client() {
     if (!data?.data) return [];
     if (activeFilter !== "all") {
       return data.data.filter(
-        (item) => item?.departmentId?.name === activeFilter
+        (item) => item?.departmentId?.name === activeFilter,
       );
     } else {
       return data.data;
@@ -79,7 +80,7 @@ export default function Client() {
     } catch (error) {
       toast.error(error.data?.message || "Failed to delete sale");
     }
-  },[confirmDelete,deleteSale,refetch])
+  }, [confirmDelete, deleteSale, refetch]);
 
   if (isLoading) {
     return (
@@ -91,9 +92,9 @@ export default function Client() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-zinc-700 font-semibold">
           Loading your Sales... 🚀
         </span>
       </div>
@@ -101,11 +102,11 @@ export default function Client() {
   }
 
   return (
-    <div className="min-h-screen  py-0 mx-1">
+    <div className="min-h-screen  mx-1">
       <div className="max-w-6xl mx-auto p-1 flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
-            <Users className="h-5 w-5 text-[#5f2781]" />
+            <Users className="h-5 w-5 text-zinc-700" />
             <h3 className="text-[#242424] text-xl font-bold">All Sales</h3>
           </div>
 
@@ -113,7 +114,7 @@ export default function Client() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-2 shadow-xl cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
             >
               <Plus className="h-4 w-4 text--white" />
               Add New Sale
@@ -127,7 +128,7 @@ export default function Client() {
                 onClick={() => setActiveFilter(e)}
                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${
                   activeFilter === e
-                    ? "bg-[#5f2781] text-white shadow-md"
+                    ? "bg-zinc-800 text-white shadow-md"
                     : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
@@ -139,11 +140,11 @@ export default function Client() {
 
         <motion.div
           variants={itemVariants}
-          className="bg-white rounded-2xl mx-1 md:mx-0 p-2 shadow-xl border border-purple-100"
+          className=" rounded-2xl  md:mx-0 shadow-xl border border-gray-100"
         >
           {filteredNotifications()?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Users className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+              <Users className="h-16 w-16 text-gray-300 mbg-zinc-800" />
               <h3 className="text-xl font-semibold text-gray-700">No Sale</h3>
               <p className="text-gray-500 mt-2">
                 {activeFilter === "all"
@@ -152,55 +153,23 @@ export default function Client() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-lg border border-gray-200">
+            <div className="overflow-hidden rounded-2xl shadow-lg border border-gray-100">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-[#F7F7F7]">
+                  <thead className="sticky top-0 z-20">
                     <tr>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Name{" "}
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Email{" "}
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Phone No.{" "}
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Serial No.{" "}
-                      </th>
-
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Brand Name{" "}
-                      </th>
-
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Brand Mark
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Department
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Agent
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Type{" "}
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Fronter{" "}
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Amount{" "}
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Status{" "}
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Date{" "}
-                      </th>
-                      <th className="px-2 py-1.5 text-center text-sm font-medium text-gray-800 capitalize tracking-wider">
-                        Action
-                      </th>
+                      {SALEHEADERS.map((col, index) => (
+                        <th
+                          key={index}
+                          className={`sticky top-0 p-3 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800 ${
+                            col === "Status" || col === "Action"
+                              ? "text-center"
+                              : ""
+                          }`}
+                        >
+                          {col}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -210,33 +179,33 @@ export default function Client() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="hover:bg-[#f7f7f7] transition-colors"
+                        className="hover:bg-zinc-50 transition-colors"
                       >
-                        <td className="px-2 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
+                        <td className="p-4 whitespace-nowrap text-sm text-gray-600 capitalize">
                           {emp?.name || "-"}
                         </td>
 
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 ">
+                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 ">
                           {emp?.email || "-"}
                         </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.phoneNo || "-"}
                         </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.serialNo || "-"}
                         </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.brandName || "-"}
                         </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.brandMark || "-"}
                         </td>
 
-                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
+                        <td className="p-4 whitespace-nowrap capitalize">
                           {emp?.departmentId?.name ? (
                             <span
                               className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
-                                emp?.departmentId?.name
+                                emp?.departmentId?.name,
                               )}`}
                             >
                               {emp?.departmentId?.name.charAt(0).toUpperCase() +
@@ -247,11 +216,9 @@ export default function Client() {
                           )}
                         </td>
 
-                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
+                        <td className="p-4 whitespace-nowrap capitalize">
                           {emp?.agent ? (
-                            <span
-                              className={` text-xs font-medium `}
-                            >
+                            <span className={` text-xs font-medium `}>
                               {emp.agent.fullName
                                 ? `${emp.agent.fullName}`
                                 : "-"}
@@ -260,20 +227,20 @@ export default function Client() {
                             "-" // if no handleBy
                           )}
                         </td>
-                         <td className="px-2 py-1.5 whitespace-nowrap">
+                        <td className="p-4 whitespace-nowrap">
                           <div className="flex items-center gap-3">
-                            <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
-                                emp?.type
-                              )}`}>
+                            <span
+                              className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
+                                emp?.type,
+                              )}`}
+                            >
                               {emp?.type}
                             </span>
                           </div>
                         </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap capitalize">
+                        <td className="p-4 whitespace-nowrap capitalize">
                           {emp?.fronter ? (
-                            <span
-                              className={` text-xs font-medium`}
-                            >
+                            <span className={` text-xs font-medium`}>
                               {emp.fronter.fullName
                                 ? `${emp.fronter.fullName}`
                                 : "-"}
@@ -282,22 +249,19 @@ export default function Client() {
                             "-" // if no handleBy
                           )}
                         </td>
-                        
 
-                        <td className="px-2 py-1.5 whitespace-nowrap">
+                        <td className="p-4 whitespace-nowrap">
                           {/* <div className="flex items-center gap-3"> */}
-                            <span className="text-sm  text-gray-600">
-                              {emp?.amount}
-                            </span>
+                          <span className="text-sm  text-gray-600">
+                            {emp?.amount}
+                          </span>
                           {/* </div> */}
                         </td>
-
-                       
 
                         <td className="px-3 py-4 whitespace-nowrap">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                              emp.status
+                              emp.status,
                             )}`}
                           >
                             {emp.status.charAt(0).toUpperCase() +
@@ -305,7 +269,7 @@ export default function Client() {
                           </span>
                         </td>
 
-                        <td className="px-2 py-1.5 whitespace-nowrap">
+                        <td className="p-4 whitespace-nowrap">
                           {/* <div className="flex items-center gap-3"> */}
                           <span className="text-[12px]  text-gray-600 ">
                             {emp?.createdAt ? formatDate(emp.createdAt) : "-"}
@@ -318,7 +282,7 @@ export default function Client() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleEdit(emp)}
-                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-[#5f2781] text-white rounded-lg hover:bg-[#4f1f6d] transition-colors"
+                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-900 transition-colors"
                           >
                             <Edit className="h-4 w-4" />
                           </motion.button>

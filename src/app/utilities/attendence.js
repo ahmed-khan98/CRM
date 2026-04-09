@@ -4,7 +4,7 @@ import moment from "moment-timezone";
 export const Tooltip = ({ text, children }) => (
     <div className="group relative inline-flex items-center">
       {children}
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 p-2 bg-gray-900 text-white text-[10px] rounded-lg shadow-xl z-[999] text-center leading-tight">
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 p-2 bg-zinc-800 text-white text-[10px] rounded-lg shadow-xl z-[999] text-center leading-tight">
         {text}
         <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
       </div>
@@ -41,12 +41,12 @@ export const Tooltip = ({ text, children }) => (
       case "present":
         return "bg-green-100 text-green-700 border-green-200";
       case "full-day":
-        return "bg-blue-100 text-blue-700 border-blue-200";
+        return "bg-blue-200 text-blue-700 border-blue-200";
       case "late":
       case "half-day":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
+        return "bg-yellow-200 text-yellow-800 border-yellow-300";
       case "absent":
-        return "bg-red-100 text-red-700 border-red-200";
+        return "bg-red-200 text-red-700 border-red-200";
       case "active":
         return "bg-purple-100 text-purple-700 border-purple-200";
       default:

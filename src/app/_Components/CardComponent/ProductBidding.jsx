@@ -125,7 +125,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mbg-[#5f2781] p-3 bg-green-100 text-green-800 rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
+              className="mbg-zinc-800 p-3 bg-green-100 text-green-800 rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
             >
               <CheckCircle size={18} />
               <div className="flex-1">Bid placed successfully!</div>
@@ -138,7 +138,7 @@ const ProductBidding = ({ id, isSold, highestBid, isAuctionActive, userBid, bidd
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="mbg-[#5f2781]  m-1 p-3 bg-[#f2d9bd] border border-[#EA580C]  text-[#EA580C] rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
+            className="mbg-zinc-800  m-1 p-3 bg-[#f2d9bd] border border-[#EA580C]  text-[#EA580C] rounded-lg flex items-center gap-2 absolute bottom-full left-0 right-0 z-10"
           >
             <AlertCircle size={18} />
             <div className="flex-1"><strong>OUTBID: </strong>Another bidder has a higher <strong>Max Bid</strong> on this item. You'll need to increase your <strong>Max Bid</strong> for a chance to win</div>

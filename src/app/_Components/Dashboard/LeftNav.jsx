@@ -21,6 +21,7 @@ import {
   Mails,
   Building,
   Link,
+  MegaphoneIcon,
 } from "lucide-react";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
@@ -53,6 +54,11 @@ const LeftNav = ({ set }) => {
       name: "Brand",
       icon: <Home className="w-5 h-5" />,
       path: ["/dashboard/brand"],
+    },
+    {
+      name: "Announcement",
+      icon: <MegaphoneIcon className="w-5 h-5" />,
+      path: ["/dashboard/announcement"],
     },
     {
       name: "Employee",
@@ -167,8 +173,9 @@ const LeftNav = ({ set }) => {
 
   const SUBADMIN_ALLOWED_TABS = [
     "Dashboard",
-    "Employee",
+    "Employees",
     "Brand",
+    "Announcement",
     "Client",
     "leads",
     "Email",
@@ -257,105 +264,88 @@ const LeftNav = ({ set }) => {
   };
 
   return (
-    <div className="h-full bg-white overflow-y-auto mx-2 pb-2 drop-shadow-lg rounded-2xl border border-gray-100 ">
-      <div className="py-2 ">
-        {/* Use the filteredMenuItems array for mapping */}
-        {filteredMenuItems.map((item, index) => {
-          const isActive = isMenuActive(item.path);
-          const hasSubmenu = item.submenu && item.submenu.length > 0;
-          const isExpanded = expandedMenus[index] || isActive;
+  <div className="h-full bg-zinc-900 overflow-y-auto mx-2 drop-shadow-xl rounded-2xl">
+  <div className="py-2">
+    {filteredMenuItems.map((item, index) => {
+      const isActive = isMenuActive(item.path);
+      const hasSubmenu = item.submenu && item.submenu.length > 0;
+      const isExpanded = expandedMenus[index] || isActive;
 
-          return (
-            <div key={index} className="mb-0 ">
-              <div
-                onClick={() => {
-                  if (hasSubmenu) {
-                    toggleSubmenu(index);
-                  } else {
-                    router.push(item.path[0]);
-                    if (set) {
-                      set();
-                    }
-                  }
-                }}
-                className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-200  ${
-                  isActive
-                    ? "bg-[#f7f7f7] text-[#5f2781] border-l-4 border-[#5f2781]"
-                    : "text-gray-700 hover:bg-[#f7f7f7] hover:text-[#5f2781]"
-                }`}
-              >
-                <div className="flex items-center gap-4 ">
-                  <span
-                    className={isActive ? "text-[#5f2781]" : "text-gray-500"}
-                  >
-                    {item.icon}
-                  </span>
-                  <span className="font-medium text-sm">
-                    {sidebars?.data?.[index]?.title ?? item?.name}
-                  </span>
-                  {item.badge && (
-                    <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-                {hasSubmenu && (
-                  <span className="text-gray-400">
-                    {isExpanded ? (
-                      <ChevronDown size={16} />
-                    ) : (
-                      <ChevronRight size={16} />
-                    )}
-                  </span>
-                )}
-              </div>
-
-              {/* Submenu */}
-              {hasSubmenu && isExpanded && (
-                <div className="bg-gray-50 pl-6 pr-2">
-                  {item.submenu.map((subItem, subIndex) => (
-                    <div
-                      key={subIndex}
-                      onClick={() => {
-                        if (set) {
-                          set();
-                        }
-                        router.push(subItem.path);
-                      }}
-                      className={`flex gap-2 py-2 px-3 text-[12px] font-medium cursor-pointer transition-colors hover:bg-white ${
-                        isSubmenuActive(subItem.path)
-                          ? "text-[#5f2781] font-medium"
-                          : "text-gray-600 hover:text-[#5f2781]"
-                      }`}
-                    >
-                      {" "}
-                      <span
-                        className={
-                          isSubmenuActive(subItem.path)
-                            ? "text-[#5f2781]"
-                            : "text-gray-500"
-                        }
-                      >
-                        {subItem.icon}
-                      </span>
-                      {subItem.name}
-                    </div>
-                  ))}
-                </div>
+      return (
+        <div key={index} className="mb-1 px-2"> {/* Added slight padding for floating effect */}
+          <div
+            onClick={() => {
+              if (hasSubmenu) {
+                toggleSubmenu(index);
+              } else {
+                router.push(item.path[0]);
+                if (set) set();
+              }
+            }}
+            className={`flex items-center justify-between px-4 py-2.5 cursor-pointer rounded-xl transition-all duration-200 ${
+              isActive
+                ? "bg-zinc-800/40 text-zinc-400 shadow-sm border border-zinc-800"
+                : "text-zinc-300 hover:bg-zinc-800/40 hover:text-zinc-400"
+            }`}
+          >
+            <div className="flex items-center gap-4">
+              <span className={isActive ? "text-zinc-400" : " hover:text-zinc-400"}>
+                {item.icon}
+              </span>
+              <span className="font-medium text-sm">
+                {sidebars?.data?.[index]?.title ?? item?.name}
+              </span>
+              {item.badge && (
+                <span className="ml-2 px-2 py-0.5 bg-zinc-800 text-zinc-300 text-[10px] rounded-full border ">
+                  {item.badge}
+                </span>
               )}
             </div>
-          );
-        })}
+            {hasSubmenu && (
+              <span className="text-zinc-600">
+                {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              </span>
+            )}
+          </div>
 
-        <div
-          onClick={() => handleLogout()}
-          className="flex items-center gap-3 px-4 py-2 mt-4 text-[#5f2781] hover:b-[#4f1f6d] cursor-pointer transition-all duration-200"
-        >
-          <LogOut className="w-5 h-5" />
-          <span className="font-medium text-sm">Out</span>
+          {/* Submenu with darker contrast */}
+          {hasSubmenu && isExpanded && (
+            <div className="mt-1 ml-4 pl-4 pr-2 space-y-1">
+              {item.submenu.map((subItem, subIndex) => (
+                <div
+                  key={subIndex}
+                  onClick={() => {
+                    if (set) set();
+                    router.push(subItem.path);
+                  }}
+                  className={`flex gap-2 py-2 px-3 text-[12px] font-medium rounded-lg cursor-pointer transition-colors ${
+                    isSubmenuActive(subItem.path)
+                     ? "bg-zinc-800/40 text-zinc-800 shadow-sm border border-zinc-800"
+                : "text-zinc-300 hover:bg-zinc-800/40 hover:text-zinc-400"
+                  }`}
+                >
+                  <span className={isSubmenuActive(subItem.path) ? "text-zinc-300" : "hover:text-zinc-400"}>
+                    {subItem.icon}
+                  </span>
+                  {subItem.name}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      );
+    })}
+
+    {/* Logout Button updated */}
+    <div
+      onClick={() => handleLogout()}
+      className="flex items-center gap-3 px-6 py-3 mt-4 text-red-400 hover:text-red-400 hover:bg-red-500/10 cursor-pointer transition-all duration-200 rounded-xl mx-2"
+    >
+      <LogOut className="w-4 h-4" />
+      <span className="font-medium text-sm">Logout</span>
     </div>
+  </div>
+</div>
   );
 };
 

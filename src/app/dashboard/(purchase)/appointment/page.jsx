@@ -77,9 +77,9 @@ export default function AppointmentBooking() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-gray-800 font-semibold">
           Loading your Employees... 🚀
         </span>
       </div>
@@ -91,7 +91,7 @@ export default function AppointmentBooking() {
       <div className="max-w-6xl mx-auto p-3 flex flex-col space-y-6">
         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
-            <Users className="h-7 w-7 text-[#5f2781]" />
+            <Users className="h-7 w-7 text-gray-800" />
             <h3 className="text-[#242424] text-[24px] font-bold">
               All Employees
             </h3>
@@ -101,7 +101,7 @@ export default function AppointmentBooking() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
             >
               <Plus className="h-4 w-4" />
               Create Employee
@@ -112,7 +112,7 @@ export default function AppointmentBooking() {
                   onClick={() => setActiveFilter(e)}
                   className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${
                     activeFilter === e
-                      ? "bg-[#5f2781] text-white shadow-md"
+                      ? "bg-zinc-800 text-white shadow-md"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -129,7 +129,7 @@ export default function AppointmentBooking() {
         >
           {filteredNotifications()?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Users className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+              <Users className="h-16 w-16 text-gray-300 mbg-zinc-800" />
               <h3 className="text-xl font-semibold text-gray-700">
                 No Employee
               </h3>
@@ -149,7 +149,7 @@ export default function AppointmentBooking() {
             <div className="overflow-hidden rounded-2xl border border-gray-200">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-[#F7F7F7]">
+                  <thead className="bg-zinc-100">
                     <tr>
                       <th className="px-3 py-4 text-left text-sm font-semiboldtext-gray-600 uppercase tracking-wider">
                         Date
@@ -199,19 +199,19 @@ export default function AppointmentBooking() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="hover:bg-[#f7f7f7] transition-colors"
+                          className="hover:bg-zinc-200 transition-colors"
                         >
                           <td className="px-3 py-4 whitespace-nowrap">
                             <div className="flex items-center gap-3">
-                              <Users className="h-4 w-4 text-[#5f2781]" />
-                              <span className="text-sm font-semibold text-gray-900">
+                              <Users className="h-4 w-4 text-gray-800" />
+                              <span className="text-sm font-semibold bg-zinc-800">
                                 {formatDate(appointment.appointmentDate)}
                               </span>
                             </div>
                           </td>
                           <td className="px-3 py-4 whitespace-nowrap">
                             <div className="flex items-center gap-2">
-                              <Clock className="h-4 w-4 text-[#5f2781]" />
+                              <Clock className="h-4 w-4 text-gray-800" />
                               <span className="text-sm text-gray-600">
                                 {formatTime12Hour(appointment.appointmentTime)}
                               </span>
@@ -255,7 +255,7 @@ export default function AppointmentBooking() {
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-medium ${
                                   appointment.paymentStatus === "unpaid"
-                                    ? "text-[#5f2781] bg-red-100"
+                                    ? "text-gray-800 bg-red-100"
                                     : "text-green-600 bg-green-100"
                                 }`}
                               >
@@ -272,7 +272,7 @@ export default function AppointmentBooking() {
                                   whileHover={{ scale: 1.05 }}
                                   whileTap={{ scale: 0.95 }}
                                   onClick={() => handleEdit(appointment)}
-                                  className="inline-flex items-center cursor-pointer px-3 py-2 bg-[#5f2781] text-white rounded-lg hover:bg-red-700 transition-colors"
+                                  className="inline-flex items-center cursor-pointer px-3 py-2 bg-zinc-800 text-white rounded-lg hover:bg-red-700 transition-colors"
                                 >
                                   <Edit className="h-4 w-4 mr-1" />
                                   Edit

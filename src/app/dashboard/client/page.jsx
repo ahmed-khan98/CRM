@@ -105,9 +105,9 @@ export default function Client() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-gray-800 font-semibold">
           Loading your Clients... 🚀
         </span>
       </div>
@@ -115,14 +115,14 @@ export default function Client() {
   }
 
   return (
-    <div className="min-h-screen py-2 bg-[#F8F9FC]">
+    <div className="min-h-screen">
       {/* Container: Bari screen pe max-w-full aur 1600px tak jayega */}
-      <div className="w-full max-w-[1600px] mx-auto px-2  flex flex-col space-y-4">
+      <div className="w-full max-w-[1600px] mx-auto px-1  flex flex-col space-y-4">
         {/* 1. Header Section */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between bg-white p-3 rounded-3xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-purple-50 rounded-2xl">
-              <Users className="h-6 w-6 text-[#5f2781]" />
+            <div className="p-2.5 bg-zinc-200 rounded-2xl">
+              <Users className="h-6 w-6 text-gray-800" />
             </div>
             <div>
               <h3 className="text-[#242424] text-lg font-black tracking-tight leading-none">
@@ -138,7 +138,7 @@ export default function Client() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleEdit()}
-            className="flex items-center justify-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-3 rounded-2xl text-[13px] font-bold shadow-lg shadow-purple-100 hover:bg-[#4f1f6d] transition-all"
+            className="flex items-center justify-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-3 rounded-2xl text-[13px] font-bold shadow-lg shadow-purple-100 hover:bg-zinc-900 transition-all"
           >
             <Plus className="h-5 w-5" />
             Add New Client
@@ -158,8 +158,8 @@ export default function Client() {
                   onClick={() => setActiveFilter(e)}
                   className={`px-5 py-2 text-[12px] font-bold rounded-xl cursor-pointer transition-all capitalize whitespace-nowrap ${
                     activeFilter === e
-                      ? "bg-[#5f2781] text-white shadow-md shadow-purple-100"
-                      : "text-gray-500 hover:bg-white hover:text-[#5f2781]"
+                      ? "bg-zinc-800 text-white shadow-md shadow-purple-100"
+                      : "text-gray-500 hover:bg-zinc-100 hover:text-gray-800"
                   }`}
                 >
                   {e}
@@ -171,11 +171,11 @@ export default function Client() {
 
         <motion.div
           variants={itemVariants}
-          className="bg-white rounded-3xl mx-1 md:mx-0 p-4 shadow-xl border border-purple-100"
+          className=" md:mx-0"
         >
           {filteredNotifications()?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Users className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+              <Users className="h-16 w-16 text-gray-300 mbg-zinc-800" />
               <h3 className="text-xl font-semibold text-gray-700">No Client</h3>
               <p className="text-gray-500 mt-2">
                 {activeFilter === "all"
@@ -184,29 +184,29 @@ export default function Client() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+            <div className="overflow-hidden bg-zinc-800 rounded-2xl shadow-lg">
               <div className="overflow-x-auto">
                 <table className="min-w-full border-separate border-spacing-0">
-                  <thead className="bg-[#F9FAFB]">
+                  <thead className="">
                     <tr>
                       {/* Sticky Name Column */}
-                      <th className=" px-4 py-4 text-left text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                      <th className=" px-4 py-3 text-left text-[13px] font-bold text-zinc-300">
                         Client Info
                       </th>
-                      <th className="px-4 py-4 text-left text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                      <th className="px-4 py-3 text-left text-[13px] font-bold text-zinc-300">
                         Company
                       </th>
-                      <th className="px-4 py-4 text-left text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                      <th className="px-4 py-3 text-left text-[13px] font-bold text-zinc-300">
                         Contact Details
                       </th>
-                      <th className="px-4 py-4 text-center text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                      <th className="px-4 py-3 text-center text-[13px] font-bold text-zinc-300">
                         Tags
                       </th>
-                      <th className="px-4 py-4 text-left text-[13px] font-bold text-gray-600 border-b border-gray-100">
+                      <th className="px-4 py-3 text-left text-[13px] font-bold text-zinc-300">
                         Handled By
                       </th>
                       {/* Sticky Action Column */}
-                      <th className="px-4 py-4 text-center text-[13px] font-bold text-gray-600 border-b border-gray-100 shadow-[-10px_0_15px_-3px_rgba(0,0,0,0.02)]">
+                      <th className="px-4 py-3 text-center text-[13px] font-bold text-zinc-300 ">
                         Actions
                       </th>
                     </tr>
@@ -219,7 +219,7 @@ export default function Client() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="group hover:bg-purple-50/30 transition-all duration-200"
+                        className="group hover:bg-zinc-50 transition-all duration-200"
                       >
                         {/* Sticky Client Info (Image + Name + Email) */}
                         <td className="px-4 py-3 border-b border-gray-50 transition-colors">

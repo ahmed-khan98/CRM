@@ -295,7 +295,7 @@
 //                 <Link href="/" className="mx-auto">
 //                     <Image className="mx-auto h-10 w-auto" src={Main} alt="Logo" height={50} />
 //                 </Link>
-//                 <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+//                 <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight bg-zinc-800">Sign in to your account</h2>
 //             </div>
 //             <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
 
@@ -644,7 +644,7 @@
 //                     name="brand"
 //                     value={values.brand}
 //                     onChange={handleChange}
-//                     className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                     className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                 />
 //             </div>
 //             <ErrorMessage name="brand" component="div" className="text-red-500 text-sm" />
@@ -656,7 +656,7 @@
 //                     name="model"
 //                     value={values.model}
 //                     onChange={handleChange}
-//                     className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                     className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                 />
 //             </div>
 //             <ErrorMessage name="model" component="div" className="text-red-500 text-sm" />
@@ -682,7 +682,7 @@
 //                     name="ASIN"
 //                     value={values.ASIN}
 //                     onChange={handleChange}
-//                     className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                     className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                 />
 //             </div>
 //             <ErrorMessage name="ASIN" component="div" className="text-red-500 text-sm" />
@@ -695,7 +695,7 @@
 //                     name="EAN/UPC"
 //                     value={values?.['EAN/UPC']}
 //                     onChange={handleChange}
-//                     className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                     className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                 />
 //             </div>
 //             <ErrorMessage name="EAN/UPC" component="div" className="text-red-500 text-sm" />
@@ -919,7 +919,7 @@
 //                         name='retail'
 //                         value={values?.retail}
 //                         onChange={handleChange}
-//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                     />
 //                 </div>
 //                 <ErrorMessage name="retail" component="div" className="text-red-500 text-sm" />
@@ -932,7 +932,7 @@
 //                         name='price'
 //                         value={values?.price}
 //                         onChange={handleChange}
-//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                     />
 //                 </div>
 //                 <ErrorMessage name="price" component="div" className="text-red-500 text-sm" />
@@ -944,7 +944,7 @@
 //                         type="text"
 //                         name='buyerPremium'
 //                         value={values?.buyerPremium}
-//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                     />
 //                 </div>
 //                 <ErrorMessage name="buyerPremium" component="div" className="text-red-500 text-sm" />
@@ -972,7 +972,7 @@
 //                         name='item weight'
 //                         value={values?.['item weight']}
 //                         onChange={handleChange}
-//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                     />
 //                 </div>
 //                 <ErrorMessage name="item weight" component="div" className="text-red-500 text-sm" />
@@ -985,7 +985,7 @@
 //                         name='dimension'
 //                         value={values?.dimension}
 //                         onChange={handleChange}
-//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                     />
 //                 </div>
 //                 <ErrorMessage name="dimension" component="div" className="text-red-500 text-sm" />
@@ -996,7 +996,7 @@
 //                         type="text"
 //                         name='handling fee'
 //                         value={values?.['handling fee']}
-//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                     />
 //                 </div>
 //                 <ErrorMessage name="handling fee" component="div" className="text-red-500 text-sm" />
@@ -1008,7 +1008,7 @@
 //                         name='location'
 //                         value={values?.location}
 //                         onChange={handleChange}
-//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
+//                         className="block w-full rounded-md bg-white px-3 py-2.5 text-base bg-zinc-800 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-red-600 sm:text-sm/6"
 //                     />
 //                 </div>
 //                 <ErrorMessage name="location" component="div" className="text-red-500 text-sm" />

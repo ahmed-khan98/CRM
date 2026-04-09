@@ -66,10 +66,10 @@ const BulkEmailsPage = () => {
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div className="flex items-center gap-4 mb-4 md:mb-0">
             <div className="bg-purple-100 p-3 rounded-full">
-              <Mails className="h-7 w-7 text-[#5f2781]" />
+              <Mails className="h-7 w-7 text-gray-800" />
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold text-gray-900">
+              <h1 className="text-lg md:text-xl font-bold bg-zinc-800">
                Trademark Bulk Email Dashboard
               </h1>
               <p className="text-gray-500 text-sm mt-1">
@@ -81,7 +81,7 @@ const BulkEmailsPage = () => {
             whileHover={{ scale: 0.95 }}
             whileTap={{ scale: 0.99 }}
             onClick={() => router.push("/dashboard/SentTmBulkEmail")}
-            className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-[#4f1f6d] transition-colors shadow-lg"
+            className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-zinc-900 transition-colors shadow-lg"
           >
             <Send className="h-4 w-4" />
            New Campaign

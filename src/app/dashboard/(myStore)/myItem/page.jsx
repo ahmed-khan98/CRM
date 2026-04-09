@@ -51,7 +51,7 @@
 //       case false :
 //         return "text-yellow-600 bg-yellow-100"
 //       case "discarded":
-//         return "text-[#5f2781] bg-red-100"
+//         return "text-gray-800 bg-red-100"
 //       default:
 //         return "text-gray-600 bg-gray-100"
 //     }
@@ -84,9 +84,9 @@
 //         <motion.div
 //           animate={{ rotate: 360 }}
 //           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-//           className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+//           className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
 //         />
-//         <span className="ml-4 text-[#5f2781] font-semibold">Loading your Store Items... 🚀</span>
+//         <span className="ml-4 text-gray-800 font-semibold">Loading your Store Items... 🚀</span>
 //       </div>
 //     )
 //   }
@@ -97,7 +97,7 @@
 
 //         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
 //           <div className="flex items-center gap-3">
-//             <Store className="h-7 w-7 text-[#5f2781]" />
+//             <Store className="h-7 w-7 text-gray-800" />
 //             <h3 className="text-[#242424] text-[24px] font-bold">{currentUser?.isStore ? 'My Items' :'My Store'}</h3>
 //           </div>
 
@@ -105,7 +105,7 @@
 //           <div className="flex bg-white rounded-full shadow-sm p-1">
 //             {filterData?.map(e => <button
 //               onClick={() => setActiveFilter(e)}
-//               className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+//               className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-zinc-800 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
 //                 }`}
 //             >
 //               {e}
@@ -135,7 +135,7 @@
 //             <div className="overflow-hidden rounded-2xl border border-gray-200" >
 //               <div className="overflow-x-auto">
 //                 <table className="min-w-full">
-//                   <thead className="bg-[#5f2781]">
+//                   <thead className="bg-zinc-800">
 //                     <tr>
 //                     <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Image
@@ -175,7 +175,7 @@
 //                         initial={{ opacity: 0, x: -20 }}
 //                         animate={{ opacity: 1, x: 0 }}
 //                         transition={{ delay: index * 0.1 }}
-//                         className="hover:bg-[#f7f7f7] transition-colors"
+//                         className="hover:bg-zinc-200 transition-colors"
 //                       >
 //                         <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600"> <img
 //                           src={product?.images?.[0]}
@@ -299,7 +299,7 @@
 //       case false:
 //         return "text-yellow-600 bg-yellow-100"
 //       case "discarded":
-//         return "text-[#5f2781] bg-red-100"
+//         return "text-gray-800 bg-red-100"
 //       default:
 //         return "text-gray-600 bg-gray-100"
 //     }
@@ -356,9 +356,9 @@
 //         <motion.div
 //           animate={{ rotate: 360 }}
 //           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-//           className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+//           className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
 //         />
-//         <span className="ml-4 text-[#5f2781] font-semibold">Loading your Store Items... 🚀</span>
+//         <span className="ml-4 text-gray-800 font-semibold">Loading your Store Items... 🚀</span>
 //       </div>
 //     )
 //   }
@@ -382,7 +382,7 @@
 //                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
 //                   className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6"
 //                 >
-//                   <Store className="h-12 w-12 text-[#5f2781]" />
+//                   <Store className="h-12 w-12 text-gray-800" />
 //                 </motion.div>
 
 //                 {/* Main Message */}
@@ -413,11 +413,11 @@
 //                   className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-6 mb-8 border border-red-200"
 //                 >
 //                   <div className="flex items-center justify-center mb-4">
-//                     <DollarSign className="h-8 w-8 text-[#5f2781] mr-2" />
+//                     <DollarSign className="h-8 w-8 text-gray-800 mr-2" />
 //                     <h3 className="text-xl font-semibold text-[9825fd]">One-Time Setup Fee</h3>
 //                   </div>
 //                   <div className="text-center">
-//                     <span className="text-4xl font-bold text-[#5f2781]">$50</span>
+//                     <span className="text-4xl font-bold text-gray-800">$50</span>
 //                     <p className="text-gray-600 mt-2">
 //                       This one-time payment covers your store setup, verification, and lifetime access to our platform.
 //                     </p>
@@ -462,7 +462,7 @@
 //                   whileHover={{ scale: 1.05 }}
 //                   whileTap={{ scale: 0.95 }}
 //                   onClick={handleCreateStore}
-//                   className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
+//                   className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
 //                 >
 //                   <Plus className="h-5 w-5" />
 //                   Create My Store - $50
@@ -497,7 +497,7 @@
 //       <div className="max-w-7xl mx-auto p-5 flex flex-col space-y-6">
 //         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
 //           <div className="flex items-center gap-3">
-//             <Store className="h-7 w-7 text-[#5f2781]" />
+//             <Store className="h-7 w-7 text-gray-800" />
 //             <h3 className="text-[#242424] text-[24px] font-bold">My Store Items</h3>
 //           </div>
 //           <div className="flex bg-white rounded-full shadow-sm p-1">
@@ -505,7 +505,7 @@
 //               <button
 //                 key={e}
 //                 onClick={() => setActiveFilter(e)}
-//                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+//                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-zinc-800 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
 //                   }`}
 //               >
 //                 {e}
@@ -533,7 +533,7 @@
 //             <div className="overflow-hidden rounded-2xl border border-gray-200">
 //               <div className="overflow-x-auto">
 //                 <table className="min-w-full">
-//                   <thead className="bg-[#5f2781]">
+//                   <thead className="bg-zinc-800">
 //                     <tr>
 //                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Image
@@ -570,7 +570,7 @@
 //                           initial={{ opacity: 0, x: -20 }}
 //                           animate={{ opacity: 1, x: 0 }}
 //                           transition={{ delay: index * 0.1 }}
-//                           className="hover:bg-[#f7f7f7] transition-colors"
+//                           className="hover:bg-zinc-200 transition-colors"
 //                         >
 //                           <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
 //                             <img
@@ -689,7 +689,7 @@
 //       case false:
 //         return "text-yellow-600 bg-yellow-100"
 //       case "discarded":
-//         return "text-[#5f2781] bg-red-100"
+//         return "text-gray-800 bg-red-100"
 //       default:
 //         return "text-gray-600 bg-gray-100"
 //     }
@@ -746,9 +746,9 @@
 //         <motion.div
 //           animate={{ rotate: 360 }}
 //           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-//           className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+//           className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
 //         />
-//         <span className="ml-4 text-[#5f2781] font-semibold">Loading your Store Items... 🚀</span>
+//         <span className="ml-4 text-gray-800 font-semibold">Loading your Store Items... 🚀</span>
 //       </div>
 //     )
 //   }
@@ -772,7 +772,7 @@
 //                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
 //                   className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6"
 //                 >
-//                   <Store className="h-12 w-12 text-[#5f2781]" />
+//                   <Store className="h-12 w-12 text-gray-800" />
 //                 </motion.div>
 
 //                 {/* Main Message */}
@@ -803,11 +803,11 @@
 //                   className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-6 mb-8 border border-red-200"
 //                 >
 //                   <div className="flex items-center justify-center mb-4">
-//                     <DollarSign className="h-8 w-8 text-[#5f2781] mr-2" />
+//                     <DollarSign className="h-8 w-8 text-gray-800 mr-2" />
 //                     <h3 className="text-xl font-semibold text-[9825fd]">One-Time Setup Fee</h3>
 //                   </div>
 //                   <div className="text-center">
-//                     <span className="text-4xl font-bold text-[#5f2781]">$50</span>
+//                     <span className="text-4xl font-bold text-gray-800">$50</span>
 //                     <p className="text-gray-600 mt-2">
 //                       This one-time payment covers your store setup, verification, and lifetime access to our platform.
 //                     </p>
@@ -852,7 +852,7 @@
 //                   whileHover={{ scale: 1.05 }}
 //                   whileTap={{ scale: 0.95 }}
 //                   onClick={handleCreateStore}
-//                   className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
+//                   className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
 //                 >
 //                   <Plus className="h-5 w-5" />
 //                   Create My Store - $50
@@ -887,7 +887,7 @@
 //       <div className="max-w-7xl mx-auto p-5 flex flex-col space-y-6">
 //         <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
 //           <div className="flex items-center gap-3">
-//             <Store className="h-7 w-7 text-[#5f2781]" />
+//             <Store className="h-7 w-7 text-gray-800" />
 //             <h3 className="text-[#242424] text-[24px] font-bold">My Store Items</h3>
 //           </div>
 //           <div className="flex bg-white rounded-full shadow-sm p-1">
@@ -895,7 +895,7 @@
 //               <button
 //                 key={e}
 //                 onClick={() => setActiveFilter(e)}
-//                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+//                 className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-zinc-800 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
 //                   }`}
 //               >
 //                 {e}
@@ -923,7 +923,7 @@
 //             <div className="overflow-hidden rounded-2xl border border-gray-200">
 //               <div className="overflow-x-auto">
 //                 <table className="min-w-full">
-//                   <thead className="bg-[#5f2781]">
+//                   <thead className="bg-zinc-800">
 //                     <tr>
 //                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
 //                         Image
@@ -960,7 +960,7 @@
 //                           initial={{ opacity: 0, x: -20 }}
 //                           animate={{ opacity: 1, x: 0 }}
 //                           transition={{ delay: index * 0.1 }}
-//                           className="hover:bg-[#f7f7f7] transition-colors"
+//                           className="hover:bg-zinc-200 transition-colors"
 //                         >
 //                           <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
 //                             <img
@@ -1155,9 +1155,9 @@ export default function Page() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">Loading your Store Items... 🚀</span>
+        <span className="ml-4 text-gray-800 font-semibold">Loading your Store Items... 🚀</span>
       </div>
     )
   }
@@ -1182,7 +1182,7 @@ export default function Page() {
                   transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                   className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6"
                 >
-                  <Store className="h-12 w-12 text-[#5f2781]" />
+                  <Store className="h-12 w-12 text-gray-800" />
                 </motion.div>
 
                 {/* Main Message */}
@@ -1213,11 +1213,11 @@ export default function Page() {
                   className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-6 mb-8 border border-red-200"
                 >
                   <div className="flex items-center justify-center mb-4">
-                    <DollarSign className="h-8 w-8 text-[#5f2781] mr-2" />
+                    <DollarSign className="h-8 w-8 text-gray-800 mr-2" />
                     <h3 className="text-xl font-semibold text-[9825fd]">One-Time Setup Fee</h3>
                   </div>
                   <div className="text-center">
-                    <span className="text-4xl font-bold text-[#5f2781]">$99</span>
+                    <span className="text-4xl font-bold text-gray-800">$99</span>
                     <p className="text-gray-600 mt-2">
                       This one-time payment covers your store setup, verification, and lifetime access to our platform.
                     </p>
@@ -1262,7 +1262,7 @@ export default function Page() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleCreateStore}
-                  className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
+                  className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 hover:from-[#4f1f6d] hover:to-[#5f2781] text-white font-bold py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 flex items-center gap-3 mx-auto"
                 >
                   <Plus className="h-5 w-5" />
                   Create My Store - $99
@@ -1300,8 +1300,8 @@ export default function Page() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             {/* Store Name Section */}
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-[#f7f7f7] rounded-2xl flex items-center justify-center">
-                <Store className="h-8 w-8 text-[#5f2781]" />
+              <div className="w-16 h-16 bg-zinc-200 rounded-2xl flex items-center justify-center">
+                <Store className="h-8 w-8 text-gray-800" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2 capitalize">
@@ -1343,7 +1343,7 @@ export default function Page() {
                   onClick={() => router.push(`/dashboard/feeConfirmation?type=store_payment&id=${storeData?.data?._id}&amount=${99}&product=${storeData?.data?.name}`)
                   }
                   disabled={isPocessing}
-                  className="cursor-pointer w-full bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+                  className="cursor-pointer w-full bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   {isPocessing ? (
                     <>
@@ -1372,7 +1372,7 @@ export default function Page() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => router.push('/dashboard/createListing')}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
             >
               <Plus className="h-4 w-4" />
               Create Listing
@@ -1382,7 +1382,7 @@ export default function Page() {
                 <button
                   key={e}
                   onClick={() => setActiveFilter(e)}
-                  className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-[#5f2781] text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
+                  className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${activeFilter === e ? "bg-zinc-800 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
                     }`}
                 >
                   {e}
@@ -1419,7 +1419,7 @@ export default function Page() {
             <div className="overflow-hidden rounded-2xl border border-gray-200">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-[#f7f7f7]">
+                  <thead className="bg-zinc-100">
                     <tr>
                       <th className="px-3 py-4 text-left text-sm font-bold text-[9825fd] uppercase tracking-wider">
                         Image
@@ -1456,7 +1456,7 @@ export default function Page() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="hover:bg-[#f7f7f7] transition-colors"
+                          className="hover:bg-zinc-200 transition-colors"
                         >
                           <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
                             <img

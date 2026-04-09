@@ -38,7 +38,7 @@ import { useEffect, useState } from "react";
         {/* Main Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-6 animate-slide-up border border-gray-100">
           {/* Headline */}
-          <h1 className="text-3xl font-bold text-center text-gray-900 my-4 text-balance">Payment Successful! 🎉</h1>
+          <h1 className="text-3xl font-bold text-center bg-zinc-800 my-4 text-balance">Payment Successful! 🎉</h1>
 
           {/* Subheading */}
           <p className="text-center text-gray-600 my-8 text-pretty">
@@ -50,7 +50,7 @@ import { useEffect, useState } from "react";
               <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm font-medium">Transaction ID</span>
-                <span className="text-gray-900 font-mono font-semibold text-sm">#TXN-20250108</span>
+                <span className="bg-zinc-800 font-mono font-semibold text-sm">#TXN-20250108</span>
               </div>
               <div className="h-px bg-gradient-to-r from-emerald-200 to-transparent" />
               <div className="flex justify-between items-center">
@@ -60,7 +60,7 @@ import { useEffect, useState } from "react";
                <div className="" />
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 text-sm font-medium">Date</span>
-                <span className="text-gray-900 font-semibold text-sm">{currentDateTime || "Loading..."}</span>
+                <span className="bg-zinc-800 font-semibold text-sm">{currentDateTime || "Loading..."}</span>
               </div>
               <div className="h-px bg-gradient-to-r from-emerald-200 to-transparent" />
               <div className="flex justify-between items-center">

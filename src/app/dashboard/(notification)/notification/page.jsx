@@ -113,7 +113,7 @@ const NotificationsPage = () => {
           </div>
         ) : filteredNotifications().length === 0 ? (
           <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-            <Bell className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+            <Bell className="h-16 w-16 text-gray-300 mbg-zinc-800" />
             <h3 className="text-xl font-semibold text-gray-700">No notifications</h3>
             <p className="text-gray-500 mt-2">
               {activeFilter === "all"
@@ -142,7 +142,7 @@ const NotificationsPage = () => {
                   )}
                   <div className="p-5">
                     <h4 className="font-semibold text-lg text-gray-800 mb-2">{item?.title}</h4>
-                    <p className="text-gray-600 line-clamp-2 text-sm mbg-[#5f2781]">
+                    <p className="text-gray-600 line-clamp-2 text-sm mbg-zinc-800">
                       {item?.message?.substring(0, 120)}
                       {item?.message?.length > 120 ? "..." : ""}
                     </p>

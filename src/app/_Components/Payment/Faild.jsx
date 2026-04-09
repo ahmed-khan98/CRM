@@ -19,7 +19,7 @@ export default function Faild() {
         {/* Main Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-8 animate-slide-up border border-gray-100">
           {/* Headline */}
-          <h1 className="text-3xl font-bold text-center text-gray-900 mb-3 text-balance">
+          <h1 className="text-3xl font-bold text-center bg-zinc-800 mb-3 text-balance">
             Payment Failed!
           </h1>
 

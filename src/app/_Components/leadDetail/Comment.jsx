@@ -5,7 +5,7 @@ const Comment = ({ id, lastComment, username, lastAction, createdAt }) => {
   return (
     <div key={id} className="relative pl-3">
       {/* Timeline Dot (Accent) */}
-      <div className="absolute w-3 h-3 bg-[#5f2781] rounded-full mt-2 -left-[7px] border-4 border-white"></div>
+      <div className="absolute w-3 h-3 bg-zinc-800 rounded-full mt-2 -left-[7px] border-4 border-white"></div>
 
       {/* Comment Card */}
       <div className="bg-[#f5f4f5] p-2 rounded-lg shadow-sm">
@@ -19,7 +19,7 @@ const Comment = ({ id, lastComment, username, lastAction, createdAt }) => {
           <p className="text-xs font-medium text-gray-700 capitalize">
             Action: {lastAction || "N/A"}
           </p>
-          <p className="text-xs text-[#5f2781] font-medium capitalize ">
+          <p className="text-xs text-gray-800 font-medium capitalize ">
             By: {username}
           </p>
           <p className="text-xs text-gray-600">Date: {formatDate(createdAt)}</p>

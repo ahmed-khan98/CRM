@@ -151,9 +151,9 @@ function Leads() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-gray-800 font-semibold">
           Loading your Leads... 🚀
         </span>
       </div>
@@ -165,7 +165,7 @@ function Leads() {
       <div className="max-full mx-auto p-1  flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
-            <ChartBar className="h-5 w-5 text-[#5f2781]" />
+            <ChartBar className="h-5 w-5 text-gray-800" />
 
             <h3 className="text-[#242424] text-xl font-bold">All Leads</h3>
           </div>
@@ -174,7 +174,7 @@ function Leads() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={handleEdit}
-              className="flex items-center gap-1 cursor-pointer bg-[#5f2781] text-white px-2.5 py-2 shadow-lg rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-1 cursor-pointer bg-zinc-800 text-white px-2.5 py-2 shadow-lg rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
             >
               <Plus className="h-4 w-4 text-white" />
               Add New Lead
@@ -183,7 +183,7 @@ function Leads() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsImportOpen(true)}
-              className="flex items-center gap-1 cursor-pointer bg-[#5f2781] text-white px-2.5 shadow-lg py-2 rounded-full text-sm font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-1 cursor-pointer bg-zinc-800 text-white px-2.5 shadow-lg py-2 rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
             >
               <Plus className="h-4 w-4 text-white" />
               Import
@@ -198,7 +198,7 @@ function Leads() {
             onClick={() => onFilterChange("all")}
             className={`cursor-pointer px-3 py-1 text-xs rounded-full border transition ${
               activeFilter === "all"
-                ? "bg-[#5f2781] text-white border-[#5f2781]"
+                ? "bg-zinc-800 text-white border-zinc-800"
                 : "bg-white text-gray-800 border-gray-200 hover:bg-gray-100"
             }`}
           >
@@ -211,8 +211,8 @@ function Leads() {
               onClick={() => onFilterChange(b?._id)}
               className={`cursor-pointer px-2 md:px-3 py-1 text-xs rounded-full border transition capitalize ${
                 activeFilter === b?._id
-                  ? "bg-[#5f2781] text-white border-[#5f2781]"
-                  : "bg-white text-gray-800 border-gray-200 hover:bg-gray-100"
+                  ? "bg-zinc-800 text-white border-zinc-800"
+                  : "bg-white text-gray-800 border-gray-200 hover:bg-zinc-200 hover:border-gray-300"
               }`}
             >
               {b?.name}
@@ -222,7 +222,7 @@ function Leads() {
 
         <motion.div
           variants={itemVariants}
-          className="bg-white rounded-2xl mx-1 md:mx-0 p-2 shadow-xl border border-purple-100 relative"
+          className=" md:mx-0 rounded-2xl shadow-lg border border-zinc-100 relative"
         >
           {isPaginationLoading && (
             <div className="absolute inset-0 bg-white/70 z-10 flex items-center justify-center rounded-2xl border border-gray-200">
@@ -235,7 +235,7 @@ function Leads() {
 
                   ease: "linear",
                 }}
-                className="w-8 h-8 border-3 border-[#5f2781] border-t-transparent rounded-full"
+                className="w-8 h-8 border-3 border-zinc-800 border-t-transparent rounded-full"
               />
             </div>
           )}
@@ -253,15 +253,15 @@ function Leads() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-lg border border-gray-200">
+            <div className="overflow-hidden rounded-2xl">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-[#F7F7F7]">
-                    <tr>
+                  <thead >
+                    <tr className="">
                       {LEADHEADERS?.map((h) => (
                         <th
                           key={h}
-                          className="px-1 py-3 text-start text-xs font-medium text-gray-800 capitalize"
+                          className="p-3 py-4 text-start text-xs font-medium text-zinc-300 capitalize bg-zinc-800 "
                         >
                           {h}
                         </th>

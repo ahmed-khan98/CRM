@@ -93,7 +93,7 @@ const ManageCards = () => {
             </div>
           ) : cardsData?.data?.length === 0 ? (
             <div className="text-center py-10">
-              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mbg-[#5f2781]">
+              <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mbg-zinc-800">
                 <CreditCard className="h-8 w-8 text-gray-400" />
               </div>
               <h3 className="text-lg font-medium text-gray-700 mb-1">No cards added yet</h3>
@@ -123,7 +123,7 @@ const ManageCards = () => {
                       <div className="text-center p-4">
                         <AlertCircle className="h-10 w-10 text-red-500 mx-auto mb-2" />
                         <h3 className="text-lg font-bold text-gray-800 mb-1">Remove this card?</h3>
-                        <p className="text-gray-600 mbg-[#5f2781]">This action cannot be undone.</p>
+                        <p className="text-gray-600 mbg-zinc-800">This action cannot be undone.</p>
                         <div className="flex justify-center space-x-3">
                           <motion.button
                             whileTap={{ scale: 0.95 }}
@@ -201,7 +201,7 @@ const ManageCards = () => {
         </div>
 
         {/* <div className="bg-white rounded-3xl shadow-md p-6 mt-8">
-          <h2 className="text-xl font-bold text-gray-800 mbg-[#5f2781]">Card Security</h2>
+          <h2 className="text-xl font-bold text-gray-800 mbg-zinc-800">Card Security</h2>
           <p className="text-gray-600 mb-6">
             Your card information is securely stored and processed according to PCI DSS standards. We never store your full card number or CVV.
           </p>

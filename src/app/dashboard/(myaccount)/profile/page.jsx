@@ -109,7 +109,7 @@ const ProfilePage = () => {
 
   const name = formData?.fullName?.split(" ");
   return (
-    <div className="min-h-screen  py-1 mx-1 ">
+    <div className="min-h-screen  mx-1 ">
       <Toaster position="top-center" />
       <div className="max-w-7xl mx-auto">
         <Tab tabs={myAccountTabs} />
@@ -127,15 +127,17 @@ const ProfilePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mx-2 "
+          // {/* className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700 border border-zinc-700/50 hover:border-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"                        > */}
         >
+
           <div className="relative overflow-hidden">
-            <div className="h-18 bg-gradient-to-r from-[#5f2781] to-[#a945fc]"></div>
+            <div className="h-18 bg-gradient-to-r from-zinc-800 via-zinc-600  to-zinc-800 shadow-zinc-900/50"></div>
 
             <div className="relative px-1 md:px-4  pb-6 -mt-12">
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2">
                 <div className="flex items-end gap-4 mx-4 md:mx-0">
                   <div className="h-18 w-18 rounded-full bg-white shadow-md flex items-center justify-center border-3 border-white">
-                    <div className="h-full w-full rounded-full bg-[#5f2781] flex items-center justify-center text-white text-xl font-bold capitalize">
+                    <div className="h-full w-full rounded-full bg-zinc-800 flex items-center justify-center text-white text-xl font-bold capitalize">
                       {name?.map((e) => `${e?.charAt(0)}`) || (
                         <User size={30} />
                       )}
@@ -155,7 +157,7 @@ const ProfilePage = () => {
                   className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${
                     isEditable
                       ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      : "bg-white text-[#5f2781] border border-[#5f2781] hover:bg-[#a945fc] hover:text-white"
+                      : "bg-zinc-800 text-white border border-white hover:bg-zinc-900 hover:text-white"
                   }`}
                 >
                   {isEditable ? (
@@ -169,7 +171,7 @@ const ProfilePage = () => {
                 <button
                   type="button"
                   onClick={() => handleBreakIn()}
-                  className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${"bg-white text-[#5f2781] border border-[#5f2781] hover:bg-[#a945fc] hover:text-white"}`}
+                  className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${"bg-zinc-800 text-white border border-white hover:bg-zinc-900 hover:text-white"}`}
                 >
                   Break In
                 </button>
@@ -199,7 +201,7 @@ const ProfilePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <User size={16} className="text-[#5f2781]" />
+                  <User size={16} className="text-gray-800" />
                   Full Name
                 </label>
                 <div className="relative">
@@ -221,7 +223,7 @@ const ProfilePage = () => {
 
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <IdCard size={18} className="text-[#5f2781]" />
+                  <IdCard size={18} className="text-gray-800" />
                   CNIC
                 </label>
                 <div className="relative">
@@ -243,7 +245,7 @@ const ProfilePage = () => {
 
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <Mail size={16} className="text-[#5f2781]" />
+                  <Mail size={16} className="text-gray-800" />
                   Email Address
                 </label>
                 <div className="relative">
@@ -265,7 +267,7 @@ const ProfilePage = () => {
 
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <Phone size={16} className="text-[#5f2781]" />
+                  <Phone size={16} className="text-gray-800" />
                   Phone Number
                 </label>
                 <div className="relative">
@@ -295,7 +297,7 @@ const ProfilePage = () => {
 
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <ShieldUser size={16} className="text-[#5f2781]" />
+                  <ShieldUser size={16} className="text-gray-800" />
                   Designation
                 </label>
                 <div className="relative">
@@ -323,7 +325,7 @@ const ProfilePage = () => {
 
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <Building size={16} className="text-[#5f2781]" />
+                  <Building size={16} className="text-gray-800" />
                   Department
                 </label>
                 <div className="relative">
@@ -350,7 +352,7 @@ const ProfilePage = () => {
 
               <div className="space-y-1">
                 <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <Calendar size={16} className="text-[#5f2781]" />
+                  <Calendar size={16} className="text-gray-800" />
                   Joining Date
                 </label>
                 <div className="relative">
@@ -387,7 +389,7 @@ const ProfilePage = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="group cursor-pointer relative overflow-hidden p-2 bg-[#5f2781] text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70 min-w-[180px]"
+                    className="group cursor-pointer relative overflow-hidden p-2 bg-zinc-900 text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70 min-w-[180px]"
                   >
                     <span className="relative flex items-center justify-center gap-2">
                       {isLoading ? (

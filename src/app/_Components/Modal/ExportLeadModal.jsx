@@ -18,16 +18,14 @@ const modalVariants = {
 
 const formatKB = (bytes = 0) => (bytes / 1024).toFixed(2) + " KB";
 
-
 export default function ExportLeadModal({ ...props }) {
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [isImporting, setIsImporting] = useState(false);
-    const fileInputRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [importLead, { isLoading }] = useImportLeadMutation();
   const percent = useSelector((s) => s.upload.leadImportPercent);
 
- const handleFileSelect = (e) => {
+  const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
     setSelectedFile(file || null);
   };
@@ -43,11 +41,10 @@ export default function ExportLeadModal({ ...props }) {
       toast.success("Excel File Uploaded Successfully");
       setSelectedFile(null);
       props.closeModal?.();
-      setIsImporting(false) ;
+      setIsImporting(false);
       props.refetch?.();
-
     } catch (err) {
-      console.log(err,'err')
+      console.log(err, "err");
       setIsImporting(false);
       toast.error(err?.data?.message || "Failed to import file");
     }
@@ -79,7 +76,7 @@ export default function ExportLeadModal({ ...props }) {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] px-4 md:px-8 py-3 text-white relative overflow-hidden shrink-0">
+            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-4 md:px-8 py-3 text-white relative overflow-hidden shrink-0">
               <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
               <div className="relative z-10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -163,7 +160,7 @@ export default function ExportLeadModal({ ...props }) {
                   </div>
                   <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
                     <div
-                      className="h-2 bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] transition-all duration-100"
+                      className="h-2 bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 transition-all duration-100"
                       style={{ width: `${percent}%` }}
                     />
                   </div>
@@ -190,7 +187,7 @@ export default function ExportLeadModal({ ...props }) {
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSubmit}
                 disabled={!selectedFile || isImporting}
-                className="cursor-pointer flex-1 px-6 py-3 bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] text-white rounded-2xl font-semibold hover:from-[#8b1ffd] hover:to-[#8b1ffd] disabled:opacity-50 transition-all shadow-lg flex items-center justify-center gap-2"
+                className="cursor-pointer flex-1 px-6 py-3 bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold  hover:from-zinc-800 hover:to-zinc-700 hover:border-zinc-500 hover:shadow-xl hover:shadow-zinc-950/50 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg flex items-center justify-center gap-2"
               >
                 <Upload className="w-4 h-4" />
                 {isImporting ? "Importing…" : "Import File"}

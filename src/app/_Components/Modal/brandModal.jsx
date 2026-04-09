@@ -112,7 +112,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
             className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] px-2 md:px-8 py-3 text-white relative overflow-hidden shrink-0">
+            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-2 md:px-8 py-3 text-white relative overflow-hidden shrink-0">
               <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
               <div className="relative z-10 flex items-center justify-between">
                 <div className="flex items-center gap-1 md:gap-4">
@@ -249,7 +249,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
                             className={`w-full px-4 py-2 ${
                               // ⬇️ tailwind: 'border' not 'border-1'
                               errors.name && touched.name
-                                ? "border border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border border-zinc-500 focus:border-zinc-500"
                                 : "border border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           />
@@ -294,7 +294,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
                           disabled={isSubmitting}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] text-white rounded-2xl font-semibold hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                          className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700  disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"
                         >
                           {isSubmitting ? (
                             <div className="flex items-center justify-center gap-2">

@@ -84,7 +84,7 @@ const DetailPageTab = ({ data }) => {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`relative cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-200 ${tab.key === activeTab ? "text-white shadow-lg" : "text-gray-600 hover:text-gray-900"
+                className={`relative cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-200 ${tab.key === activeTab ? "text-white shadow-lg" : "text-gray-600 hover:bg-zinc-800"
                   }`}
               >
                 {tab.key === activeTab && (
@@ -115,7 +115,7 @@ const DetailPageTab = ({ data }) => {
         {activeTab === 'item_spec' && <div className="flex gap-2 hover:bg-gray-100 transition-colors">
 
           <div className="flex-1 min-w-0">
-            <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
+            <p className="font-semibold bg-zinc-800 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
             CONDITION
             </p>
           </div>
@@ -159,7 +159,7 @@ const DetailPageTab = ({ data }) => {
                 return item?.value !== '' ? (
                   <div key={index} className="flex gap-2 hover:bg-gray-100 transition-colors">
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
+                      <p className="font-semibold bg-zinc-800 text-sm uppercase tracking-wide bg-gray-300 p-3 rounded-lg">
                         {item?.name}
                       </p>
                     </div>
@@ -173,7 +173,7 @@ const DetailPageTab = ({ data }) => {
             })
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mbg-[#5f2781]">
+              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mbg-zinc-800">
                 <Package className="w-8 h-8 text-gray-400" />
               </div>
               <p className="text-gray-500 font-medium">

@@ -81,10 +81,10 @@ const ComingSoonPage = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center justify-center p-2 bg-orange-100 rounded-full mbg-[#5f2781]">
+          <div className="inline-flex items-center justify-center p-2 bg-orange-100 rounded-full mbg-zinc-800">
             <Clock className="h-6 w-6 text-[#F33E0A]" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mbg-[#5f2781]">
+          <h1 className="text-4xl md:text-5xl font-bold bg-zinc-800 mbg-zinc-800">
             Our New <span className="text-[#F33E0A]">Auction Features</span> Are Coming Soon
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -136,7 +136,7 @@ const ComingSoonPage = () => {
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-orange-50 rounded-lg">{feature.icon}</div>
                 <div>
-                  <h3 className="font-bold text-lg text-gray-900 mb-1">{feature.title}</h3>
+                  <h3 className="font-bold text-lg bg-zinc-800 mb-1">{feature.title}</h3>
                   <p className="text-gray-600">{feature.description}</p>
                 </div>
               </div>

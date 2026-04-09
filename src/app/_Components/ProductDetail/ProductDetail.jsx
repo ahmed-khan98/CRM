@@ -140,7 +140,7 @@ const ProductDetail = ({ id }) => {
                 <span>/</span>
                 <span>Auctions</span>
                 <span>/</span>
-                <span className="text-gray-900 font-medium line-clamp-1 md:line-clamp-none">
+                <span className="bg-zinc-800 font-medium line-clamp-1 md:line-clamp-none">
   {productData?.data?.name}
 </span>
 

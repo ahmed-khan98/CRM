@@ -62,9 +62,9 @@ export default function Client() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-gray-800 font-semibold">
           Loading your Brand Email... 🚀
         </span>
       </div>
@@ -76,7 +76,7 @@ export default function Client() {
       <div className="w-full mx-auto p-1 flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
-            <AtSign className="h-5 w-5 text-[#5f2781]" />
+            <AtSign className="h-5 w-5 text-gray-800" />
             <h3 className="text-[#242424] text-xl font-medium">
               All Brand Email
             </h3>
@@ -86,7 +86,7 @@ export default function Client() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-[#5f2781] text-white px-4 py-2 rounded-full text-[12px] font-medium hover:bg-[#4f1f6d] transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-[12px] font-medium hover:bg-zinc-900 transition-colors"
             >
               <Plus className="h-4 w-4 text--white" />
               Add Brand Email
@@ -96,11 +96,11 @@ export default function Client() {
 
         <motion.div
           variants={itemVariants}
-          className="bg-white rounded-3xl mx-1 md:mx-0 p-4 shadow-xl border border-purple-100"
+          className="shadow-lg rounded-2xl"
         >
           {data?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <AtSign  className="h-16 w-16 text-gray-300 mbg-[#5f2781]" />
+              <AtSign  className="h-16 w-16 text-gray-300 mbg-zinc-800" />
               <h3 className="text-xl font-semibold text-gray-700">
                 No Brand Email
               </h3>
@@ -109,22 +109,22 @@ export default function Client() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-gray-200">
+            <div className="overflow-hidden rounded-xl ">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-[#F7F7F7]">
+                  <thead className="bg-zinc-800">
                     <tr>
-                      <th className="px-2 py-3 text-start text-[13px] font-medium capitalize tracking-wider">
+                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
                         Brand{" "}
                       </th>
-                      <th className="px-2 py-3 text-start text-[13px] font-medium capitalize tracking-wider">
+                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
                         Name{" "}
                       </th>
-                      <th className="px-2 py-3 text-start text-[13px] font-medium capitalize tracking-wider">
+                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
                         Email ID{" "}
                       </th>
 
-                      <th className="px-2 py-3 text-start text-[13px] font-medium capitalize tracking-wider">
+                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
                         Action
                       </th>
                     </tr>
@@ -136,7 +136,7 @@ export default function Client() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="hover:bg-[#f7f7f7] transition-colors"
+                        className="hover:bg-zinc-50 transition-colors"
                       >
                         <td className="px-2 py-3 whitespace-nowrap text-[14px] font-medium text-gray-800 capitalize">
                           {emp?.brandId ? `${emp.brandId?.name}` : "-"}
@@ -154,7 +154,7 @@ export default function Client() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleEdit(emp)}
-                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-[#5f2781] text-white rounded-lg hover:bg-[#4f1f6d] transition-colors"
+                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-900 transition-colors"
                           >
                             <Edit className="h-4 w-4" />
                           </motion.button>

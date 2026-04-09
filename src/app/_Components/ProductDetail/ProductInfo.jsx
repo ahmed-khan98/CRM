@@ -180,9 +180,9 @@ const ProductInfo = ({
     <div className="p-4 space-y-3">
 
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-3 capitalize">{name}</h1>
+        <h1 className="text-2xl font-bold bg-zinc-800 mb-3 capitalize">{name}</h1>
 
-        <div className="flex items-center gap-4 mbg-[#5f2781]">
+        <div className="flex items-center gap-4 mbg-zinc-800">
           <div className="flex items-center gap-2">
             <Rating size={20} SVGstyle={{ display: "inline-block" }} initialValue={rating ?? 0} readonly />
             <span className="text-sm text-gray-600">({rating}/5)</span>
@@ -222,7 +222,7 @@ const ProductInfo = ({
 
       {/* Description */}
       <div className="bg-gray-200 rounded-xl p-4">
-        <h3 className="font-semibold text-gray-900 mb-1">Description</h3>
+        <h3 className="font-semibold bg-zinc-800 mb-1">Description</h3>
         <p className="text-gray-700 leading-relaxed">
           {displayedText}
           {isLong && !showFull && "..."}
@@ -244,7 +244,7 @@ const ProductInfo = ({
             <DollarSign className="w-4 h-4 text-gray-600" />
             <span className="text-md font-medium text-gray-600">Estimated Retail</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">${retail}</p>
+          <p className="text-2xl font-bold bg-zinc-800">${retail}</p>
         </div>
 
         <div className="bg-gray-200 rounded-xl p-3 border border-blue-500">
@@ -259,7 +259,7 @@ const ProductInfo = ({
         <div className="bg-gray-200 rounded-xl p-3 sm:col-span-2">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-600">Buyer's Premium</span>
-            <span className="font-bold text-gray-900">
+            <span className="font-bold bg-zinc-800">
               {`${buyerPremium}${buyerPremium?.includes("%") ? "" : "%"}`}
             </span>
           </div>
@@ -268,7 +268,7 @@ const ProductInfo = ({
         <div className="bg-gray-200 rounded-xl p-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-600">Lot Fee</span>
-            <span className="font-bold text-gray-900">
+            <span className="font-bold bg-zinc-800">
               ${lotfee}
             </span>
           </div>
@@ -276,7 +276,7 @@ const ProductInfo = ({
         <div className="bg-gray-200 rounded-xl p-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-600">Quantity</span>
-            <span className="font-bold text-gray-900">
+            <span className="font-bold bg-zinc-800">
               {quantity}
             </span>
           </div>
@@ -325,7 +325,7 @@ const ProductInfo = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-600">Next Minimum Bid</span>
-              <span className="font-bold text-gray-900">${!biddingCount ? highestBid : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1}</span>
+              <span className="font-bold bg-zinc-800">${!biddingCount ? highestBid : automateBidder ? automateBidder?.bidder === user?._id ? automateBidder?.highestBid + 1 : highestBid + 1 : highestBid + 1}</span>
             </div>
 
             <div className="flex gap-3">

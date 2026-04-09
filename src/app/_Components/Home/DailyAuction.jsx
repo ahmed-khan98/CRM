@@ -41,14 +41,14 @@ const DailyAuction = () => {
         {/* Content Section */}
         <div className="p-6 flex flex-col justify-between gap-6 text-left">
           {/* Title & Address */}
-          <div className="text-gray-900">
+          <div className="bg-zinc-800">
             <p className="text-lg">Daily Auctions at</p>
             <h3 className="font-semibold text-2xl">Dean Martin</h3>
           </div>
 
-          <div className="text-lg text-gray-900">
+          <div className="text-lg bg-zinc-800">
             <p>7440 Dean Martin Dr Suite 204</p>
-            <p className="pbg-[#5f2781]">Las Vegas, NV</p>
+            <p className="pbg-zinc-800">Las Vegas, NV</p>
             <p className="font-bold">9,095 items</p>
           </div>
 

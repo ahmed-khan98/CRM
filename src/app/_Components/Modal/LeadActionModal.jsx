@@ -72,7 +72,7 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] px-2 md:px-8 py-2 text-white relative overflow-hidden">
+            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-2 md:px-8 py-2 text-white relative overflow-hidden">
               <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
               <div className="relative z-10 flex items-center justify-between">
                 <div className="flex items-center gap-1 md:gap-4">
@@ -98,7 +98,7 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
             <div className="overflow-hidden rounded-2xl border border-gray-200 m-4">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-[#F7F7F7] border-b-1 border-gray-200">
+                  <thead className="bg-zinc-200 border-b-1 border-gray-200">
                     <tr>
                       <th className="px-2 py-3 text-start text-sm font-medium text-gray-800 capitalize ">
                         Last Action Date{" "}
@@ -241,7 +241,7 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
                             name="scheduleDate"
                             className={`w-full px-4 py-2 border-1 ${
                               errors.scheduleDate && touched.scheduleDate
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border-zinc-500 focus:border-zinc-500"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           />
@@ -286,7 +286,7 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
                           disabled={isSubmitting}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] text-white rounded-2xl font-semibold hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                          className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700  disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"
                         >
                           {isSubmitting ? (
                             <div className="flex items-center justify-center gap-2">

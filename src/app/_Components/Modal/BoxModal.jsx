@@ -230,7 +230,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                                                 whileTap={{ scale: 0.98 }}
                                                 type="submit"
                                                 disabled={editingBox ? updateLoading : addLoading}
-                                                className="flex-1 bg-gradient-to-r from-[#5f2781] to-[#a945fc] text-white py-3 px-3 rounded-xl font-semibold  hover:bg-[#4f1f6d] focus:outline-none focus:ring-4 focus:ring-red-300 disabled:opacity-50 transition-all cursor-pointer"
+                                                className="flex-1 bg-gradient-to-r from-[#5f2781] to-[#a945fc] text-white py-3 px-3 rounded-xl font-semibold  hover:bg-zinc-900 focus:outline-none focus:ring-4 focus:ring-red-300 disabled:opacity-50 transition-all cursor-pointer"
                                             >
                                                 {editingBox
                                                     ? (updateLoading ? (

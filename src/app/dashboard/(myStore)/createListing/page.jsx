@@ -304,7 +304,7 @@ export default function Home() {
                                         {step !== 9 && (
                                             <button
                                                 type="submit"
-                                                className="cursor-pointer flex-1 sm:flex-none px-4 py-2 bg-[#4f1f6d] text-white rounded-md text-sm font-medium hover:bg-[#5f2781]"
+                                                className="cursor-pointer flex-1 sm:flex-none px-4 py-2 bg-[#4f1f6d] text-white rounded-md text-sm font-medium hover:bg-zinc-800"
                                             >
                                                 Continue →
                                             </button>
@@ -370,7 +370,7 @@ function Step1({ errors, touched, isSubmitting, values, setFieldValue, handleSub
                         }
                     }}
                     className={`w-full p-4 bg-gray-50 capitalize border ${errors?.categoryId && touched?.categoryId
-                        ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                        ? "border-zinc-800 focus:ring-[#4f1f6d]"
                         : "border-gray-200 focus:ring-[#4f1f6d]"
                         } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
 
@@ -393,7 +393,7 @@ function Step1({ errors, touched, isSubmitting, values, setFieldValue, handleSub
                     value={values.subCategoryId}
                     onChange={handleChange}
                     className={`capitalize w-full p-4 bg-gray-50 border ${errors?.subCategoryId && touched?.subCategoryId
-                        ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                        ? "border-zinc-800 focus:ring-[#4f1f6d]"
                         : "border-gray-200 focus:ring-[#4f1f6d]"
                         } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
 
@@ -504,7 +504,7 @@ function Step2() {
                     <button
                         type="button"
                         onClick={handleTakeMainPhoto}
-                        className="flex items-center justify-center gap-2 rounded-lg bg-[#4f1f6d] px-4 py-3 text-sm font-semibold text-white hover:bg-[#5f2781] shadow"
+                        className="flex items-center justify-center gap-2 rounded-lg bg-[#4f1f6d] px-4 py-3 text-sm font-semibold text-white hover:bg-zinc-800 shadow"
                     >
                         <Camera className="w-5 h-5" />
                         Take Main Photo
@@ -562,7 +562,7 @@ function Step2() {
                     <button
                         type="button"
                         onClick={handleTakePhoto}
-                        className="flex items-center justify-center gap-2 rounded-lg bg-[#4f1f6d] px-4 py-3 text-sm font-semibold text-white hover:bg-[#5f2781] shadow"
+                        className="flex items-center justify-center gap-2 rounded-lg bg-[#4f1f6d] px-4 py-3 text-sm font-semibold text-white hover:bg-zinc-800 shadow"
                     >
                         <Camera className="w-5 h-5" />
                         Take Photo
@@ -630,7 +630,7 @@ function Step3({ errors, touched, isSubmitting, values, setFieldValue, handleSub
                     maxLength="200"
                     placeholder="Enter a catchy and clear product name..."
                     className={`w-full p-4 bg-gray-50 border ${errors?.name && touched?.name
-                        ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                        ? "border-zinc-800 focus:ring-[#4f1f6d]"
                         : "border-gray-200 focus:ring-[#4f1f6d]"
                         } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                 />
@@ -658,7 +658,7 @@ function Step3({ errors, touched, isSubmitting, values, setFieldValue, handleSub
                     maxLength="1000"
                     placeholder="Briefly describe your product to attract buyers..."
                     className={`w-full p-4 bg-gray-50 border ${errors?.shortDescription && touched?.shortDescription
-                        ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                        ? "border-zinc-800 focus:ring-[#4f1f6d]"
                         : "border-gray-200 focus:ring-[#4f1f6d]"
                         } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                 />
@@ -728,7 +728,7 @@ function Step4({ errors, touched, values, setFieldValue }) {
                         id="condition"
                         name="condition"
                         className={`w-full p-4 bg-gray-50 border ${errors?.condition && touched?.condition
-                            ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                            ? "border-zinc-800 focus:ring-[#4f1f6d]"
                             : "border-gray-200 focus:ring-[#4f1f6d]"
                             } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                     >
@@ -754,7 +754,7 @@ function Step4({ errors, touched, values, setFieldValue }) {
                         name="buyerPremium"
                         placeholder="e.g., 15%"
                         className={`w-full p-4 bg-gray-50 border ${errors?.buyerPremium && touched?.buyerPremium
-                            ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                            ? "border-zinc-800 focus:ring-[#4f1f6d]"
                             : "border-gray-200 focus:ring-[#4f1f6d]"
                             } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                     />
@@ -776,7 +776,7 @@ function Step4({ errors, touched, values, setFieldValue }) {
                         name="quantity"
                         placeholder="e.g., 1"
                         className={`w-full p-4 bg-gray-50 border ${errors?.quantity && touched?.quantity
-                            ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                            ? "border-zinc-800 focus:ring-[#4f1f6d]"
                             : "border-gray-200 focus:ring-[#4f1f6d]"
                             } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                         min="1"
@@ -800,7 +800,7 @@ function Step4({ errors, touched, values, setFieldValue }) {
                         readOnly
                         placeholder="e.g., 3"
                         className={`w-full p-4 bg-gray-50 border ${errors?.lotfee && touched?.lotfee
-                            ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                            ? "border-zinc-800 focus:ring-[#4f1f6d]"
                             : "border-gray-200 focus:ring-[#4f1f6d]"
                             } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                     />
@@ -822,7 +822,7 @@ function Step4({ errors, touched, values, setFieldValue }) {
                         name="retail"
                         placeholder="e.g., 120.00"
                         className={`w-full p-4 bg-gray-50 border ${errors?.retail && touched?.retail
-                            ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                            ? "border-zinc-800 focus:ring-[#4f1f6d]"
                             : "border-gray-200 focus:ring-[#4f1f6d]"
                             } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                         step="0.01"
@@ -845,7 +845,7 @@ function Step4({ errors, touched, values, setFieldValue }) {
                         name="price"
                         placeholder="e.g., 99.99"
                         className={`w-full p-4 bg-gray-50 border ${errors?.price && touched?.price
-                            ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                            ? "border-zinc-800 focus:ring-[#4f1f6d]"
                             : "border-gray-200 focus:ring-[#4f1f6d]"
                             } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                         step="0.01"
@@ -954,7 +954,7 @@ function Step5({ errors, touched, values, setFieldValue, handleChange }) {
                     name="rating"
                     placeholder="e.g., 4"
                     className={`capitalize w-full p-4 bg-gray-50 border ${touched.ratring && errors.ratring
-                        ? "border-[#5f2781] focus:ring-[#4f1f6d]"
+                        ? "border-zinc-800 focus:ring-[#4f1f6d]"
                         : "border-gray-200 focus:ring-[#4f1f6d]"
                         } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                     min="0"

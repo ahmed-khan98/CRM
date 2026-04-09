@@ -103,7 +103,7 @@ export default function GenZResetPasswordForm() {
                   <Image src={Main} alt="Logo" width={270} height={60} />
                 </Link>
               </motion.div>
-              {/* <h2 className="text-2xl font-bold mb-1 text-[#5f2781]">
+              {/* <h2 className="text-2xl font-bold mb-1 text-gray-800">
                 Reset Password
               </h2> */}
               <p className="text-gray-500 font-normal">
@@ -117,7 +117,7 @@ export default function GenZResetPasswordForm() {
                 <div
                   className={`relative border-1 rounded-xl transition-all duration-300 ${
                     focusedField === "code"
-                      ? "border-[#5f2781] shadow-sm shadow-orange-100"
+                      ? "border-zinc-800 shadow-sm shadow-orange-100"
                       : formik.touched.code && formik.errors.code
                       ? "border-red-300"
                       : "border-gray-200"
@@ -155,7 +155,7 @@ export default function GenZResetPasswordForm() {
                 <div
                   className={`relative border-1 rounded-xl transition-all duration-300 ${
                     focusedField === "password"
-                      ? "border-[#5f2781] shadow-sm shadow-orange-100"
+                      ? "border-zinc-800 shadow-sm shadow-orange-100"
                       : formik.touched.password && formik.errors.password
                       ? "border-red-300"
                       : "border-gray-200"
@@ -230,7 +230,7 @@ export default function GenZResetPasswordForm() {
                 <div
                   className={`relative border-1 rounded-xl transition-all duration-300 ${
                     focusedField === "confirmPassword"
-                      ? "border-[#5f2781] shadow-sm shadow-orange-100"
+                      ? "border-zinc-800 shadow-sm shadow-orange-100"
                       : formik.touched.confirmPassword &&
                         formik.errors.confirmPassword
                       ? "border-red-300"
@@ -281,7 +281,7 @@ export default function GenZResetPasswordForm() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full  cursor-pointer bg-[#5f2781] hover:bg-[#4f1f6d] text-white py-3 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all"
+                className="w-full  cursor-pointer bg-zinc-800 hover:bg-zinc-900 text-white py-3 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
@@ -296,7 +296,7 @@ export default function GenZResetPasswordForm() {
               <div className="text-center">
                 <Link
                   href="/login"
-                  className="text-[#5f2781] text-sm font-medium flex items-center justify-center mx-auto hover:underline"
+                  className="text-gray-800 text-sm font-medium flex items-center justify-center mx-auto hover:underline"
                 >
                   <ArrowLeft className="h-4 w-4 mr-1" />
                   Back to Login

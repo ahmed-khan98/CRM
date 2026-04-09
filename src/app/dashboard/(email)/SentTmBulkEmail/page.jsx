@@ -68,7 +68,7 @@ export default function page() {
           <div className="bg-white rounded-3xl shadow-md p-6 mt-3">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-700 flex items-center">
-                <Mails className="mr-2 h-6 w-6 text-[#5f2781]" />
+                <Mails className="mr-2 h-6 w-6 text-gray-800" />
                 New Compaign Bulk Email
               </h2>
             </div>
@@ -176,8 +176,8 @@ export default function page() {
                           //   readOnly={values?.compaignName ? true : false}
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.compaignName && touched.compaignName
-                              ? "border-[#5f2781] focus:border-[#5f2781]"
-                              : "border-gray-200 focus:border-[#5f2781]"
+                              ? "border-zinc-500 focus:border-zinc-500"
+                              : "border-gray-200 focus:border-zinc-800"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
@@ -210,8 +210,8 @@ export default function page() {
                           //   readOnly={values?.fromemail ? true : false}
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.fromemail && touched.fromemail
-                              ? "border-[#5f2781] focus:border-[#5f2781]"
-                              : "border-gray-200 focus:border-[#5f2781]"
+                              ? "border-zinc-500 focus:border-zinc-500"
+                              : "border-gray-200 focus:border-zinc-800"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
@@ -269,8 +269,8 @@ export default function page() {
                           name="subject"
                           className={`w-full px-4 py-2 border-1 text-sm ${
                             errors.subject && touched.subject
-                              ? "border-[#5f2781] focus:border-[#5f2781]"
-                              : "border-gray-200 focus:border-[#5f2781]"
+                              ? "border-zinc-500 focus:border-zinc-500"
+                              : "border-gray-200 focus:border-zinc-800"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
@@ -305,7 +305,7 @@ export default function page() {
                         disabled={isSubmitting}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="flex items-center gap-2 px-2 md:px-4 py-2 cursor-pointer bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] text-white rounded-xl text-sm font-semibold  hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                        className="flex items-center gap-2 px-2 md:px-4 py-2 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-xl text-sm font-semibold  hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center gap-2">

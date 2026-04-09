@@ -10,7 +10,7 @@ import { toast, Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { AtSign, KeyRound, ArrowLeft } from "lucide-react";
-import Main from "../../../app/Assets/logo-ppi.png";
+import Main from "../../../app/Assets/zytronlogo.png";
 
 export default function GenZForgetForm() {
   const navigation = useRouter();
@@ -45,7 +45,7 @@ export default function GenZForgetForm() {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-purple-50 to-purple-100">
+    <div className="flex justify-center items-center min-h-screen bg-zinc-900">
       <Toaster position="top-center" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -53,23 +53,23 @@ export default function GenZForgetForm() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md p-6 mx-4"
       >
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div className="bg-zinc-800/40 rounded-3xl shadow-xl overflow-hidden">
           <div className="p-6">
             <div className="mb-6 text-center">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-64 h-24 mx-auto mb-2 rounded-full bg-[#3C3360] flex items-center justify-center"
+                className="w-64 h-24 mx-auto mb-2 rounded-full flex items-center justify-center"
               >
                 <Link href="/login" className="mx-auto">
                   <Image src={Main} alt="Logo" width={270} height={60} />
                 </Link>
               </motion.div>
-              {/* <h2 className="text-2xl font-bold mb-1 text-[#5f2781]">
+              {/* <h2 className="text-2xl font-bold mb-1 text-gray-800">
                 Forgot Password?
               </h2> */}
-              <p className="text-gray-500 font-normal">
+              <p className="text-zinc-300 font-normal">
                 Forgot Password?
                 {/* Enter your email to reset your password */}
               </p>
@@ -80,20 +80,20 @@ export default function GenZForgetForm() {
                 <div
                   className={`relative border-1 rounded-xl transition-all duration-300 ${
                     focusedField === "email"
-                      ? "border-[#5f2781] shadow-sm shadow-orange-100"
+                      ? "border-zinc-800 "
                       : formik.touched.email && formik.errors.email
-                      ? "border-red-300"
-                      : "border-gray-200"
+                      ? "border-red-700"
+                      : "border-zinc-600"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
-                    <AtSign className="h-5 w-5 text-gray-400" />
+                    <AtSign className="h-5 w-5 text-zinc-400" />
                   </div>
                   <input
                     type="email"
                     name="email"
                     placeholder="Email address"
-                    className="w-full pl-10 pr-4 py-3.5 rounded-xl focus:outline-none text-gray-700"
+                    className="w-full pl-10 pr-4 py-3.5 rounded-xl focus:outline-none text-zinc-400"
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
@@ -107,7 +107,7 @@ export default function GenZForgetForm() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm ml-2"
+                    className="text-red-700 text-[11px] ml-2"
                   >
                     {formik.errors.email}
                   </motion.p>
@@ -118,22 +118,22 @@ export default function GenZForgetForm() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#5f2781] hover:bg-[#4f1f6d] cursor-pointer text-white py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all"
+                className="w-full bg-zinc-800 hover:bg-zinc-900 cursor-pointer text-zinc-400 py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
-                    <div className="h-5 w-5 border-1 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className="h-5 w-5 border-1 border-zinc-800 border-t-transparent rounded-full animate-spin mr-2"></div>
                     Submitting...
                   </div>
                 ) : (
-                  "SUBMIT"
+                  "Submit"
                 )}
               </motion.button>
 
               <div className="text-center">
                 <Link
                   href="/login"
-                  className="text-[#5f2781] text-sm font-medium flex items-center justify-center mx-auto hover:underline"
+                  className="text-zinc-400 text-sm font-medium flex items-center justify-center mx-auto hover:underline"
                 >
                   <ArrowLeft className="h-4 w-4 mr-1" />
                   Back to Login

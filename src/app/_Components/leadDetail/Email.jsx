@@ -14,7 +14,7 @@ const Email = ({ email, index, onOpenDetails }) => {
       onClick={() => onOpenDetails(email)}
     >
       <div className="flex items-center justify-between mb-2">
-        <h4 className="font-bold text-gray-900 truncate capitalize">
+        <h4 className="font-bold  truncate capitalize">
           {email.subject}
         </h4>
         {email.status === "sent" ? (

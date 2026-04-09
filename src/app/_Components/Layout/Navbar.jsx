@@ -90,7 +90,7 @@
 //       <button
 //         onClick={() => (attendence?.shiftDate ? dispatch(setAttendence(data?.data)) : handleTimeIn())}
 //         className={`cursor-pointer py-2 px-3 rounded text-white text-sm font-medium whitespace-nowrap shadow hover:opacity-90 transition-opacity ${
-//           token ? "bg-[#5f2781]" : "bg-[#a945fc]"
+//           token ? "bg-zinc-800" : "bg-[#a945fc]"
 //         }`}
 //       >
 //         {isTimeIn || isTimeOut ? (
@@ -111,7 +111,7 @@
 //             setIsMenuOpen(!isMenuOpen);
 //             router.push("/dashboard/dashboardcount");
 //           }}
-//           className="cursor-pointer py-2 px-3 bg-[#5f2781] text-white rounded text-sm font-medium whitespace-nowrap shadow hover:opacity-90 transition-opacity"
+//           className="cursor-pointer py-2 px-3 bg-zinc-800 text-white rounded text-sm font-medium whitespace-nowrap shadow hover:opacity-90 transition-opacity"
 //         >
 //           Dashboard
 //         </button>
@@ -131,7 +131,7 @@
 //           {/* Mobile Controls */}
 //           <div className="lg:hidden flex items-center space-x-2">
 //             <button
-//               className="p-1 text-[#5f2781]"
+//               className="p-1 text-gray-800"
 //               onClick={() => setIsMenuOpen(!isMenuOpen)}
 //               aria-label="Toggle Menu"
 //             >
@@ -151,7 +151,7 @@
 //         className={`fixed inset-0 z-50 backdrop-blur-sm bg-black/20 transition-transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:hidden`}
 //       >
 //         <nav className="fixed top-0 left-0 h-full w-80 bg-white p-3 shadow-md">
-//           <div className="flex justify-between items-center mb-[#5f2781]">
+//           <div className="flex justify-between items-center mb-gray-800">
 //             <Link href="/dashboard/dashboardcount">
 //               <Image
 //                 src={Main || "/placeholder.svg"}
@@ -194,7 +194,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment-timezone";
-import Main from "../../../app/Assets/logo-ppi.png";
+import Main from "../../../app/Assets/zytronlogo.png";
 import {
   X,
   Menu,
@@ -329,7 +329,7 @@ const Navbar = () => {
         <button
           onClick={handleTimeIn}
           disabled={isTimeIn}
-          className="cursor-pointer flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 shadow-lg shadow-green-100 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+          className="cursor-pointer flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800  shadow-green-100 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
         >
           {isTimeIn ? (
             <svg
@@ -363,7 +363,7 @@ const Navbar = () => {
         <button
           onClick={() => setConfirmDelete(true)}
           disabled={isTimeOut}
-          className="cursor-pointer flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 shadow-lg shadow-red-100 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+          className="cursor-pointer flex items-center justify-center gap-2 bg-red-800 hover:bg-red-900  shadow-red-100 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
         >
           {isTimeOut ? (
             <svg
@@ -402,7 +402,7 @@ const Navbar = () => {
       {token && (
         <button
           onClick={handleLogout}
-          className="cursor-pointer flex items-center justify-center gap-2 bg-[#5f2781] hover:bg-purple-900 shadow-purple-100 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+          className="cursor-pointer flex items-center justify-center gap-2 bg-zinc-600 hover:bg-zinc-500 shadow-zinc-100 text-zinc-300 px-5 py-2 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
         >
           <>
             <LogOut size={18} />
@@ -415,47 +415,47 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="bg-white border-b border-[#DDDDDD7D] fixed top-0 left-0 w-full z-50">
-        <nav className="container mx-auto md:px-10 px-4 py-1 flex justify-between items-center">
+      <div className="bg-zinc-900 border-b border-[#DDDDDD7D] fixed top-0 left-0 w-full z-50">
+        <nav className="container mx-auto md:px-10 px-4 flex justify-between items-center py-0.5">
           <Link href="/dashboard/dashboardcount" className="shrink-0">
-            <Image src={Main} alt="Logo" height={50} width={150} priority />
+            <Image src={Main} alt="Logo" height={150} width={150} priority />
           </Link>
 
           {attendence?.timeIn && !attendence?.timeOut ? (
-            <div className="hidden lg:flex items-center space-x-8 bg-gray-50 border border-gray-100 px-6 py-1.5 rounded-full shadow-sm">
-              <div className="flex flex-col items-center border-r pr-6 border-gray-200">
-                <div className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+            <div className="hidden lg:flex items-center space-x-8  bg-zinc-800/40 border border-zinc-800 px-6 py-1 my-0.5 rounded-full shadow-lg">
+              <div className="flex flex-col items-center border-r pr-6 border-zinc-700">
+                <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
                   <Clock size={12} /> Time In
                 </div>
-                <span className="text-sm font-bold text-gray-700">
+                <span className="text-sm font-bold text-zinc-300">
                   {moment(attendence.timeIn)
                     .tz("Asia/Karachi")
                     .format("hh:mm A")}
                 </span>
               </div>
 
-              <div className="flex flex-col items-center border-r pr-6 border-gray-200">
-                <div className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+              <div className="flex flex-col items-center border-r pr-6 border-zinc-700">
+                <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
                   <Timer size={12} /> Working Time
                 </div>
-                <span className="text-sm font-mono font-black text-[#5f2781]">
+                <span className="text-sm font-mono font-black text-zinc-300">
                   {workingTime}
                 </span>
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
                   <Activity size={12} /> Status
                 </div>
                 <span
-                  className={`text-[11px] font-bold px-2 py-0.5 rounded-full text-white uppercase ${attendence.status === "present" ? "bg-green-500" : "bg-gradient-to-br from-yellow-400 to-yellow-500"}`}
+                  className={`text-[11px] font-bold px-2 py-0.5 rounded-full text-white uppercase ${attendence.status === "present" ? "bg-green-500" : "bg-gradient-to-br from-yellow-500 to-yellow-600"}`}
                 >
                   {attendence.status}
                 </span>
               </div>
             </div>
           ) : attendence?.timeIn && attendence?.timeOut ? (
-            <div className="hidden lg:flex items-center gap-3 bg-green-50 border border-green-100 px-5 py-2 rounded-full">
+            <div className="hidden lg:flex items-center gap-3 bg-green-50 border border-green-100 px-5 py-1 rounded-full">
               <div className="bg-green-500 p-1.5 rounded-full text-white">
                 <CheckCircle size={16} />
               </div>
@@ -469,7 +469,7 @@ const Navbar = () => {
               </div>
             </div>
           ) : (
-            <div className="hidden lg:flex items-center gap-3 bg-red-50 border border-red-100 px-5 py-2 rounded-lg animate-pulse">
+            <div className="hidden lg:flex items-center gap-3 bg-red-100 border border-red-200 px-5 py-1 my-0.5 rounded-lg animate-pulse">
               <div className="bg-red-500 p-1.5 rounded-full text-white">
                 <Clock size={16} />
               </div>
@@ -491,7 +491,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Trigger */}
           <button
-            className="lg:hidden text-[#5f2781]"
+            className="lg:hidden text-zinc-300"
             onClick={() => setIsMenuOpen(true)}
           >
             <Menu size={28} />
@@ -504,10 +504,10 @@ const Navbar = () => {
         className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"} lg:hidden`}
       >
         <div
-          className={`fixed top-0 left-0 h-full w-72 bg-white transition-transform duration-300 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+          className={`fixed top-0 left-0 h-full w-72 bg-zinc-800 transition-transform duration-300 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
-          <div className="p-4 flex justify-between items-center border-b">
-            <Image src={Main} alt="Logo" width={100} height={40} />
+          <div className="p-4 flex justify-between items-center border-b border-zinc-700">
+            <Image src={Main} alt="Logo" width={100} height={60} />
             <X
               className="cursor-pointer text-gray-500"
               onClick={() => setIsMenuOpen(false)}
@@ -515,39 +515,53 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Drawer Content */}
-          <div className="p-4 space-y-4">
+          <div className="p-3 space-y-2">
             {attendence?.timeIn && !attendence?.timeOut ? (
-              <div className="bg-gray-50 p-3 rounded-xl border border-gray-200 space-y-3">
-                <div className="flex justify-between items-center border-b pb-2">
+              <div className="bg-zinc-900/40 p-3 rounded-xl border border-zinc-800 space-y-3">
+                <div className="flex justify-between items-center border-b border-zinc-700  pb-2">
                   <span className="text-[10px] text-gray-400 font-bold uppercase">
                     Working Time
                   </span>
-                  <span className="text-sm font-mono font-black text-[#5f2781]">
+                  <span className="text-sm font-mono font-black text-zinc-300">
                     {workingTime}
                   </span>
                 </div>
-                <div className="flex justify-between items-center border-b pb-2">
+                <div className="flex justify-between items-center border-b border-zinc-700 pb-2">
                   <span className="text-[10px] text-gray-400 font-bold uppercase">
                     Time In
                   </span>
-                  <span className="text-xs font-bold text-gray-700">
+                  <span className="text-xs font-bold text-zinc-300">
                     {moment(attendence.timeIn)
                       .tz("Asia/Karachi")
                       .format("hh:mm A")}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] text-gray-400 font-bold uppercase">
+                  <span className="text-[10px] text-zinc-400 font-bold uppercase">
                     Status
                   </span>
                   <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full text-white uppercase ${attendence.status === "present" ? "bg-green-500" : "bg-orange-500"}`}
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full text-zinc-300 uppercase ${attendence.status === "present" ? "bg-green-500" : "bg-orange-500"}`}
                   >
                     {attendence.status}
                   </span>
                 </div>
+              </div> 
+            ) : attendence?.timeIn && attendence?.timeOut ? (
+               <div className="bg-green-50 p-3 rounded-xl border border-green-200 flex flex-col items-center text-center animate-pulse gap-2">
+                <div className="bg-green-500 p-2 rounded-full text-white">
+                   <CheckCircle size={16} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-green-700 uppercase">
+                      Shift Completed
+                  </span>
+                  <span className="text-[12px] text-gray-700 leading-tight">
+                    Great work today! See you in the next shift.
+                  </span>
+                </div>
               </div>
-            ) : (
+            )  : (
               <div className="bg-red-50 p-3 rounded-xl border border-red-200 flex flex-col items-center text-center animate-pulse gap-2">
                 <div className="bg-red-500 p-2 rounded-full text-white">
                   <Clock size={20} />
@@ -557,16 +571,16 @@ const Navbar = () => {
                     Attendance Missing
                   </span>
                   <span className="text-[12px] text-gray-700 leading-tight">
-                    Please mark your attendance to avoid salary deductions.
+                    Please mark your attendance to start the shift.
                   </span>
                 </div>
               </div>
             )}
 
             {/* Time In / Out Button */}
-            <div className="mt-4">{renderAuthButtons()}</div>
+            <div className="my-2">{renderAuthButtons()}</div>
 
-            <div className="pt-2 border-t">
+            <div className="pt-2 border-t border-zinc-700">
               <LeftNav set={() => setIsMenuOpen(false)} />
             </div>
           </div>

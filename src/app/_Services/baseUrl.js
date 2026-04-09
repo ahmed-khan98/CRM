@@ -4,7 +4,9 @@
 
 
 
-export const BaseUrl ='https://api.pentaprime-innovations.com/api/v1/user/'
+export const BaseUrl ='http://185.199.52.245:8000/api/v1/user/'
+// 'http://localhost:8000/api/v1/user/'
+// 'https://api.pentaprime-innovations.com/api/v1/user/'
 // 'http://192.168.18.226:8000/api/v1/user/'
 // 'https://crm-backend-production-3f73.up.railway.app/api/v1/user/'
 

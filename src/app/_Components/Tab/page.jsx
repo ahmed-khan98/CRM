@@ -19,13 +19,13 @@ const Tab = ({ tabs }) => {
                  className={`relative rounded-full mx-1 px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                    isActive
                      ? "text-white"
-                     : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                     : "text-gray-600 hover:bg-zinc-800 hover:bg-gray-100"
                  }`}
                >
                  {isActive && (
                    <motion.div
                      layoutId="activeTabBackground"
-                     className="absolute inset-0 bg-[#5f2781] rounded-full"
+                     className="absolute inset-0 bg-zinc-800 rounded-full"
                      initial={false}
                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
                    />

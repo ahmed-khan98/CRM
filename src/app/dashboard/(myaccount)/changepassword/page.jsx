@@ -62,8 +62,8 @@ export default function page() {
         >
           <div className="p-4 md:p-8">
             <div className="flex items-center gap-3 mb-4">
-              <div className="h-12 w-1 bg-[#5f2781] rounded-full"></div>
-              <h1 className="text-2xl  font-semibold text-[#5f2781]">
+              <div className="h-12 w-1 bg-zinc-800 rounded-full"></div>
+              <h1 className="text-2xl  font-semibold text-gray-800">
                 Change Password
               </h1>
             </div>
@@ -71,7 +71,7 @@ export default function page() {
               onSubmit={formik.handleSubmit}
               className="max-w-md items-center py-4 space-y-4"
             >
-              <div className="mbg-[#5f2781]">
+              <div className="mbg-zinc-800">
                 <label className="block text-gray-700 font-medium mb-1">
                   Current Password *
                 </label>
@@ -98,7 +98,7 @@ export default function page() {
                 )}
               </div>
 
-              <div className="mbg-[#5f2781]">
+              <div className="mbg-zinc-800">
                 <label className="block text-gray-700 font-medium mb-1">
                   New Password *
                 </label>
@@ -128,7 +128,7 @@ export default function page() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="group relative cursor-pointer overflow-hidden px-8 py-4 bg-[#5f2781] text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70"
+                className="group relative cursor-pointer overflow-hidden px-8 py-4 bg-zinc-800 text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70"
               >
                 <span className="relative flex items-center justify-center gap-2">
                   {isSubmitting ? (

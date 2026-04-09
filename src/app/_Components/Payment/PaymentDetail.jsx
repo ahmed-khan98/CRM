@@ -41,9 +41,9 @@ const PaymentDetail = ({ id }) => {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="w-12 h-12 border-4 border-[#5f2781] border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
         />
-        <span className="ml-4 text-[#5f2781] font-semibold">
+        <span className="ml-4 text-gray-800 font-semibold">
           Loading ... 🚀
         </span>
       </div>
@@ -60,11 +60,11 @@ const PaymentDetail = ({ id }) => {
     );
 
   return (
-    <div className="min-h-screen  py-6 px-4">
+    <div className="min-h-screen  py-6 px-4 bg-zinc-100">
       <div className="max-w-5xl mx-auto space-y-4">
         {/* <div className="flex items-center justify-between my-4">
           <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-            <CreditCard className="mr-2 h-8 w-8 text-[#5f2781]" />
+            <CreditCard className="mr-2 h-8 w-8 text-gray-800" />
             Payment Confirmation
           </h1>
         </div> */}
@@ -81,7 +81,7 @@ const PaymentDetail = ({ id }) => {
         {/* </div> */}
         <div className="grid lg:grid-cols-2 gap-3">
           {/* Left Column - Payment Method Content */}
-          <div className="bg-white rounded-2xl shadow-md p-5">
+          <div className="bg-white rounded-xl shadow-lg p-5">
             <h2 className="text-xl font-bold text-gray-800 mb-5">
               Here's your invoice info
             </h2>
@@ -95,7 +95,7 @@ const PaymentDetail = ({ id }) => {
                     </h6>
                   </div>
                   <div className="text-right ml-2">
-                    <p className="text-sm text-gray-500 mt-1 capitalize">
+                    <p className="text-sm text-zinc-700 mt-1 capitalize">
                       {data?.data?.brandId?.name}
                     </p>
                     {/* <span className="text-2xl font-bold text-gray-800">
@@ -112,7 +112,7 @@ const PaymentDetail = ({ id }) => {
                     </h6>
                   </div>
                   <div className="text-right ml-2">
-                    <p className="text-sm text-gray-500 mt-1 capitalize">
+                    <p className="text-sm text-zinc-700 mt-1 capitalize">
                       {data?.data?.name}
                     </p>
                     {/* <span className="text-2xl font-bold text-gray-800">
@@ -129,7 +129,7 @@ const PaymentDetail = ({ id }) => {
                     </h6>
                   </div>
                   <div className="text-right ml-2">
-                    <p className="text-sm text-gray-500 mt-1 ">
+                    <p className="text-sm text-zinc-700 mt-1 ">
                       {data?.data?.email}
                     </p>
                     {/* <span className="text-2xl font-bold text-gray-800">
@@ -146,7 +146,7 @@ const PaymentDetail = ({ id }) => {
                     </h6>
                   </div>
                   <div className="text-right ml-2">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-zinc-700">
                       {Array.isArray(data?.data?.service) ? (
                         data?.data?.service.length > 0 ? (
                           data?.data?.service.map((tagItem, index) => (
@@ -182,7 +182,7 @@ const PaymentDetail = ({ id }) => {
                     </h6>
                   </div>
                   <div className="text-right ml-2">
-                    <p className="text-sm text-gray-500 mt-1 ">
+                    <p className="text-sm text-zinc-700 mt-1 ">
                       {data?.data?.currency}
                     </p>
                     {/* <span className="text-2xl font-bold text-gray-800">
@@ -199,7 +199,7 @@ const PaymentDetail = ({ id }) => {
                     </h6>
                   </div>
                   <div className="text-right ml-2">
-                    <p className="text-sm text-gray-500 mt-1 ">
+                    <p className="text-sm text-zinc-700 mt-1 ">
                       {Math.round(data?.data?.amount * 100) / 100}
                     </p>
                     {/* <span className="text-2xl font-bold text-gray-800">
@@ -214,7 +214,7 @@ const PaymentDetail = ({ id }) => {
                   <span className="font-semibold text-gray-800">
                     Total Amount
                   </span>
-                  <span className="text-xl font-semibold text-gray-600">
+                  <span className="text-xl font-semibold text-zinc-800">
                     ${Math.round(data?.data?.amount * 100) / 100}
                   </span>
                 </div>
@@ -237,7 +237,7 @@ const PaymentDetail = ({ id }) => {
 
           {/* Right Column - Fee Details */}
 
-          <div className="bg-white rounded-2xl shadow-md p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-800 mb-6">
               Choose a way to Pay
             </h2>

@@ -1,3 +1,4 @@
+
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script"; 
 import "./globals.css";
@@ -17,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "CMS-PPI",
-  description: "Develop by Penta Prime Innovation",
+  title: "CRM ZYTRON WORLD",
+  description: "Develop by ZYTRON WORLD",
 };
 
 export default function RootLayout({ children }) {
@@ -28,7 +29,16 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
         <LayoutWrapper>
         {/* <SocketProvider> */}
-        <Toaster position="top-center" />
+   <Toaster
+  position="top-center"
+  toastOptions={{
+    style: {
+      borderRadius: "10px",
+      background: "#333",
+      color: "#fff",
+    },
+  }}
+  />
           {children}
         {/* </SocketProvider> */}
           </LayoutWrapper>

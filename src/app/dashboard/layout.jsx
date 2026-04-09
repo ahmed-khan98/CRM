@@ -14,6 +14,8 @@ import {
 import toast from "react-hot-toast";
 import { useLogoutMutation } from "../_Services/authentication/page";
 import { useTodayUserAttendenceQuery } from "../_Services/attendence/page";
+import AnnouncementPopup from "../_Components/Modal/AnnouncementPopup";
+import AnnouncementMarquee from "../_Components/Modal/AnnouncementMarquee";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -41,7 +43,7 @@ const DashboardLayout = ({ children }) => {
     (state) => state.filter,
   );
   console.log("DashboardLayout Rendered with activityStatus:", activityStatus);
-  console.log("attendence in layout:", attendence);
+  console.log("attendence in layout:", attendence,activityStatus, lastBreakInTime);
 
   const clearExtensionAndRedirect = (response) => {
     if (
@@ -151,9 +153,10 @@ const DashboardLayout = ({ children }) => {
         console.log("event.data.status, activityStatus,attendence?.timeIn", event.data.status, activityStatus, attendence?.timeIn);
 
         if (
-          event.data.status === "idle" &&
-          activityStatus === "active" &&
-          attendence?.timeIn
+          event.data.status === "idle"
+          //  &&
+          // activityStatus === "active" &&
+          // attendence?.timeIn
         ) {
                   console.log("extension ne kaha time kro");
 
@@ -170,10 +173,11 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className="app-container">
+     
       {activityStatus === "idle" ? (
         <BreakOverlay startTime={lastBreakInTime} onBreakOut={handleBreakOut} />
       ) : (
-        <div className="min-h-screen bg-[#F8F9FC] flex flex-col pt-14 md:pt-20">
+        <div className="min-h-screen bg-zinc-100 flex flex-col pt-14 md:pt-18">
           <div className="flex flex-1 relative overflow-hidden">
             {/* Overlay for mobile when sidebar is open */}
             {isMobile && isSidebarOpen && (
@@ -203,11 +207,14 @@ const DashboardLayout = ({ children }) => {
               className={`flex-1 overflow-y-auto h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] transition-all duration-300 ease-in-out px-2 md:px-2
             ${isMobile ? "w-full" : ""}`}
             >
-              <div className="w-full bg-[#F8F9FC] h-auto py-2">{children}</div>
+               <AnnouncementMarquee />
+              <div className="w-full h-auto py-2">{children}</div>
             </main>
           </div>
         </div>
       )}
+            <AnnouncementPopup />
+
     </div>
   );
 };

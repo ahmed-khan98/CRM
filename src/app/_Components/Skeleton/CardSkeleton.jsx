@@ -3,7 +3,7 @@ export default function AuctionCardSkeleton() {
     return (
       <div className="animate-pulse  p-4 ">
         {/* Image Skeleton */}
-        <div className="w-full h-48 bg-gray-300 rounded-md mbg-[#5f2781]"></div>
+        <div className="w-full h-48 bg-gray-300 rounded-md mbg-zinc-800"></div>
   
         {/* Watcher Badge */}
         <div className="absolute top-2 right-2 w-16 h-6 bg-gray-400 rounded"></div>
@@ -16,7 +16,7 @@ export default function AuctionCardSkeleton() {
         {/* Details Section */}
         <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
         <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-        <div className="h-4 bg-gray-300 rounded w-1/3 mbg-[#5f2781]"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/3 mbg-zinc-800"></div>
   
         {/* Current Bid Section */}
         <div className="h-6 bg-gray-300 rounded w-full mb-2"></div>

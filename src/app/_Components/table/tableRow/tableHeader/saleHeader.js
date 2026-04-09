@@ -1,0 +1,16 @@
+export const SALEHEADERS = [
+  "Name",
+  "Email",
+  "Phone No.",
+  "Serial No.",
+  "Brand Name",
+  "Brand Mark",
+  "Department",
+  "Agent",
+  "Type",
+  "Fronter",
+  "Amount",
+  "Status",
+  "Date",
+  "Action",
+];

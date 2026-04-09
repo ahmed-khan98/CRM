@@ -121,7 +121,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] px-2 md:px-8 py-3 text-white relative overflow-hidden">
+            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-2 md:px-8 py-3 text-white relative overflow-hidden">
               <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
               <div className="relative z-10 flex items-center justify-between">
                 <div className="flex items-center gap-1 md:gap-4">
@@ -172,9 +172,9 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                             name="departmentId"
                             className={`w-full px-4 py-3 border-2 ${
                               errors.departmentId && touched.departmentId
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
-                                : "border-gray-200 focus:border-[#5f2781]"
-                            } rounded-2xl focus:outline-none transition-colors bg-white text-gray-900`}
+                                ? "border-zinc-500 focus:border-zinc-500"
+                                : "border-gray-200 focus:border-zinc-800"
+                            } rounded-2xl focus:outline-none transition-colors bg-white bg-zinc-800`}
                           >
                             <option value="">Select Department </option>
                             <option value="pickup">Pickup</option>
@@ -196,7 +196,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                             name="joiningDate"
                             className={`w-full px-4 py-3 border-2 ${
                               errors.joiningDate && touched.joiningDate
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border-zinc-500 focus:border-zinc-500"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           />
@@ -218,7 +218,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                             name="firstName"
                             className={`w-full px-4 py-3 border-2 ${
                               errors.firstName && touched.firstName
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border-zinc-500 focus:border-zinc-500"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           ></Field>
@@ -237,7 +237,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                             name="lastName"
                             className={`w-full px-4 py-3 border-2 ${
                               errors.lastName && touched.lastName
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border-zinc-500 focus:border-zinc-500"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           ></Field>
@@ -258,7 +258,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                             name="email"
                             className={`w-full px-4 py-3 border-2 ${
                               errors.email && touched.email
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border-zinc-500 focus:border-zinc-500"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           ></Field>
@@ -277,7 +277,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                             name="designation"
                             className={`w-full px-4 py-3 border-2 ${
                               errors.designation && touched.designation
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border-zinc-500 focus:border-zinc-500"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           ></Field>
@@ -299,7 +299,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                             placeholder='40000-1234567-8'
                             className={`w-full px-4 py-3 border-2 ${
                               errors.CNIC && touched.CNIC
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border-zinc-500 focus:border-zinc-500"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           ></Field>
@@ -319,7 +319,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                         placeholder='0300-1234567'
                             className={`w-full px-4 py-3 border-2 ${
                               errors.phoneNo && touched.phoneNo
-                                ? "border-[#5f2781] focus:border-[#5f2781]"
+                                ? "border-zinc-500 focus:border-zinc-500"
                                 : "border-gray-200 focus:border-blue-500"
                             } rounded-xl focus:outline-none transition-colors`}
                           ></Field>
@@ -365,7 +365,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                           disabled={isSubmitting}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-[#5f2781] to-[#4f1f6d] text-white rounded-2xl font-semibold hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                          className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700  disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"
                         >
                           {isSubmitting ? (
                             <div className="flex items-center justify-center gap-2">

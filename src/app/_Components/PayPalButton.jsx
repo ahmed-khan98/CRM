@@ -200,7 +200,7 @@ const PayPalButton = ({
   return (
     <div className={`relative ${className}`}>
       {/* Amount Display */}
-      {/* <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 my-2 mbg-[#5f2781]">
+      {/* <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 my-2 mbg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-sm font-medium text-blue-800">Payment Amount</h3>
