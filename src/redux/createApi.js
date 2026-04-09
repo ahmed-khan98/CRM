@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 // Step 1: Original base query
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: BaseUrl,
-  // credentials: 'include',
+  credentials: 'include',
   prepareHeaders: (headers) => {
     const token = Cookies.get("token");
     if (token) {
