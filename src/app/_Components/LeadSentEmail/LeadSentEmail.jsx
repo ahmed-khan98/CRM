@@ -56,7 +56,7 @@ const LeadSentEmail = ({ id }) => {
   }, []);
 
   return (
-    <div className="min-h-screen py-4 md:py-2 px-2 md:px-4 font-sans antialiased">
+<div className="py-6 px-0 font-sans antialiased">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -64,18 +64,17 @@ const LeadSentEmail = ({ id }) => {
         className="max-w-7xl mx-auto"
       >
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b border-gray-200 pb-1 md:pb-3">
-          <div className="flex items-center gap-4 mb-4 md:mb-0">
-            <div className="bg-zinc-200 p-3 rounded-full">
-              <Mails className="h-7 w-7 text-gray-800" />
-            </div>
-            <div>
-              <h1 className="text-lg md:text-xl font-bold ">
-                All Email
-              </h1>
-            </div>
-          </div>
-        </header>
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b" style={{ borderColor: "rgba(99,102,241,0.15)" }}>
+  <div className="flex items-center gap-3 mb-4 md:mb-0">
+    <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.2)" }}>
+      <Mails className="h-4 w-4" style={{ color: "#818cf8" }} />
+    </div>
+    <div>
+      <p className="text-[10px] font-bold tracking-[0.15em] uppercase mb-0.5" style={{ color: "#818cf8" }}>Emails</p>
+      <h1 className="text-base font-bold text-white">All Email</h1>
+    </div>
+  </div>
+</header>
 
         {/* Content Section */}
         {isLoading ? (

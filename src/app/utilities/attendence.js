@@ -18,21 +18,21 @@ export const Tooltip = ({ text, children }) => (
     const diff = moment.duration(end.diff(start));
     const hours = Math.floor(diff.asHours());
     const minutes = diff.minutes();
-    return hours > 0 || minutes > 0 ? `${hours}h ${minutes}m` : "-";
+    return hours > 0 || minutes > 0 ? `${hours}hr ${minutes}min` : "-";
   };
 
   export const onlyWorkingHours =(inTime, outTime,totalBreakMinutes) => {
-        if (!inTime || !outTime) return "0h 0m";
+        if (!inTime || !outTime) return "0hr 0min";
         
         const totalMinutes = moment(outTime).diff(moment(inTime), 'minutes');
         const breakMinutes = totalBreakMinutes || 0;
         const workingMinutes = totalMinutes - breakMinutes;
         
-        if (workingMinutes <= 0) return "0h 0m";
+        if (workingMinutes <= 0) return "0hr 0min";
         
         const hours = Math.floor(workingMinutes / 60);
         const mins = workingMinutes % 60;
-        return `${hours}h ${mins}m`;
+        return `${hours}hr ${mins}min`;
       }
 
   // Updated Status Classes to handle new logic
@@ -57,4 +57,16 @@ export const Tooltip = ({ text, children }) => (
   export const formatTimeOnly = (timeStr) => {
     if (!timeStr) return "-";
     return moment(timeStr).format("hh:mm A");
+  };
+
+  export const formatBreakMinutes = (minutes) => {
+    if (minutes == null || minutes < 0) return "-";
+  
+    const hrs = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+  
+    if (hrs === 0) return `${mins}min`;
+    if (mins === 0) return `${hrs}hr`;
+  
+    return `${hrs}hr ${mins}min`;
   };

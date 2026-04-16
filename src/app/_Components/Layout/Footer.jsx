@@ -110,12 +110,15 @@ const Footer = () => {
   return (
     // bg-[#5f2781]
     <>
-      <div className="bg-zinc-800 w-full text-center py-3 mt-2">
+      <div   style={{
+        background: "#0f0f11",
+      }} 
+      className="0f0f11 w-full text-center py-3 ">
         {" "}
         <p className=" text-sm text-white">
           © Copyright 2026{" "}
           <a
-            href="https://pentaprime-innovations.com/"
+            href="https://zytronworld.com/"
             className="text-blue-300 hover:underline"
           >
             ZYTRON WORLD

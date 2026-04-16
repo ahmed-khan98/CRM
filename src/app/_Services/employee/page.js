@@ -86,6 +86,7 @@ const employeeApi = createApiAuction.injectEndpoints({
           body: formData,
         };
       },
+      invalidatesTags: ['loggedUser'],
     }),
     breakOut: builder.mutation({
       query: (formData) => {
@@ -95,7 +96,7 @@ const employeeApi = createApiAuction.injectEndpoints({
           body: formData,
         };
       },
-      invalidatesTags: ["todayUserAttendence"],
+      invalidatesTags: ["todayUserAttendence", 'loggedUser'],
     }),
   }),
 });

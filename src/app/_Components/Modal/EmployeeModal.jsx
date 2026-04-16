@@ -13,21 +13,32 @@ import { useEffect, useRef } from "react";
 import { empSchema } from "@/app/schema/employee";
 import FormikSelect from "./formikSelect";
 
+const inputClass = (hasError) =>
+  `w-full px-3.5 py-2.5 rounded-[10px] text-[13px] font-medium bg-white/[0.04] border text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-white/25 transition-colors duration-150 ${
+    hasError ? "border-red-500/50" : "border-white/10"
+  }`;
+
+const FieldLabel = ({ children }) => (
+  <label className="block text-[11px] font-black tracking-[0.12em] uppercase mb-1.5 text-zinc-500">
+    {children}
+  </label>
+);
+
+const ErrMsg = ({ name }) => (
+  <ErrorMessage
+    name={name}
+    component="p"
+    className="text-[11px] mt-1 font-medium text-red-400"
+  />
+);
+
 const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
   const [createEmployee] = useCreateEmployeeMutation();
   const [updateEmployee] = useUpdateEmployeeMutation();
-
-  const {
-    data: departments,
-    error: isError,
-    isLoading,
-  } = useAllDepartmentsQuery();
+  const { data: departments } = useAllDepartmentsQuery();
   const isEdit = !!data;
 
-  console.log(data, "data");
-
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    console.log(values, "employee");
     try {
       const payload = new FormData();
       payload.append("id", data?._id);
@@ -49,7 +60,6 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
               ? {
                   body: {
                     fullName: values?.fullName,
-                    // lastName: values?.lastName,
                     email: values?.email,
                     joiningDate: values?.joiningDate,
                     address: values?.address,
@@ -61,19 +71,12 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                   },
                   id: data?._id,
                 }
-              : {
-                  id: data?._id,
-                  body: payload,
-                },
+              : { id: data?._id, body: payload },
           ).unwrap()
         : createEmployee(payload).unwrap());
-      console.log(response, "response");
+
       if (response.success) {
-        toast.success(
-          isEdit
-            ? "Employee updated successfully!"
-            : "Employee created successfully!",
-        );
+        toast.success(isEdit ? "Employee updated successfully!" : "Employee created successfully!");
       } else {
         toast.error(response.message || "Failed to process Employee");
       }
@@ -81,34 +84,16 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
       closeModal();
       refetch();
     } catch (error) {
-      console.log(error, "error");
       toast.error(error.data?.message || "Failed to create employee");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 50 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { type: "spring", damping: 25, stiffness: 300 },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: 50,
-      transition: { duration: 0.2 },
-    },
-  };
-
   const initialValues = {
     departmentId: data?.departmentId?._id || "",
-    joiningDate: data?.joiningDate.split("T")[0] || "",
+    joiningDate: data?.joiningDate?.split("T")[0] || "",
     fullName: data?.fullName || "",
-    // lastName: data?.lastName || "",
     designation: data?.designation || "",
     email: data?.email || "",
     CNIC: data?.CNIC || "",
@@ -122,7 +107,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
 
   const roleOption = [
     { name: "User", value: "USER" },
-    { name: "department Admin", value: "SUBADMIN" },
+    { name: "Department Admin", value: "SUBADMIN" },
   ];
 
   return (
@@ -132,73 +117,58 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/75 backdrop-blur-md"
           onClick={closeModal}
         >
           <motion.div
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[99vh] overflow-hidden"
+            initial={{ opacity: 0, scale: 0.96, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 16 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="w-full max-w-3xl max-h-[95vh] flex flex-col overflow-hidden rounded-[20px] bg-zinc-950 border border-white/[0.08] shadow-[0_32px_80px_rgba(0,0,0,0.7)]"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Top accent */}
+            <div className="h-[1.5px] w-full flex-shrink-0 bg-gradient-to-r from-transparent via-white/25 to-white/[0.06]" />
+
             {/* Header */}
-            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-2 md:px-8 py-2 text-white relative overflow-hidden">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex items-center gap-1 md:gap-4">
-                  <div className="p-2 bg-white/20 rounded-2xl backdrop-blur-sm">
-                    <User className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg mdtext-2xl font-bold">
-                      {data ? "Edit Employee" : "Add New Employee"}
-                    </h2>
-                  </div>
+            <div className="flex items-center justify-between px-6 py-4 flex-shrink-0 border-b border-white/[0.07]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/[0.07] border border-white/10 flex-shrink-0">
+                  <User className="w-4 h-4 text-zinc-400" />
                 </div>
-                <motion.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={closeModal}
-                  className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
-                >
-                  <X className="w-6 h-6" />
-                </motion.button>
+                <div>
+                  <p className="text-[10px] font-black tracking-[0.18em] uppercase text-zinc-600">
+                    {isEdit ? "Edit Record" : "New Record"}
+                  </p>
+                  <h2 className="text-base font-black text-zinc-100">
+                    {isEdit ? "Edit Employee" : "Add New Employee"}
+                  </h2>
+                </div>
               </div>
+
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={closeModal}
+                className="cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/[0.08] text-zinc-500 hover:text-zinc-300 hover:bg-white/10 transition-all duration-150"
+              >
+                <X className="w-4 h-4" />
+              </motion.button>
             </div>
 
-            {/* Form */}
-            <div className="px-6 md:px-8 py-4 max-h-[84vh] overflow-y-auto ">
+            {/* Scrollable Form */}
+            <div className="flex-1 overflow-y-auto px-6 py-5">
               <Formik
                 initialValues={initialValues}
                 validationSchema={empSchema}
                 onSubmit={handleSubmit}
                 enableReinitialize
               >
-                {({
-                  errors,
-                  touched,
-                  isSubmitting,
-                  values,
-                  setFieldValue,
-                  setFieldTouched,
-                }) => {
-                  console.log(errors, "emplyeeerrors");
-                  const deptOptions =
-                    departments?.data?.map((d) => ({
-                      value: d?._id,
-                      label: d?.name,
-                    })) ?? [];
-                  const roleOptions =
-                    roleOption?.map((d) => ({
-                      value: d?.value,
-                      label: d?.name,
-                    })) ?? [];
-                  console.log(errors.password, "errors---->>>>");
-                  // if (values.type !== selectedMethod) {
-                  //     setSelectedMethod(values.type)
-                  // }
+                {({ errors, touched, isSubmitting, values, setFieldValue, setFieldTouched }) => {
+                  const deptOptions = departments?.data?.map((d) => ({ value: d?._id, label: d?.name })) ?? [];
+                  const roleOptions = roleOption?.map((d) => ({ value: d?.value, label: d?.name })) ?? [];
+
                   const fileInputRef1 = useRef(null);
 
                   const handleMainImageUpload = (e) => {
@@ -207,9 +177,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                     setFieldValue("image", file);
                   };
 
-                  const handleDeleteMainImage = () => {
-                    setFieldValue("image", "");
-                  };
+                  const handleDeleteMainImage = () => setFieldValue("image", "");
 
                   const previewSrc =
                     values.image instanceof File
@@ -225,7 +193,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                   }, [previewSrc, values?.image]);
 
                   return (
-                    <Form className="space-y-3">
+                    <Form className="space-y-5">
                       <input
                         type="file"
                         ref={fileInputRef1}
@@ -234,53 +202,48 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                         accept="image/*"
                       />
 
-                      <div className="flex justify-center items-center my-3">
-                        <div className="relative w-28 h-28">
+                      {/* Avatar upload */}
+                      <div className="flex justify-center py-2">
+                        <div className="relative">
                           <div
                             role="button"
                             tabIndex={0}
                             onClick={() => fileInputRef1.current?.click()}
-                            className={`w-28 h-28 rounded-full border 
-        ${
-          previewSrc
-            ? "overflow-hidden"
-            : "border-dashed border-gray-400 bg-gray-50 cursor-pointer flex flex-col items-center justify-center text-center p-2"
-        }
-      `}
+                            className={`w-24 h-24 rounded-full cursor-pointer overflow-hidden flex items-center justify-center transition-all duration-150
+                              ${previewSrc
+                                ? "ring-2 ring-white/15"
+                                : "border-2 border-dashed border-white/12 bg-white/[0.04] hover:bg-white/[0.07]"
+                              }`}
                           >
                             {previewSrc ? (
-                              <img
-                                src={previewSrc}
-                                alt="Employee"
-                                className="w-full h-full rounded-full object-cover"
-                              />
+                              <img src={previewSrc} alt="Employee" className="w-full h-full object-cover" />
                             ) : (
-                              <>
-                                <Upload className="w-6 h-6 text-gray-500 mb-1" />
-                                <span className="text-[11px] text-gray-600 leading-tight">
-                                  Upload Employee Image
+                              <div className="flex flex-col items-center gap-1">
+                                <Upload className="w-5 h-5 text-zinc-600" />
+                                <span className="text-[10px] font-bold text-center px-2 text-zinc-600">
+                                  Upload Photo
                                 </span>
-                              </>
+                              </div>
                             )}
                           </div>
-                          <ErrorMessage
-                            name="image"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
+                          <ErrMsg name="image" />
                           {previewSrc && (
                             <button
                               type="button"
                               onClick={handleDeleteMainImage}
-                              className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow hover:bg-red-100"
+                              className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer bg-red-500/90 border-2 border-zinc-950"
                             >
-                              <Trash2 className="w-4 h-4 text-red-500" />
+                              <Trash2 className="w-3 h-3 text-white" />
                             </button>
                           )}
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      {/* Divider */}
+                      <div className="h-px bg-white/[0.06]" />
+
+                      {/* Row 1 — Department + Joining Date */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <FormikSelect
                             name="departmentId"
@@ -292,196 +255,132 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                             error={errors.departmentId}
                             touched={touched.departmentId}
                             placeholder="Select Department"
-                            //   onChangeExtra={handleDepartmentChange}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            <Calendar className="inline w-4 h-4 mr-1" />
+                          <FieldLabel>
+                            <Calendar className="inline w-3 h-3 mr-1" />
                             Joining Date
-                          </label>
-                          <Field
-                            type="date"
-                            name="joiningDate"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.joiningDate && touched.joiningDate
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          />
-                          <ErrorMessage
-                            name="joiningDate"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
+                          </FieldLabel>
+                          <Field name="joiningDate">
+                            {({ field }) => (
+                              <input {...field} type="date" className={inputClass(errors.joiningDate && touched.joiningDate)} />
+                            )}
+                          </Field>
+                          <ErrMsg name="joiningDate" />
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 gap-4 mb-4">
+
+                      {/* Row 2 — Full Name */}
+                      <div>
+                        <FieldLabel>Full Name</FieldLabel>
+                        <Field name="fullName">
+                          {({ field }) => (
+                            <input {...field} type="text" placeholder="John Smith" className={inputClass(errors.fullName && touched.fullName)} />
+                          )}
+                        </Field>
+                        <ErrMsg name="fullName" />
+                      </div>
+
+                      {/* Row 3 — Email + Designation */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Full Name
-                          </label>
-                          <Field
-                            type="text"
-                            name="fullName"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.fullName && touched.fullName
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="fullName"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
+                          <FieldLabel>Email</FieldLabel>
+                          <Field name="email">
+                            {({ field }) => (
+                              <input {...field} type="email" placeholder="example@gmail.com" className={inputClass(errors.email && touched.email)} />
+                            )}
+                          </Field>
+                          <ErrMsg name="email" />
+                        </div>
+                        <div>
+                          <FieldLabel>Designation</FieldLabel>
+                          <Field name="designation">
+                            {({ field }) => (
+                              <input {...field} type="text" placeholder="e.g. Senior Developer" className={inputClass(errors.designation && touched.designation)} />
+                            )}
+                          </Field>
+                          <ErrMsg name="designation" />
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                      {/* Row 4 — CNIC + Phone */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Email
-                          </label>
-                          <Field
-                            type="email"
-                            name="email"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.email && touched.email
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="email"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
+                          <FieldLabel>CNIC</FieldLabel>
+                          <Field name="CNIC">
+                            {({ field }) => (
+                              <input {...field} type="text" placeholder="40000-1234567-8" className={inputClass(errors.CNIC && touched.CNIC)} />
+                            )}
+                          </Field>
+                          <ErrMsg name="CNIC" />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Designation
-                          </label>
-                          <Field
-                            type="text"
-                            name="designation"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.designation && touched.designation
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="designation"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
+                          <FieldLabel>Phone No.</FieldLabel>
+                          <Field name="phoneNo">
+                            {({ field }) => (
+                              <input {...field} type="text" placeholder="0300-1234567" className={inputClass(errors.phoneNo && touched.phoneNo)} />
+                            )}
+                          </Field>
+                          <ErrMsg name="phoneNo" />
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            CNIC
-                          </label>
-                          <Field
-                            type="text"
-                            name="CNIC"
-                            placeholder="40000-1234567-8"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.CNIC && touched.CNIC
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="CNIC"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Phone No.
-                          </label>
-                          <Field
-                            type="text"
-                            name="phoneNo"
-                            placeholder="0300-1234567"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.phoneNo && touched.phoneNo
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="phoneNo"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                      {/* Row 5 — Password + Role */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {!isEdit && (
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Password
-                            </label>
-                            <Field
-                              type="text"
-                              name="password"
-                              placeholder="********"
-                              className={`w-full px-4 py-2 border-1 ${
-                                errors.password && touched.password
-                                  ? "border-zinc-500 focus:border-zinc-500"
-                                  : "border-gray-200 focus:border-blue-500"
-                              } rounded-xl focus:outline-none transition-colors`}
-                            ></Field>
-                            <ErrorMessage
-                              name="password"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
+                            <FieldLabel>Password</FieldLabel>
+                            <Field name="password">
+                              {({ field }) => (
+                                <input {...field} type="text" placeholder="••••••••" className={inputClass(errors.password && touched.password)} />
+                              )}
+                            </Field>
+                            <ErrMsg name="password" />
                           </div>
                         )}
-                        <div>
+                        <div className={isEdit ? "md:col-span-2" : ""}>
                           <FormikSelect
                             name="role"
-                            label="Select user role"
+                            label="Select User Role"
                             options={roleOptions}
                             value={values.role}
                             setFieldValue={setFieldValue}
                             setFieldTouched={setFieldTouched}
                             error={errors.role}
                             touched={touched.role}
-                            placeholder="user , sub admin"
-                            //   onChangeExtra={handleDepartmentChange}
+                            placeholder="User, Sub Admin"
                           />
                         </div>
                       </div>
 
+                      {/* Row 6 — Address */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Address
-                        </label>
-                        <Field
-                          as="textarea"
-                          name="address"
-                          rows="3"
-                          placeholder="address..."
-                          className="w-full px-4 py-2 border-1 border-gray-200 focus:border-blue-500 rounded-xl focus:outline-none transition-colors resize-none"
-                        />
-                        <ErrorMessage
-                          name="address"
-                          component="div"
-                          className="text-red-500 text-sm mt-1"
-                        />
+                        <FieldLabel>Address</FieldLabel>
+                        <Field name="address">
+                          {({ field }) => (
+                            <textarea
+                              {...field}
+                              rows={3}
+                              placeholder="Full address..."
+                              className={`${inputClass(false)} resize-none leading-relaxed`}
+                            />
+                          )}
+                        </Field>
+                        <ErrMsg name="address" />
                       </div>
-                      <div className="flex gap-2 md:gap-4 pt-2">
+
+                      {/* Divider */}
+                      <div className="h-px bg-white/[0.06]" />
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 pb-1">
                         <motion.button
                           type="button"
                           whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
+                          whileTap={{ scale: 0.97 }}
                           onClick={closeModal}
-                          className="flex-1 px-3 md:px-6 py-4 border-2 cursor-pointer border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50 transition-colors"
+                          className="flex-1 py-3 rounded-xl text-sm font-bold cursor-pointer transition-all duration-150 bg-white/[0.04] border border-white/[0.08] text-zinc-500 hover:bg-white/[0.08] hover:text-zinc-300"
                         >
                           Cancel
                         </motion.button>
@@ -490,20 +389,18 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                           type="submit"
                           disabled={isSubmitting}
                           whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700 border border-zinc-700/50 hover:border-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"                        >
+                          whileTap={{ scale: 0.97 }}
+                          className="flex-1 py-3 rounded-xl text-sm font-black cursor-pointer transition-all duration-150 bg-white text-zinc-950 border border-white/90 shadow-[0_2px_16px_rgba(255,255,255,0.1)] hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
                           {isSubmitting ? (
-                            <div className="flex items-center justify-center gap-2">
-                              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            <span className="flex items-center justify-center gap-2">
+                              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                              </svg>
                               Processing...
-                            </div>
-                          ) : values?.type === "pickup" ? (
-                            "Submit Pickup"
-                          ) : values?.type === "drop off" ? (
-                            "Schedule  Drop Off"
-                          ) : (
-                            "Continue"
-                          )}
+                            </span>
+                          ) : isEdit ? "Save Changes" : "Add Employee"}
                         </motion.button>
                       </div>
                     </Form>

@@ -2,30 +2,18 @@
 
 import {
   Award,
-  Eye,
   Calendar,
-  Star,
   ArrowUp,
   ArrowDown,
-  CalendarRangeIcon,
-  Frown,
-  Users,
-  Settings,
   ShoppingBag,
   TrendingUp,
   DollarSign,
   Package,
-  BoxIcon,
-  Mail,
+
 } from "lucide-react";
-import { FaGavel } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useWonItemsQuery } from "@/app/_Services/wonProduct/page";
-import { useAllAppointmentQuery } from "@/app/_Services/appointment/page";
-import { usePenalizedProductItemsQuery } from "@/app/_Services/PenaltyFeeProduct/page";
-import { useGetBillBoardQuery } from "@/app/_Services/services/page";
-import { useAllStoreProductQuery } from "@/app/_Services/StoreProduct/page";
+import { useGetDashboardCountQuery } from "@/app/_Services/about/page";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
@@ -78,7 +66,7 @@ const StatCard = ({
             </div>
           )}
         </div>
-        <div className="text-3xl font-bold text-white my-1">{value}</div>
+        <div className="text-xl font-bold text-white my-1">{value}</div>
         <div className="text-white text-opacity-80 font-medium">{title}</div>
         {subtitle && (
           <div className="text-white text-opacity-60 text-sm mt-1">
@@ -91,41 +79,14 @@ const StatCard = ({
   );
 };
 
-const QuickActionCard = ({ icon: Icon, title, description, color, link }) => {
-  const router = useRouter();
-
-  return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      // onClick={() => router.push(link)}
-      className="bg-white rounded-2xl p-4 md:p-5 shadow-lg border border-gray-100 cursor-pointer hover:shadow-xl transition-all duration-300"
-    >
-      <div className={`p-3 rounded-2xl w-fit mbg-zinc-800 ${color}`}>
-        <Icon className="h-6 w-6 text-white" />
-      </div>
-      <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
-      {/* <p className="text-gray-600 text-sm">{description}</p> */}
-    </motion.div>
-  );
-};
 
 export default function DashboardPage() {
   const [greeting, setGreeting] = useState("");
   const [currentUser, setCurrentUser] = useState("");
 
-  // API Queries
-  const { data: billBoard, isLoading: billBoardLoading } =
-    useGetBillBoardQuery();
-  const { data: storeItems, isLoading: storeLoading } =
-    useAllStoreProductQuery();
-  const { data: purchasesData, isLoading: purchasesLoading } =
-    useWonItemsQuery();
 
-  const { data: missed, isLoading: missedLoading } = useAllAppointmentQuery();
-  const { data: penalized, isLoading: penalizedLoading } =
-    usePenalizedProductItemsQuery();
-  console.log(billBoard, "billBoard");
+  const { data, isLoading } =
+    useGetDashboardCountQuery();
 
   useEffect(() => {
     const data = Cookies.get("currentuser");
@@ -148,24 +109,7 @@ export default function DashboardPage() {
     }
   }, []);
 
-  const soldProducts =
-    storeItems?.data?.filter((item) => item.isSold)?.length || 0;
-  const totalProducts = storeItems?.data?.length || 0;
-  const purchasedProducts = purchasesData?.data?.paid?.length || 0;
-  const totalFees = 0;
-  const pendingFees =
-    penalized?.data?.length +
-      missed?.data?.filter(
-        (e) => e?.status === "missed" && e?.paymentStatus === "unpaid"
-      )?.length +
-      purchasesData?.data?.pending?.length || 0;
 
-  const isLoading =
-    billBoardLoading ||
-    storeLoading ||
-    purchasesLoading ||
-    missedLoading ||
-    penalizedLoading;
 
   if (isLoading) {
     return (
@@ -188,15 +132,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen px-2">
-      {/* {billBoard?.data?.map(e=><div className=" pt-6 p-1 md:p-4  bg-gray-200 shadow-lg rounded-2xl border-3 border-[#ffa51d] ">
-        <div
-          dangerouslySetInnerHTML={{ __html: e?.title }}
-        />
-        <div
-          dangerouslySetInnerHTML={{ __html: e?.description }}
-          className="py-3"
-        />
-      </div>)} */}
 
       <div className="relative overflow-hidden bg-gradient-to-r from-zinc-800 via-zinc-700 to-zinc-800 text-white rounded-lg">
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 via-zinc-700 to-zinc-800 bg-opacity-100"></div>
@@ -243,7 +178,7 @@ export default function DashboardPage() {
           <StatCard
             icon={Package}
             title="Total Lead"
-            value={totalProducts}
+            value={data?.data?.leadCount}
             // subtitle="Items in your watchlist"
             color="bg-gradient-to-br from-blue-700 to-blue-800"
             trend="up"
@@ -254,8 +189,7 @@ export default function DashboardPage() {
           <StatCard
             icon={ShoppingBag}
             title="Total Client"
-            value={purchasedProducts}
-            // subtitle="Items you've bought"
+            value={data?.data?.clientCount}
             color="bg-gradient-to-br from-yellow-600 to-yellow-700"
             trend="up"
             trendValue="0"
@@ -265,12 +199,7 @@ export default function DashboardPage() {
           <StatCard
             icon={TrendingUp}
             title="Total Sale"
-            value={soldProducts}
-            // subtitle={`${
-            //   totalProducts > 0
-            //     ? Math.round((soldProducts / totalProducts) * 100)
-            //     : 0
-            // }% success rate`}
+            value={data?.data?.saleAmount}
             color="bg-gradient-to-br from-green-600 to-emerald-700"
             emerald="up"
             trendValue="0"
@@ -280,7 +209,7 @@ export default function DashboardPage() {
           <StatCard
             icon={DollarSign}
             title="Pending Payment Link"
-            value={pendingFees}
+            value={data?.data?.paymentLinkCount}
             // subtitle={`${pendingFees} unpaid fees`}
             color="bg-gradient-to-br from-orange-600 to-red-700"
             trend={"down"}
@@ -289,95 +218,6 @@ export default function DashboardPage() {
           />
         </motion.div>
 
-        {/* Quick Actions */}
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mb-8"
-        >
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-            <Star className="h-6 w-6 text-yellow-500 bg-ora" />
-            Quick Actions
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-6">
-            <QuickActionCard
-              icon={FaGavel}
-              title="Bidding"
-              description="View bidding items"
-              color="bg-gradient-to-r from-gray-500 to-gray-600"
-              link={"/dashboard/Bidding"}
-            />
-            <QuickActionCard
-              icon={ShoppingBag}
-              title="Won"
-              description="View Won Items"
-              color="bg-gradient-to-r from-green-500 to-emerald-600"
-              link={"/dashboard/wonitem"}
-            />
-
-            <QuickActionCard
-              icon={Frown}
-              title="Lost"
-              description="View Lost Items"
-              color="bg-gradient-to-r from-rose-500 to-rose-600"
-              link={"/dashboard/lostitem"}
-            />
-            <QuickActionCard
-              icon={Eye}
-              title="WatchList"
-              description="View Items"
-              color="bg-gradient-to-r from-blue-500 to-blue-600"
-              link={"/dashboard/wishlist"}
-            />
-            <QuickActionCard
-              icon={DollarSign}
-              title="Invoices"
-              description="View Invoices"
-              color="bg-gradient-to-r from-orange-400 to-orange-500"
-              link={"/dashboard/appointment"}
-            />
-
-            <QuickActionCard
-              icon={BoxIcon}
-              title="Selling"
-              description="View Store Items"
-              color="bg-gradient-to-r from-lime-600 to-lime-700"
-              link={"/dashboard/myItem"}
-            />
-
-            <QuickActionCard
-              icon={CalendarRangeIcon}
-              title="Appointments "
-              description="View Pickup Appointment"
-              color="bg-gradient-to-r from-purple-500 to-purple-600"
-              link={"/dashboard/appointment"}
-            />
-            <QuickActionCard
-              icon={Users}
-              title="Referrals"
-              description="View Your Squads"
-              color="bg-gradient-to-r from-yellow-500 to-yellow-600"
-              link={"/dashboard/refferal"}
-            />
-            <QuickActionCard
-              icon={Settings}
-              title="Setting"
-              description="View Your Squads"
-              color="bg-gradient-to-r from-fuchsia-300 to-fuchsia-400"
-              link={"/dashboard/profile"}
-            />
-            <QuickActionCard
-              icon={Mail}
-              title="Help"
-              description="View Your Squads"
-              color="bg-gradient-to-r from-cyan-400 to-cyan-500"
-              link={"/dashboard/contactform"}
-            />
-          </div>
-        </motion.div> */}
-
-        {/* Recent Activity */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -391,7 +231,7 @@ export default function DashboardPage() {
 
           {/* Activity Timeline */}
           <div className="space-y-6">
-            {soldProducts > 0 && (
+            {/* {soldProducts > 0 && (
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                   <TrendingUp className="h-5 w-5 text-green-600" />
@@ -434,25 +274,22 @@ export default function DashboardPage() {
                   <p className="text-gray-400 text-xs">Action required</p>
                 </div>
               </div>
-            )}
+            )} */}
 
-            {soldProducts === 0 &&
-              purchasedProducts === 0 &&
-              totalFees === 0 && (
+           
                 <div className="text-center py-8">
                   <Award className="h-16 w-16 text-gray-300 mx-auto mbg-zinc-800" />
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">
                     No Recent Activity
                   </h3>
                   <p className="text-gray-500">
-                    Start by listing your first product or making a purchase!
+                    Start by listing your first lead or making a sale!
                   </p>
                 </div>
-              )}
+              
           </div>
         </motion.div>
 
-        {/* Footer Stats */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

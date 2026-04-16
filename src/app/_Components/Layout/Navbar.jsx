@@ -1,190 +1,3 @@
-// "use client";
-
-// import { useState } from "react";
-// import Image from "next/image";
-// import Link from "next/link";
-// import Cookies from "js-cookie";
-// import { useRouter } from "next/navigation";
-// import { useDispatch, useSelector } from "react-redux";
-// import Main from "../../../app/Assets/logo-ppi.png";
-// import { Search, X, Menu } from "lucide-react";
-// import LeftNav from "../Dashboard/LeftNav";
-// import { useLogoutMutation } from "@/app/_Services/authentication/page";
-
-// import toast from "react-hot-toast";
-// import {
-//   useTimeInMutation,
-//   useTimeOutMutation,
-// } from "@/app/_Services/attendence/page";
-// import { setAttendence } from "@/redux/filterSlice";
-
-// const Navbar = () => {
-//   const router = useRouter();
-//   const token = Cookies.get("token");
-
-//   const { attendence } = useSelector((state) => state.filter);
-// console.log(attendence,'attendence')
-//   const [isMenuOpen, setIsMenuOpen] = useState(false);
-//   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-
-//   const [logout, { isLoading: isSubmitting }] = useLogoutMutation();
-//   const [TimeIn, { isLoading: isTimeIn }] = useTimeInMutation();
-//   const [TimeOut, { isLoading: isTimeOut }] = useTimeOutMutation();
-
-//   const clearExtensionAndRedirect = (response) => {
-//     if (
-//       typeof window !== "undefined" &&
-//       window.chrome &&
-//       window.chrome.runtime
-//     ) {
-//       window.window.postMessage(
-//         "ipmkoccmjmjepnnepibolhakgijemoed",
-//         { type: "LOGOUT" },
-//         (res) => {
-//           console.log("SUCCESS! Extension replied:", res);
-//           // finalizeLogout(response.message);
-//           router.push("/");
-//         },
-//       );
-//     } else {
-//       console.log("Chrome Extension API not found");
-//       // finalizeLogout(response.message);
-//       router.push("/");
-//     }
-//   };
-
-//   const finalizeLogout = (msg) => {
-//     console.log("Finalizing Logout - Removing Cookies...");
-//     Cookies.remove("token", { path: "/" });
-//     Cookies.remove("currentuser", { path: "/" });
-//     toast.success(msg);
-//     clearExtensionAndRedirect();
-//   };
-
-//   const handleLogout = async () => {
-//     try {
-//       const response = await logout().unwrap();
-//       console.log(response, "response");
-//       if (response.statusCode === 200) {
-//         finalizeLogout(response?.message);
-//       }
-//     } catch (error) {
-//       toast.error(error?.data?.message || "Logout failed");
-//     }
-//   };
-
-//   const handleTimeIn = async () => {
-//     try {
-//       const response = await TimeIn().unwrap();
-//       console.log(response, "attedence");
-//       if (response.statusCode === 200) {
-//         toast.success(response?.message);
-//       }
-//     } catch (error) {
-//       toast.error(error?.data?.message || "Logout failed");
-//     }
-//   };
-
-//   const renderAuthButtons = () => (
-//     <>
-//       <button
-//         onClick={() => (attendence?.shiftDate ? dispatch(setAttendence(data?.data)) : handleTimeIn())}
-//         className={`cursor-pointer py-2 px-3 rounded text-white text-sm font-medium whitespace-nowrap shadow hover:opacity-90 transition-opacity ${
-//           token ? "bg-zinc-800" : "bg-[#a945fc]"
-//         }`}
-//       >
-//         {isTimeIn || isTimeOut ? (
-//           <div className="flex items-center">
-//             <div className="h-5 w-5 border-1 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-//             loading...
-//           </div>
-//         ) : attendence?.shiftDate ? (
-//           "Time Out"
-//         ) : (
-//           "Time In"
-//         )}
-//       </button>
-
-//       {token && (
-//         <button
-//           onClick={() => {
-//             setIsMenuOpen(!isMenuOpen);
-//             router.push("/dashboard/dashboardcount");
-//           }}
-//           className="cursor-pointer py-2 px-3 bg-zinc-800 text-white rounded text-sm font-medium whitespace-nowrap shadow hover:opacity-90 transition-opacity"
-//         >
-//           Dashboard
-//         </button>
-//       )}
-//     </>
-//   );
-
-//   return (
-//     <>
-//       {/* Main Navbar */}
-//       <div className="bg-white border-b border-[#DDDDDD7D] fixed top-0 left-0 w-full z-50">
-//         <nav className="container  md:px-10 px-2 py-1 flex justify-between items-center">
-//           <Link href="/dashboard/dashboardcount" className="w-60">
-//             <Image src={Main || "/placeholder.svg"} alt="Logo" height={60} />
-//           </Link>
-
-//           {/* Mobile Controls */}
-//           <div className="lg:hidden flex items-center space-x-2">
-//             <button
-//               className="p-1 text-gray-800"
-//               onClick={() => setIsMenuOpen(!isMenuOpen)}
-//               aria-label="Toggle Menu"
-//             >
-//               <Menu size={30} />
-//             </button>
-//           </div>
-
-//           {/* Desktop Auth Buttons */}
-//           <div className="hidden lg:flex items-center space-x-4 text-black">
-//             {renderAuthButtons()}
-//           </div>
-//         </nav>
-//       </div>
-
-//       {/* Mobile Menu */}
-//       <div
-//         className={`fixed inset-0 z-50 backdrop-blur-sm bg-black/20 transition-transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"} lg:hidden`}
-//       >
-//         <nav className="fixed top-0 left-0 h-full w-80 bg-white p-3 shadow-md">
-//           <div className="flex justify-between items-center mb-gray-800">
-//             <Link href="/dashboard/dashboardcount">
-//               <Image
-//                 src={Main || "/placeholder.svg"}
-//                 alt="Logo"
-//                 width={100}
-//                 height={30}
-//               />
-//             </Link>
-
-//             <button
-//               className="text-gray-500 hover:text-gray-700 transition-colors"
-//               onClick={() => setIsMenuOpen(false)}
-//               aria-label="Close Menu"
-//             >
-//               <X size={24} />
-//             </button>
-//           </div>
-
-//           {token ? (
-//             <LeftNav set={() => setIsMenuOpen(false)} />
-//           ) : (
-//             <div className="flex flex-col gap-3 mt-6">
-//               {renderAuthButtons()}
-//             </div>
-//           )}
-//         </nav>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Navbar;
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -211,11 +24,13 @@ import toast from "react-hot-toast";
 import {
   useTimeInMutation,
   useTimeOutMutation,
-  useTodayUserAttendenceQuery,
 } from "@/app/_Services/attendence/page";
+import { useBreakInMutation } from "@/app/_Services/employee/page";
+
 import {
   removeAttendence,
   resumeWork,
+  setActivity,
   setAttendence,
 } from "@/redux/filterSlice";
 import TimeOutModal from "../Modal/TimeOutModal";
@@ -233,22 +48,19 @@ const Navbar = () => {
   const [logout] = useLogoutMutation();
   const [TimeIn, { isLoading: isTimeIn }] = useTimeInMutation();
   const [TimeOut, { isLoading: isTimeOut }] = useTimeOutMutation();
-
-
+  const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
+  
 
   useEffect(() => {
     let interval;
-    // Agar timeIn hai aur timeOut abhi tak nahi hua (active shift)
     if (attendence?.timeIn && !attendence?.timeOut) {
       interval = setInterval(() => {
         const now = moment().tz("Asia/Karachi");
         const start = moment(attendence.timeIn);
         const duration = moment.duration(now.diff(start));
-
         const hrs = Math.floor(duration.asHours()).toString().padStart(2, "0");
         const mins = duration.minutes().toString().padStart(2, "0");
         const secs = duration.seconds().toString().padStart(2, "0");
-
         setWorkingTime(`${hrs}:${mins}:${secs}`);
       }, 1000);
     } else {
@@ -256,6 +68,31 @@ const Navbar = () => {
     }
     return () => clearInterval(interval);
   }, [attendence]);
+
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
+  const handleBreakIn = async () => {
+    try {
+      const res = await breakIn({ attendanceId: attendence?._id }).unwrap();
+      if (res.success) {
+        console.log(res, "-------->>>res");
+        dispatch(
+          setActivity({
+            activityStatus: res?.data?.activityStatus,
+            lastBreakInTime: res?.data?.lastBreakInTime,
+          }),
+        );
+      }
+    } catch (err) {
+      console.log(err, "-------->>>err");
+      toast.error(err?.data?.message || "Update failed");
+    }
+  };
 
   const handleTimeIn = async () => {
     try {
@@ -269,25 +106,15 @@ const Navbar = () => {
     }
   };
 
-  const clearExtensionAndRedirect = (response) => {
+  const clearExtensionAndRedirect = () => {
     if (
       typeof window !== "undefined" &&
       window.chrome &&
       window.chrome.runtime
     ) {
-      window.postMessage(
-        {
-          type: "LOGOUT",
-        },
-        "*",
-      );
-
-      router.push("/");
-    } else {
-      console.log("Chrome Extension API not found");
-      // finalizeLogout(response.message);
-      router.push("/");
+      window.postMessage({ type: "LOGOUT" }, "*");
     }
+    router.push("/");
   };
 
   const handleTimeOut = async () => {
@@ -310,91 +137,162 @@ const Navbar = () => {
       const response = await logout().unwrap();
       if (response.statusCode === 200) {
         toast.success("Logged out successfully");
-           Cookies.remove("token", { path: "/" });
-      Cookies.remove("currentuser", { path: "/" });
-      clearExtensionAndRedirect();
-      dispatch(resumeWork());
-      dispatch(removeAttendence());
+        Cookies.remove("token", { path: "/" });
+        Cookies.remove("currentuser", { path: "/" });
+        clearExtensionAndRedirect();
+        dispatch(resumeWork());
+        dispatch(removeAttendence());
       }
     } catch (error) {
       toast.error(error?.message);
-      console.error("Logout API failed:", error);
-    } 
+    }
   };
 
-  const renderAuthButtons = () => (
-    <div className="flex items-center gap-3">
-      {/* Dynamic Button: Time In / Time Out */}
-      {!attendence?.timeIn ? (
-        <button
-          onClick={handleTimeIn}
-          disabled={isTimeIn}
-          className="cursor-pointer flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800  shadow-green-100 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+  const Spinner = () => (
+    <svg
+      className="animate-spin h-4 w-4"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
+  );
+
+  const AttendanceStatus = ({ mobile = false }) => {
+    if (attendence?.timeIn && !attendence?.timeOut) {
+      return (
+        <div
+          className={`flex items-center gap-4 rounded-xl px-4 py-2 bg-white/5 border border-white/[0.08] ${mobile ? "w-full" : ""}`}
         >
-          {isTimeIn ? (
-            <svg
-              className="animate-spin h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
+              <Clock size={9} /> Time In
+            </span>
+            <span className="text-xs font-bold text-zinc-200">
+              {moment(attendence.timeIn).tz("Asia/Karachi").format("hh:mm A")}
+            </span>
+          </div>
+          <div className="w-px h-7 bg-white/[0.08]" />
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
+              <Timer size={9} /> Working
+            </span>
+            <span className="text-xs font-mono font-black text-zinc-100">
+              {workingTime}
+            </span>
+          </div>
+          <div className="w-px h-7 bg-white/[0.08]" />
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
+              <Activity size={9} /> Status
+            </span>
+            <span
+              className={`text-[9px] font-bold px-2 py-[2px] rounded-full uppercase border ${
+                attendence.status === "present"
+                  ? "bg-green-500/15 text-green-400 border-green-500/25"
+                  : "bg-yellow-500/15 text-yellow-400 border-yellow-500/25"
+              }`}
             >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-          ) : (
-            <>
-              <Clock size={18} />
-              <span>Time In</span>
-            </>
-          )}
-        </button>
+              {attendence.status}
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    if (attendence?.timeIn && attendence?.timeOut) {
+      return (
+        <div
+          className={`flex items-center gap-2.5 rounded-xl px-4 py-2 bg-green-500/[0.07] border border-green-500/15 ${mobile ? "w-full" : ""}`}
+        >
+          <CheckCircle size={15} className="text-green-400 shrink-0" />
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-green-400">
+              Shift Completed
+            </p>
+            <p className="text-[11px] text-zinc-500">Great work today!</p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={`flex items-center gap-2.5 rounded-xl px-4 py-2 animate-pulse bg-red-500/[0.07] border border-red-500/[0.18] ${mobile ? "w-full" : ""}`}
+      >
+        <Clock size={15} className="text-red-400 shrink-0" />
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-widest text-red-400">
+            Attention Needed!
+          </p>
+          <p className="text-[11px] text-zinc-500">
+            Please mark your attendance.
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  const ActionButtons = ({ mobile = false }) => (
+    <div
+      className={`flex ${mobile ? "flex-col w-full" : "items-center"} gap-2`}
+    >
+      {!attendence?.timeIn ? (
+          <button
+            onClick={handleTimeIn}
+            disabled={isTimeIn}
+            className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-green-500/[0.12] border border-green-500/25 text-green-400 hover:bg-green-500/20 ${mobile ? "w-full" : ""}`}
+          >
+            {isTimeIn ? (
+              <Spinner />
+            ) : (
+              <>
+                <Clock size={14} />
+                <span>Time In</span>
+              </>
+            )}
+          </button>
       ) : !attendence?.timeOut ? (
+        <>      
+         <button
+            type="button"
+            onClick={() => handleBreakIn()}
+            className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-yellow-500/[0.12] border border-yellow-500/25 text-yellow-400 hover:bg-yellow-500/20 ${mobile ? "w-full" : ""}`}
+          >
+            Break In
+          </button>
         <button
           onClick={() => setConfirmDelete(true)}
           disabled={isTimeOut}
-          className="cursor-pointer flex items-center justify-center gap-2 bg-red-800 hover:bg-red-900  shadow-red-100 text-white px-5 py-2 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+          className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-red-500/10 border border-red-500/[0.22] text-red-400 hover:bg-red-500/[0.18] ${mobile ? "w-full" : ""}`}
         >
           {isTimeOut ? (
-            <svg
-              className="animate-spin h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <Spinner />
           ) : (
             <>
-              <PowerOff size={18} />
+              <PowerOff size={14} />
               <span>Time Out</span>
             </>
           )}
         </button>
+        </>
       ) : (
-        <span className="bg-gray-200 text-gray-600 px-4 py-2 rounded-md text-sm font-bold">
+        <span
+          className={`px-4 py-2 rounded-xl text-xs font-bold uppercase bg-white/5 border border-white/[0.08] text-zinc-500 ${mobile ? "text-center" : ""}`}
+        >
           Shift Over
         </span>
       )}
@@ -402,12 +300,10 @@ const Navbar = () => {
       {token && (
         <button
           onClick={handleLogout}
-          className="cursor-pointer flex items-center justify-center gap-2 bg-zinc-600 hover:bg-zinc-500 shadow-zinc-100 text-zinc-300 px-5 py-2 rounded-xl text-sm font-bold transition-all disabled:opacity-70 disabled:cursor-not-allowed min-w-[120px]"
+          className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09] hover:text-zinc-200 ${mobile ? "w-full" : ""}`}
         >
-          <>
-            <LogOut size={18} />
-            <span>Log Out</span>
-          </>
+          <LogOut size={14} />
+          <span>Log Out</span>
         </button>
       )}
     </div>
@@ -415,177 +311,67 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="bg-zinc-900 border-b border-[#DDDDDD7D] fixed top-0 left-0 w-full z-50">
-        <nav className="container mx-auto md:px-10 px-4 flex justify-between items-center py-0.5">
+      {/* Main Navbar */}
+      <div className="fixed top-0 left-0 w-full z-50 bg-[#0f0f11] border-b border-white/[0.07] shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+        <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-white/5" />
+        <nav className="flex items-center justify-between px-3 md:px-6 py-1 gap-3">
           <Link href="/dashboard/dashboardcount" className="shrink-0">
-            <Image src={Main} alt="Logo" height={150} width={150} priority />
+            <Image src={Main} alt="Logo" height={48} width={130} priority />
           </Link>
-
-          {attendence?.timeIn && !attendence?.timeOut ? (
-            <div className="hidden lg:flex items-center space-x-8  bg-zinc-800/40 border border-zinc-800 px-6 py-1 my-0.5 rounded-full shadow-lg">
-              <div className="flex flex-col items-center border-r pr-6 border-zinc-700">
-                <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
-                  <Clock size={12} /> Time In
-                </div>
-                <span className="text-sm font-bold text-zinc-300">
-                  {moment(attendence.timeIn)
-                    .tz("Asia/Karachi")
-                    .format("hh:mm A")}
-                </span>
-              </div>
-
-              <div className="flex flex-col items-center border-r pr-6 border-zinc-700">
-                <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
-                  <Timer size={12} /> Working Time
-                </div>
-                <span className="text-sm font-mono font-black text-zinc-300">
-                  {workingTime}
-                </span>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
-                  <Activity size={12} /> Status
-                </div>
-                <span
-                  className={`text-[11px] font-bold px-2 py-0.5 rounded-full text-white uppercase ${attendence.status === "present" ? "bg-green-500" : "bg-gradient-to-br from-yellow-500 to-yellow-600"}`}
-                >
-                  {attendence.status}
-                </span>
-              </div>
-            </div>
-          ) : attendence?.timeIn && attendence?.timeOut ? (
-            <div className="hidden lg:flex items-center gap-3 bg-green-50 border border-green-100 px-5 py-1 rounded-full">
-              <div className="bg-green-500 p-1.5 rounded-full text-white">
-                <CheckCircle size={16} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] font-black text-green-700 uppercase tracking-widest">
-                  Shift Completed
-                </span>
-                <span className="text-[12px] font-medium text-gray-600">
-                  Great work today! See you in the next shift.
-                </span>
-              </div>
-            </div>
-          ) : (
-            <div className="hidden lg:flex items-center gap-3 bg-red-100 border border-red-200 px-5 py-1 my-0.5 rounded-lg animate-pulse">
-              <div className="bg-red-500 p-1.5 rounded-full text-white">
-                <Clock size={16} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold text-red-600 uppercase tracking-tight">
-                  Attention Needed!
-                </span>
-                <span className="text-[13px] font-medium text-gray-700">
-                  Please mark your attendance to start the shift.
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Desktop Controls */}
-          <div className="hidden lg:flex items-center space-x-4">
-            {renderAuthButtons()}
+          <div className="hidden lg:flex flex-1 justify-center px-4">
+            <AttendanceStatus />
           </div>
-
-          {/* Mobile Menu Trigger */}
+          <div className="hidden lg:flex items-center">
+            <ActionButtons />
+          </div>
           <button
-            className="lg:hidden text-zinc-300"
+            className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-150 cursor-pointer bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09]"
             onClick={() => setIsMenuOpen(true)}
+            aria-label="Open Menu"
           >
-            <Menu size={28} />
+            <Menu size={18} />
           </button>
         </nav>
       </div>
 
+      {/* Mobile Backdrop */}
+      <div
+        onClick={() => setIsMenuOpen(false)}
+        className={`lg:hidden fixed inset-0 z-[60] transition-all duration-300 bg-black/60 backdrop-blur-sm ${
+          isMenuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      />
+
       {/* Mobile Drawer */}
       <div
-        className={`fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"} lg:hidden`}
+        className={`lg:hidden fixed top-0 left-0 z-[70] h-full flex flex-col transition-transform duration-300 ease-in-out w-[min(300px,85vw)] bg-[#0d0d0f] border border-white/[0.07] shadow-[8px_0_40px_rgba(0,0,0,0.6)] ${
+          isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
-        <div
-          className={`fixed top-0 left-0 h-full w-72 bg-zinc-800 transition-transform duration-300 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
-        >
-          <div className="p-4 flex justify-between items-center border-b border-zinc-700">
-            <Image src={Main} alt="Logo" width={100} height={60} />
-            <X
-              className="cursor-pointer text-gray-500"
-              onClick={() => setIsMenuOpen(false)}
-            />
-          </div>
-
-          {/* Mobile Drawer Content */}
-          <div className="p-3 space-y-2">
-            {attendence?.timeIn && !attendence?.timeOut ? (
-              <div className="bg-zinc-900/40 p-3 rounded-xl border border-zinc-800 space-y-3">
-                <div className="flex justify-between items-center border-b border-zinc-700  pb-2">
-                  <span className="text-[10px] text-gray-400 font-bold uppercase">
-                    Working Time
-                  </span>
-                  <span className="text-sm font-mono font-black text-zinc-300">
-                    {workingTime}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center border-b border-zinc-700 pb-2">
-                  <span className="text-[10px] text-gray-400 font-bold uppercase">
-                    Time In
-                  </span>
-                  <span className="text-xs font-bold text-zinc-300">
-                    {moment(attendence.timeIn)
-                      .tz("Asia/Karachi")
-                      .format("hh:mm A")}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[10px] text-zinc-400 font-bold uppercase">
-                    Status
-                  </span>
-                  <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full text-zinc-300 uppercase ${attendence.status === "present" ? "bg-green-500" : "bg-orange-500"}`}
-                  >
-                    {attendence.status}
-                  </span>
-                </div>
-              </div> 
-            ) : attendence?.timeIn && attendence?.timeOut ? (
-               <div className="bg-green-50 p-3 rounded-xl border border-green-200 flex flex-col items-center text-center animate-pulse gap-2">
-                <div className="bg-green-500 p-2 rounded-full text-white">
-                   <CheckCircle size={16} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-green-700 uppercase">
-                      Shift Completed
-                  </span>
-                  <span className="text-[12px] text-gray-700 leading-tight">
-                    Great work today! See you in the next shift.
-                  </span>
-                </div>
-              </div>
-            )  : (
-              <div className="bg-red-50 p-3 rounded-xl border border-red-200 flex flex-col items-center text-center animate-pulse gap-2">
-                <div className="bg-red-500 p-2 rounded-full text-white">
-                  <Clock size={20} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold text-red-600 uppercase">
-                    Attendance Missing
-                  </span>
-                  <span className="text-[12px] text-gray-700 leading-tight">
-                    Please mark your attendance to start the shift.
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Time In / Out Button */}
-            <div className="my-2">{renderAuthButtons()}</div>
-
-            <div className="pt-2 border-t border-zinc-700">
-              <LeftNav set={() => setIsMenuOpen(false)} />
-            </div>
-          </div>
+        <div className="h-[1.5px] w-full shrink-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+        <div className="flex items-center justify-between px-4 py-3 shrink-0 border-b border-white/[0.06]">
+          <Image src={Main} alt="Logo" width={110} height={36} />
+          <button
+            onClick={() => setIsMenuOpen(false)}
+            className="flex items-center justify-center w-8 h-8 rounded-lg cursor-pointer transition-all duration-150 bg-white/5 border border-white/[0.08] text-zinc-500 hover:bg-white/[0.09] hover:text-zinc-400"
+          >
+            <X size={15} />
+          </button>
+        </div>
+        <div className="px-3 pt-3 shrink-0">
+          <AttendanceStatus mobile />
+        </div>
+        <div className="px-3 pt-2 pb-2 shrink-0">
+          <ActionButtons mobile />
+        </div>
+        <div className="mx-3 shrink-0 h-px bg-white/[0.06]" />
+        <div className="flex-1 overflow-y-auto pt-2 overscroll-contain">
+          <LeftNav set={() => setIsMenuOpen(false)} />
         </div>
       </div>
+
       {confirmDelete && (
         <TimeOutModal
           setConfirmDelete={setConfirmDelete}

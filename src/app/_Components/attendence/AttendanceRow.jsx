@@ -142,6 +142,7 @@ import moment from "moment-timezone";
 import { formatDate } from "@/app/utilities/date";
 import {
   calculateDuration,
+  formatBreakMinutes,
   formatTimeOnly,
   getStatusClasses,
   onlyWorkingHours,
@@ -247,7 +248,7 @@ const AttendanceRow = ({ row }) => {
       </td>
 
       <td className="px-6 py-3 text-xs font-bold text-gray-700">
-        {record?.totalBreakMinutes >= 0 ? `${record.totalBreakMinutes}min` : "-"}
+        {record?.totalBreakMinutes >= 0 ? `${formatBreakMinutes(record?.totalBreakMinutes)}` : "-"}
       </td>
 
       <td className="px-4 py-2">

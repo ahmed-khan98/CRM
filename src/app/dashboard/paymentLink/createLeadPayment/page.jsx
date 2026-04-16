@@ -14,11 +14,7 @@ import { useCreatePaymentLinkMutation } from "@/app/_Services/paymentLink/page";
 
 function LeadPayment() {
   const searchParams = useSearchParams();
-  // const email = searchParams.get("email");
-  // const phoneNo = searchParams.get("phoneNo");
-  // const companyName = searchParams.get("companyName");
-  // const name = searchParams.get("name");
-  // const brand = searchParams.get("brand");
+
   const id = searchParams.get("leadId");
 
   const { data, error, isLoading } = useGetLeadByIdQuery({ id });
@@ -66,8 +62,6 @@ function LeadPayment() {
 
   const merchant = [
     { id: "Kinatech Business Solutions LLC", name: "Kinatech Business Solutions LLC" },
-    { id: "Pay Kinetic", name: "Pay Kinetic" },
-    { id: "SA Pro Solution LLC", name: "SA Pro Solution LLC" },
   ];
 
   const services = [

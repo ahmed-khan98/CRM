@@ -34,52 +34,59 @@ useEffect(() => {
 }, [startTime]);
 
   return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-      backgroundColor: 'rgba(10, 10, 10, 0.98)', color: 'white', zIndex: 10000,
-      display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-      backdropFilter: 'blur(10px)'
-    }}>
-      <div style={{ textAlign: 'center', padding: '40px', borderRadius: '30px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
-        <h1 style={{ marginBottom: '10px', fontSize: '1.5rem', fontWeight: '800', letterSpacing: '1px' }}>
-          🚫 SYSTEM IDLE (ON BREAK)
-        </h1>
-        
-        {/* Yahan humne Timezone aur Format dono set kar diye hain */}
-        <p style={{ color: '#a0aec0', fontSize: '14px', marginBottom: '30px' }}>
-          Break started at: <span style={{ color: '#a855f7', fontWeight: 'bold' }}>
-            {breakTime ? moment(breakTime).tz("Asia/Karachi").format("hh:mm:ss A") : "--:--"}
-          </span>
-        </p>
+    
+     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/100 backdrop-blur-lg">
+      <div className="w-full max-w-sm mx-4  rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d0d0f] shadow-[0_24px_64px_rgba(0,0,0,0.7)]">
 
-        <div style={{ marginBottom: '40px' }}>
-          <p style={{ fontSize: '12px', color: '#718096', textTransform: 'uppercase', fontWeight: 'bold', marginBottom: '5px' }}>
-            Duration
+        {/* Top accent line */}
+        <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+
+        {/* Header */}
+        <div className="flex flex-col items-center gap-2 px-6 pt-6 pb-4 border-b border-white/[0.04]">
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-red-500/10 border border-red-500/20 text-2xl">
+            🚫
+          </div>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-red-400">
+            System Idle (On Break)
           </p>
-          <h2 style={{ fontSize: '4rem', fontWeight: '900', color: '#a855f7', margin: 0, lineHeight: '1' }}>
-            {duration}
-          </h2>
         </div>
 
-        <button 
-          onClick={() => onBreakOut()}
-          style={{ 
-            padding: '15px 40px', 
-            cursor: 'pointer', 
-            borderRadius: '15px', 
-            border: 'none', 
-            background: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: '16px',
-            boxShadow: '0 10px 15px -3px rgba(168, 85, 247, 0.4)',
-            transition: 'transform 0.2s'
-          }}
-          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-        >
-          I am Back! (Resume Work)
-        </button>
+        {/* Break info */}
+        <div className="px-6 py-4 flex flex-col gap-3">
+
+          {/* Break started at */}
+          <div className="flex items-center justify-between rounded-xl px-4 py-2.5 bg-white/[0.03] border border-white/[0.06]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-600">
+              Break Started At
+            </span>
+            <span className="text-xs font-mono font-bold text-zinc-300">
+              {breakTime
+                ? moment(breakTime).tz("Asia/Karachi").format("hh:mm:ss A")
+                : "--:--"}
+            </span>
+          </div>
+
+          {/* Duration */}
+          <div className="flex flex-col items-center gap-1 rounded-xl px-4 py-4 bg-white/[0.03] border border-white/[0.06]">
+            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600">
+              Duration
+            </span>
+            <span className="text-3xl font-black font-mono text-zinc-100 tabular-nums">
+              {duration}
+            </span>
+          </div>
+
+          {/* Resume button */}
+          <button
+            onClick={() => onBreakOut()}
+            className="cursor-pointer w-full py-2.5 text-xs font-semibold rounded-xl transition-all duration-150 bg-white/[0.03] border border-white/[0.06] text-zinc-400 hover:bg-white/[0.06] hover:text-zinc-300 hover:scale-[1.02] active:scale-[0.98]"
+          >
+            I am Back! (Resume Work)
+          </button>
+        </div>
+
+        {/* Bottom accent line */}
+        <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       </div>
     </div>
   );

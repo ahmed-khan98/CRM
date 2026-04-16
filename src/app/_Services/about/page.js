@@ -1,12 +1,12 @@
 import { createApiAuction } from "@/redux/createApi"
 
-const aboutApi = createApiAuction.injectEndpoints({
+const dashboardCountApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({ 
-    getAbout: builder.query({
-      query: () => 'user/about',
+    getDashboardCount: builder.query({
+      query: () => 'dashboard/count',
     }),
   
   }),
 })
 
-export const { useGetAboutQuery } = aboutApi
+export const { useGetDashboardCountQuery } = dashboardCountApi

@@ -12,7 +12,7 @@ import {
   useBreakOutMutation,
 } from "../_Services/employee/page";
 import toast from "react-hot-toast";
-import { useLogoutMutation } from "../_Services/authentication/page";
+import { useGetLoggedUserQuery, useLogoutMutation } from "../_Services/authentication/page";
 import { useTodayUserAttendenceQuery } from "../_Services/attendence/page";
 import AnnouncementPopup from "../_Components/Modal/AnnouncementPopup";
 import AnnouncementMarquee from "../_Components/Modal/AnnouncementMarquee";
@@ -34,10 +34,17 @@ const DashboardLayout = ({ children }) => {
       isLoading,
       refetch,
     } = useTodayUserAttendenceQuery();
-  
+    const {
+      data:loggedUser,
+      error: isloggedError,
+      isLoading:isLoggedLoading,
+      refetch:isLoggedRefetch,
+    } = useGetLoggedUserQuery();
+  console.log(loggedUser,'loggedUser in layout');
+
     useEffect(() => {
       dispatch(setAttendence(data?.data));
-    }, [data,dispatch]);
+    }, [loggedUser,data,dispatch]);
 
   const { activityStatus, lastBreakInTime, attendence } = useSelector(
     (state) => state.filter,
@@ -172,14 +179,19 @@ const DashboardLayout = ({ children }) => {
   }, [dispatch, activityStatus,attendence]);
 
   return (
-    <div className="app-container">
+    <div className="app-container ">
      
-      {activityStatus === "idle" ? (
+      {loggedUser?.data?.activityStatus === 'idle' &&  activityStatus === "idle" ? (
         <BreakOverlay startTime={lastBreakInTime} onBreakOut={handleBreakOut} />
       ) : (
-        <div className="min-h-screen bg-zinc-100 flex flex-col pt-14 md:pt-18">
+        <div 
+      //   style={{
+      //   background: "#0f0f11",
+      //   border: "1px solid rgba(255,255,255,0.07)",
+      //   // boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+      // }}
+        className="min-h-screen bg-zinc-100 flex flex-col pt-14 md:pt-18">
           <div className="flex flex-1 relative overflow-hidden">
-            {/* Overlay for mobile when sidebar is open */}
             {isMobile && isSidebarOpen && (
               <div
                 className="fixed inset-0 backdrop-blur-sm bg-black/20 z-20"
@@ -187,7 +199,6 @@ const DashboardLayout = ({ children }) => {
               ></div>
             )}
 
-            {/* Sidebar - Fixed on desktop, overlay on mobile */}
             <div
               className={`${
                 isSidebarOpen
@@ -202,7 +213,6 @@ const DashboardLayout = ({ children }) => {
               <LeftNav />
             </div>
 
-            {/* Main Content - Scrollable */}
             <main
               className={`flex-1 overflow-y-auto h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] transition-all duration-300 ease-in-out px-2 md:px-2
             ${isMobile ? "w-full" : ""}`}

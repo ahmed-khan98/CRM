@@ -19,6 +19,7 @@ import moment from "moment-timezone";
 import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
 import {
   calculateDuration,
+  formatBreakMinutes,
   formatTimeOnly,
   getStatusClasses,
   onlyWorkingHours,
@@ -596,7 +597,7 @@ export default function TeamAttendence() {
       Break:
     </span>
     <span className="text-[10px] font-bold text-yellow-600">
-      {record?.totalBreakMinutes >= 0 ? `${record.totalBreakMinutes}min` : "0min"}
+      {record?.totalBreakMinutes >= 0 ? `${formatBreakMinutes(record?.totalBreakMinutes)}` : "0min"}
     </span>
   </div>
 </div>

@@ -8,7 +8,6 @@ import {
   User,
   Mail,
   Phone,
-  Edit2,
   Save,
   CheckCircle,
   Loader2,
@@ -16,42 +15,19 @@ import {
   Building,
   IdCard,
   ShieldUser,
+  Pencil,
+  X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Tab from "@/app/_Components/Tab/page";
 import { myAccountTabs } from "@/app/utilities/tabs/page";
 import { formatPhoneNumber } from "@/app/utilities/phoneFormat";
-import { useDispatch, useSelector } from "react-redux";
-import { setActivity } from "@/redux/filterSlice";
-import { useBreakInMutation } from "@/app/_Services/employee/page";
 
 const ProfilePage = () => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
-  const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
   const [isEditable, setIsEditable] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-      const { attendence } = useSelector((state) => state.filter);
-
-  
-  const dispatch = useDispatch();
-
-
-  const handleBreakIn = async () => {
-    try {
-      const res = await breakIn({attendanceId:attendence?._id}).unwrap();
-      if (res.success) {
-        console.log(res, "-------->>>res");
-        dispatch(
-          setActivity({
-            activityStatus: res?.data?.activityStatus,
-            lastBreakInTime: res?.data?.lastBreakInTime
-          }),
-        );
-      }
-    } catch (err) {
-      toast.error(err?.data?.message || "Update failed");
-    }
-  };
+ 
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -131,50 +107,48 @@ const ProfilePage = () => {
         >
 
           <div className="relative overflow-hidden">
-            <div className="h-18 bg-gradient-to-r from-zinc-800 via-zinc-600  to-zinc-800 shadow-zinc-900/50"></div>
+            <div className="h-18 bg-zinc-950 shadow-zinc-900/50"></div>
 
             <div className="relative px-1 md:px-4  pb-6 -mt-12">
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2">
                 <div className="flex items-end gap-4 mx-4 md:mx-0">
-                  <div className="h-18 w-18 rounded-full bg-white shadow-md flex items-center justify-center border-3 border-white">
-                    <div className="h-full w-full rounded-full bg-zinc-800 flex items-center justify-center text-white text-xl font-bold capitalize">
+                  <div className="h-18 w-18 rounded-full bg-white/[0.08] shadow-md flex items-center justify-center border border-white/10">
+                    <div className="h-full w-full rounded-full bg-zinc-950 flex items-center justify-center text-zinc-400 text-xl font-bold capitalize">
                       {name?.map((e) => `${e?.charAt(0)}`) || (
                         <User size={30} />
                       )}
                     </div>
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-white capitalize">
+                    <h2 className="text-xl font-bold text-zinc-300 capitalize">
                       {formData.fullName}
                     </h2>
                     <p className="text-gray-500">{formData.email}</p>
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsEditable(!isEditable)}
-                  className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${
-                    isEditable
-                      ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      : "bg-zinc-800 text-white border border-white hover:bg-zinc-900 hover:text-white"
-                  }`}
-                >
-                  {isEditable ? (
-                    <>Cancel Editing</>
-                  ) : (
-                    <>
-                      <Edit2 size={18} /> Edit Profile
-                    </>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleBreakIn()}
-                  className={`cursor-pointer flex items-center mx-4 gap-2 px-5 py-2.5 rounded-full transition-all ${"bg-zinc-800 text-white border border-white hover:bg-zinc-900 hover:text-white"}`}
-                >
-                  Break In
-                </button>
+              <button
+  onClick={() => setIsEditable(!isEditable)}
+  className={`cursor-pointer flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-150 border ${
+    isEditable
+      ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-800 border-zinc-700"
+      : "bg-zinc-900 border-white/[0.08] text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+  }`}
+>
+  {isEditable ? (
+    <>
+      <X size={14} />
+      <span>Cancel Editing</span>
+    </>
+  ) : (
+    <>
+      <Pencil size={14} />
+      <span>Edit Profile</span>
+    </>
+  )}
+</button>
+
+              
               </div>
             </div>
           </div>
@@ -389,7 +363,7 @@ const ProfilePage = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="group cursor-pointer relative overflow-hidden p-2 bg-zinc-900 text-white font-medium rounded-full hover:shadow-lg transition-all duration-300 disabled:opacity-70 min-w-[180px]"
+                    className="group cursor-pointer relative overflow-hidden p-2 bg-zinc-900 text-white font-medium rounded-full hover:shadow-lg hover:bg-zinc-800 hover:text-zinc-400 transition-all duration-300 disabled:opacity-70 min-w-[180px]"
                   >
                     <span className="relative flex items-center justify-center gap-2">
                       {isLoading ? (

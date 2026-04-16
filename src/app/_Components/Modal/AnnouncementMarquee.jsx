@@ -20,7 +20,7 @@ const AnnouncementMarquee = () => {
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 whitespace-nowrap">
           Updates
         </span>
-      </div>x
+      </div>
 
       {/* Framer Motion Marquee */}
       <div className="flex flex-1 overflow-hidden relative">
