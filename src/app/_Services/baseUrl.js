@@ -4,7 +4,7 @@
 
 
 
-export const BaseUrl ='http://localhost:8000/api/v1/user/'
+export const BaseUrl ='https://api.pentaprime-innovations.com/api/v1/user/'
 // 'http://localhost:8000/api/v1/user/'
 // 'https://api.pentaprime-innovations.com/api/v1/user/'
 // 'http://192.168.18.226:8000/api/v1/user/'
