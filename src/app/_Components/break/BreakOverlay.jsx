@@ -99,63 +99,26 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import moment from "moment-timezone";
 
-// const BreakOverlay = ({ startTime, onBreakOut }) => {
-
-//   const [duration, setDuration] = useState('0m 0s');
-//   const {breakInTime,type,reason} = useSelector((state) => state.filter);
-
-//   // 🔥 startTime ko ek hi baar parse karo
-//   const startMoment = useMemo(() => {
-
-//     if (!startTime) return null;
-//     return moment.utc(startTime).tz("Asia/Karachi");
-
-//   }, [startTime]);
-
-//   useEffect(() => {
-//     if (!startMoment) return;
-
-//     const updateDuration = () => {
-
-//       const now = moment().tz("Asia/Karachi");
-//       const diffInSeconds = now.diff(startMoment, 'seconds');
-
-//       if (diffInSeconds < 0 || isNaN(diffInSeconds)) {
-//         setDuration('0m 0s');
-//         return;
-//       }
-
-//       const mins = Math.floor(diffInSeconds / 60);
-//       const secs = diffInSeconds % 60;
-
-//       setDuration(`${mins}m ${secs}s`);
-//     };
-
-//     updateDuration();
-
-//     const timer = setInterval(updateDuration, 1000);
-
-//     return () => clearInterval(timer);
-
-//   }, [startMoment]);
 const BreakOverlay = ({ startTime, onBreakOut }) => {
 
   const [duration, setDuration] = useState('0m 0s');
-  const { breakInTime, type, reason } = useSelector((state) => state.filter);
+  const {breakInTime,type,reason} = useSelector((state) => state.filter);
 
-  // 🔥 start time ko ek hi baar parse karo (server UTC time)
-  const startTimestamp = useMemo(() => {
+  // 🔥 startTime ko ek hi baar parse karo
+  const startMoment = useMemo(() => {
+
     if (!startTime) return null;
-    return new Date(startTime).getTime(); // ✅ no moment
+    return moment.utc(startTime).tz("Asia/Karachi");
+
   }, [startTime]);
 
   useEffect(() => {
-    if (!startTimestamp) return;
+    if (!startMoment) return;
 
     const updateDuration = () => {
 
-      const now = Date.now(); // ✅ faster + cleaner
-      const diffInSeconds = Math.floor((now - startTimestamp) / 1000);
+      const now = moment().tz("Asia/Karachi");
+      const diffInSeconds = now.diff(startMoment, 'seconds');
 
       if (diffInSeconds < 0 || isNaN(diffInSeconds)) {
         setDuration('0m 0s');
@@ -174,8 +137,8 @@ const BreakOverlay = ({ startTime, onBreakOut }) => {
 
     return () => clearInterval(timer);
 
-  }, [startTimestamp]);
-  
+  }, [startMoment]);
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/100 backdrop-blur-lg">
       <div className="w-full max-w-sm mx-4 rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d0d0f] shadow-[0_24px_64px_rgba(0,0,0,0.7)]">
