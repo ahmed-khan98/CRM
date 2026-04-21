@@ -64,7 +64,7 @@ const LeftNav = ({ set }) => {
   ];
 
   const USER_ALLOWED_TABS = ["Dashboard", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
-  const SUBADMIN_ALLOWED_TABS = ["Dashboard", "Employees", "Brand", "Announcement", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
+  const SUBADMIN_ALLOWED_TABS = ["Dashboard", "Employee", "Brand", "Announcement", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
 
   const filteredMenuItems =
     user?.role === "USER"
