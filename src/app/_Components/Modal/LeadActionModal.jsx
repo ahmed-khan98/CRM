@@ -184,7 +184,7 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
             </div>
 
             {/* Form */}
-            <div className="px-4 md:px-6 py-2 h-98  overflow-y-auto">
+            <div className="px-4 md:px-6 py-2   overflow-y-auto">
               <Formik
                 initialValues={initialValues}
                 validationSchema={leadActionSchema}

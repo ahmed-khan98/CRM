@@ -65,7 +65,7 @@ export default function GenZLoginForm() {
           dispatch(
             setActivity({
               activityStatus: user?.activityStatus,
-              lastBreakInTime: user?.lastBreakInTime,
+              breakInTime: user?.breakInTime,
             }),
           );
 

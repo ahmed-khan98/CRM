@@ -27,7 +27,6 @@ const ProfilePage = () => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
   const [isEditable, setIsEditable] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
- 
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -105,7 +104,6 @@ const ProfilePage = () => {
           className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mx-2 "
           // {/* className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700 border border-zinc-700/50 hover:border-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"                        > */}
         >
-
           <div className="relative overflow-hidden">
             <div className="h-18 bg-zinc-950 shadow-zinc-900/50"></div>
 
@@ -127,28 +125,26 @@ const ProfilePage = () => {
                   </div>
                 </div>
 
-              <button
-  onClick={() => setIsEditable(!isEditable)}
-  className={`cursor-pointer flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-150 border ${
-    isEditable
-      ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-800 border-zinc-700"
-      : "bg-zinc-900 border-white/[0.08] text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
-  }`}
->
-  {isEditable ? (
-    <>
-      <X size={14} />
-      <span>Cancel Editing</span>
-    </>
-  ) : (
-    <>
-      <Pencil size={14} />
-      <span>Edit Profile</span>
-    </>
-  )}
-</button>
-
-              
+                <button
+                  onClick={() => setIsEditable(!isEditable)}
+                  className={`cursor-pointer flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-150 border ${
+                    isEditable
+                      ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-800 border-zinc-700"
+                      : "bg-zinc-900 border-white/[0.08] text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                  }`}
+                >
+                  {isEditable ? (
+                    <>
+                      <X size={14} />
+                      <span>Cancel Editing</span>
+                    </>
+                  ) : (
+                    <>
+                      <Pencil size={14} />
+                      <span>Edit Profile</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>

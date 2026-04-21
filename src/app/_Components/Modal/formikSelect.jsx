@@ -46,6 +46,8 @@ function FormikSelect({
   isLoading={isLoading}
   isDisabled={isDisabled}
   placeholder={placeholder}
+    menuPortalTarget={typeof document !== "undefined" ? document.body : null}
+        menuPosition="fixed"
   onChange={(opt) => {
     const val = isMulti
       ? Array.isArray(opt)
@@ -107,12 +109,16 @@ function FormikSelect({
       border: "1px solid #e5e7eb",
       boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
     }),
+              menuPortal: (b) => ({ ...b, zIndex: 9999 }),
+
   }}
 />
       {hasError ? (
-        <div className="text-red-500 text-sm mt-1">{error}</div>
+        <div className="text-red-500  text-[11px] mt-1">{error}</div>
       ) : null}
     </div>
   );
 }
 export default FormikSelect;
+
+

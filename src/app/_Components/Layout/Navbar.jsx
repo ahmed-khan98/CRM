@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -34,6 +34,7 @@ import {
   setAttendence,
 } from "@/redux/filterSlice";
 import TimeOutModal from "../Modal/TimeOutModal";
+import BreakTypeModal from "../Modal/BreakTypeModal";
 
 const Navbar = () => {
   const router = useRouter();
@@ -44,13 +45,12 @@ const Navbar = () => {
   const [workingTime, setWorkingTime] = useState("00:00:00");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isBreakOpen, setIsBreakOpen] = useState(false);
 
   const [logout] = useLogoutMutation();
   const [TimeIn, { isLoading: isTimeIn }] = useTimeInMutation();
   const [TimeOut, { isLoading: isTimeOut }] = useTimeOutMutation();
-  const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
   
-
   useEffect(() => {
     let interval;
     if (attendence?.timeIn && !attendence?.timeOut) {
@@ -75,24 +75,6 @@ const Navbar = () => {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
-
-  const handleBreakIn = async () => {
-    try {
-      const res = await breakIn({ attendanceId: attendence?._id }).unwrap();
-      if (res.success) {
-        console.log(res, "-------->>>res");
-        dispatch(
-          setActivity({
-            activityStatus: res?.data?.activityStatus,
-            lastBreakInTime: res?.data?.lastBreakInTime,
-          }),
-        );
-      }
-    } catch (err) {
-      console.log(err, "-------->>>err");
-      toast.error(err?.data?.message || "Update failed");
-    }
-  };
 
   const handleTimeIn = async () => {
     try {
@@ -269,7 +251,7 @@ const Navbar = () => {
         <>      
          <button
             type="button"
-            onClick={() => handleBreakIn()}
+            onClick={() => setIsBreakOpen(true)}
             className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-yellow-500/[0.12] border border-yellow-500/25 text-yellow-400 hover:bg-yellow-500/20 ${mobile ? "w-full" : ""}`}
           >
             Break In
@@ -308,6 +290,10 @@ const Navbar = () => {
       )}
     </div>
   );
+
+  const closeBreakModal = useCallback(() => {
+      setIsBreakOpen(false);
+  }, []);
 
   return (
     <>
@@ -379,6 +365,8 @@ const Navbar = () => {
           handleDelete={handleTimeOut}
         />
       )}
+    
+        {isBreakOpen && <BreakTypeModal isOpen={isBreakOpen} closeModal={closeBreakModal} />}
     </>
   );
 };

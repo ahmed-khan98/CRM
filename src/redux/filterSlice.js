@@ -5,7 +5,9 @@ const initialState = {
   filteredProducts: [],
   attendence: {},
   activityStatus: "active",
-  lastBreakInTime: null,
+  breakInTime: null,
+  type: "",
+  reason: "",
 };
 
 const filterSlice = createSlice({
@@ -102,15 +104,22 @@ const filterSlice = createSlice({
         if (action.payload.activityStatus !== undefined) {
           state.activityStatus = action.payload.activityStatus;
         }
-
-        if (action.payload.lastBreakInTime !== undefined) {
-          state.lastBreakInTime = action.payload.lastBreakInTime;
+        if (action.payload.breakInTime !== undefined) {
+          state.breakInTime = action.payload.breakInTime;
+        }
+        if (action.payload.type !== undefined) {
+          state.type = action.payload.type;
+        }
+        if (action.payload.reason !== undefined) {
+          state.reason = action.payload.reason;
         }
       }
     },
     resumeWork: (state) => {
       state.activityStatus = "active";
-      state.lastBreakInTime = null;
+      state.breakInTime = null;
+      state.type = '';
+      state.reason = '';
     },
     setAttendence: (state, action) => {
       state.attendence = action?.payload || {};

@@ -20,6 +20,7 @@ import AnnouncementMarquee from "../_Components/Modal/AnnouncementMarquee";
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  
   const pathname = usePathname();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -40,17 +41,15 @@ const DashboardLayout = ({ children }) => {
       isLoading:isLoggedLoading,
       refetch:isLoggedRefetch,
     } = useGetLoggedUserQuery();
-  console.log(loggedUser,'loggedUser in layout');
 
     useEffect(() => {
       dispatch(setAttendence(data?.data));
     }, [loggedUser,data,dispatch]);
 
-  const { activityStatus, lastBreakInTime, attendence } = useSelector(
+  const { activityStatus, breakInTime, attendence,type } = useSelector(
     (state) => state.filter,
   );
-  console.log("DashboardLayout Rendered with activityStatus:", activityStatus);
-  console.log("attendence in layout:", attendence,activityStatus, lastBreakInTime);
+  console.log("loggedUser", loggedUser);
 
   const clearExtensionAndRedirect = (response) => {
     if (
@@ -115,7 +114,8 @@ const DashboardLayout = ({ children }) => {
         dispatch(
           setActivity({
             activityStatus: res?.data?.activityStatus,
-            lastBreakInTime: res?.data?.lastBreakInTime,
+            breakInTime: res?.data?.breakRecord?.breakIn,
+            type:'SYSTEM IDLE'
           }),
         );
       }
@@ -160,12 +160,10 @@ const DashboardLayout = ({ children }) => {
         console.log("event.data.status, activityStatus,attendence?.timeIn", event.data.status, activityStatus, attendence?.timeIn);
 
         if (
-          event.data.status === "idle"
-          //  &&
-          // activityStatus === "active" &&
+          event.data.status === "idle" && activityStatus === "active"
           // attendence?.timeIn
         ) {
-                  console.log("extension ne kaha time kro");
+                  console.log("extension ne kaha break in kro",activityStatus);
 
           handleBreakIn();
         } else if (event.data.status === "active") {
@@ -181,8 +179,8 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="app-container ">
      
-      {loggedUser?.data?.activityStatus === 'idle' &&  activityStatus === "idle" ? (
-        <BreakOverlay startTime={lastBreakInTime} onBreakOut={handleBreakOut} />
+      {loggedUser?.data?.activityStatus !== 'active' &&  activityStatus !== "active" && type !== "OFFICIAL" ? (
+        <BreakOverlay startTime={breakInTime} onBreakOut={handleBreakOut} />
       ) : (
         <div 
       //   style={{
@@ -224,6 +222,7 @@ const DashboardLayout = ({ children }) => {
         </div>
       )}
             <AnnouncementPopup />
+           
 
     </div>
   );

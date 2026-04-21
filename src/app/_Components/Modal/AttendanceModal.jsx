@@ -3,8 +3,8 @@ import { X, Clock, Calendar, Save } from "lucide-react";
 import moment from "moment";
 
 export default function AttendanceModal({ isOpen, onClose, selectedData, onSave,isSubmitting }) {
-  console.log(selectedData,'selectedData')
   const [formData, setFormData] = useState({
+    
     timeIn: "",
     timeOut: "",
     // status: "present",

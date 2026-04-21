@@ -238,7 +238,6 @@ export default function TeamAttendence() {
 
   // 2. Handler function
   const handleOpenModal = (emp, record, date) => {
-    console.log(emp, record, date, "modal data");
     setModalConfig({
       isOpen: true,
       data: { emp, record, date: record?.shiftDate || date },
@@ -246,7 +245,6 @@ export default function TeamAttendence() {
   };
 
   const handleSaveAttendance = async (data) => {
-    console.log("Saving to Backend:", data);
     try {
       const res = await updateTeamAttendence(data).unwrap();
       if (res.success) {

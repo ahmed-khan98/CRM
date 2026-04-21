@@ -28,7 +28,7 @@ const AnnouncementMarquee = () => {
           animate={{ x: ["0%", "-100%"] }}
           transition={{
             ease: "linear",
-            duration:200, // Speed control (zyada seconds = slow)
+            duration:400, // Speed control (zyada seconds = slow)
             repeat: Infinity,
           }}
           className="flex whitespace-nowrap items-center gap-6"
