@@ -23,7 +23,7 @@ const authenticationsApi = createApiAuction.injectEndpoints({
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: ["todayUserAttendence"],
+      invalidatesTags: ["todayUserAttendence",'loggedUser'],
     }),
     logout: builder.mutation({
       query: (formData) => ({

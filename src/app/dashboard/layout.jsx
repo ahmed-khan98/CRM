@@ -35,6 +35,7 @@ const DashboardLayout = ({ children }) => {
       isLoading,
       refetch,
     } = useTodayUserAttendenceQuery();
+    
     const {
       data:loggedUser,
       error: isloggedError,
