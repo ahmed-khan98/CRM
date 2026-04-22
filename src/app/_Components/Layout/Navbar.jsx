@@ -126,7 +126,8 @@ const Navbar = () => {
         dispatch(removeAttendence());
       }
     } catch (error) {
-      toast.error(error?.message);
+      console.log(error);
+      toast.error(error?.data?.message);
     }
   };
 
