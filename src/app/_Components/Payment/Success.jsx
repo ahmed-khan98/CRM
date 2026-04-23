@@ -38,7 +38,7 @@ import { useEffect, useState } from "react";
         {/* Main Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-6 animate-slide-up border border-gray-100">
           {/* Headline */}
-          <h1 className="text-3xl font-bold text-center bg-zinc-800 my-4 text-balance">Payment Successful! 🎉</h1>
+          <h1 className="text-3xl font-bold text-center my-4 text-balance">Payment Successful! 🎉</h1>
 
           {/* Subheading */}
           <p className="text-center text-gray-600 my-8 text-pretty">
