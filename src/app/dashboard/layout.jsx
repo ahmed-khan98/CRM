@@ -5,14 +5,22 @@ import LeftNav from "../_Components/Dashboard/LeftNav";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { removeAttendence, resumeWork, setActivity, setAttendence } from "@/redux/filterSlice";
+import {
+  removeAttendence,
+  resumeWork,
+  setActivity,
+  setAttendence,
+} from "@/redux/filterSlice";
 import BreakOverlay from "../_Components/break/BreakOverlay";
 import {
   useBreakInMutation,
   useBreakOutMutation,
 } from "../_Services/employee/page";
 import toast from "react-hot-toast";
-import { useGetLoggedUserQuery, useLogoutMutation } from "../_Services/authentication/page";
+import {
+  useGetLoggedUserQuery,
+  useLogoutMutation,
+} from "../_Services/authentication/page";
 import { useTodayUserAttendenceQuery } from "../_Services/attendence/page";
 import AnnouncementPopup from "../_Components/Modal/AnnouncementPopup";
 import AnnouncementMarquee from "../_Components/Modal/AnnouncementMarquee";
@@ -20,7 +28,7 @@ import AnnouncementMarquee from "../_Components/Modal/AnnouncementMarquee";
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   const pathname = usePathname();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -29,25 +37,25 @@ const DashboardLayout = ({ children }) => {
   const [breakOut] = useBreakOutMutation();
   const [breakIn, { isLoading: isBreakLoading }] = useBreakInMutation();
 
-    const {
-      data,
-      error: isError,
-      isLoading,
-      refetch,
-    } = useTodayUserAttendenceQuery();
-    
-    const {
-      data:loggedUser,
-      error: isloggedError,
-      isLoading:isLoggedLoading,
-      refetch:isLoggedRefetch,
-    } = useGetLoggedUserQuery();
+  const {
+    data,
+    error: isError,
+    isLoading,
+    refetch,
+  } = useTodayUserAttendenceQuery();
 
-    useEffect(() => {
-      dispatch(setAttendence(data?.data));
-    }, [loggedUser,data,dispatch]);
+  const {
+    data: loggedUser,
+    error: isloggedError,
+    isLoading: isLoggedLoading,
+    refetch: isLoggedRefetch,
+  } = useGetLoggedUserQuery();
 
-  const { activityStatus, breakInTime, attendence,type } = useSelector(
+  useEffect(() => {
+    dispatch(setAttendence(data?.data));
+  }, [loggedUser, data, dispatch]);
+
+  const { activityStatus, breakInTime, attendence, type } = useSelector(
     (state) => state.filter,
   );
   console.log("loggedUser", loggedUser);
@@ -75,7 +83,7 @@ const DashboardLayout = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      const response = await logout().unwrap();
+      const response = await logout({'forceLogout': true}).unwrap();
       if (response.statusCode === 200) {
         toast.success("Logged out successfully");
         Cookies.remove("token", { path: "/" });
@@ -85,8 +93,7 @@ const DashboardLayout = ({ children }) => {
         dispatch(removeAttendence());
       }
     } catch (error) {
-      toast.error(error?.message);
-      console.error("Logout API failed:", error);
+      toast.error(error?.data?.message || "Logout failed");
     }
   };
 
@@ -116,7 +123,7 @@ const DashboardLayout = ({ children }) => {
           setActivity({
             activityStatus: res?.data?.activityStatus,
             breakInTime: res?.data?.breakRecord?.breakIn,
-            type:'SYSTEM IDLE'
+            type: "SYSTEM IDLE",
           }),
         );
       }
@@ -154,17 +161,23 @@ const DashboardLayout = ({ children }) => {
     const messageListener = (event) => {
       if (event.data && event.data.type === "STATUS_CHANGED") {
         console.log("REACT RECEIVED:", event.data);
-        
+
         if (window.location.pathname === "/") {
           return;
         }
-        console.log("event.data.status, activityStatus,attendence?.timeIn", event.data.status, activityStatus, attendence?.timeIn);
+        console.log(
+          "event.data.status, activityStatus,attendence?.timeIn",
+          event.data.status,
+          activityStatus,
+          attendence?.timeIn,
+        );
 
         if (
-          event.data.status === "idle" && activityStatus === "active"
+          event.data.status === "idle" &&
+          activityStatus === "active"
           // attendence?.timeIn
         ) {
-                  console.log("extension ne kaha break in kro",activityStatus);
+          console.log("extension ne kaha break in kro", activityStatus);
 
           handleBreakIn();
         } else if (event.data.status === "active") {
@@ -175,21 +188,23 @@ const DashboardLayout = ({ children }) => {
 
     window.addEventListener("message", messageListener);
     return () => window.removeEventListener("message", messageListener);
-  }, [dispatch, activityStatus,attendence]);
+  }, [dispatch, activityStatus, attendence]);
 
   return (
     <div className="app-container ">
-     
-      {loggedUser?.data?.activityStatus !== 'active' &&  activityStatus !== "active" && type !== "OFFICIAL" ? (
+      {loggedUser?.data?.activityStatus !== "active" &&
+      activityStatus !== "active" &&
+      type !== "OFFICIAL" ? (
         <BreakOverlay startTime={breakInTime} onBreakOut={handleBreakOut} />
       ) : (
-        <div 
-      //   style={{
-      //   background: "#0f0f11",
-      //   border: "1px solid rgba(255,255,255,0.07)",
-      //   // boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-      // }}
-        className="min-h-screen bg-zinc-100 flex flex-col pt-14 md:pt-18">
+        <div
+          //   style={{
+          //   background: "#0f0f11",
+          //   border: "1px solid rgba(255,255,255,0.07)",
+          //   // boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+          // }}
+          className="min-h-screen bg-zinc-100 flex flex-col pt-14 md:pt-18"
+        >
           <div className="flex flex-1 relative overflow-hidden">
             {isMobile && isSidebarOpen && (
               <div
@@ -216,15 +231,13 @@ const DashboardLayout = ({ children }) => {
               className={`flex-1 overflow-y-auto h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] transition-all duration-300 ease-in-out px-2 md:px-2
             ${isMobile ? "w-full" : ""}`}
             >
-               <AnnouncementMarquee />
+              <AnnouncementMarquee />
               <div className="w-full h-auto py-2">{children}</div>
             </main>
           </div>
         </div>
       )}
-            <AnnouncementPopup />
-           
-
+      <AnnouncementPopup />
     </div>
   );
 };

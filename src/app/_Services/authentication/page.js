@@ -29,6 +29,7 @@ const authenticationsApi = createApiAuction.injectEndpoints({
       query: (formData) => ({
         url: "logout",
         method: "POST",
+        body: formData,
       }),
     }),
     sendVerificationCode: builder.mutation({
