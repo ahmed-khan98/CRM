@@ -29,15 +29,14 @@ export const LinkRow = memo(
 
     const [isCopied, setIsCopied] = useState(false);
 
-    // 2. Updated onCopy function defined inside the component
-    const onCopy = (employeeId) => {
-      if (!employeeId) {
-        console.error("Employee ID is missing.");
+    const onCopy = (payId) => {
+      if (!payId) {
+        console.error("Payment ID is missing.");
         return;
       }
 
       const baseUrl = "https://crm-virid-nine-17.vercel.app/pay/";
-      const fullUrl = `${baseUrl}${employeeId}`;
+      const fullUrl = `${baseUrl}${payId}`;
 
       navigator.clipboard
         .writeText(fullUrl)
@@ -153,6 +152,7 @@ export const LinkRow = memo(
                   data-[closed]:opacity-0"
                 >
                   <div className="py-1">
+                     {emp?.paymentStatus !== "paid" && (
                     <MenuItem>
                       {({ active }) => (
                         <button
@@ -165,8 +165,8 @@ export const LinkRow = memo(
                           View
                         </button>
                       )}
-                    </MenuItem>
-                    {/* *** Yahaan changes kiye gaye hain *** */}
+                    </MenuItem>)}
+                     {emp?.paymentStatus !== "paid" && (
                     <MenuItem>
                       {({ active }) => (
                         <button
@@ -187,8 +187,7 @@ export const LinkRow = memo(
                           {isCopied ? "Copied!" : "Copy Link"}{" "}
                         </button>
                       )}
-                    </MenuItem>
-                    {/* *** Changes end here *** */}
+                    </MenuItem>)}
                     <MenuItem>
                       {({ active }) => (
                         <button
