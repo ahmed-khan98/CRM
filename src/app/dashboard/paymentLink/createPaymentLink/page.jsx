@@ -50,6 +50,7 @@ export default function page() {
 
   const merchant = [
     { id: "Kinatech Business Solutions LLC", name: "Kinatech Business Solutions LLC" },
+    { id: "Augmentus", name: "Augmentus" },
   ];
 
   const currencyType = [
