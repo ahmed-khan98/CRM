@@ -53,6 +53,9 @@ const DashboardLayout = ({ children }) => {
 
   useEffect(() => {
     dispatch(setAttendence(data?.data));
+    if (loggedUser?.data?.status === "de active") {
+      handleLogout();
+    }
   }, [loggedUser, data, dispatch]);
 
   const { activityStatus, breakInTime, attendence, type } = useSelector(
@@ -83,7 +86,7 @@ const DashboardLayout = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      const response = await logout({'forceLogout': true}).unwrap();
+      const response = await logout({ forceLogout: true }).unwrap();
       if (response.statusCode === 200) {
         toast.success("Logged out successfully");
         Cookies.remove("token", { path: "/" });
