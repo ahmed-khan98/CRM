@@ -196,8 +196,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="app-container ">
       {loggedUser?.data?.activityStatus !== "active" &&
-      activityStatus !== "active" &&
-      type !== "OFFICIAL" ? (
+      activityStatus !== "active" ? (
         <BreakOverlay startTime={breakInTime} onBreakOut={handleBreakOut} />
       ) : (
         <div

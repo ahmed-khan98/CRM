@@ -64,13 +64,19 @@ const LeftNav = ({ set }) => {
   ];
 
   const USER_ALLOWED_TABS = ["Dashboard", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
-  const SUBADMIN_ALLOWED_TABS = ["Dashboard", "Employee", "Brand", "Announcement", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
+  const DEP_ADMIN_ALLOWED_TABS = ["Dashboard", "Brand","Employee", "Announcement", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
+  const HR_ADMIN_ALLOWED_TABS = ["Dashboard",  "Department", "Brand","Employee", "Announcement", "My Account", "Attendance"];
+  const FINANCE_ADMIN_ALLOWED_TABS = ["Dashboard", "Payment Link", "Sales", "My Account", "Attendance"];
 
   const filteredMenuItems =
     user?.role === "USER"
       ? menuItems.filter((item) => USER_ALLOWED_TABS.includes(item.name))
-      : user?.role === "SUBADMIN"
-        ? menuItems.filter((item) => SUBADMIN_ALLOWED_TABS.includes(item.name))
+      : user?.role === "DEP_ADMIN"
+        ? menuItems.filter((item) => DEP_ADMIN_ALLOWED_TABS.includes(item.name))
+      : user?.role === "HR_ADMIN"
+        ? menuItems.filter((item) => HR_ADMIN_ALLOWED_TABS.includes(item.name))
+      : user?.role === "FINANCE_ADMIN"
+        ? menuItems.filter((item) => FINANCE_ADMIN_ALLOWED_TABS.includes(item.name))
         : menuItems;
 
   const clearExtensionAndRedirect = () => {

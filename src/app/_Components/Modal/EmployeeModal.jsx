@@ -107,7 +107,11 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
 
   const roleOption = [
     { name: "User", value: "USER" },
-    { name: "Department Admin", value: "SUBADMIN" },
+    { name: "Department Admin", value: "DEP_ADMIN" },
+    { name: "HR Admin", value: "HR_ADMIN" },
+    { name: "Finance Admin", value: "FINANCE_ADMIN" },
+    { name: "Sub Admin", value: "SUBADMIN" },
+    { name: "Admin", value: "ADMIN" },
   ];
 
   return (
