@@ -19,13 +19,19 @@ import {
   PowerOff,
 } from "lucide-react";
 import LeftNav from "../Dashboard/LeftNav";
-import { useLogoutMutation } from "@/app/_Services/authentication/page";
+import {
+  useGetLoggedUserQuery,
+  useLogoutMutation,
+} from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
 import {
   useTimeInMutation,
   useTimeOutMutation,
 } from "@/app/_Services/attendence/page";
-import { useBreakInMutation } from "@/app/_Services/employee/page";
+import {
+  useBreakInMutation,
+  useBreakOutMutation,
+} from "@/app/_Services/employee/page";
 
 import {
   removeAttendence,
@@ -42,15 +48,24 @@ const Navbar = () => {
   const token = Cookies.get("token");
 
   const { attendence } = useSelector((state) => state.filter);
+  const {
+    data: loggedUser,
+    error: isloggedError,
+    isLoading: isLoggedLoading,
+    refetch: isLoggedRefetch,
+  } = useGetLoggedUserQuery();
+  
   const [workingTime, setWorkingTime] = useState("00:00:00");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [isBreakOpen, setIsBreakOpen] = useState(false);
 
   const [logout] = useLogoutMutation();
+  const [breakOut] = useBreakOutMutation();
+
   const [TimeIn, { isLoading: isTimeIn }] = useTimeInMutation();
   const [TimeOut, { isLoading: isTimeOut }] = useTimeOutMutation();
-  
+
   useEffect(() => {
     let interval;
     if (attendence?.timeIn && !attendence?.timeOut) {
@@ -130,6 +145,23 @@ const Navbar = () => {
     }
   };
 
+  const handleBreakOut = async () => {
+    try {
+      const res = await breakOut({ attendanceId: attendence?._id }).unwrap();
+      if (res.success) {
+        console.log("breakOutResponse", res);
+        dispatch(resumeWork());
+        if (res.data?.mustLogout) {
+          console.log("backend ne kaha logout kro");
+          handleLogout();
+        }
+        toast.success(res?.message);
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || "Update failed");
+    }
+  };
+
   const Spinner = () => (
     <svg
       className="animate-spin h-4 w-4"
@@ -154,6 +186,65 @@ const Navbar = () => {
   );
 
   const AttendanceStatus = ({ mobile = false }) => {
+ if (loggedUser?.data?.activeBreak?.type === "OFFICIAL") {
+  const brea = loggedUser?.data?.activeBreak;
+
+  const duration = brea?.breakIn
+    ? moment().diff(moment(brea.breakIn), "minutes")
+    : 0;
+
+  return (
+    <div
+      className={`flex flex-col md:flex-row md:items-center gap-3 rounded-xl px-4 py-3 bg-yellow-500/[0.07] border border-yellow-500/15 ${
+        mobile ? "w-full" : ""
+      }`}
+    >
+      {/* Row 1 (mobile) / All inline (desktop) */}
+      <div className="flex flex-wrap items-center gap-3 w-full">
+
+        {/* Status */}
+        <div className="flex flex-col min-w-[120px]">
+          <span className="text-[9px] text-zinc-500 uppercase">Status</span>
+          <span className="text-xs font-bold text-yellow-400 break-words">
+            {`User on ${brea?.type?.toLowerCase()} break`}
+          </span>
+        </div>
+
+        {/* Divider (desktop only) */}
+        <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+
+        {/* Break In */}
+        <div className="flex flex-col min-w-[80px]">
+          <span className="text-[9px] text-zinc-500 uppercase">Break In</span>
+          <span className="text-xs text-zinc-200">
+            {moment(brea?.breakIn).tz("Asia/Karachi").format("hh:mm A")}
+          </span>
+        </div>
+
+        <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+
+        {/* Duration */}
+        <div className="flex flex-col min-w-[70px]">
+          <span className="text-[9px] text-zinc-500 uppercase">Duration</span>
+          <span className="text-xs font-mono text-white">
+            {duration} min
+          </span>
+        </div>
+
+        <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+
+        {/* Reason */}
+        <div className="flex flex-col flex-1 min-w-[120px]">
+          <span className="text-[9px] text-zinc-500 uppercase">Reason</span>
+          <span className="text-xs text-zinc-300 break-words">
+            {brea?.reason || "-"}
+          </span>
+        </div>
+
+      </div>
+    </div>
+  );
+}
     if (attendence?.timeIn && !attendence?.timeOut) {
       return (
         <div
@@ -194,7 +285,6 @@ const Navbar = () => {
         </div>
       );
     }
-
     if (attendence?.timeIn && attendence?.timeOut) {
       return (
         <div
@@ -227,49 +317,60 @@ const Navbar = () => {
       </div>
     );
   };
+  const isOnBreak = loggedUser?.data?.activeBreak;
 
   const ActionButtons = ({ mobile = false }) => (
     <div
       className={`flex ${mobile ? "flex-col w-full" : "items-center"} gap-2`}
     >
       {!attendence?.timeIn ? (
-          <button
-            onClick={handleTimeIn}
-            disabled={isTimeIn}
-            className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-green-500/[0.12] border border-green-500/25 text-green-400 hover:bg-green-500/20 ${mobile ? "w-full" : ""}`}
-          >
-            {isTimeIn ? (
-              <Spinner />
-            ) : (
-              <>
-                <Clock size={14} />
-                <span>Time In</span>
-              </>
-            )}
-          </button>
-      ) : !attendence?.timeOut ? (
-        <>      
-         <button
-            type="button"
-            onClick={() => setIsBreakOpen(true)}
-            className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-yellow-500/[0.12] border border-yellow-500/25 text-yellow-400 hover:bg-yellow-500/20 ${mobile ? "w-full" : ""}`}
-          >
-            Break In
-          </button>
         <button
-          onClick={() => setConfirmDelete(true)}
-          disabled={isTimeOut}
-          className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-red-500/10 border border-red-500/[0.22] text-red-400 hover:bg-red-500/[0.18] ${mobile ? "w-full" : ""}`}
+          onClick={handleTimeIn}
+          disabled={isTimeIn}
+          className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-green-500/[0.12] border border-green-500/25 text-green-400 hover:bg-green-500/20 ${mobile ? "w-full" : ""}`}
         >
-          {isTimeOut ? (
+          {isTimeIn ? (
             <Spinner />
           ) : (
             <>
-              <PowerOff size={14} />
-              <span>Time Out</span>
+              <Clock size={14} />
+              <span>Time In</span>
             </>
           )}
         </button>
+      ) : !attendence?.timeOut ? (
+        <>
+          {!isOnBreak ? (
+            <button
+              type="button"
+              onClick={() => setIsBreakOpen(true)}
+              className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-yellow-500/[0.12] border border-yellow-500/25 text-yellow-400 hover:bg-yellow-500/20 ${mobile ? "w-full" : ""}`}
+            >
+              Break In
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => handleBreakOut()}
+              className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-yellow-500/[0.12] border border-yellow-500/25 text-yellow-400 hover:bg-yellow-500/20 ${mobile ? "w-full" : ""}`}
+            >
+              Break Out
+            </button>
+          )}
+          <button
+            onClick={() => setConfirmDelete(true)}
+            disabled={isTimeOut}
+            className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-red-500/10 border border-red-500/[0.22] text-red-400 hover:bg-red-500/[0.18] ${mobile ? "w-full" : ""}`}
+          >
+            {isTimeOut ? (
+              <Spinner />
+            ) : (
+              <>
+                <PowerOff size={14} />
+                <span>Time Out</span>
+              </>
+            )}
+          </button>
         </>
       ) : (
         <span
@@ -292,7 +393,7 @@ const Navbar = () => {
   );
 
   const closeBreakModal = useCallback(() => {
-      setIsBreakOpen(false);
+    setIsBreakOpen(false);
   }, []);
 
   return (
@@ -365,8 +466,10 @@ const Navbar = () => {
           handleDelete={handleTimeOut}
         />
       )}
-    
-        {isBreakOpen && <BreakTypeModal isOpen={isBreakOpen} closeModal={closeBreakModal} />}
+
+      {isBreakOpen && (
+        <BreakTypeModal isOpen={isBreakOpen} closeModal={closeBreakModal} />
+      )}
     </>
   );
 };
