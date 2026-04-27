@@ -152,7 +152,8 @@ export const LinkRow = memo(
                   data-[closed]:opacity-0"
                 >
                   <div className="py-1">
-                     {/* {emp?.paymentStatus !== "paid" && (
+                     {emp?.paymentStatus !== "paid" && (
+                   <>
                     <MenuItem>
                       {({ active }) => (
                         <button
@@ -165,8 +166,7 @@ export const LinkRow = memo(
                           View
                         </button>
                       )}
-                    </MenuItem>)} */}
-                     {emp?.paymentStatus !== "paid" && (
+                    </MenuItem>
                     <MenuItem>
                       {({ active }) => (
                         <button
@@ -187,8 +187,9 @@ export const LinkRow = memo(
                           {isCopied ? "Copied!" : "Copy Link"}{" "}
                         </button>
                       )}
-                    </MenuItem>)}
-                    <MenuItem>
+                    </MenuItem>
+                   </>)}
+                    {/* <MenuItem>
                       {({ active }) => (
                         <button
                           onClick={() => setConfirmDelete(emp?._id)}
@@ -200,7 +201,7 @@ export const LinkRow = memo(
                           Delete
                         </button>
                       )}
-                    </MenuItem>
+                    </MenuItem> */}
                   </div>
                 </MenuItems>
               </Transition>
