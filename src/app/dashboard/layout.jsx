@@ -60,8 +60,8 @@ const DashboardLayout = ({ children }) => {
         setActivity({
           // activityStatus: res?.data?.activeBreak,
           // breakInTime: res?.data?.activeBreak?.breakIn,
-          type: res?.data?.activeBreak?.type,
-          reason: res?.data?.activeBreak?.reason,
+          type: loggedUser?.data?.activeBreak?.type,
+          reason: loggedUser?.data?.activeBreak?.reason,
         }),
       );
     }
