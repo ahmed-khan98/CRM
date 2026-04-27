@@ -55,6 +55,15 @@ const DashboardLayout = ({ children }) => {
     dispatch(setAttendence(data?.data));
     if (loggedUser?.data?.status === "de active") {
       handleLogout();
+    } else if (loggedUser?.data?.activeBreak) {
+      dispatch(
+        setActivity({
+          // activityStatus: res?.data?.activeBreak,
+          // breakInTime: res?.data?.activeBreak?.breakIn,
+          type: res?.data?.activeBreak?.type,
+          reason: res?.data?.activeBreak?.reason,
+        }),
+      );
     }
   }, [loggedUser, data, dispatch]);
 
