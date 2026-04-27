@@ -152,7 +152,7 @@ export const LinkRow = memo(
                   data-[closed]:opacity-0"
                 >
                   <div className="py-1">
-                     {emp?.paymentStatus !== "paid" && (
+                     {/* {emp?.paymentStatus !== "paid" && (
                     <MenuItem>
                       {({ active }) => (
                         <button
@@ -165,7 +165,7 @@ export const LinkRow = memo(
                           View
                         </button>
                       )}
-                    </MenuItem>)}
+                    </MenuItem>)} */}
                      {emp?.paymentStatus !== "paid" && (
                     <MenuItem>
                       {({ active }) => (
