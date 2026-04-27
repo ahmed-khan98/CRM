@@ -58,8 +58,8 @@ const DashboardLayout = ({ children }) => {
     } else if (loggedUser?.data?.activeBreak) {
       dispatch(
         setActivity({
-          activityStatus: res?.data?.activityStatus,
-          breakInTime: res?.data?.activeBreak?.breakIn,
+          activityStatus: loggedUser?.data?.activityStatus,
+          breakInTime: loggedUser?.data?.activeBreak?.breakIn,
           type: loggedUser?.data?.activeBreak?.type,
           reason: loggedUser?.data?.activeBreak?.reason,
         }),
