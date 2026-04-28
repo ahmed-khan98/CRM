@@ -188,8 +188,7 @@ export const LinkRow = memo(
                         </button>
                       )}
                     </MenuItem>
-                   </>)}
-                    {/* <MenuItem>
+                    <MenuItem>
                       {({ active }) => (
                         <button
                           onClick={() => setConfirmDelete(emp?._id)}
@@ -201,7 +200,9 @@ export const LinkRow = memo(
                           Delete
                         </button>
                       )}
-                    </MenuItem> */}
+                    </MenuItem>
+                   </>)}
+                   
                   </div>
                 </MenuItems>
               </Transition>

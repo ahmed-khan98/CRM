@@ -9,6 +9,7 @@ import { useAllBrandsQuery } from "@/app/_Services/brand/page";
 import { createPaymentSchema } from "@/app/schema/paymentLink";
 import { useRouter } from "next/navigation";
 import { useCreatePaymentLinkMutation } from "@/app/_Services/paymentLink/page";
+import FormikCreateableSelect from "@/app/_Components/Modal/CreateableSelect";
 
 export default function page() {
   const router = useRouter();
@@ -228,7 +229,7 @@ export default function page() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <FormikSelect
+                      <FormikCreateableSelect
                         name="service"
                         label="Select Services"
                         options={serviceOptions}
