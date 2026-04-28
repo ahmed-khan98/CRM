@@ -202,11 +202,22 @@ const DashboardLayout = ({ children }) => {
     return () => window.removeEventListener("message", messageListener);
   }, [dispatch, activityStatus, attendence]);
 
+
+    const isOnBreak =
+    loggedUser?.data?.activityStatus !== "active" &&
+      // activityStatus !== "active"
+    loggedUser?.data?.activeBreak?.type !== "OFFICIAL";
+    
+  if (isLoggedLoading) {
+    return (
+      <div className="min-h-screen bg-zinc-100 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-zinc-300 border-t-zinc-600 rounded-full animate-spin" />
+      </div>
+    );
+  }
   return (
     <div className="app-container ">
-      {loggedUser?.data?.activityStatus !== "active" &&
-      activityStatus !== "active" &&
-      loggedUser?.data?.activeBreak?.type !== "OFFICIAL"
+      {isOnBreak 
        ? (
         <BreakOverlay startTime={breakInTime} onBreakOut={handleBreakOut} />
       ) : (
