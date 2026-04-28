@@ -73,12 +73,12 @@ export default function Paymentlink() {
     try {
       await deletePaymentLink(confirmDelete).unwrap();
       setConfirmDelete(null);
-      toast.success("Lead deleted successfully");
+      toast.success("Paymentlink deleted successfully");
       if (activeFilter === "all") refetchAll();
       else refetchBrand();
     } catch (error) {
       
-      toast.error(error?.data?.message || "Failed to delete Lead");
+      toast.error(error?.data?.message || "Failed to delete Paymentlink");
     }
   }, [confirmDelete, deletePaymentLink, refetchAll, refetchBrand, activeFilter]);
 

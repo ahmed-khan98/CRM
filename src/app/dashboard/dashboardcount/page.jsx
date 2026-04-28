@@ -34,6 +34,7 @@ const StatCard = ({
   color,
   trend,
   trendValue,
+  link
 }) => {
   const router = useRouter();
 
@@ -41,8 +42,8 @@ const StatCard = ({
     <motion.div
       variants={cardVariants}
       whileHover={{ scale: 1.02, y: -5 }}
-      // onClick={() => router.push(link)}
-      className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm`}
+      onClick={() => router.push(link)}
+      className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm cursor-pointer`}
     >
       <div className="relative z-10">
         <div className="flex items-center justify-between mbg-zinc-800">
@@ -183,7 +184,7 @@ export default function DashboardPage() {
             color="bg-gradient-to-br from-blue-700 to-blue-800"
             trend="up"
             trendValue="0"
-            link={"/dashboard/wishlist"}
+            link={"/dashboard/lead"}
           />
 
           <StatCard
@@ -193,7 +194,7 @@ export default function DashboardPage() {
             color="bg-gradient-to-br from-yellow-600 to-yellow-700"
             trend="up"
             trendValue="0"
-            link={"/dashboard/wonitem"}
+            link={"/dashboard/client"}
           />
 
           <StatCard
@@ -203,7 +204,7 @@ export default function DashboardPage() {
             color="bg-gradient-to-br from-green-600 to-emerald-700"
             emerald="up"
             trendValue="0"
-            link={"/dashboard/lostitem"}
+            link={"/dashboard/sale"}
           />
 
           <StatCard
@@ -214,7 +215,7 @@ export default function DashboardPage() {
             color="bg-gradient-to-br from-orange-600 to-red-700"
             trend={"down"}
             trendValue="0"
-            link={"/dashboard/UnpaidItem"}
+            link={"/dashboard/paymentLink"}
           />
         </motion.div>
 
