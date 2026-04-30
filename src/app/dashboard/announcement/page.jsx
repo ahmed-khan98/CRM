@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Building, Edit, Plus, DeleteIcon, Megaphone } from "lucide-react";
+import { MegaphoneIcon, Edit, Plus, DeleteIcon, Megaphone } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   useAllAnnouncementsQuery,
@@ -79,193 +79,210 @@ export default function Announcement() {
     }
   };
 
-  if (isAnnoucementLoading) {
-    return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your announcement... 🚀
-        </span>
-      </div>
-    );
-  }
-
+// Loading State
+// Loading State
+if (isAnnoucementLoading) {
   return (
-    <div className="min-h-screen mx-1">
-      <div className="max-w-6xl mx-auto p-1 flex flex-col space-y-6">
-        <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
+    <div className="min-h-screen bg-zinc-100 flex items-center justify-center gap-4">
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        className="w-8 h-8 border-2 border-zinc-300 border-t-zinc-800 rounded-full"
+      />
+      <span className="text-zinc-500 text-sm font-semibold tracking-wide">
+        Loading announcements...
+      </span>
+    </div>
+  );
+}
+
+return (
+  <div className="min-h-screen bg-zinc-100 px-3 py-4">
+    <div className="max-w-6xl mx-auto flex flex-col space-y-4">
+
+      {/* Header */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p className="text-[10px] font-black tracking-[0.18em] uppercase text-zinc-400 mb-0.5">
+            Management
+          </p>
           <div className="flex items-center gap-3">
-            <Building className="h-7 w-7 text-gray-800" />
-            <h3 className="text-[#242424] text-[24px] font-bold">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-zinc-900 border border-zinc-800">
+              <MegaphoneIcon className="w-4 h-4 text-zinc-300" />
+            </div>
+            <h3 className="text-xl font-black text-zinc-900 tracking-tight">
               All Announcements
             </h3>
           </div>
-
-          <div className="flex flex-wrap gap-2">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              Create
-            </motion.button>
-          </div>
         </div>
 
-        <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
-          {data?.data?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Megaphone className="h-16 w-16 text-gray-300 mbg-zinc-800" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                No Announcement
-              </h3>
-              <p className="text-gray-500 mt-2">
-                You don't have any Announcement yet.
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-hidden rounded-xl ">
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead className="bg-zinc-800">
-                    <tr>
-                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Title{" "}
-                      </th>
-                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Message{" "}
-                      </th>
-                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        status{" "}
-                      </th>
-                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Create At{" "}
-                      </th>
-                      <th className="-p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {data?.data.map((depart, index) => (
-                      <motion.tr
-                        key={depart?._id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="hover:bg-zinc-100 transition-colors"
-                      >
-                        <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          {depart?.title}
-                        </td>
-                        <td className="px-2 py-1 w-[360px] min-w-[200px] ">
-                          <div
-                            title={depart.message}
-                            className="text-[12px] text-gray-700 leading-snug"
-                          >
-                            {depart.message}
-                          </div>
-                        </td>
-                        <td className="px-1 whitespace-normal">
-                          <button
-                            disabled={isUpdatingStatus} // Loading ke waqt click disable kar do
-                            onClick={() =>
-                              updateAnnouncementStatus({ id: depart?._id })
-                            }
-                            className={`relative min-w-[70px] flex items-center justify-center cursor-pointer px-2 py-1 shadow-sm rounded text-xs font-medium transition-all ${getStatusColor(
-                              depart?.isActive ? "active" : "deactive",
-                            )} ${isUpdatingStatus && originalArgs?.id === depart?._id ? "opacity-70" : ""}`}
-                          >
-                            {/* Agar ye specific ID load ho rahi hai, to loader dikhao */}
-                            {isUpdatingStatus && originalArgs?.id === depart?._id ? (
-                              <div className="flex items-center gap-1">
-                                <svg
-                                  className="animate-spin h-3 w-3 text-current"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <circle
-                                    className="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    strokeWidth="4"
-                                    fill="none"
-                                  />
-                                  <path
-                                    className="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                  />
-                                </svg>
-                                <span>Wait...</span>
-                              </div>
-                            ) : /* Normal Text */
-                            depart?.isActive ? (
-                              "Active"
-                            ) : (
-                              "Deactive"
-                            )}
-                          </button>
-                        </td>
-                        <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          {formatDate(depart.createdAt)}
-                        </td>
-
-                        <td className="px-4 py-1.5 whitespace-nowrap">
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleEdit(depart)}
-                            className="inline-flex items-center cursor-pointer mx-1 px-3 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-900 transition-colors"
-                          >
-                            <Edit className="h-4 w-4" />
-                            {/* Edit */}
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setConfirmDelete(depart._id)}
-                            className="inline-flex items-center cursor-pointer px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                          >
-                            <DeleteIcon className="h-4 w-4" />
-
-                            {/* Edit */}
-                          </motion.button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </motion.div>
-        {confirmDelete && (
-          <WarningModal
-            setConfirmDelete={setConfirmDelete}
-            isDeleting={isDeleting}
-            message="department"
-            handleDelete={handleDelete}
-          />
-        )}
-
-        <AnnouncementModal
-          isOpen={isModalOpen}
-          data={editingAppointment}
-          closeModal={closeModal}
-          refetch={refetch}
-        />
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleEdit()}
+          className="flex items-center gap-2 cursor-pointer bg-zinc-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-400/20 border border-zinc-700"
+        >
+          <Plus className="h-4 w-4" />
+          Create Announcement
+        </motion.button>
       </div>
+
+      {/* Divider */}
+      <div className="h-px bg-gradient-to-r from-transparent via-zinc-300 to-transparent" />
+
+      {/* Empty State */}
+      {data?.data?.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-[20px] bg-zinc-900 border border-white/[0.06] p-16 text-center shadow-xl shadow-zinc-400/10">
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white/[0.07] border border-white/10 mb-4">
+            <Megaphone className="h-6 w-6 text-zinc-500" />
+          </div>
+          <h3 className="text-base font-black text-zinc-200 mb-1">
+            No Announcements Yet
+          </h3>
+          <p className="text-zinc-500 text-sm">
+            Create your first announcement to get started.
+          </p>
+        </div>
+      ) : (
+        <div className="rounded-[20px] overflow-hidden shadow-xl shadow-zinc-400/15 border border-zinc-200">
+
+          {/* Dark top accent */}
+          <div className="h-[2px] w-full bg-gradient-to-r from-zinc-900 via-zinc-700 to-zinc-900" />
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+
+              {/* Dark Header */}
+              <thead>
+                <tr className="bg-zinc-900 border-b border-white/[0.07]">
+                  {["Title", "Message", "Status", "Created At", "Actions"].map((h) => (
+                    <th
+                      key={h}
+                      className="px-4 py-3.5 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-500"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+
+              {/* Light Rows */}
+              <tbody className="bg-white divide-y divide-zinc-100">
+                {data?.data.map((depart, index) => (
+                  <motion.tr
+                    key={depart?._id}
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05, ease: "easeOut" }}
+                    className="hover:bg-zinc-50 transition-colors group"
+                  >
+                    {/* Title */}
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-[13px] font-semibold text-zinc-800 capitalize">
+                        {depart?.title}
+                      </span>
+                    </td>
+
+                    {/* Message */}
+                    <td className="px-4 py-3 w-[320px] min-w-[180px]">
+                      <p
+                        title={depart.message}
+                        className="text-[12px] text-zinc-500 leading-snug line-clamp-2"
+                      >
+                        {depart.message}
+                      </p>
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <button
+                        disabled={isUpdatingStatus}
+                        onClick={() => updateAnnouncementStatus({ id: depart?._id })}
+                        className={`relative min-w-[76px] flex items-center justify-center gap-1.5 cursor-pointer px-3 py-1.5 rounded-lg text-[11px] font-black tracking-wide transition-all border ${
+                          depart?.isActive
+                            ? "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100"
+                            : "bg-red-50 text-red-500 border-red-200 hover:bg-red-100"
+                        } ${isUpdatingStatus && originalArgs?.id === depart?._id ? "opacity-60" : ""}`}
+                      >
+                        {isUpdatingStatus && originalArgs?.id === depart?._id ? (
+                          <>
+                            <svg className="animate-spin h-3 w-3 text-current" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                            Wait...
+                          </>
+                        ) : (
+                          <>
+                            <span className={`w-1.5 h-1.5 rounded-full ${depart?.isActive ? "bg-emerald-500" : "bg-red-400"}`} />
+                            {depart?.isActive ? "Active" : "Inactive"}
+                          </>
+                        )}
+                      </button>
+                    </td>
+
+                    {/* Date */}
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-[12px] text-zinc-400 font-medium">
+                        {formatDate(depart.createdAt)}
+                      </span>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.93 }}
+                          onClick={() => handleEdit(depart)}
+                          className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                        >
+                          <Edit className="h-3.5 w-3.5" />
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.93 }}
+                          onClick={() => setConfirmDelete(depart._id)}
+                          className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
+                        >
+                          <DeleteIcon className="h-3.5 w-3.5" />
+                        </motion.button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Dark Footer */}
+          <div className="bg-zinc-900 border-t border-white/[0.06] px-4 py-2.5 flex items-center justify-between">
+            <p className="text-[11px] text-zinc-600 font-semibold">
+              {data?.data?.length} announcement{data?.data?.length !== 1 ? "s" : ""}
+            </p>
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          </div>
+        </div>
+      )}
     </div>
-  );
+
+    {confirmDelete && (
+      <WarningModal
+        setConfirmDelete={setConfirmDelete}
+        isDeleting={isDeleting}
+        message="announcement"
+        handleDelete={handleDelete}
+      />
+    )}
+
+    <AnnouncementModal
+      isOpen={isModalOpen}
+      data={editingAppointment}
+      closeModal={closeModal}
+      refetch={refetch}
+    />
+  </div>
+);
+
+
 }

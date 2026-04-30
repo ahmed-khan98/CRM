@@ -3,12 +3,10 @@
 import * as Yup from "yup";
 import { motion, AnimatePresence } from "framer-motion";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { X, MegaphoneIcon, Megaphone } from "lucide-react";
+import { X, CalendarDays, Calendar } from "lucide-react";
 import { toast } from "react-hot-toast";
-import {
-  useCreateAnnouncementMutation,
-  useUpdateAnnouncementMutation,
-} from "@/app/_Services/announcement/page";
+import { useCreateMonthMutation } from "@/app/_Services/month/page";
+
 
 const inputClass = (hasError) =>
   `w-full px-3.5 py-2.5 rounded-[10px] text-[13px] font-medium bg-white/[0.04] border text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-white/25 transition-colors duration-150 ${
@@ -28,36 +26,38 @@ const ErrMsg = ({ name }) => (
     className="text-[11px] mt-1 font-medium text-red-400"
   />
 );
-const announcementSchema = Yup.object().shape({
-  title: Yup.string()
-    .required("Announcement title is required")
-    .min(3, "Title must be at least 3 characters"),
-    
-  message: Yup.string()
-    .required("Announcement message is required")
-    .min(10, "Message should be at least 10 characters long")
-    .max(1000, "Message cannot exceed 1000 characters"),
+
+const monthSchema = Yup.object().shape({
+  name: Yup.string()
+    .required("Month name is required")
+    .min(3, "Name must be at least 3 characters"),
+  startDate: Yup.string().required("Start date is required"),
+//   endDate: Yup.string()
+//     .required("End date is required")
+//     .test("is-after-start", "End date must be after start date", function (value) {
+//       const { startDate } = this.parent;
+//       if (!startDate || !value) return true;
+//       return new Date(value) > new Date(startDate);
+//     }),
 });
 
-const AnnouncementModal = ({ isOpen, closeModal, data, refetch }) => {
-  const isEdit = !!data;
-  const [createAnnouncement] = useCreateAnnouncementMutation();
-  const [updateAnnouncement] = useUpdateAnnouncementMutation();
+const MonthModal = ({ isOpen, closeModal, data, refetch }) => {
+  const [createMonth] = useCreateMonthMutation();
+
+  const initialValues = {
+    name: "",
+    startDate: "",
+    endDate:  "",
+  };
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const response = await (data
-        ? updateAnnouncement({ id: data?._id, ...values }).unwrap()
-        : createAnnouncement({ ...values }).unwrap());
+      const response = await  createMonth({ ...values }).unwrap();
 
       if (response.success) {
-        toast.success(
-          data
-            ? "Announcement updated successfully!"
-            : "Announcement created successfully!"
-        );
+        toast.success("Month created successfully!");
       } else {
-        toast.error(response.message || "Failed to process announcement");
+        toast.error(response.message || "Failed to process month");
       }
       resetForm();
       closeModal();
@@ -65,40 +65,17 @@ const AnnouncementModal = ({ isOpen, closeModal, data, refetch }) => {
     } catch (error) {
       const msg =
         error?.response?.data?.message ||
-        error?.message ||
         error?.data?.message ||
-        "Failed to create announcement";
+        error?.message ||
+        "Failed to process month";
       toast.error(msg);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 50 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { type: "spring", damping: 25, stiffness: 300 },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: 50,
-      transition: { duration: 0.2 },
-    },
-  };
-
-
-
-  const initialValues = {
-    title: data?.title || "",
-    message: data?.message || "",
-  };
-
   return (
-  <AnimatePresence>
+    <AnimatePresence>
       {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -112,7 +89,7 @@ const AnnouncementModal = ({ isOpen, closeModal, data, refetch }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="w-full max-w-xl max-h-[95vh] flex flex-col overflow-hidden rounded-[20px] bg-zinc-950 border border-white/[0.08] shadow-[0_32px_80px_rgba(0,0,0,0.7)]"
+            className="w-full max-w-lg max-h-[95vh] flex flex-col overflow-hidden rounded-[20px] bg-zinc-950 border border-white/[0.08] shadow-[0_32px_80px_rgba(0,0,0,0.7)]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Top accent line */}
@@ -122,14 +99,14 @@ const AnnouncementModal = ({ isOpen, closeModal, data, refetch }) => {
             <div className="flex items-center justify-between px-6 py-4 flex-shrink-0 border-b border-white/[0.07]">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/[0.07] border border-white/10 flex-shrink-0">
-                  <Megaphone className="w-4 h-4 text-zinc-400" />
+                  <CalendarDays className="w-4 h-4 text-zinc-400" />
                 </div>
                 <div>
                   <p className="text-[10px] font-black tracking-[0.18em] uppercase text-zinc-600">
-                    {isEdit ? "Edit Record" : "New Record"}
+                    New Record"
                   </p>
                   <h2 className="text-base font-black text-zinc-100">
-                    {isEdit ? "Edit Announcement" : "Add New Announcement"}
+                    Start New Month
                   </h2>
                 </div>
               </div>
@@ -144,47 +121,77 @@ const AnnouncementModal = ({ isOpen, closeModal, data, refetch }) => {
               </motion.button>
             </div>
 
-            {/* Scrollable Form Body */}
-            <div className="flex-1 overflow-y-auto px-6 py-3">
+            {/* Form Body */}
+            <div className="flex-1 overflow-y-auto px-6 py-5">
               <Formik
                 initialValues={initialValues}
-                validationSchema={announcementSchema}
+                validationSchema={monthSchema}
                 onSubmit={handleSubmit}
                 enableReinitialize
               >
                 {({ errors, touched, isSubmitting }) => (
                   <Form className="space-y-4">
 
-                    {/* Title */}
+                    {/* Month Name */}
                     <div>
-                      <FieldLabel>Title</FieldLabel>
-                      <Field name="title">
+                      <FieldLabel>Month Name</FieldLabel>
+                      <Field name="name">
                         {({ field }) => (
                           <input
                             {...field}
                             type="text"
-                            placeholder="e.g. Company Picnic 2025"
-                            className={inputClass(errors.title && touched.title)}
+                            placeholder="e.g. January 2025"
+                            className={inputClass(errors.name && touched.name)}
                           />
                         )}
                       </Field>
-                      <ErrMsg name="title" />
+                      <ErrMsg name="name" />
                     </div>
 
-                    {/* Message */}
-                    <div>
-                      <FieldLabel>Message</FieldLabel>
-                      <Field name="message">
-                        {({ field }) => (
-                          <textarea
-                            {...field}
-                            rows={8}
-                            placeholder="Write your announcement here..."
-                            className={`${inputClass(errors.message && touched.message)} resize-none leading-relaxed`}
-                          />
-                        )}
-                      </Field>
-                      <ErrMsg name="message" />
+                    {/* Start Date + End Date */}
+                    <div className="grid grid-cols-1  gap-4">
+                      <div>
+                        <FieldLabel>
+                          <Calendar className="inline w-3 h-3 mr-1" />
+                          Start Date
+                        </FieldLabel>
+                        <Field name="startDate">
+                          {({ field }) => (
+                            <input
+                              {...field}
+                              type="date"
+                              className={inputClass(errors.startDate && touched.startDate)}
+                            />
+                          )}
+                        </Field>
+                        <ErrMsg name="startDate" />
+                      </div>
+
+                      {/* <div>
+                        <FieldLabel>
+                          <Calendar className="inline w-3 h-3 mr-1" />
+                          End Date
+                        </FieldLabel>
+                        <Field name="endDate">
+                          {({ field }) => (
+                            <input
+                              {...field}
+                              type="date"
+                              className={inputClass(errors.endDate && touched.endDate)}
+                            />
+                          )}
+                        </Field>
+                        <ErrMsg name="endDate" />
+                      </div> */}
+                    </div>
+
+                    {/* Info note */}
+                    <div className="flex items-start gap-2.5 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3.5 py-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
+                      <p className="text-[11px] text-zinc-500 leading-relaxed">
+                        Month code will be auto-generated from the name. Only one month can be{" "}
+                        <span className="text-emerald-400 font-bold">OPEN</span> at a time.
+                      </p>
                     </div>
 
                     {/* Divider */}
@@ -217,7 +224,7 @@ const AnnouncementModal = ({ isOpen, closeModal, data, refetch }) => {
                             </svg>
                             Processing...
                           </span>
-                        ) : isEdit ? "Save Changes" : "Add Announcement"}
+                        ) : "Create Month"}
                       </motion.button>
                     </div>
                   </Form>
@@ -228,8 +235,7 @@ const AnnouncementModal = ({ isOpen, closeModal, data, refetch }) => {
         </motion.div>
       )}
     </AnimatePresence>
-
   );
 };
 
-export default AnnouncementModal;
+export default MonthModal;

@@ -7,6 +7,7 @@ import {
   Home, Calendar, User, Users, LogOut, ChevronRight, ChevronDown,
   LayoutDashboard, BadgeDollarSign, ChartBar, Mail, LayoutPanelTop,
   AtSign, List, Mails, Building, Link, MegaphoneIcon,
+  CalendarDays,
 } from "lucide-react";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
@@ -50,11 +51,12 @@ const LeftNav = ({ set }) => {
         { name: "TM Bulk Email", path: "/dashboard/TmBulkEmail", icon: <Mails className="w-3.5 h-3.5" /> },
       ],
     },
+    { name: "All Months", icon: <Calendar className="w-4 h-4" />, path: ["/dashboard/month"] },
     { name: "Sales", icon: <BadgeDollarSign className="w-4 h-4" />, path: ["/dashboard/sale"] },
     { name: "My Account", icon: <User className="w-4 h-4" />, path: ["/dashboard/profile", "/dashboard/changepassword"] },
     {
       name: "Attendance",
-      icon: <Calendar className="w-4 h-4" />,
+      icon: <CalendarDays  className="w-4 h-4" />,
       path: ["/dashboard/attendance", "/dashboard/attendance/departmentAttendence"],
       submenu: [
         { name: "My Attendance", path: "/dashboard/attendance" },
