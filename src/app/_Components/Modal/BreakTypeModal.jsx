@@ -61,7 +61,7 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
     type: "",
   };
 
-  const typeOptions = ["MEAL", "REST ROOM", "SMOKING", "OFFICIAL"].map((b) => ({
+  const typeOptions = ["MEAL", "REST ROOM", "SMOKING","TEA","PRAYER","OFFICIAL"].map((b) => ({
     value: b,
     label: b,
   }));

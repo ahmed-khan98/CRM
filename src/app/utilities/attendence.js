@@ -200,6 +200,7 @@ export const getAllTableData = (isFetching, data, viewType, customRange) => {
   }
   return dates.sort((a, b) => moment(b.date).diff(moment(a.date)));
 };
+
 export const PALETTES = {
   present:     { bg: "bg-emerald-50",  border: "border-emerald-200",  activeBorder: "border-emerald-400",  ring: "ring-emerald-200",  iconBg: "bg-emerald-100",  iconText: "text-emerald-600",  labelText: "text-emerald-500",  valueText: "text-emerald-800",  ghost: "text-emerald-300",  badge: "bg-emerald-200 text-emerald-700"  },
   absent:      { bg: "bg-rose-50",     border: "border-rose-200",     activeBorder: "border-rose-400",     ring: "ring-rose-200",     iconBg: "bg-rose-100",     iconText: "text-rose-600",     labelText: "text-rose-400",     valueText: "text-rose-800",     ghost: "text-rose-300",     badge: "bg-rose-200 text-rose-700"        },
