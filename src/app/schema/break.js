@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-const TYPE = ["MEAL", "REST ROOM", "SMOKING", "OFFICIAL"];
+const TYPE = ["MEAL", "REST ROOM", "SMOKING","TEA","PRAYER", "OFFICIAL"];
 
 export const BreakSchema = Yup.object({
   type: Yup.string()

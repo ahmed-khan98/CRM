@@ -1,8 +1,6 @@
 export const EMPLOYEE_HEADERS = [
   "Sr",
-  "Img",
-  "Name",
-  "Email",
+  "Employee Info",,
   "Designation",
   "CNIC",
   "Phone No.",

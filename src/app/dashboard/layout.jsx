@@ -245,7 +245,7 @@ const DashboardLayout = ({ children }) => {
               } ${
                 isMobile
                   ? "fixed top-0 left-0 h-full z-30 w-78 shadow-xl overflow-y-auto"
-                  : "lg:relative lg:w-52 xl:w-64 lg:top-0 h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] overflow-y-auto"
+                  : "lg:relative lg:top-0 h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] overflow-y-auto"
               } transition-transform duration-300 ease-in-out`}
             >
               <LeftNav />

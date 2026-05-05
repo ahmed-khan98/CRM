@@ -1,3 +1,4 @@
+import { AlertCircle, BedDouble, Clock, Coffee, UserCheck, UserX } from "lucide-react";
 import moment from "moment-timezone";
 
 export function Tooltip({ text, children }) {
@@ -205,8 +206,84 @@ export const PALETTES = {
   present:     { bg: "bg-emerald-50",  border: "border-emerald-200",  activeBorder: "border-emerald-400",  ring: "ring-emerald-200",  iconBg: "bg-emerald-100",  iconText: "text-emerald-600",  labelText: "text-emerald-500",  valueText: "text-emerald-800",  ghost: "text-emerald-300",  badge: "bg-emerald-200 text-emerald-700"  },
   absent:      { bg: "bg-rose-50",     border: "border-rose-200",     activeBorder: "border-rose-400",     ring: "ring-rose-200",     iconBg: "bg-rose-100",     iconText: "text-rose-600",     labelText: "text-rose-400",     valueText: "text-rose-800",     ghost: "text-rose-300",     badge: "bg-rose-200 text-rose-700"        },
   late:        { bg: "bg-amber-50",    border: "border-amber-200",    activeBorder: "border-amber-400",    ring: "ring-amber-200",    iconBg: "bg-amber-100",    iconText: "text-amber-600",    labelText: "text-amber-500",    valueText: "text-amber-800",    ghost: "text-amber-300",    badge: "bg-amber-200 text-amber-700"      },
-  halfday:     { bg: "bg-sky-50",      border: "border-sky-200",      activeBorder: "border-sky-400",      ring: "ring-sky-200",      iconBg: "bg-sky-100",      iconText: "text-sky-600",      labelText: "text-sky-400",      valueText: "text-sky-800",      ghost: "text-sky-300",      badge: "bg-sky-200 text-sky-700"          },
+  'half-day':     { bg: "bg-sky-50",      border: "border-sky-200",      activeBorder: "border-sky-400",      ring: "ring-sky-200",      iconBg: "bg-sky-100",      iconText: "text-sky-600",      labelText: "text-sky-400",      valueText: "text-sky-800",      ghost: "text-sky-300",      badge: "bg-sky-200 text-sky-700"          },
   discrepancy: { bg: "bg-orange-50",   border: "border-orange-200",   activeBorder: "border-orange-400",   ring: "ring-orange-200",   iconBg: "bg-orange-100",   iconText: "text-orange-600",   labelText: "text-orange-400",   valueText: "text-orange-800",   ghost: "text-orange-300",   badge: "bg-orange-200 text-orange-700"    },
   weekend:     { bg: "bg-indigo-50",   border: "border-indigo-200",   activeBorder: "border-indigo-400",   ring: "ring-indigo-200",   iconBg: "bg-indigo-100",   iconText: "text-indigo-600",   labelText: "text-indigo-400",   valueText: "text-indigo-800",   ghost: "text-indigo-300",   badge: "bg-indigo-200 text-indigo-700"    },
   total:       { bg: "bg-zinc-100",    border: "border-zinc-200",     activeBorder: "border-zinc-400",     ring: "ring-zinc-200",     iconBg: "bg-zinc-200",     iconText: "text-zinc-500",     labelText: "text-zinc-400",     valueText: "text-zinc-800",     ghost: "text-zinc-300",     badge: "bg-zinc-300 text-zinc-600"        },
+};
+
+export const calculateAttendanceStats = (data, options = {}) => {
+  const {
+    getStatus = (item) => item?.computedStatus,   // default (My Attendance)
+    isWeekend = (item) => item?.isWeekend,        // default weekend check
+    isAbsent = (item) => false                    // optional override
+  } = options;
+
+  return data.reduce(
+    (acc, item) => {
+      const weekend = isWeekend(item);
+
+      if (weekend) {
+        acc.weekend++;
+        return acc;
+      }
+
+      const status = getStatus(item);
+
+      if (isAbsent(item) || status === "absent") acc.absent++;
+      else if (status === "late") acc.late++;
+      else if (status === "discrepancy") acc.discrepancy++;
+      else if (status === "half-day") acc.halfday++;
+      else if (status === "present") acc.present++;
+
+      return acc;
+    },
+    {
+      present: 0,
+      absent: 0,
+      late: 0,
+      halfday: 0,
+      discrepancy: 0,
+      weekend: 0,
+    }
+  );
+};
+
+const DEFAULT_CARD_CONFIG = {
+  present:     { label: "Present",     icon: UserCheck },
+  absent:      { label: "Absent",      icon: UserX },
+  late:        { label: "Late",        icon: Clock },
+  "half-day":  { label: "Half Day",    icon: Coffee },
+  discrepancy: { label: "Discrepancy", icon: AlertCircle },
+  weekend:     { label: "Weekends",    icon: BedDouble },
+};
+
+export const getStatCards = ({
+  stats,
+  data,
+  palettes,
+  config = DEFAULT_CARD_CONFIG,
+  extraCard, // custom last card
+}) => {
+  const cards = Object.entries(config).map(([key, cfg]) => ({
+    id: key,
+    label: cfg.label,
+    icon: cfg.icon,
+    value: stats[key === "half-day" ? "halfday" : key],
+    palette: PALETTES[key],
+  }));
+
+  // optional extra card (Working Days / Total etc.)
+  if (extraCard) {
+    cards.push({
+      id: null,
+      ...extraCard,
+      value:
+        typeof extraCard.getValue === "function"
+          ? extraCard.getValue(data)
+          : extraCard.value,
+    });
+  }
+
+  return cards;
 };

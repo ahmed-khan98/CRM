@@ -499,25 +499,27 @@ export default function AppointmentBooking() {
                         <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600 capitalize">
                           {index + 1}
                         </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
-                          <div className="relative w-8 h-8">
-                            {" "}
-                            <Image
-                              src={emp?.image || "/placeholder.svg"}
-                              alt="employee-img"
-                              fill
-                              className="rounded-full object-cover"
-                            />
+
+                        <td className="px-4 py-3 transition-colors">
+                          <div className="flex items-center gap-3">
+                            <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
+                              <Image
+                                src={emp?.image || "/placeholder.svg"}
+                                alt="employee-img"
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-bold text-gray-800 leading-none capitalize">
+                                {emp?.fullName || "-"}
+                              </span>
+                              <span className="text-[12px] text-gray-500 mt-1">
+                                {emp?.email || "-"}
+                              </span>
+                            </div>
                           </div>
                         </td>
-
-                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600 capitalize">
-                          {emp?.fullName ? `${emp.fullName}` : "-"}
-                        </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
-                          {emp?.email || "-"}
-                        </td>
-
                         <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
                           {emp?.designation || "-"}
                         </td>
@@ -558,7 +560,6 @@ export default function AppointmentBooking() {
                             onClick={() => updateStatus({ id: emp?._id })}
                             className={`relative min-w-[80px] flex items-center justify-center cursor-pointer px-2 py-1 shadow-sm rounded text-xs font-medium transition-all ${getActionStatusColor(emp?.status)} ${statusLoading && statusArgs?.id === emp?._id ? "opacity-70 cursor-not-allowed" : ""}`}
                           >
-                            
                             {statusLoading && statusArgs?.id === emp?._id ? (
                               <div className="flex items-center gap-1">
                                 <svg
@@ -589,7 +590,6 @@ export default function AppointmentBooking() {
                               "-"
                             )}
                           </button>
-                          
                         </td>
                         <td className="p-2 whitespace-nowrap">
                           <div className="flex items-center gap-1">
@@ -636,7 +636,7 @@ export default function AppointmentBooking() {
             handleDelete={handleDelete}
           />
         )}
-        
+
         <EmployeeModal
           isOpen={isModalOpen}
           data={editingAppointment}
