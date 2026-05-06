@@ -302,6 +302,7 @@ import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { getActionStatusColor } from "@/app/utilities/color";
 import toast from "react-hot-toast";
 import { EMPLOYEE_HEADERS } from "@/app/_Components/table/tableRow/tableHeader/employeeHeader";
+import { getStatusConfig } from "@/app/utilities/attendence";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -401,6 +402,8 @@ export default function AppointmentBooking() {
 
   const filterData = ["all", ...(departments?.data?.map((e) => e?.name) || [])];
 
+  
+
   if (isLoading) {
     return (
       <div className="min-h-screen  flex items-center justify-center">
@@ -422,9 +425,9 @@ export default function AppointmentBooking() {
   }
 
   return (
-    <div className="min-h-screen  mx-1">
+    <div className="mx-1">
       <div className="w-full mx-auto p-1 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
+        <div className="flex flex-col gap-2 pb-1 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-gray-800" />
             <h3 className="text-[#242424] text-xl font-bold">All Employees</h3>
@@ -447,7 +450,7 @@ export default function AppointmentBooking() {
               <button
                 key={index}
                 onClick={() => setActiveFilter(e)}
-                className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${
+                className={`px-4 py-1 text-sm rounded-full cursor-pointer transition-all capitalize ${
                   activeFilter === e
                     ? "bg-zinc-800 text-white shadow-md"
                     : "text-gray-600 hover:bg-gray-100"
@@ -473,9 +476,15 @@ export default function AppointmentBooking() {
             </div>
           ) : (
             <div className="overflow-hidden rounded-2xl border border-gray-200">
-              <div className="overflow-x-auto">
+              <div
+                className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-220px)]"
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#52525b transparent",
+                }}
+              >
                 <table className="min-w-full">
-                  <thead className="bg-zinc-800 py-0">
+                  <thead className="bg-zinc-800 py-0 sticky top-0 z-10">
                     <tr>
                       {EMPLOYEE_HEADERS.map((col, index) => (
                         <th
@@ -488,7 +497,9 @@ export default function AppointmentBooking() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredNotifications().map((emp, index) => (
+                    {filteredNotifications().map((emp, index) => {0
+                      const cfg = getStatusConfig(emp?.status);
+                      return (
                       <motion.tr
                         key={index}
                         initial={{ opacity: 0, x: -20 }}
@@ -520,7 +531,7 @@ export default function AppointmentBooking() {
                             </div>
                           </div>
                         </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
+                        <td className="px-2 py-1.5 whitespace-nowrap text-xs font-bold text-zinc-700">
                           {emp?.designation || "-"}
                         </td>
 
@@ -531,36 +542,35 @@ export default function AppointmentBooking() {
                         <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
                           {emp?.phoneNo || "-"}
                         </td>
+                        <td className="px-3 py-2 transition-colors">
+                            <div className="flex flex-col gap-1">
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(emp?.departmentId?.name)}`}
+                              >
+                                {emp?.departmentId?.name
+                                  .charAt(0)
+                                  .toUpperCase() +
+                                  emp?.departmentId?.name.slice(1)}
+                              </span>
 
-                        <td className="px-1 py-1.5 whitespace-nowrap capitalize">
-                          {emp?.departmentId?.name ? (
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(emp?.departmentId?.name)}`}
-                            >
-                              {emp?.departmentId?.name.charAt(0).toUpperCase() +
-                                emp?.departmentId?.name.slice(1)}
-                            </span>
-                          ) : (
-                            "-" // if no department
-                          )}
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${getActionStatusColor(emp?.role)}`}
+                              >
+                                {emp?.role
+                                  ? emp.role.charAt(0).toUpperCase() +
+                                    emp.role.slice(1)
+                                  : "-"}
+                              </span>
+                            
+                          </div>
                         </td>
-                        <td className="px-1  whitespace-nowrap">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${getActionStatusColor(emp?.role)}`}
-                          >
-                            {emp?.role
-                              ? emp.role.charAt(0).toUpperCase() +
-                                emp.role.slice(1)
-                              : "-"}
-                          </span>
-                        </td>
+
                         <td className="px-1 whitespace-normal text-center">
-                          <button
-                            disabled={statusLoading}
-                            onClick={() => updateStatus({ id: emp?._id })}
-                            className={`relative min-w-[80px] flex items-center justify-center cursor-pointer px-2 py-1 shadow-sm rounded text-xs font-medium transition-all ${getActionStatusColor(emp?.status)} ${statusLoading && statusArgs?.id === emp?._id ? "opacity-70 cursor-not-allowed" : ""}`}
-                          >
-                            {statusLoading && statusArgs?.id === emp?._id ? (
+                           <span
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
+        >
+          <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+          {statusLoading && statusArgs?.id === emp?._id ? (
                               <div className="flex items-center gap-1">
                                 <svg
                                   className="animate-spin h-3 w-3 text-current"
@@ -589,7 +599,8 @@ export default function AppointmentBooking() {
                             ) : (
                               "-"
                             )}
-                          </button>
+        </span>
+                         
                         </td>
                         <td className="p-2 whitespace-nowrap">
                           <div className="flex items-center gap-1">
@@ -600,13 +611,13 @@ export default function AppointmentBooking() {
                             </span>
                           </div>
                         </td>
-                        <td className=" px-4 py-3">
+                        <td className=" px-3 py-3">
                           <div className="flex items-center justify-center gap-2">
                             <motion.button
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() => handleEdit(emp)}
-                              className="cursor-pointer p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
+                              className="cursor-pointer p-1 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
                             >
                               <Edit className="h-4 w-4" />
                             </motion.button>
@@ -614,14 +625,15 @@ export default function AppointmentBooking() {
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
                               onClick={() => setConfirmDelete(emp._id)}
-                              className="cursor-pointer p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                              className="cursor-pointer p-1 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
                             >
                               <DeleteIcon className="h-4 w-4" />
                             </motion.button>
                           </div>
                         </td>
                       </motion.tr>
-                    ))}
+                      )
+})}
                   </tbody>
                 </table>
               </div>

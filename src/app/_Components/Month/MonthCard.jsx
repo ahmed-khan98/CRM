@@ -33,7 +33,7 @@ useEffect(() => {
         <span
           className={`text-[10px] px-2.5 py-1 rounded-full font-bold tracking-wide border ${
             month?.status === "OPEN"
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 animate-pulse"
               : "bg-red-500/10 text-red-400 border-red-500/20"
           }`}
         >

@@ -31,6 +31,7 @@ console.log(index,'index')
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.2 }}
         className="hover:bg-zinc-50 transition-colors relative"
+        
       >
         <td
           className="px-3 py-1 whitespace-nowrap text-[13px] text-gray-600 capitalize cursor-pointer"

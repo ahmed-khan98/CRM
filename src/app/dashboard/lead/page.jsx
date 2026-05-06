@@ -161,9 +161,9 @@ function Leads() {
   }
 
   return (
-    <div className="min-h-screen  mx-1">
-      <div className="max-full mx-auto p-1  flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
+    <div className=" mx-1">
+      <div className="max-full mx-auto  flex flex-col space-y-2">
+        <div className="flex flex-col gap-2 py-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
             <ChartBar className="h-5 w-5 text-gray-800" />
 
@@ -254,14 +254,21 @@ function Leads() {
             </div>
           ) : (
             <div className="overflow-hidden rounded-2xl">
-              <div className="overflow-x-auto">
+             <div 
+  className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-260px)]"
+  style={{
+    scrollbarWidth: "thin",
+    scrollbarColor: "#52525b transparent",
+  }}
+>
+
                 <table className="min-w-full">
-                  <thead >
+                  <thead className="sticky top-0 z-20 bg-zinc-800">
                     <tr className="">
                       {LEADHEADERS?.map((h) => (
                         <th
                           key={h}
-                          className="p-3 py-4 text-start text-xs font-medium text-zinc-300 capitalize bg-zinc-800 "
+                          className="p-3 py-4 text-start text-xs font-medium text-zinc-300 capitalize  "
                         >
                           {h}
                         </th>

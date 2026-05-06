@@ -117,8 +117,8 @@ export const LinkRow = memo(
           </span>
         </td>
         <td className="px-2 py-1.5 whitespace-nowrap">
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium bg-zinc-200 text-zinc-800">
-            💰 ${emp?.amount}
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-bold bg-zinc-200 text-zinc-800">
+            <DollarSign className="text-amber-500 h-5 w-5" /> {emp?.amount}
           </span>
         </td>
         <td className="px-2 py-1.5  whitespace-nowrap">

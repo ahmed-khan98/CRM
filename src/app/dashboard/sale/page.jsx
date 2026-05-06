@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Users, Edit, Plus, DeleteIcon, MoreVertical } from "lucide-react";
+import { Users, Edit, Plus, DeleteIcon, MoreVertical, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/app/utilities/date";
 import {
@@ -103,7 +103,7 @@ export default function Client() {
 
   return (
     <div className="min-h-screen  mx-1">
-      <div className="max-w-6xl mx-auto p-1 flex flex-col space-y-2">
+      <div className="mx-auto p-1 flex flex-col space-y-2">
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-3">
             <Users className="h-5 w-5 text-zinc-700" />
@@ -153,7 +153,11 @@ export default function Client() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-2xl shadow-lg border border-gray-100">
+            <div className="overflow-hidden rounded-2xl shadow-lg border border-gray-100"
+             style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "#52525b transparent",
+          }} >
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead className="sticky top-0 z-20">
@@ -181,25 +185,42 @@ export default function Client() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-zinc-50 transition-colors"
                       >
-                        <td className="p-4 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          {emp?.name || "-"}
+                        <td className="px-4 py-3 transition-colors">
+                          <div className="flex items-center gap-3">
+                           
+                            <div className="flex flex-col">
+                              <span className="text-sm font-bold text-gray-800 leading-none capitalize">
+                                {emp?.name || "-"}
+                              </span>
+                              <span className="text-[12px] text-gray-500 mt-1">
+                                {emp?.email || "-"}
+                              </span>
+                              <span className="text-[12px] text-gray-500 mt-1">
+                               {emp?.phoneNo || "-"}
+                              </span>
+                            </div>
+                          </div>
                         </td>
 
-                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 ">
-                          {emp?.email || "-"}
-                        </td>
-                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
-                          {emp?.phoneNo || "-"}
-                        </td>
-                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
-                          {emp?.serialNo || "-"}
-                        </td>
-                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
+                       
+                        
+                        {/* <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.brandName || "-"}
+                        </td> */}
+                           <td className="px-4 py-3 transition-colors">
+                          <div className="flex items-center gap-3">
+                           
+                            <div className="flex flex-col">
+                              <span className="text-sm font-bold text-gray-800 leading-none capitalize">
+                              {emp?.serialNo || "-"}
+                              </span>
+                              <span className="text-[12px] text-gray-500 mt-1">
+                                {emp?.brandMark || "-"}
+                              </span>
+                            </div>
+                          </div>
                         </td>
-                        <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
-                          {emp?.brandMark || "-"}
-                        </td>
+                     
 
                         <td className="p-4 whitespace-nowrap capitalize">
                           {emp?.departmentId?.name ? (
@@ -251,11 +272,9 @@ export default function Client() {
                         </td>
 
                         <td className="p-4 whitespace-nowrap">
-                          {/* <div className="flex items-center gap-3"> */}
-                          <span className="text-sm  text-gray-600">
-                            {emp?.amount}
-                          </span>
-                          {/* </div> */}
+                           <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-bold bg-zinc-200 text-zinc-800">
+            <DollarSign className="text-amber-500 h-5 w-5" /> {emp?.amount}
+          </span>
                         </td>
 
                         <td className="px-3 py-4 whitespace-nowrap">

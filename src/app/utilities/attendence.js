@@ -79,6 +79,13 @@ const STATUS_CONFIG = {
     border: "border-emerald-200",
     dot: "bg-emerald-500",
   },
+  active: {
+    label: "Active",
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
+    dot: "bg-emerald-500",
+  },
   late: {
     label: "Late",
     bg: "bg-amber-50",
@@ -88,6 +95,13 @@ const STATUS_CONFIG = {
   },
   absent: {
     label: "Absent",
+    bg: "bg-rose-50",
+    text: "text-rose-700",
+    border: "border-rose-200",
+    dot: "bg-rose-500",
+  },
+  'de active': {
+    label: "Deactive",
     bg: "bg-rose-50",
     text: "text-rose-700",
     border: "border-rose-200",

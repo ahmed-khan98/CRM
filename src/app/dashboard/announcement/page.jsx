@@ -11,7 +11,7 @@ import {
 import AnnouncementModal from "@/app/_Components/Modal/AnnouncementModal";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { formatDate } from "@/app/utilities/date";
-import { getStatusColor } from "@/app/utilities/color";
+import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/AttendenceHeader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -98,24 +98,12 @@ if (isAnnoucementLoading) {
 
 return (
   <div className="min-h-screen bg-zinc-100 px-3 py-4">
-    <div className="max-w-6xl mx-auto flex flex-col space-y-4">
+    <div className=" mx-auto flex flex-col space-y-4">
 
       {/* Header */}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p className="text-[10px] font-black tracking-[0.18em] uppercase text-zinc-400 mb-0.5">
-            Management
-          </p>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-zinc-900 border border-zinc-800">
-              <MegaphoneIcon className="w-4 h-4 text-zinc-300" />
-            </div>
-            <h3 className="text-xl font-black text-zinc-900 tracking-tight">
-              All Announcements
-            </h3>
-          </div>
-        </div>
-
+            <AttendenceHeader icon={MegaphoneIcon} length={'Management'} name=" All Announcements" />
+      
         <motion.button
           whileTap={{ scale: 0.97 }}
           whileHover={{ scale: 1.02 }}

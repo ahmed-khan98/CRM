@@ -280,9 +280,9 @@ ${isToday ? "bg-zinc-50 border-l-2 border-l-zinc-400" : isWeekend ? "bg-sky-50/4
       </td>
 
       {/* Status */}
-      <td className="px-5 py-3.5">
+      <td className="px-4 py-3.5 w-25">
         <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
+          className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
         >
           <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
           {isWeekend ? "Off" : cfg.label || currentStatus}

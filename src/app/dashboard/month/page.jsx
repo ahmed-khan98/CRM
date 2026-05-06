@@ -91,7 +91,7 @@ export default function Announcement() {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-800 text-white text-sm font-semibold border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600 hover:scale-[1.03] transition-all duration-200 shadow-lg shadow-black/30"
+            className="cursor-pointer group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-800 text-white text-sm font-semibold border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600 hover:scale-[1.03] transition-all duration-200 shadow-lg shadow-black/30"
           >
             <Plus
               size={15}

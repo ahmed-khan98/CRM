@@ -118,7 +118,7 @@ const LeftNav = ({ set }) => {
     /* ── Outer wrapper: width transitions here ── */
     <div
     className={`h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out
-        ${isCollapsed ? "w-[68px]" : "w-[260px]"}`}
+        ${isCollapsed ? "w-[76px]" : "w-[260px]"}`}
     
     >
 <div className="flex flex-col min-h-0 flex-1 overflow-hidden rounded-2xl mx-2 bg-zinc-950 border border-white/[0.07] shadow-2xl">
@@ -131,7 +131,7 @@ const LeftNav = ({ set }) => {
         >
           <button
             onClick={() => setIsCollapsed((prev) => !prev)}
-            className="cursor-pointer flex items-center justify-center w-5 h-5 rounded-lg bg-white/[0.06] text-zinc-500 hover:bg-white/10 hover:text-zinc-300 transition-all duration-150"
+            className="cursor-pointer flex items-center justify-center w-5 h-5 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-200 transition-all duration-150"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {isCollapsed
@@ -143,8 +143,12 @@ const LeftNav = ({ set }) => {
 
         {/* ── Scrollable nav ── */}
         <nav
-          className="flex-1 overflow-y-auto py-1 px-2 scrollbar-none"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+  className="sidebar-scroll flex-1 overflow-y-auto py-1 px-2"
+            style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "#52525b transparent",
+          }}        // className="flex-1 overflow-y-auto py-1 px-2 scrollbar-none"
+          // style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {filteredMenuItems.map((item, index) => {
             const isActive   = isMenuActive(item.path);
@@ -170,7 +174,7 @@ const LeftNav = ({ set }) => {
                   }}
                   title={isCollapsed ? label : undefined}
                   className={`relative flex items-center cursor-pointer rounded-xl border transition-all duration-150 group
-                    ${isCollapsed ? "justify-center px-0 py-[4px]" : "justify-between px-3 py-[9px]"}
+                    ${isCollapsed ? "justify-center px-2 py-[4px]" : "justify-between px-3 py-[9px]"}
                     ${isActive
                       ? "bg-white/[0.09] border-white/[0.12]"
                       : "border-transparent hover:bg-white/[0.04]"
@@ -248,7 +252,7 @@ const LeftNav = ({ set }) => {
         <div className="mx-3 flex-shrink-0 h-px bg-white/[0.06]" />
 
         {/* ── Logout ── */}
-        <div className="flex-shrink-0 px-2 py-3">
+        <div className="flex-shrink-0 px-2 py-1">
           <div
             onClick={handleLogout}
             title={isCollapsed ? "Logout" : undefined}
