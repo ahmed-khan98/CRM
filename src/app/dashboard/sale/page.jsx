@@ -192,10 +192,10 @@ export default function Client() {
                               <span className="text-sm font-bold text-gray-800 leading-none capitalize">
                                 {emp?.name || "-"}
                               </span>
-                              <span className="text-[12px] text-gray-500 mt-1">
+                              <span className="text-[12px] text-gray-500 ">
                                 {emp?.email || "-"}
                               </span>
-                              <span className="text-[12px] text-gray-500 mt-1">
+                              <span className="text-[12px] text-gray-500 ">
                                {emp?.phoneNo || "-"}
                               </span>
                             </div>
@@ -207,8 +207,7 @@ export default function Client() {
                         {/* <td className="p-4 whitespace-nowrap text-[13px] text-gray-600 capitalize">
                           {emp?.brandName || "-"}
                         </td> */}
-                           <td className="px-4 py-3 transition-colors">
-                          <div className="flex items-center gap-3">
+                           <td className="px-4 py-3 ">
                            
                             <div className="flex flex-col">
                               <span className="text-sm font-bold text-gray-800 leading-none capitalize">
@@ -217,7 +216,6 @@ export default function Client() {
                               <span className="text-[12px] text-gray-500 mt-1">
                                 {emp?.brandMark || "-"}
                               </span>
-                            </div>
                           </div>
                         </td>
                      

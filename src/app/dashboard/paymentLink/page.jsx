@@ -142,7 +142,7 @@ export default function Paymentlink() {
                       {PAYMENTLINKHEADERS?.map((h) => (
                         <th
                           key={h}
-                          className="sticky top-0 p-3 text-start text-xs font-medium text-zinc-300 bg-zinc-800 capitalize"
+                          className="sticky top-0 p-3 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800"
                         >
                           {h}
                         </th>

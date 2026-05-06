@@ -49,20 +49,6 @@ export default function Client() {
     setEditingAppointment(null);
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "scheduled":
-        return "text-blue-600 bg-blue-300";
-      case "completed":
-        return "text-green-600 bg-green-300";
-      case "missed":
-        return "text-red-600 bg-red-300";
-      case "cancelled":
-        return "text-gray-800 bg-gray-300";
-      default:
-        return "text-[#5f2760] bg-purple-300";
-    }
-  };
 
   const filteredNotifications = () => {
     if (!data?.data) return [];
@@ -219,10 +205,10 @@ export default function Client() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="group hover:bg-zinc-50 transition-all duration-200"
+                        className=" hover:bg-zinc-50  transition-colors"
                       >
                         {/* Sticky Client Info (Image + Name + Email) */}
-                        <td className="px-4 py-3 border-b border-gray-50 transition-colors">
+                        <td className="px-4 py-3 border-b border-gray-50 ">
                           <div className="flex items-center gap-3">
                             <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
                               <Image

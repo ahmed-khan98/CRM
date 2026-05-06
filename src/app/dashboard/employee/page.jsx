@@ -511,7 +511,7 @@ export default function AppointmentBooking() {
                           {index + 1}
                         </td>
 
-                        <td className="px-4 py-3 transition-colors">
+                        <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
                               <Image
@@ -542,7 +542,7 @@ export default function AppointmentBooking() {
                         <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
                           {emp?.phoneNo || "-"}
                         </td>
-                        <td className="px-3 py-2 transition-colors">
+                        <td className="px-3 py-2">
                             <div className="flex flex-col gap-1">
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(emp?.departmentId?.name)}`}

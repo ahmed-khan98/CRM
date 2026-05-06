@@ -63,23 +63,23 @@ export const LinkRow = memo(
         transition={{ duration: 0.2 }}
         className="hover:bg-gray-50 transition-colors relative "
       >
-        <td className="px-4 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
+        <td className="px-4 py-2 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
           {emp?.name || "-"}
         </td>
 
-        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600">
+        <td className="px-2 py-2 whitespace-nowrap text-[12px] font-normal text-gray-600">
           {emp?.email || "-"}
         </td>
 
-        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
+        <td className="px-2 py-2 whitespace-nowrap text-[12px] text-gray-800">
           {emp?.phoneNo || "-"}
         </td>
 
-        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
+        <td className="px-2 py-2 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
           {emp?.brandId?.name || "-"}
         </td>
 
-        <td className="px-2 py-1.5 ">
+        <td className="px-2 py-2 ">
           {Array.isArray(emp?.service) ? (
             emp.service.length > 0 ? (
               emp.service.map((tagItem, index) => (
@@ -100,7 +100,7 @@ export const LinkRow = memo(
           )}
         </td>
 
-        <td className="px-2 py-1.5  whitespace-nowrap">
+        <td className="px-2 py-2  whitespace-nowrap">
           <span className="text-[12px] text-gray-600">{emp?.merchantType}</span>
         </td>
 
@@ -116,12 +116,12 @@ export const LinkRow = memo(
               : "-"}
           </span>
         </td>
-        <td className="px-2 py-1.5 whitespace-nowrap">
+        <td className="px-2 py-2 whitespace-nowrap">
           <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-bold bg-zinc-200 text-zinc-800">
             <DollarSign className="text-amber-500 h-5 w-5" /> {emp?.amount}
           </span>
         </td>
-        <td className="px-2 py-1.5  whitespace-nowrap">
+        <td className="px-2 py-2  whitespace-nowrap">
           {emp?.createdAt && (
             <span className="text-[12px] text-gray-600">
               {formatDate(emp.createdAt)}
