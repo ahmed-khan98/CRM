@@ -62,6 +62,7 @@ const LeftNav = ({ set }) => {
       submenu: [
         { name: "My Attendance", path: "/dashboard/attendance" },
         { name: "Team Attendance", path: "/dashboard/attendance/departmentAttendence" },
+        { name: "My Break", path: "/dashboard/attendance/break" },
       ],
     },
   ];
