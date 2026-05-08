@@ -862,8 +862,8 @@ const TeamAttendence = () => {
 
       {/* ── Table ── */}
       <div className="flex-1 rounded-2xl border border-zinc-200 overflow-hidden bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] min-h-0">
-        <div  className=" overflow-y-auto max-h-[calc(100vh-180px)]"
-                style={{
+        <div className="overflow-auto h-full scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent"
+         style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#52525b transparent",
                 }}>

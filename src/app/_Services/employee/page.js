@@ -86,7 +86,7 @@ const employeeApi = createApiAuction.injectEndpoints({
           body: formData,
         };
       },
-      invalidatesTags: ['loggedUser'],
+      invalidatesTags: ["loggedUser",'allBreaks'],
     }),
     breakOut: builder.mutation({
       query: (formData) => {
@@ -96,7 +96,21 @@ const employeeApi = createApiAuction.injectEndpoints({
           body: formData,
         };
       },
-      invalidatesTags: ["todayUserAttendence", 'loggedUser'],
+      invalidatesTags: ["todayUserAttendence", "loggedUser", "allBreaks"],
+    }),
+    getBreaks: builder.query({
+      query: (params) => ({
+        url: "employee//my-breaks",
+        params: params,
+      }),
+      providesTags: ["allBreaks"],
+    }),
+    getDepartEmployeeBreak: builder.query({
+      query: (params) => ({
+        url: "employee/breaks",
+        params: params, 
+      }),
+      providesTags: ["allDepartAttendance"],
     }),
   }),
 });
@@ -110,4 +124,6 @@ export const {
   useUpdateStatusMutation,
   useBreakInMutation,
   useBreakOutMutation,
+  useGetBreaksQuery,
+  useGetDepartEmployeeBreakQuery,
 } = employeeApi;

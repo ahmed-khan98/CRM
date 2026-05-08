@@ -7,7 +7,7 @@ const AttendanceTable = React.memo(({ isFetching, tableData,activeFilter }) => {
    
 
      <div className="flex-1 rounded-2xl border border-zinc-200 overflow-hidden bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)]">
-            <div   className=" overflow-y-auto max-h-[calc(100vh-180px)]"
+                        <div   className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-180px)]"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#52525b transparent",

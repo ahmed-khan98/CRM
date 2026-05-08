@@ -90,10 +90,7 @@ export default function AppointmentBooking() {
           </div>
         </div>
 
-        <motion.div
-          variants={itemVariants}
-          className="shadow-lg rounded-2xl"
-        >
+        <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
           {data?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <Home className="h-16 w-16 text-gray-300 mbg-zinc-800" />
@@ -138,7 +135,6 @@ export default function AppointmentBooking() {
                             <Image
                               src={br?.image || "/placeholder.svg"}
                               alt="brand-logo"
-                              
                               width="100"
                               height="0"
                               className="rounded object-contain border border-purple-300"
@@ -152,26 +148,25 @@ export default function AppointmentBooking() {
                           {br?.departmentId?.name}
                         </td>
 
-                        <td className="px-4 py-1.5 whitespace-nowrap">
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleEdit(br)}
-                            className="inline-flex items-center cursor-pointer mx-1 px-3 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-900 transition-colors"
-                          >
-                            <Edit className="h-4 w-4" />
-                            {/* Edit */}
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setConfirmDelete(br._id)}
-                            className="inline-flex items-center cursor-pointer px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                          >
-                            <DeleteIcon className="h-4 w-4" />
-
-                            {/* Edit */}
-                          </motion.button>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <motion.button
+                              whileHover={{ scale: 1.08 }}
+                              whileTap={{ scale: 0.93 }}
+                              onClick={() => handleEdit(br)}
+                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                            >
+                              <Edit className="h-3.5 w-3.5" />
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.08 }}
+                              whileTap={{ scale: 0.93 }}
+                              onClick={() => setConfirmDelete(br._id)}
+                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
+                            >
+                              <DeleteIcon className="h-3.5 w-3.5" />
+                            </motion.button>
+                          </div>
                         </td>
                       </motion.tr>
                     ))}

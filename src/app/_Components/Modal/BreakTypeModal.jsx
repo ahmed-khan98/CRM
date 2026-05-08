@@ -24,7 +24,6 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
       const res = await breakIn({ attendanceId: attendence?._id,...data }).unwrap();
       if (res.success) {
         closeModal();
-        console.log(res, "-------->>>res");
         dispatch(
           setActivity({
             activityStatus: res?.data?.activityStatus,
@@ -35,7 +34,6 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
         );
       }
     } catch (err) {
-      console.log(err, "-------->>>err");
       toast.error(err?.data?.message || "break in failed");
     }
   };

@@ -159,7 +159,7 @@ export default function Paymentlink() {
             </div>
           )}
 
-          <MemoPagination meta={meta} onPageChange={onPageChange} />
+         {!isAllLoading  && <MemoPagination meta={meta} onPageChange={onPageChange} />}
         </motion.div>
 
         {confirmDelete && (

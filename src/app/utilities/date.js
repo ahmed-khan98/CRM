@@ -1,7 +1,20 @@
+import moment from "moment-timezone";
+
+const TZ = "Asia/Karachi";
+
+export const toLocal = (utcStr) =>
+  utcStr ? moment(utcStr).tz(TZ).format("hh:mm A") : "--:--";
+export const formatDuration = (minutes) => {
+  if (minutes === undefined || minutes === null) return "—";
+  if (minutes === 0) return "0m";
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+};
 export const formatDate = (dateString) => {
-   if (!dateString || dateString.trim() === '') {
-        return 'N/A';
-    }
+  if (!dateString || dateString.trim() === "") {
+    return "N/A";
+  }
   const date = new Date(dateString);
 
   const isMidnightUTC = date.getUTCHours() === 0 && date.getUTCMinutes() === 0;
@@ -25,40 +38,44 @@ export const formatDate = (dateString) => {
   }).format(date);
 };
 
+export const formatOnlyDate = (utcStr) =>
+  utcStr ? moment(utcStr).tz(TZ).format("DD MMM") : "—";
 
- export const timeAgo=(dateString)=> {
-    const now = new Date();
-    const past = new Date(dateString);
-    const diffInSeconds = Math.floor((now - past) / 1000);
-  
-    const intervals = [
-      // { label: 'year', seconds: 31536000 },
-      // { label: 'month', seconds: 2592000 },
-      // { label: 'week', seconds: 604800 },
-      { label: 'day', seconds: 86400 },
-      { label: 'hr', seconds: 3600 },
-      { label: 'min', seconds: 60 },
-      { label: 's', seconds: 1 },
-    ];
-  
-    for (const interval of intervals) {
-      const count = Math.floor(diffInSeconds / interval.seconds);
-      if (count > 0) {
-        return `${count} ${interval.label}${count > 1 ? 's ago' : ''}`;
-      }
+export const formatDay = (utcStr) =>
+  utcStr ? moment(utcStr).tz(TZ).format("ddd") : "";
+
+export const timeAgo = (dateString) => {
+  const now = new Date();
+  const past = new Date(dateString);
+  const diffInSeconds = Math.floor((now - past) / 1000);
+
+  const intervals = [
+    // { label: 'year', seconds: 31536000 },
+    // { label: 'month', seconds: 2592000 },
+    // { label: 'week', seconds: 604800 },
+    { label: "day", seconds: 86400 },
+    { label: "hr", seconds: 3600 },
+    { label: "min", seconds: 60 },
+    { label: "s", seconds: 1 },
+  ];
+
+  for (const interval of intervals) {
+    const count = Math.floor(diffInSeconds / interval.seconds);
+    if (count > 0) {
+      return `${count} ${interval.label}${count > 1 ? "s ago" : ""}`;
     }
-  
-    return 'just now';
   }
-  
-  export const formatTime12Hour = (timeString) => {
-    const [hourStr, minuteStr] = timeString.split(":");
-    let hour = parseInt(hourStr, 10);
-    const minute = parseInt(minuteStr, 10);
-  
-    const ampm = hour >= 12 ? "PM" : "AM";
-    hour = hour % 12 || 12; // convert 0 -> 12 and 13-23 -> 1-11
-  
-    return `${hour}:${minute.toString().padStart(2, "0")} ${ampm}`;
-  };
-  
+
+  return "just now";
+};
+
+export const formatTime12Hour = (timeString) => {
+  const [hourStr, minuteStr] = timeString.split(":");
+  let hour = parseInt(hourStr, 10);
+  const minute = parseInt(minuteStr, 10);
+
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12; // convert 0 -> 12 and 13-23 -> 1-11
+
+  return `${hour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+};

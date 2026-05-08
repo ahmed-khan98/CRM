@@ -293,8 +293,27 @@ export default function Client() {
                           </span>
                           {/* </div> */}
                         </td>
-
-                        <td className="pr-2 py-1.5 whitespace-nowrap">
+ <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.93 }}
+                          onClick={() => handleEdit(emp)}
+                          className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                        >
+                          <Edit className="h-3.5 w-3.5" />
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.93 }}
+                          onClick={() => setConfirmDelete(emp._id)}
+                          className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
+                        >
+                          <DeleteIcon className="h-3.5 w-3.5" />
+                        </motion.button>
+                      </div>
+                    </td>
+                        {/* <td className="pr-2 py-1.5 whitespace-nowrap">
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -311,9 +330,8 @@ export default function Client() {
                           >
                             <DeleteIcon className="h-4 w-4" />
 
-                            {/* Edit */}
                           </motion.button>
-                        </td>
+                        </td> */}
                       </motion.tr>
                     ))}
                   </tbody>

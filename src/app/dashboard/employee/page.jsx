@@ -450,7 +450,7 @@ export default function AppointmentBooking() {
               <button
                 key={index}
                 onClick={() => setActiveFilter(e)}
-                className={`px-4 py-1 text-sm rounded-full cursor-pointer transition-all capitalize ${
+                className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${
                   activeFilter === e
                     ? "bg-zinc-800 text-white shadow-md"
                     : "text-gray-600 hover:bg-gray-100"
