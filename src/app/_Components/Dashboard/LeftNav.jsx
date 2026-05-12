@@ -72,11 +72,6 @@ const LeftNav = ({ set }) => {
     },
   ];
 
-  // const USER_ALLOWED_TABS = ["Dashboard", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
-  // const DEP_ADMIN_ALLOWED_TABS = ["Dashboard", "Brand","Employee", "Announcement", "Client", "leads", "Email", "Payment Link",'All Months', "Sales", "My Account", "Attendance","Team Attendance",'Team Break'];
-  // const HR_ADMIN_ALLOWED_TABS = ["Dashboard",  "Department", "Brand","Employee", "Announcement", "My Account", "Attendance","Team Attendance",'Team Break'];
-  // const FINANCE_ADMIN_ALLOWED_TABS = ["Dashboard", "Payment Link",'All Months', "Sales", "My Account",''];
-
 const filteredMenuItems = menuItems
   .filter((item) => {
     if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
@@ -131,7 +126,7 @@ const filteredMenuItems = menuItems
     /* ── Outer wrapper: width transitions here ── */
     <div
     className={`h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out
-        ${isCollapsed ? "w-[76px]" : "w-[260px]"}`}
+        ${isCollapsed ? "w-[76px]" : "w-[240px]"}`}
     
     >
 <div className="flex flex-col min-h-0 flex-1 overflow-hidden rounded-2xl mx-2 bg-zinc-950 border border-white/[0.07] shadow-2xl">
@@ -139,7 +134,7 @@ const filteredMenuItems = menuItems
         <div className="h-[1.5px] w-full flex-shrink-0 bg-gradient-to-r from-transparent via-white/30 to-white/5" />
 
         {/* ── Header: logo / toggle button ── */}
-        <div className={`flex-shrink-0 flex items-center px-2 py-2
+        <div className={`flex-shrink-0 flex items-center px-2 py-1
           ${isCollapsed ? "justify-center" : "justify-end"}`}
         >
           <button
@@ -170,7 +165,7 @@ const filteredMenuItems = menuItems
             const label      = sidebars?.data?.[index]?.title ?? item?.name;
 
             return (
-              <div key={index} className="mb-[2px]">
+              <div key={index} className="mb-[1px]">
                 {/* ── Main row ── */}
                 <div
                   onClick={() => {
@@ -187,7 +182,7 @@ const filteredMenuItems = menuItems
                   }}
                   title={isCollapsed ? label : undefined}
                   className={`relative flex items-center cursor-pointer rounded-xl border transition-all duration-150 group
-                    ${isCollapsed ? "justify-center px-2 py-[4px]" : "justify-between px-3 py-[9px]"}
+                    ${isCollapsed ? "justify-center px-2 py-[2px]" : "justify-between px-3 py-1 my-1"}
                     ${isActive
                       ? "bg-white/[0.09] border-white/[0.12]"
                       : "border-transparent hover:bg-white/[0.04]"
@@ -198,7 +193,7 @@ const filteredMenuItems = menuItems
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[18px] bg-white rounded-r-full" />
                   )}
 
-                  <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-3"}`}>
+                  <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-2"}`}>
                     {/* Icon */}
                     <span className={`flex items-center justify-center w-7 h-7 rounded-lg transition-all duration-150 flex-shrink-0
                       ${isActive ? "bg-white/15 text-white" : "bg-white/5 text-zinc-500 group-hover:text-zinc-300"}`}
@@ -209,7 +204,7 @@ const filteredMenuItems = menuItems
                     {/* Label — hidden when collapsed */}
                     {!isCollapsed && (
                       <>
-                        <span className={`text-[13px] font-semibold capitalize tracking-wide leading-none transition-colors duration-150 whitespace-nowrap
+                        <span className={`text-[12px] font-normal capitalize tracking-wide leading-none transition-colors duration-150 whitespace-nowrap
                           ${isActive ? "text-zinc-100" : "text-zinc-500 group-hover:text-zinc-300"}`}
                         >
                           {label}
@@ -233,23 +228,23 @@ const filteredMenuItems = menuItems
 
                 {/* ── Submenu (hidden when collapsed) ── */}
                 {hasSubmenu && isExpanded && !isCollapsed && (
-                  <div className="ml-4 mt-[2px] mb-1 pl-3 py-1 space-y-[2px] border-l border-white/[0.07]">
+                  <div className="ml-3 mb-1 pl-2 py-1 space-y-[1px] border-l border-white/[0.07]">
                     {item.submenu.map((subItem, subIndex) => {
                       const subActive = isSubmenuActive(subItem.path);
                       return (
                         <div
                           key={subIndex}
                           onClick={() => { if (set) set(); router.push(subItem.path); }}
-                          className={`flex items-center gap-2 py-[7px] px-3 rounded-lg cursor-pointer transition-all duration-150 border
+                          className={`flex items-center gap-2 py-1.5 px-3 rounded-lg cursor-pointer transition-all duration-150 border
                             ${subActive
                               ? "bg-white/[0.08] border-white/10 text-zinc-200"
                               : "border-transparent text-zinc-600 hover:bg-white/[0.04] hover:text-zinc-400"
                             }`}
                         >
-                          <span className={subActive ? "text-zinc-300" : "text-zinc-700"}>
+                          <span className={subActive ? "text-zinc-300" : "text-zinc-600"}>
                             {subItem.icon}
                           </span>
-                          <span className="text-xs font-semibold tracking-wide">{subItem.name}</span>
+                          <span className="text-xs font-normal tracking-wide">{subItem.name}</span>
                           {subActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" />}
                         </div>
                       );
@@ -270,13 +265,13 @@ const filteredMenuItems = menuItems
             onClick={handleLogout}
             title={isCollapsed ? "Logout" : undefined}
             className={`flex items-center cursor-pointer rounded-xl border border-transparent hover:bg-white/5 hover:border-white/[0.08] transition-all duration-150 group
-              ${isCollapsed ? "justify-center px-0 py-[9px]" : "gap-3 px-3 py-[9px]"}`}
+              ${isCollapsed ? "justify-center px-0 py-[4px]" : "gap-3 px-3 py-1"}`}
           >
             <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-500 group-hover:text-zinc-300 flex-shrink-0">
               <LogOut className="w-3.5 h-3.5" />
             </span>
             {!isCollapsed && (
-              <span className="text-[13px] font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors whitespace-nowrap">
+              <span className="text-[12px] font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors whitespace-nowrap">
                 Logout
               </span>
             )}

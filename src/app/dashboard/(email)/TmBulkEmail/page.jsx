@@ -65,11 +65,11 @@ const BulkEmailsPage = () => {
         {/* Header bm */}
         <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div className="flex items-center gap-4 mb-4 md:mb-0">
-            <div className="bg-purple-100 p-3 rounded-full">
+            <div className="bg-zinc-200 p-3 rounded-full">
               <Mails className="h-7 w-7 text-gray-800" />
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold bg-zinc-800">
+              <h1 className="text-lg md:text-xl font-bold">
                Trademark Bulk Email Dashboard
               </h1>
               <p className="text-gray-500 text-sm mt-1">
