@@ -1,10 +1,9 @@
-import { BaseUrl } from '@/app/_Services/baseUrl';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import Cookies from 'js-cookie';
 
 // Step 1: Original base query
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: BaseUrl,
+  baseUrl: process.env.NEXT_PUBLIC_API_URL,
   credentials: 'include',
   prepareHeaders: (headers) => {
     const token = Cookies.get("token");

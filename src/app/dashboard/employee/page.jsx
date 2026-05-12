@@ -567,7 +567,9 @@ export default function AppointmentBooking() {
 
                         <td className="px-1 whitespace-normal text-center">
                            <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
+                           onClick={() => handleStatus(emp?._id)}
+                           disabled={statusLoading}
+          className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
         >
           <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
           {statusLoading && statusArgs?.id === emp?._id ? (

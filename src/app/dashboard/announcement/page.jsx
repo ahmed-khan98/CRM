@@ -13,14 +13,6 @@ import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { formatDate } from "@/app/utilities/date";
 import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/AttendenceHeader";
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5 },
-  },
-};
 
 export default function Announcement() {
   const [editingAppointment, setEditingAppointment] = useState(null);

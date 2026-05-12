@@ -8,6 +8,7 @@ import {
   LayoutDashboard, BadgeDollarSign, ChartBar, Mail, LayoutPanelTop,
   AtSign, List, Mails, Building, Link, MegaphoneIcon,
   ArrowLeft, ArrowRight, CalendarDays,
+  Coffee,
 } from "lucide-react";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
@@ -27,61 +28,72 @@ const LeftNav = ({ set }) => {
   const user = userCookie ? JSON.parse(userCookie) : null;
 
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, path: ["/dashboard/dashboardcount"] },
-    { name: "Department", icon: <Building className="w-4 h-4" />, path: ["/dashboard/department"] },
-    { name: "Brand", icon: <Home className="w-4 h-4" />, path: ["/dashboard/brand"] },
-    { name: "Announcement", icon: <MegaphoneIcon className="w-4 h-4" />, path: ["/dashboard/announcement"] },
-    { name: "Employee", icon: <Users className="w-4 h-4" />, path: ["/dashboard/employee"] },
-    { name: "Client", icon: <User className="w-4 h-4" />, path: ["/dashboard/client"] },
-    { name: "leads", icon: <ChartBar className="w-4 h-4" />, path: ["/dashboard/lead"] },
+    { name: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, path: ["/dashboard/dashboardcount"],roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'] },
+    { name: "Department", icon: <Building className="w-4 h-4" />, path: ["/dashboard/department"],roles: ["HR_ADMIN",] },
+    { name: "Brand", icon: <Home className="w-4 h-4" />, path: ["/dashboard/brand"],roles: ["HR_ADMIN",'DEP_ADMIN'] },
+    { name: "Announcement", icon: <MegaphoneIcon className="w-4 h-4" />, path: ["/dashboard/announcement"],roles: ["HR_ADMIN",'DEP_ADMIN','FINANCE_ADMIN'] },
+    { name: "Employee", icon: <Users className="w-4 h-4" />, path: ["/dashboard/employee"],roles: ["HR_ADMIN",'DEP_ADMIN'] },
+    { name: "Client", icon: <User className="w-4 h-4" />, path: ["/dashboard/client"],roles: ["USER",'DEP_ADMIN'] },
+    { name: "leads", icon: <ChartBar className="w-4 h-4" />, path: ["/dashboard/lead"],roles: ["USER","DEP_ADMIN",] },
     {
       name: "Payment Link",
       icon: <Link className="w-4 h-4" />,
       path: ["/dashboard/paymentLink", "/dashboard/createLeadPayment", "/dashboard/createPaymentLink"],
+      roles: ["USER",'FINANCE_ADMIN','DEP_ADMIN']
     },
     {
       name: "Email",
       icon: <Mail className="w-4 h-4" />,
       path: ["/dashboard/EmailTemplate", "/dashboard/BrandEmail", "/dashboard/SendEmail", "/dashboard/EmailList", "/dashboard/TmEmailList", "/dashboard/BulkEmail", "/dashboard/SentBulkEmail", "/dashboard/SentTMBulkEmail"],
+      roles: ["USER",'DEP_ADMIN'],
       submenu: [
-        { name: "Brand Email", path: "/dashboard/BrandEmail", icon: <AtSign className="w-3.5 h-3.5" /> },
-        { name: "Email Template", path: "/dashboard/EmailTemplate", icon: <LayoutPanelTop className="w-3.5 h-3.5" /> },
-        { name: "Email List", path: "/dashboard/EmailList", icon: <List className="w-3.5 h-3.5" /> },
-        { name: "TM Email List", path: "/dashboard/TmEmailList", icon: <List className="w-3.5 h-3.5" /> },
-        { name: "Bulk Email", path: "/dashboard/BulkEmail", icon: <Mails className="w-3.5 h-3.5" /> },
-        { name: "TM Bulk Email", path: "/dashboard/TmBulkEmail", icon: <Mails className="w-3.5 h-3.5" /> },
+        { name: "Brand Email", path: "/dashboard/BrandEmail", icon: <AtSign className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
+        { name: "Email Template", path: "/dashboard/EmailTemplate", icon: <LayoutPanelTop className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
+        { name: "Email List", path: "/dashboard/EmailList", icon: <List className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
+        { name: "TM Email List", path: "/dashboard/TmEmailList", icon: <List className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
+        { name: "Bulk Email", path: "/dashboard/BulkEmail", icon: <Mails className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
+        { name: "TM Bulk Email", path: "/dashboard/TmBulkEmail", icon: <Mails className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
       ],
     },
-    { name: "All Months", icon: <Calendar className="w-4 h-4" />, path: ["/dashboard/month"] },
-    { name: "Sales", icon: <BadgeDollarSign className="w-4 h-4" />, path: ["/dashboard/sale"] },
-    { name: "My Account", icon: <User className="w-4 h-4" />, path: ["/dashboard/profile", "/dashboard/changepassword"] },
+    { name: "All Months", icon: <Calendar className="w-4 h-4" />, path: ["/dashboard/month"] ,roles: ["DEP_ADMIN","HR_ADMIN",'FINANCE_ADMIN']},
+    { name: "Sales", icon: <BadgeDollarSign className="w-4 h-4" />, path: ["/dashboard/sale"],roles: ["DEP_ADMIN",'FINANCE_ADMIN'] },
+    { name: "My Account", icon: <User className="w-4 h-4" />, path: ["/dashboard/profile", "/dashboard/changepassword"],roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'] },
     {
       name: "Attendance",
       icon: <CalendarDays  className="w-4 h-4" />,
-      path: ["/dashboard/attendance", "/dashboard/attendance/departmentAttendence"],
+      path: ["/dashboard/attendance", "/dashboard/attendance"],
+      roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'],
       submenu: [
-        { name: "My Attendance", path: "/dashboard/attendance" },
-        { name: "Team Attendance", path: "/dashboard/attendance/departmentAttendence" },
-        { name: "My Break", path: "/dashboard/attendance/break" },
+        { name: "My Attendance", path: "/dashboard/attendance" ,roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'], icon: <CalendarDays className="w-3.5 h-3.5" />},
+        { name: "Team Attendance", path: "/dashboard/attendance/teamAttendence" ,roles: ["HR_ADMIN",'DEP_ADMIN'], icon: <CalendarDays className="w-3.5 h-3.5" />},
+        { name: "My Break", path: "/dashboard/attendance/break" ,roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'], icon: <Coffee className="w-3.5 h-3.5" />},
+        { name: "Team Break", path: "/dashboard/attendance/teamBreak" ,roles: ["HR_ADMIN",'DEP_ADMIN'], icon: <Coffee className="w-3.5 h-3.5" />},
       ],
     },
   ];
 
-  const USER_ALLOWED_TABS = ["Dashboard", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
-  const DEP_ADMIN_ALLOWED_TABS = ["Dashboard", "Brand","Employee", "Announcement", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
-  const HR_ADMIN_ALLOWED_TABS = ["Dashboard",  "Department", "Brand","Employee", "Announcement", "My Account", "Attendance"];
-  const FINANCE_ADMIN_ALLOWED_TABS = ["Dashboard", "Payment Link", "Sales", "My Account", "Attendance"];
+  // const USER_ALLOWED_TABS = ["Dashboard", "Client", "leads", "Email", "Payment Link", "Sales", "My Account", "Attendance"];
+  // const DEP_ADMIN_ALLOWED_TABS = ["Dashboard", "Brand","Employee", "Announcement", "Client", "leads", "Email", "Payment Link",'All Months', "Sales", "My Account", "Attendance","Team Attendance",'Team Break'];
+  // const HR_ADMIN_ALLOWED_TABS = ["Dashboard",  "Department", "Brand","Employee", "Announcement", "My Account", "Attendance","Team Attendance",'Team Break'];
+  // const FINANCE_ADMIN_ALLOWED_TABS = ["Dashboard", "Payment Link",'All Months', "Sales", "My Account",''];
 
-  const filteredMenuItems =
-    user?.role === "USER"
-      ? menuItems.filter((item) => USER_ALLOWED_TABS.includes(item.name))
-      : user?.role === "DEP_ADMIN"
-        ? menuItems.filter((item) => DEP_ADMIN_ALLOWED_TABS.includes(item.name))
-      : user?.role === "HR_ADMIN"
-        ? menuItems.filter((item) => HR_ADMIN_ALLOWED_TABS.includes(item.name))
-      : user?.role === "FINANCE_ADMIN"
-        ? menuItems.filter((item) => FINANCE_ADMIN_ALLOWED_TABS.includes(item.name))
-        : menuItems;
+const filteredMenuItems = menuItems
+  .filter((item) => {
+    if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
+    
+    return item.roles?.includes(user?.role);
+  })
+  .map((item) => {
+    if (item.submenu) {
+      const filteredSub = item.submenu.filter((sub) => {
+        if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
+        return sub.roles?.includes(user?.role);
+      });
+
+      return { ...item, submenu: filteredSub };
+    }
+    return item;
+  });
 
   const clearExtensionAndRedirect = () => {
     if (typeof window !== "undefined" && window.chrome && window.chrome.runtime) {
@@ -338,10 +350,10 @@ export default LeftNav;
 //     {
 //       name: "Attendance",
 //       icon: <CalendarDays  className="w-4 h-4" />,
-//       path: ["/dashboard/attendance", "/dashboard/attendance/departmentAttendence"],
+//       path: ["/dashboard/attendance", "/dashboard/attendance/teamAttendence"],
 //       submenu: [
 //         { name: "My Attendance", path: "/dashboard/attendance" },
-//         { name: "Team Attendance", path: "/dashboard/attendance/departmentAttendence" },
+//         { name: "Team Attendance", path: "/dashboard/attendance/teamAttendence" },
 //       ],
 //     },
 //   ];

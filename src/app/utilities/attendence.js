@@ -9,6 +9,7 @@ import {
   Bath,
   Monitor,
   HandHeart,
+  UtensilsCrossed,
 } from "lucide-react";
 import moment from "moment-timezone";
 
@@ -223,6 +224,15 @@ const STATUS_CONFIG = {
     border: "border-purple-200",
     dot: "bg-purple-400",
   },
+  MEAL:{
+    label: "Meal",
+    icon: UtensilsCrossed,
+    bg: "bg-green-50",
+    text: "text-green-700",
+    border: "border-green-200",
+    dot: "bg-green-400",
+    
+  }
 };
 
 export const getStatusConfig = (s) =>

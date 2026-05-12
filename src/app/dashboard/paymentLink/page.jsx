@@ -34,7 +34,7 @@ export default function Paymentlink() {
 
   // pagination state
   const [page, setPage] = useState(1);
-  const limit = 5;
+  const limit = 10;
 
   useEffect(() => {
     setPage(1);

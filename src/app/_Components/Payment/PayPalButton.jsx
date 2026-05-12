@@ -1,5 +1,4 @@
 "use client";
-import { BaseUrl } from '@/app/_Services/baseUrl';
 import { useEffect, useRef, useState } from "react";
 import { AlertCircle, CheckCircle } from "lucide-react";
 import toast from "react-hot-toast";
@@ -66,7 +65,7 @@ const PayPalButton = ({
                 let payload = { id };
 
                 const response = await fetch(
-                  `${BaseUrl}paymentlink/pay-with-paypal`,
+                  `${process.env.NEXT_PUBLIC_API_URL}paymentlink/pay-with-paypal`,
                   {
                     method: "POST",
                     headers: {
@@ -101,7 +100,7 @@ const PayPalButton = ({
                 const token = Cookies.get("token");
                 let payload = { id };
                 const response = await fetch(
-                  `${BaseUrl}paymentlink/pay-with-paypal/${data.orderID}/charge`,
+                  `${process.env.NEXT_PUBLIC_API_URL}paymentlink/pay-with-paypal/${data.orderID}/charge`,
                   {
                     method: "POST",
                     // headers: {
@@ -199,28 +198,7 @@ const PayPalButton = ({
 
   return (
     <div className={`relative ${className}`}>
-      {/* Amount Display */}
-      {/* <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 my-2 mbg-zinc-800">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-medium text-blue-800">Payment Amount</h3>
-            <p className="text-xs text-blue-600 mt-1">
-              {type === "missed_appointment_payment"
-                ? "Appointment Fee"
-                : type === "auction_payment"
-                  ? "Auction Payment"
-                  : type === "penalized_product_payment"
-                    ? "Penalty Fee"
-                    : "Store Creation Fee"}
-            </p>
-          </div>
-          <div className="text-right">
-            <span className="text-2xl font-bold text-blue-800">${amount}</span>
-          </div>
-        </div>
-      </div> */}
-
-      {/* PayPal Button Container */}
+    
       <div className="relative">
         {isLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center rounded-xl">
@@ -265,104 +243,3 @@ const PayPalButton = ({
 };
 
 export default PayPalButton;
-
-// PayPalButton.js (Changes only in useEffect)
-
-// ... imports and state are same
-
-// useEffect(() => {
-//     const loadPayPalScript = (clientId) => { // clientId argument add karein
-//         // ... (existing window.paypal check)
-
-//         const script = document.createElement("script")
-//         // Dynamically load Client ID
-//         script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
-//         // ... (rest of the script loading logic)
-//     }
-
-//     const fetchLinkDetailsAndInitPayPal = async () => {
-//         setIsLoading(true);
-//         // Step 1: Backend Route B ko call karein
-//         const response = await fetch(`/api/v1/payment/public/${id}`); // Assuming 'id' is linkId
-//         const data = await response.json();
-
-//         if (!response.ok) {
-//             setError(data.message || "Failed to load payment link details");
-//             setIsLoading(false);
-//             return;
-//         }
-
-//         const { data: linkData, paypalClientId } = data;
-
-//         // Step 2: PayPal SDK load karein
-//         loadPayPalScript(paypalClientId);
-
-//         // *Note: Aapko is component ke props mein 'amount' ki zaroorat nahi padegi,
-//         // *lekin UI ke liye aap isko 'linkData.amount' se set kar sakte hain.
-//         // *Apne component state mein linkData ko save karein.
-//     }
-
-//     // fetchLinkDetailsAndInitPayPal();
-//     // ⚠️ Agar aap link details ko parent component mein fetch karte hain, to yeh logic simplify ho jayega.
-
-//     const initializePayPal = () => {
-//         // ... (existing checks)
-
-//         window.paypal
-//             .Buttons({
-//                 createOrder: async () => {
-//                     setIsProcessing(true)
-//                     try {
-//                         // Backend Route C ko call karein (No need for token/payload here)
-//                         const response = await fetch(`/api/v1/payment/public/${id}/create-order`, {
-//                              method: "POST",
-//                              headers: { "Content-Type": "application/json" },
-//                              body: JSON.stringify({ linkId: id }) // Only send linkId
-//                         })
-
-//                         const data = await response.json()
-//                         if (!response.ok) {
-//                             throw new Error(data.message || "Failed to create PayPal order")
-//                         }
-
-//                         return data.data.transactionId // PayPal Order ID return karein
-//                     } catch (error) {
-//                         // ... (error handling)
-//                         throw error
-//                     }
-//                 },
-
-//                 onApprove: async (data) => {
-//                     try {
-//                         // ⚠️ Yahan aapko link details se merchantType chahiye hoga.
-//                         // Assume karein ki aapne link details component state mein save kiye hain.
-//                         // const merchantType = linkDetails.merchantType;
-
-//                         const response = await fetch(`/api/v1/payment/public/${id}/charge`, {
-//                             method: "POST",
-//                             headers: { "Content-Type": "application/json" },
-//                             body: JSON.stringify({
-//                                 orderID: data.orderID,
-//                                 // merchantType: merchantType // Agar aapko ye zaroori ho to body mein bhejein
-//                             }),
-//                         })
-
-//                         // ... (rest of onApprove logic)
-
-//                     } catch (error) {
-//                         // ... (error handling)
-//                     }
-//                 },
-
-//                 // ... (onError, onCancel, style are same)
-//             })
-//             .render(paypalRef.current)
-
-//         setIsLoading(false)
-//     }
-
-//     // Is logic ko update karein ki yeh link ID ke hisaab se payment data fetch kare
-//     // Abhi ke liye, main assume kar raha hun ki aapka parent component fetch karega.
-//     // Agar nahi, to fetchLinkDetailsAndInitPayPal ko call karein.
-
-// }, [type, id, onSuccess, onError])

@@ -1,9 +1,15 @@
 "use client";
 import moment from "moment-timezone";
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import {
-    Cigarette ,
-    Bath,
+  Cigarette,
+  Bath,
   Clock,
   Coffee,
   UtensilsCrossed,
@@ -15,55 +21,69 @@ import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/Attenden
 import FilterBar from "@/app/_Components/attendence/MyAttendance/FilterBar";
 import StatsSection from "@/app/_Components/attendence/StatsSection";
 import ActiveFilterShowing from "@/app/_Components/attendence/MyAttendance/ActiveFilterShowing";
-import { getStatCards, getStatusConfig, PALETTES } from "@/app/utilities/attendence";
+import {
+  getStatCards,
+  getStatusConfig,
+  PALETTES,
+} from "@/app/utilities/attendence";
 import BreakTable from "@/app/_Components/break/BreakTable";
+import FiltersBar from "@/app/_Components/attendence/TeamAttendance/FilterBar";
+import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
 const TZ = "Asia/Karachi";
 
 export default function BreakPage() {
-  const [viewType, setViewType] = useState("current_month");
+  const [viewType, setViewType] = useState("today");
+  const [selectedEmployee, setSelectedEmployee] = useState("");
   const [customRange, setCustomRange] = useState({ start: "", end: "" });
-  const [debouncedCustomRange, setDebouncedCustomRange] = useState(customRange);
-  const [activeFilter, setActiveFilter] = useState(null); 
+  const [activeFilter, setActiveFilter] = useState(null);
   const [page, setPage] = useState(1);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(null);
   const abortRef = useRef(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedCustomRange(customRange);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [customRange]);
+  const { data: employees, isFetching: isEmployeesFetching } =
+    useAllEmployeesQuery();
 
   /* ── Build query params ── */
+  console.log("Selected Employee:", selectedEmployee);
   const queryParams = useMemo(() => {
     const base = { page, limit: 5 };
-    if (viewType === "current_month") {
-      // send month/year so backend filters; adjust to your actual API contract
-      return {
+    const now = moment().tz("Asia/Karachi");
+    let params = { ...base };
+
+    if (viewType === "today") {
+      const shiftDate =
+        now.hour() < 8
+          ? now.subtract(1, "days").format("YYYY-MM-DD")
+          : now.format("YYYY-MM-DD");
+      params = {
+        ...base,
+        startDate: shiftDate,
+        endDate: shiftDate,
+      };
+    } else if (viewType === "month") {
+      params = {
         ...base,
         startDate: moment().tz(TZ).startOf("month").format("YYYY-MM-DD"),
         endDate: moment().tz(TZ).endOf("month").format("YYYY-MM-DD"),
       };
-    }
-
-    if (viewType === "custom_range") {
-      if (!debouncedCustomRange.start) return null;
-      return {
+    } else if (viewType === "custom") {
+      if (!customRange.start) return null;
+      params = {
         ...base,
-        startDate: debouncedCustomRange.start,
-        endDate: debouncedCustomRange.end || debouncedCustomRange.start,
+        startDate: customRange.start,
+        endDate: customRange.end || customRange.start,
       };
     }
 
-    return base;
-  }, [viewType, debouncedCustomRange, page]);
+    if (selectedEmployee) {
+      params.userId = selectedEmployee;
+    }
+
+    return params;
+  }, [viewType, customRange, selectedEmployee, page]);
 
   /* ── Fetch ── */
   useEffect(() => {
-    if (!queryParams) return;
     if (abortRef.current) abortRef.current.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -82,7 +102,7 @@ export default function BreakPage() {
         ).toString();
 
         // ── Replace this URL with your actual API endpoint ──
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}employee/my-breaks?${search}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}employee/breaks?${search}`, {
           signal: controller.signal,
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
@@ -105,7 +125,17 @@ export default function BreakPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [viewType, customRange]);
+  }, [viewType, customRange, selectedEmployee]);
+
+  const employeeOptions = useMemo(() => {
+    const options =
+      employees?.data?.map((emp) => ({
+        value: emp._id,
+        label: emp.fullName,
+        designation: emp.designation,
+      })) || [];
+    return [{ value: "", label: "All Employees (Department)" }, ...options];
+  }, [employees]);
 
   const items = data?.items ?? [];
   const meta = data?.meta ?? null;
@@ -116,12 +146,16 @@ export default function BreakPage() {
     return {
       total: meta?.total ?? items.length,
       smoking: items.filter((i) => i.type?.toUpperCase() === "SMOKING").length,
-      'rest room': items.filter((i) => i.type?.toUpperCase() === "REST ROOM").length,
+      "rest room": items.filter((i) => i.type?.toUpperCase() === "REST ROOM")
+        .length,
       tea: items.filter((i) => i.type?.toUpperCase() === "TEA").length,
       meal: items.filter((i) => i.type?.toUpperCase() === "MEAL").length,
       prayer: items.filter((i) => i.type?.toUpperCase() === "PRAYER").length,
-      official: items.filter((i) => i.type?.toUpperCase() === "OFFICIAL").length,
-      "system idle": items.filter((i) => i.type?.toUpperCase() === "SYSTEM IDLE").length,
+      official: items.filter((i) => i.type?.toUpperCase() === "OFFICIAL")
+        .length,
+      "system idle": items.filter(
+        (i) => i.type?.toUpperCase() === "SYSTEM IDLE",
+      ).length,
       active: items.filter((i) => i.status === "break-in").length,
     };
   }, [items, meta]);
@@ -133,12 +167,12 @@ export default function BreakPage() {
       palettes: PALETTES,
       config: {
         smoking: { label: "Smoking", icon: Cigarette },
-        'rest room': { label: "Rest Room", icon: Bath },
+        "rest room": { label: "Rest Room", icon: Bath },
         tea: { label: "Tea", icon: Coffee },
         meal: { label: "Meal", icon: UtensilsCrossed },
         prayer: { label: "Prayer", icon: HandHeart },
         official: { label: "Official", icon: Briefcase },
-        'system idle': { label: "System Idle", icon: Monitor },
+        "system idle": { label: "System Idle", icon: Monitor },
         active: { label: "On Break", icon: Clock },
       },
       extraCard: {
@@ -164,7 +198,9 @@ export default function BreakPage() {
     ];
 
     if (TYPE_FILTERS.includes(activeFilter.toUpperCase())) {
-      return items.filter((i) => i.type?.toUpperCase() === activeFilter.toUpperCase());
+      return items.filter(
+        (i) => i.type?.toUpperCase() === activeFilter.toUpperCase(),
+      );
     }
 
     if (activeFilter === "active") {
@@ -179,10 +215,14 @@ export default function BreakPage() {
   }, []);
 
   const clearFilters = useCallback(() => {
-    setViewType("current_month");
+    setViewType("today");
     setCustomRange({ start: "", end: "" });
     setActiveFilter(null);
+    setSelectedEmployee("");
   }, []);
+
+  const showClearBtn =
+    viewType !== "today" || customRange.start || selectedEmployee;
 
   return (
     <div className="min-h-screen text-zinc-800 p-2 md:p-4 flex flex-col gap-3">
@@ -191,15 +231,19 @@ export default function BreakPage() {
         <AttendenceHeader
           icon={Coffee}
           length={meta?.total}
-          name="My Breaks"
+          name="Team Breaks"
         />
-        {/* Filter bar */}
-        <FilterBar
+
+        <FiltersBar
+          employeeOptions={employeeOptions}
+          selectedEmployee={selectedEmployee}
+          setSelectedEmployee={setSelectedEmployee}
           viewType={viewType}
           setViewType={setViewType}
           customRange={customRange}
           setCustomRange={setCustomRange}
-          clearFilters={clearFilters}
+          showClearBtn={showClearBtn}
+          onClear={clearFilters}
         />
       </div>
 
@@ -219,10 +263,13 @@ export default function BreakPage() {
         />
       )}
 
-     <BreakTable isFetching={isFetching} tableData={tableData} activeFilter={activeFilter}
-     meta={meta} onPageChange={onPageChange}  
+      <BreakTable
+        isFetching={isFetching}
+        tableData={tableData}
+        activeFilter={activeFilter}
+        meta={meta}
+        onPageChange={onPageChange}
       />
-    
     </div>
   );
 }

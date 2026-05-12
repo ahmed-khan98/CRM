@@ -344,7 +344,7 @@ import { useGetCardsQuery } from "@/app/_Services/wallet/page"
 import StripeCardForm from "@/app/_Components/wallet/StripeCardForm"
 import { useAddCardPaymentMutation, useAddPaymentMutation } from "@/app/_Services/payment/page"
 import toast from "react-hot-toast"
-import PayPalButton from "@/app/_Components/PayPalButton"
+import PayPalButton from "@/app/_Components/Payment/PayPalButton"
 
 const FeeCindirmation = () => {
   const router = useRouter()

@@ -3,7 +3,6 @@ import {
   setLeadImportProgress,
   resetLeadImportProgress,
 } from "@/redux/uploadSlice";
-import { BaseUrl } from "@/app/_Services/baseUrl";
 import Cookies from "js-cookie";
 
 const EmailListApi = createApiAuction.injectEndpoints({
@@ -14,7 +13,7 @@ const EmailListApi = createApiAuction.injectEndpoints({
         try {
           api.dispatch(setLeadImportProgress(0));
           const token = Cookies.get("token");
-          const url = `${BaseUrl.replace(/\/$/, "")}/emailList/importEmailList`;
+          const url = `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")}/emailList/importEmailList`;
 
           // If we're not in the browser (SSR/Edge), fall back to fetch (no progress)
           if (typeof window === "undefined") {

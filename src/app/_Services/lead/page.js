@@ -3,7 +3,6 @@ import {
   setLeadImportProgress,
   resetLeadImportProgress,
 } from "@/redux/uploadSlice";
-import { BaseUrl } from "@/app/_Services/baseUrl";
 import Cookies from "js-cookie";
 
 const LeadApi = createApiAuction.injectEndpoints({
@@ -23,7 +22,7 @@ const LeadApi = createApiAuction.injectEndpoints({
         try {
           api.dispatch(setLeadImportProgress(0));
           const token = Cookies.get("token");
-          const url = `${BaseUrl.replace(/\/$/, "")}/lead/import-excel`;
+          const url = `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")}/lead/import-excel`;
 
           // If we're not in the browser (SSR/Edge), fall back to fetch (no progress)
           if (typeof window === "undefined") {
