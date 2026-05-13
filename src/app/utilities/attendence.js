@@ -500,19 +500,21 @@ export const calculateAttendanceStats = (data, options = {}) => {
   return data.reduce(
     (acc, item) => {
       const weekend = isWeekend(item);
-
       if (weekend) {
         acc.weekend++;
         return acc;
       }
 
       const status = getStatus(item);
-
+      console.log(item,'item')
+      console.log(status,'status')
       if (isAbsent(item) || status === "absent") acc.absent++;
-      else if (status === "late") acc.late++;
-      else if (status === "discrepancy") acc.discrepancy++;
-      else if (status === "half-day") acc.halfday++;
-      else if (status === "present") acc.present++;
+      if (item?.record?.timeIn && !item?.record?.timeOut) {
+        acc.discrepancy++;
+      }
+      if (status === "late") acc.late++;
+      if (status === "half-day") acc.halfday++;
+      if (status === "present") acc.present++;
 
       return acc;
     },

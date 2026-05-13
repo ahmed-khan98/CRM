@@ -778,6 +778,7 @@ const TeamAttendence = () => {
       isAbsent: (item) => item.isAbsent,
     });
   }, [finalDisplayData]);
+  console.log("Calculated Stats:", stats);
 
   const statCards = useMemo(() => {
     return getStatCards({
@@ -803,7 +804,7 @@ const TeamAttendence = () => {
       if (activeFilter === "present")     return !item.isAbsent && status === "present";
       if (activeFilter === "late")        return status === "late";
       if (activeFilter === "absent")      return item.isAbsent || status === "absent";
-      if (activeFilter === "discrepancy") return status === "discrepancy";
+      if (activeFilter === "discrepancy") return item.record?.timeIn && !item.record?.timeOut;
       if (activeFilter === "half-day") return status === "half-day";
       return true;
     });

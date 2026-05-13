@@ -126,10 +126,10 @@ const filteredMenuItems = menuItems
     /* ── Outer wrapper: width transitions here ── */
     <div
     className={`h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out
-        ${isCollapsed ? "w-[76px]" : "w-[240px]"}`}
+        ${isCollapsed ? "w-[74px]" : "w-[230px]"}`}
     
     >
-<div className="flex flex-col min-h-0 flex-1 overflow-hidden rounded-2xl mx-2 bg-zinc-950 border border-white/[0.07] shadow-2xl">
+<div className="flex flex-col min-h-0 flex-1 overflow-hidden rounded-2xl mx-1 bg-zinc-950 border border-white/[0.07] shadow-2xl">
         {/* Top accent line */}
         <div className="h-[1.5px] w-full flex-shrink-0 bg-gradient-to-r from-transparent via-white/30 to-white/5" />
 
@@ -151,7 +151,7 @@ const filteredMenuItems = menuItems
 
         {/* ── Scrollable nav ── */}
         <nav
-  className="sidebar-scroll flex-1 overflow-y-auto py-1 px-2"
+  className="sidebar-scroll flex-1 overflow-y-auto p-1"
             style={{
             scrollbarWidth: "thin",
             scrollbarColor: "#52525b transparent",

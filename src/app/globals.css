@@ -21,7 +21,7 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #d4d4d8; /* Zinc-300 */
+  background: #a9a9ac; /* Zinc-300 */
   border-radius: 10px;
 }
 

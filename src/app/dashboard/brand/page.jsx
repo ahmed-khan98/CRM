@@ -129,17 +129,15 @@ export default function AppointmentBooking() {
                         className="hover:bg-zinc-50 transition-colors"
                       >
                         <td className="px-2 py-1.5 whitespace-nowrap text-sm text-gray-600">
-                          <div className=" w-25 h-25">
-                            {" "}
-                            {/* 96x96 container */}
+                      
                             <Image
                               src={br?.image || "/placeholder.svg"}
                               alt="brand-logo"
                               width="100"
                               height="0"
-                              className="rounded object-contain border border-purple-300"
+                              className="rounded object-contain w-24 h-12"
                             />
-                          </div>
+                          {/* </div> */}
                         </td>
                         <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
                           {br?.name}
