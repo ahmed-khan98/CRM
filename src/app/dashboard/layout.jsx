@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import LeftNav from "../_Components/Dashboard/LeftNav";
+import LeftNav from "../_Components/Layout/LeftNav";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
@@ -23,7 +23,7 @@ import {
 } from "../_Services/authentication/page";
 import { useTodayUserAttendenceQuery } from "../_Services/attendence/page";
 import AnnouncementPopup from "../_Components/Modal/AnnouncementPopup";
-import AnnouncementMarquee from "../_Components/Modal/AnnouncementMarquee";
+import AnnouncementMarquee from "../_Components/Layout/AnnouncementMarquee";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

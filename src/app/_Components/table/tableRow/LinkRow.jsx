@@ -9,6 +9,7 @@ import {
   Mail,
   Pencil,
   Trash2,
+  Power,
   Check,
   Eye, // <-- New icon for 'Copied' state
 } from "lucide-react";
@@ -20,14 +21,34 @@ import {
   Transition,
 } from "@headlessui/react";
 import { useRouter } from "next/navigation";
-import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
+import { getStatusColor } from "@/app/utilities/color";
+import { useUpdatePaymentStatusMutation } from "@/app/_Services/paymentLink/page";
+import toast from "react-hot-toast";
 
 export const LinkRow = memo(
-  function LeadRow({ emp, setConfirmDelete }) {
+  function LeadRow({ emp, setConfirmDelete, refetchAll }) {
+    const [updatePaymentStatus, { isLoading: isUpdatingStatus, originalArgs }] =
+      useUpdatePaymentStatusMutation();
 
     const router = useRouter();
 
     const [isCopied, setIsCopied] = useState(false);
+
+    const isEnabled =
+      emp?.isActive === undefined ||
+      emp?.isActive === null ||
+      emp?.isActive === true ||
+      emp?.isActive === "true" ||
+      emp?.isActive === "enabled" ||
+      emp?.isActive === "active";
+
+    const rowBgClass = !isEnabled
+      ? "bg-gray-200"
+      : emp?.paymentStatus === "paid"
+      ? "bg-green-100"
+      : emp?.paymentStatus === "failed"
+      ? "bg-red-100"
+      : "bg-white-200";
 
     const onCopy = (payId) => {
       if (!payId) {
@@ -55,13 +76,34 @@ export const LinkRow = memo(
         });
     };
 
+    const handleStatus = async (id) => {
+      try {
+        const response = await updatePaymentStatus({ id }).unwrap();
+        console.log(response, "response");
+        if (response.success) {
+          toast.success(response.message);
+        } else {
+          toast.error(response.message || "Failed to changed status");
+        }
+        refetchAll();
+      } catch (error) {
+        console.error("Error updating payment status:", error);
+        const msg =
+          error?.response?.data?.message ||
+          error?.message ||
+          error?.data?.message ||
+          "Failed to update payment status";
+        toast.error(msg);
+      }
+    };
+
     return (
       <motion.tr
         key={emp?._id}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.2 }}
-        className="hover:bg-gray-50 transition-colors relative "
+        className={`${rowBgClass} transition-colors relative `}
       >
         <td className="px-4 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
           {emp?.name || "-"}
@@ -107,7 +149,7 @@ export const LinkRow = memo(
         <td className="px-3  whitespace-nowrap">
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-              emp?.paymentStatus
+              emp?.paymentStatus,
             )}`}
           >
             {emp?.paymentStatus
@@ -116,6 +158,7 @@ export const LinkRow = memo(
               : "-"}
           </span>
         </td>
+
         <td className="px-2 py-1.5 whitespace-nowrap">
           <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-bold bg-zinc-200 text-zinc-800">
             <DollarSign className="text-amber-500 h-5 w-5" /> {emp?.amount}
@@ -152,57 +195,70 @@ export const LinkRow = memo(
                   data-[closed]:opacity-0"
                 >
                   <div className="py-1">
-                     {emp?.paymentStatus !== "paid" && (
-                   <>
-                    <MenuItem>
-                      {({ active }) => (
-                        <button
-                          onClick={() => router.push(`/pay/${emp?._id}`)}
-                          className={`${
-                            active ? "bg-gray-100" : ""
-                          } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-gray-800`}
-                        >
-                          <Eye className="h-4 w-4" />
-                          View
-                        </button>
-                      )}
-                    </MenuItem>
-                    <MenuItem>
-                      {({ active }) => (
-                        <button
-                          onClick={() => onCopy(emp?._id)} // Updated to use local onCopy
-                          className={`${
-                            active ? "bg-gray-100" : ""
-                          } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] ${
-                            isCopied ? "text-green-600" : "text-blue-700" // Text color change
-                          }`}
-                        >
-                          {/* Icon change based on state */}
-                          {isCopied ? (
-                            <Check className="h-4 w-4 text-green-600" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
+                    {emp?.paymentStatus !== "paid" && (
+                      <>
+                        <MenuItem>
+                          {({ active }) => (
+                            <button
+                              onClick={() => router.push(`/pay/${emp?._id}`)}
+                              className={`${
+                                active ? "bg-gray-100" : ""
+                              } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-black-800`}
+                            >
+                              <Eye className="h-4 w-4" />
+                              View
+                            </button>
                           )}
-                          {/* Text change based on state */}
-                          {isCopied ? "Copied!" : "Copy Link"}{" "}
-                        </button>
-                      )}
-                    </MenuItem>
-                    <MenuItem>
-                      {({ active }) => (
-                        <button
-                          onClick={() => setConfirmDelete(emp?._id)}
-                          className={`${
-                            active ? "bg-gray-100" : ""
-                          } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-red-600`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          Delete
-                        </button>
-                      )}
-                    </MenuItem>
-                   </>)}
-                   
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <button
+                              onClick={() => onCopy(emp?._id)} // Updated to use local onCopy
+                              className={`${
+                                active ? "bg-gray-100" : ""
+                              } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] ${
+                                isCopied ? "text-green-600" : "text-blue-700" // Text color change
+                              }`}
+                            >
+                              {/* Icon change based on state */}
+                              {isCopied ? (
+                                <Check className="h-4 w-4 text-green-600" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                              {/* Text change based on state */}
+                              {isCopied ? "Copied!" : "Copy Link"}{" "}
+                            </button>
+                          )}
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <button
+                              onClick={() => handleStatus(emp?._id)}
+                              className={`${
+                                active ? "bg-gray-200" : ""
+                              } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-gray-600`}
+                            >
+                              <Power className="h-4 w-4" />
+                              {isEnabled ? "Disable" : "Enable"}
+                            </button>
+                          )}
+                        </MenuItem>
+                        <MenuItem>
+                          {({ active }) => (
+                            <button
+                              onClick={() => setConfirmDelete(emp?._id)}
+                              className={`${
+                                active ? "bg-gray-100" : ""
+                              } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-red-600`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              Delete
+                            </button>
+                          )}
+                        </MenuItem>  
+                      </>
+                    )}
                   </div>
                 </MenuItems>
               </Transition>
@@ -212,5 +268,5 @@ export const LinkRow = memo(
       </motion.tr>
     );
   },
-  (prev, next) => prev.emp === next.emp
+  (prev, next) => prev.emp === next.emp,
 );

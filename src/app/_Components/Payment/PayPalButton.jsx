@@ -140,8 +140,8 @@ const PayPalButton = ({
             },
 
             onError: (err) => {
-              console.log('on error',error)
-              toast.error(error?.data?.message || 'on error toast', "---------------->>>>");
+              console.error('PayPal onError callback:', err);
+              toast.error(err?.data?.message || 'PayPal payment failed');
               setIsProcessing(false);
 
               if (onError) {

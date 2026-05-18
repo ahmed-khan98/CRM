@@ -75,7 +75,7 @@ export default function GenZLoginForm() {
             secure: true,
           });
           toast.success(response.message);
-          navigation.push("/dashboard/dashboardcount");
+          navigation.push("/dashboard/statictics");
         }
       } catch (error) {
         console.log("Login error:", error);

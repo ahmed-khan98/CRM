@@ -18,7 +18,7 @@ import {
   LogOut,
   PowerOff,
 } from "lucide-react";
-import LeftNav from "../Dashboard/LeftNav";
+import LeftNav from "./LeftNav";
 import {
   useGetLoggedUserQuery,
   useLogoutMutation,

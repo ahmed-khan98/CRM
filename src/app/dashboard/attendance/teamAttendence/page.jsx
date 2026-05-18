@@ -711,7 +711,7 @@ import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/Attenden
 import ActiveFilterShowing from "@/app/_Components/attendence/MyAttendance/ActiveFilterShowing";
 import StatsSection from "@/app/_Components/attendence/StatsSection";
 import FiltersBar from "@/app/_Components/attendence/TeamAttendance/FilterBar";
-import TeamAttendanceTableBody from "./TeamAttendanceTableBody";
+import TeamAttendanceTableBody from "@/app/_Components/attendence/TeamAttendance/TeamAttendanceTableBody";
 import { useAttendanceData } from "@/app/_Components/attendence/TeamAttendance/useAttendance";
 
 const TeamAttendence = () => {

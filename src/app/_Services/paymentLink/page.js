@@ -6,7 +6,7 @@ import {
 import { BaseUrl } from "@/app/_Services/baseUrl";
 import Cookies from "js-cookie";
 
-const LeadApi = createApiAuction.injectEndpoints({
+const paymentApi = createApiAuction.injectEndpoints({
   overrideExisting: process.env.NODE_ENV !== "production",
   endpoints: (builder) => ({
     createPaymentLink: builder.mutation({
@@ -63,6 +63,38 @@ const LeadApi = createApiAuction.injectEndpoints({
       keepUnusedDataFor: 180,
       refetchOnMountOrArgChange: false,
     }),
+
+     updatePaymentStatus: builder.mutation({
+      query: ({ id }) => {
+        console.log(id, "updateStatusID");
+        return {
+          url: `paymentlink/${id}/status`,
+          method: "PATCH",
+        };
+      },
+      async onQueryStarted({ id }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          paymentApi.util.updateQueryData(
+            "getPaymentLinks",
+            undefined,
+            (draft) => {
+              const emp = draft.find((e) => e._id === id);
+              if (emp) {
+                emp.isActive = emp.isActive === "enabled" ? "disabled" : "enabled";
+              }
+            },
+          ),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+
+      invalidatesTags: ["allPaymentlinks"],
+    }),
   }),
 });
 
@@ -72,5 +104,6 @@ export const {
  useCreatePaymentLinkMutation,
  useDeletePaymentLinkMutation,
  useGetPaymentLinkByIdQuery,
- useUpdatePaymentLinkMutation
-} = LeadApi;
+ useUpdatePaymentLinkMutation,
+ useUpdatePaymentStatusMutation
+} = paymentApi;

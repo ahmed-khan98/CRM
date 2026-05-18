@@ -11,7 +11,7 @@ import {
 import AnnouncementModal from "@/app/_Components/Modal/AnnouncementModal";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { formatDate } from "@/app/utilities/date";
-import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/AttendenceHeader";
+import PageHeader from "@/app/_Components/PageHeader/page";
 
 
 export default function Announcement() {
@@ -93,19 +93,8 @@ return (
     <div className=" mx-auto flex flex-col space-y-4">
 
       {/* Header */}
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <AttendenceHeader icon={MegaphoneIcon} length={'Management'} name=" All Announcements" />
+            <PageHeader icon={MegaphoneIcon} length={'Management'} name=" All Announcements" btnName="Create Announcement" handleEdit={handleEdit} />
       
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleEdit()}
-          className="flex items-center gap-2 cursor-pointer bg-zinc-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-400/20 border border-zinc-700"
-        >
-          <Plus className="h-4 w-4" />
-          Create Announcement
-        </motion.button>
-      </div>
 
       {/* Divider */}
       <div className="h-px bg-gradient-to-r from-transparent via-zinc-300 to-transparent" />

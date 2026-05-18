@@ -13,12 +13,12 @@ const PaymentOrderSummary = ({name,email,brand,currency,amount,service}) => {
               </div>
 
               <div className="p-6 space-y-6">
-                <div className="grid grid-cols-2 gap-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4">
                   <DetailRow label="Customer" value={name} />
                   <DetailRow
                     label="Email"
                     value={email}
-                    className="lowercase"
+                    className="lowercase break-all"
                   />
                   <DetailRow label="Brand" value={brand} />
                   <DetailRow label="Currency" value={currency} />

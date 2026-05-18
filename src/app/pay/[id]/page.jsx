@@ -44,10 +44,10 @@ export async function generateMetadata({ params }) {
   }
 }
 
-const page = ({params}) => {
-  return (
-   <PaymentDetail id={params.id}/>
-  )
-}
+const page = async ({ params }) => {
+  const { id } = await params;
 
-export default page
+  return <PaymentDetail id={id} />;
+};
+
+export default page;

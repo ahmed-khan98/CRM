@@ -10,6 +10,7 @@ import {
 import BrandModal from "@/app/_Components/Modal/brandModal";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import Image from "next/image";
+import { formatDate, formatOnlyDate } from "@/app/utilities/date";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -103,22 +104,25 @@ export default function AppointmentBooking() {
             <div className="overflow-hidden rounded-2xl ">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-zinc-800">
-                    <tr>
-                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Brand Logo{" "}
-                      </th>
-                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Brand Name{" "}
-                      </th>
-                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Department Name{" "}
-                      </th>
-                      <th className="px-2 py-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Action
-                      </th>
+                  <thead>
+                    <tr className="bg-zinc-900 border-b border-white/[0.07]">
+                      {[
+                        "Brand Logo",
+                        "Brand Name",
+                        "Department Name",
+                        "createdAt",
+                        "Actions",
+                      ].map((h) => (
+                        <th
+                          key={h}
+                          className="px-4 py-3.5 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-500"
+                        >
+                          {h}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
+
                   <tbody className="bg-white divide-y divide-gray-200">
                     {data?.data.map((br, index) => (
                       <motion.tr
@@ -126,24 +130,32 @@ export default function AppointmentBooking() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="hover:bg-zinc-50 transition-colors"
+                        className="hover:bg-zinc-50 transition-colors group"
                       >
                         <td className="px-2 py-1.5 whitespace-nowrap text-sm text-gray-600">
-                      
-                            <Image
-                              src={br?.image || "/placeholder.svg"}
-                              alt="brand-logo"
-                              width="100"
-                              height="0"
-                              className="rounded object-contain w-24 h-12"
-                            />
+                          <Image
+                            src={br?.image || "/placeholder.svg"}
+                            alt="brand-logo"
+                            width="100"
+                            height="0"
+                            className="rounded object-contain w-24 h-8"
+                          />
                           {/* </div> */}
                         </td>
                         <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          {br?.name}
+                          <span className="text-sm font-semibold text-zinc-800 capitalize">
+                            {br?.name}
+                          </span>
                         </td>
                         <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          {br?.departmentId?.name}
+                          <span className="text-[12px] font-semibold text-zinc-800 capitalize">
+                            {br?.departmentId?.name}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="text-[12px] text-zinc-400 font-medium">
+                            {formatDate(br.createdAt)}
+                          </span>
                         </td>
 
                         <td className="px-4 py-3 whitespace-nowrap">

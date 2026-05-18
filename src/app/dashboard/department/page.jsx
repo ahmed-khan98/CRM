@@ -9,6 +9,7 @@ import {
 } from "@/app/_Services/department/page";
 import DepartmentModal from "@/app/_Components/Modal/DepartmentModal";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
+import { formatDate } from "@/app/utilities/date";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -37,7 +38,6 @@ export default function AppointmentBooking() {
     setIsModalOpen(false);
     setEditingAppointment(null);
   };
-
 
   const handleDelete = async () => {
     try {
@@ -89,14 +89,10 @@ export default function AppointmentBooking() {
               <Plus className="h-4 w-4" />
               Create
             </motion.button>
-          
           </div>
         </div>
 
-        <motion.div
-          variants={itemVariants}
-          className="shadow-lg rounded-2xl"
-        >
+        <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
           {data?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <Building className="h-16 w-16 text-gray-300 mbg-zinc-800" />
@@ -111,14 +107,16 @@ export default function AppointmentBooking() {
             <div className="overflow-hidden rounded-xl ">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-zinc-800">
-                    <tr>
-                      <th className="p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Name{" "}
-                      </th>
-                      <th className="-p-3 text-left text-sm font-medium text-zinc-300 capitalize tracking-wider">
-                        Action
-                      </th>
+                  <thead>
+                    <tr className="bg-zinc-900 border-b border-white/[0.07]">
+                      {["Department Name", "createdAt", "Actions"].map((h) => (
+                        <th
+                          key={h}
+                          className="px-4 py-3.5 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-500"
+                        >
+                          {h}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -131,29 +129,36 @@ export default function AppointmentBooking() {
                         className="hover:bg-zinc-100 transition-colors"
                       >
                         <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          {depart?.name}
+                          <span className="text-sm font-semibold text-zinc-800 capitalize">
+                            {depart?.name}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="text-[12px] text-zinc-400 font-medium">
+                            {formatDate(depart.createdAt)}
+                          </span>
                         </td>
 
-                       <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <motion.button
-                          whileHover={{ scale: 1.08 }}
-                          whileTap={{ scale: 0.93 }}
-                          onClick={() => handleEdit(depart)}
-                          className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
-                        >
-                          <Edit className="h-3.5 w-3.5" />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.08 }}
-                          whileTap={{ scale: 0.93 }}
-                          onClick={() => setConfirmDelete(depart._id)}
-                          className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
-                        >
-                          <DeleteIcon className="h-3.5 w-3.5" />
-                        </motion.button>
-                      </div>
-                    </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <motion.button
+                              whileHover={{ scale: 1.08 }}
+                              whileTap={{ scale: 0.93 }}
+                              onClick={() => handleEdit(depart)}
+                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                            >
+                              <Edit className="h-3.5 w-3.5" />
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.08 }}
+                              whileTap={{ scale: 0.93 }}
+                              onClick={() => setConfirmDelete(depart._id)}
+                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
+                            >
+                              <DeleteIcon className="h-3.5 w-3.5" />
+                            </motion.button>
+                          </div>
+                        </td>
                       </motion.tr>
                     ))}
                   </tbody>
@@ -166,7 +171,7 @@ export default function AppointmentBooking() {
           <WarningModal
             setConfirmDelete={setConfirmDelete}
             isDeleting={isDeleting}
-            message='department'
+            message="department"
             handleDelete={handleDelete}
           />
         )}

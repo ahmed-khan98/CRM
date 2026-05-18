@@ -18,12 +18,10 @@ import {
   Monitor,
 } from "lucide-react";
 import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/AttendenceHeader";
-import FilterBar from "@/app/_Components/attendence/MyAttendance/FilterBar";
 import StatsSection from "@/app/_Components/attendence/StatsSection";
 import ActiveFilterShowing from "@/app/_Components/attendence/MyAttendance/ActiveFilterShowing";
 import {
   getStatCards,
-  getStatusConfig,
   PALETTES,
 } from "@/app/utilities/attendence";
 import BreakTable from "@/app/_Components/break/BreakTable";

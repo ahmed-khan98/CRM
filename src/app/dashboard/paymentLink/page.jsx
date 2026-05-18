@@ -151,7 +151,7 @@ export default function Paymentlink() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {items?.map((emp) => (
-                      <LinkRow key={emp?._id} emp={emp} setConfirmDelete={setConfirmDelete} />
+                      <LinkRow key={emp?._id} emp={emp} setConfirmDelete={setConfirmDelete} refetchAll={refetchAll} />
                     ))}
                   </tbody>
                 </table>
