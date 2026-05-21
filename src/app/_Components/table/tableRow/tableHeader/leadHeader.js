@@ -7,9 +7,9 @@ export const LEADHEADERS = [
   "Email",
   "Last Activity",
   "Signup Date",
+  "Department/brand",
   "Paid Status",
   // "Last Comment",
-  // "Brand",
   // "Agent",
   "Action",
 ];

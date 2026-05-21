@@ -74,6 +74,7 @@ console.log(index,'index')
           {emp?.email || "-"}
         </td>
 
+
         <td
           className="px-2 py-1 w-[360px] min-w-[200px] cursor-pointer"
           onClick={() => router.push(`/dashboard/lead/detail/${emp?._id}`)}
@@ -113,6 +114,12 @@ console.log(index,'index')
           <span className="text-[11px] text-gray-600">
             {emp?.signupDate ? formatDate(emp.signupDate) : "-"}
           </span>
+        </td>
+                <td
+          className="px-2 py-1 whitespace-nowrap text-[12px] text-gray-800 cursor-pointer capitalize"
+          onClick={() => router.push(`/dashboard/lead/detail/${emp?._id}`)}
+        >
+          {emp?.brandId?.name || emp?.departmentId?.name || "-"}
         </td>
 
         <td className="px-3 py-1 whitespace-nowrap">

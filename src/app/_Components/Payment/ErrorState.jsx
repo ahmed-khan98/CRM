@@ -10,10 +10,10 @@ const ErrorState = ({ message }) => (
       <h2 className="text-xl font-bold mb-2">Payment Link Error</h2>
       <p className="text-zinc-500 text-sm mb-6">{message}</p>
       <button
-        onClick={() => window.location.reload()}
+        // onClick={() => window.location.reload()}
         className="w-full bg-zinc-900 text-white py-2 rounded-lg font-bold"
       >
-        Try Again
+        Try Again later
       </button>
     </div>
   </div>

@@ -24,6 +24,9 @@ import {
 import { useTodayUserAttendenceQuery } from "../_Services/attendence/page";
 import AnnouncementPopup from "../_Components/Modal/AnnouncementPopup";
 import AnnouncementMarquee from "../_Components/Layout/AnnouncementMarquee";
+import Ip from "../_Components/ip";
+import Navbar from "../_Components/Layout/Navbar";
+import Footer from "../_Components/Layout/Footer";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -215,12 +218,26 @@ const DashboardLayout = ({ children }) => {
       </div>
     );
   }
+
+  if (isloggedError) {
+    const loggedErrorMessage =
+      isloggedError?.data?.message ||
+      isloggedError?.error ||
+      isloggedError?.status ||
+      "Unable to load current user. Please refresh the page.";
+
+    return (
+    <Ip loggedErrorMessage={loggedErrorMessage} />
+    );
+  }
   return (
     <div className="app-container ">
       {isOnBreak 
        ? (
         <BreakOverlay startTime={breakInTime} onBreakOut={handleBreakOut} />
       ) : (
+        <>
+        <Navbar />
         <div
           //   style={{
           //   background: "#0f0f11",
@@ -260,6 +277,8 @@ const DashboardLayout = ({ children }) => {
             </main>
           </div>
         </div>
+        <Footer />
+        </>
       )}
       <AnnouncementPopup />
     </div>

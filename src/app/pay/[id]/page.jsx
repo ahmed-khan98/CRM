@@ -3,7 +3,7 @@ import PaymentDetail from '@/app/_Components/Payment/PaymentDetail'
 
 export async function generateMetadata({ params }) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}paymentLink/${params.id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}paymentlink/${params.id}`, {
       cache: 'no-store',
     })
     const json = await res.json()

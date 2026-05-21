@@ -243,7 +243,7 @@ import PaymentPagHeader from "./PaymentPagHeader";
 
 async function getPaymentData(id) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}paymentLink/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}paymentlink/${id}`,
     {
       cache: "no-store", // Taake hamesha fresh data aaye
     },
@@ -260,7 +260,7 @@ const PaymentDetail = async ({ id }) => {
 
   // if (isLoading) return <LoadingState />;
   if (!paymentData)
-    return <ErrorState message={error ? "Link Expired" : "Not Found"} />;
+    return <ErrorState message={"Not Found"} />;
 
   if (paymentData?.paymentStatus === "paid")
     return (

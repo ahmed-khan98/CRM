@@ -56,7 +56,7 @@ export const LinkRow = memo(
         return;
       }
 
-      const baseUrl = "https://crm-virid-nine-17.vercel.app/pay/";
+      const baseUrl = "https://customer-payment-link.vercel.app/";
       const fullUrl = `${baseUrl}${payId}`;
 
       navigator.clipboard

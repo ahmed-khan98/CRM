@@ -43,7 +43,7 @@ const StatCard = ({
       variants={cardVariants}
       whileHover={{ scale: 1.02, y: -5 }}
       onClick={() => router.push(link)}
-      className={`relative overflow-hidden rounded-3xl p-6 shadow-xl ${color} backdrop-blur-sm cursor-pointer`}
+      className={`relative overflow-hidden rounded-3xl p-5 shadow-xl ${color} backdrop-blur-sm cursor-pointer`}
     >
       <div className="relative z-10">
         <div className="flex items-center justify-between mbg-zinc-800">
@@ -174,7 +174,7 @@ export default function DashboardPage() {
               },
             },
           }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 -mt-16 relative z-10"
+          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 -mt-16 relative z-10"
         >
           <StatCard
             icon={Package}

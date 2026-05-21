@@ -59,7 +59,7 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
     type: "",
   };
 
-  const typeOptions = ["MEAL", "REST ROOM", "SMOKING","TEA","PRAYER","OFFICIAL"].map((b) => ({
+  const typeOptions = ["MEAL", "REST ROOM", "SMOKING","TEA","PRAYER"].map((b) => ({
     value: b,
     label: b,
   }));
@@ -67,13 +67,8 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
-          onClick={closeModal}
-        >
+          <div className="fixed inset-0 flex items-center justify-center z-[100] p-4 bg-black/75 backdrop-blur-md">
+
           <motion.div
             variants={modalVariants}
             initial="hidden"
@@ -214,7 +209,7 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
             {/* Bottom accent line */}
             <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           </motion.div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );

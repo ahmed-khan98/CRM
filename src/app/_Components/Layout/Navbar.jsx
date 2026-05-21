@@ -402,7 +402,7 @@ const Navbar = () => {
       <div className="fixed top-0 left-0 w-full z-50 bg-[#0f0f11] border-b border-white/[0.07] shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
         <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-white/5" />
         <nav className="flex items-center justify-between px-3 md:px-6 py-1 gap-3">
-          <Link href="/dashboard/dashboardcount" className="shrink-0">
+          <Link href="/dashboard/statistics" className="shrink-0">
             <Image src={Main} alt="Logo" height={48} width={130} priority />
           </Link>
           <div className="hidden lg:flex flex-1 justify-center px-4">
