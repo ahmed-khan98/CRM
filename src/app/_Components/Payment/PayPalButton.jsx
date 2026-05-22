@@ -10,6 +10,7 @@ const PayPalButton = ({
   amount,
   onSuccess,
   onError,
+  brandParam,
   className = "",
 }) => {
 
@@ -62,7 +63,7 @@ const PayPalButton = ({
                 //   throw new Error("Authentication required");
                 // }
 
-                let payload = { id };
+                let payload = { id ,brand:brandParam};
 
                 const response = await fetch(
                   `${process.env.NEXT_PUBLIC_API_URL}paymentlink/pay-with-paypal`,
@@ -98,7 +99,7 @@ const PayPalButton = ({
               try {
                 console.log(data,'--->>>onApprove')
                 const token = Cookies.get("token");
-                let payload = { id };
+                let payload = { id ,brand:brandParam};
                 const response = await fetch(
                   `${process.env.NEXT_PUBLIC_API_URL}paymentlink/pay-with-paypal/${data.orderID}/charge`,
                   {
