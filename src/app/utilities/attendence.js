@@ -83,6 +83,25 @@ export const formatBreakMinutes = (minutes) => {
   return `${hrs}hr ${mins}min`;
 };
 
+export const getShiftEffectiveDate = (reference = moment().tz("Asia/Karachi")) => {
+  const now = moment(reference).tz("Asia/Karachi");
+  return now.hour() < 5
+    ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
+    : now.format("YYYY-MM-DD");
+};
+
+export const isDiscrepancyRecord = (record) => {
+  if (!record?.timeIn || record?.timeOut) return false;
+
+  const now = moment().tz("Asia/Karachi");
+  const shiftEffectiveDate = getShiftEffectiveDate(now);
+  const recordDateStr = moment(record.shiftDate).format("YYYY-MM-DD");
+  const timeInMoment = moment(record.timeIn).tz("Asia/Karachi");
+  const hoursSinceIn = now.diff(timeInMoment, "hours", true);
+
+  return hoursSinceIn > 20 || moment(recordDateStr).isBefore(shiftEffectiveDate);
+};
+
 const STATUS_CONFIG = {
   present: {
     label: "Present",
@@ -495,6 +514,7 @@ export const calculateAttendanceStats = (data, options = {}) => {
     getStatus = (item) => item?.computedStatus, // default (My Attendance)
     isWeekend = (item) => item?.isWeekend, // default weekend check
     isAbsent = (item) => false, // optional override
+    isDiscrepancy = (item) => isDiscrepancyRecord(item?.record),
   } = options;
 
   return data.reduce(
@@ -506,15 +526,11 @@ export const calculateAttendanceStats = (data, options = {}) => {
       }
 
       const status = getStatus(item);
-      console.log(item,'item')
-      console.log(status,'status')
       if (isAbsent(item) || status === "absent") acc.absent++;
-      if (item?.record?.timeIn && !item?.record?.timeOut) {
-        acc.discrepancy++;
-      }
+      if (isDiscrepancy(item)) acc.discrepancy++;
       if (status === "late") acc.late++;
       if (status === "half-day") acc.halfday++;
-      if (status === "present") acc.present++;
+      if (status === "present" && item?.record?.timeOut ) acc.present++;
 
       return acc;
     },

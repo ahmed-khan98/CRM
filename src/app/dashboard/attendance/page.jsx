@@ -393,6 +393,7 @@ import {
   getAllTableData,
   getStatCards,
   PALETTES,
+  isDiscrepancyRecord,
 } from "@/app/utilities/attendence";
 import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/AttendenceHeader";
 import ActiveFilterShowing from "@/app/_Components/attendence/MyAttendance/ActiveFilterShowing";
@@ -426,7 +427,9 @@ export default function AttendancePage() {
   }, [isFetching, data, viewType, customRange]);
 
 const stats = useMemo(() => {
-  return calculateAttendanceStats(allData);
+  return calculateAttendanceStats(allData, {
+    isDiscrepancy: (item) => isDiscrepancyRecord(item.record),
+  });
 }, [allData]);
 
 const statCards = useMemo(() => {
@@ -444,9 +447,11 @@ const statCards = useMemo(() => {
 }, [stats, allData]);
 
   const tableData = useMemo(() => {
-    return activeFilter
-      ? allData.filter((row) => row.computedStatus === activeFilter)
-      : allData;
+    if (!activeFilter) return allData;
+    if (activeFilter === "discrepancy") {
+      return allData.filter((row) => isDiscrepancyRecord(row.record));
+    }
+    return allData.filter((row) => row.computedStatus === activeFilter);
   }, [activeFilter, allData]);
 
   const toggleFilter = useCallback((key) => {

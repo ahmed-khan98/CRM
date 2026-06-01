@@ -59,6 +59,7 @@
     "socket.io-client": "^4.8.1",
     "swiper": "^11.2.5",
     "tinymce": "^8.1.2",
+    "xlsx": "^0.18.5",
     "yup": "^1.6.1"
   },
   "devDependencies": {

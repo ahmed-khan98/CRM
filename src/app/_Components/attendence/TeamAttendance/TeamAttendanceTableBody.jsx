@@ -10,6 +10,7 @@ import {
   onlyWorkingHours,
   Tooltip,
   getStatusConfig,
+  isDiscrepancyRecord,
 } from "@/app/utilities/attendence";
 import { Avatar } from "@/app/_Components/attendence/TeamAttendance/Avatar";
 
@@ -47,17 +48,7 @@ const TeamAttendanceTableBody = ({
           const recordDateStr = moment(record?.shiftDate).format("YYYY-MM-DD");
           const isToday = recordDateStr === shiftEffectiveDate;
 
-          const timeInMoment = record?.timeIn
-            ? moment(record.timeIn).tz("Asia/Karachi")
-            : null;
-          const hoursSinceIn = timeInMoment
-            ? now.diff(timeInMoment, "hours", true)
-            : 0;
-          const isDiscrepancy =
-            record?.timeIn &&
-            !record?.timeOut &&
-            (hoursSinceIn > 20 ||
-              moment(recordDateStr).isBefore(shiftEffectiveDate));
+          const isDiscrepancy = isDiscrepancyRecord(record);
           const isActive =
             record?.timeIn &&
             !record?.timeOut &&

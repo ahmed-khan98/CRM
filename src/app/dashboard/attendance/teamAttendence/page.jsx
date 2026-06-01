@@ -693,17 +693,19 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { Users } from "lucide-react";
+import { Users, Download } from "lucide-react";
 import {
   useGetDepartEmployeeAttendanceQuery,
   useUpdateTeamAttendenceMutation,
 } from "@/app/_Services/attendence/page";
+import { exportAttendanceToExcel } from "@/app/utilities/exportToExcel";
 import moment from "moment-timezone";
 import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
 import {
  PALETTES,
   calculateAttendanceStats,
-  getStatCards
+  getStatCards,
+  isDiscrepancyRecord,
 } from "@/app/utilities/attendence";
 import AttendanceModal from "@/app/_Components/Modal/AttendanceModal";
 import toast from "react-hot-toast";
@@ -776,9 +778,9 @@ const TeamAttendence = () => {
       isWeekend: (item) =>
         item.isWeekend || item.record?.status === "weekend",
       isAbsent: (item) => item.isAbsent,
+      isDiscrepancy: (item) => isDiscrepancyRecord(item.record),
     });
   }, [finalDisplayData]);
-  console.log("Calculated Stats:", stats);
 
   const statCards = useMemo(() => {
     return getStatCards({
@@ -801,10 +803,10 @@ const TeamAttendence = () => {
       if (activeFilter === "weekend") return isWeekend;
       if (isWeekend) return false;
       const status = item.record?.status;
-      if (activeFilter === "present")     return !item.isAbsent && status === "present";
+      if (activeFilter === "present")     return !item.isAbsent && status === "present" && item?.record?.timeOut ;
       if (activeFilter === "late")        return status === "late";
       if (activeFilter === "absent")      return item.isAbsent || status === "absent";
-      if (activeFilter === "discrepancy") return item.record?.timeIn && !item.record?.timeOut;
+      if (activeFilter === "discrepancy") return isDiscrepancyRecord(item.record);
       if (activeFilter === "half-day") return status === "half-day";
       return true;
     });
@@ -827,16 +829,40 @@ const TeamAttendence = () => {
     }
   }, [updateTeamAttendence, refetch]);
 
+  const handleExportToExcel = useCallback(() => {
+    try {
+      const startDate = queryParams.startDate || moment().format("YYYY-MM-DD");
+      const endDate = queryParams.endDate || moment().format("YYYY-MM-DD");
+
+      exportAttendanceToExcel(finalDisplayData, startDate, endDate, {
+        selectedEmployee,
+        employeeList: employees?.data || [],
+      });
+      toast.success("Attendance report exported successfully!");
+    } catch (error) {
+      toast.error(error.message || "Failed to export attendance report");
+      console.error("Export error:", error);
+    }
+  }, [finalDisplayData, queryParams, selectedEmployee, employees?.data]);
+
+
   const showClearBtn = viewType !== "today" || customRange.start || selectedEmployee;
 
   return (
     <div className="h-screen flex flex-col gap-3 overflow-hidden p-2 md:p-3">
-
-     
-      <AttendenceHeader icon={Users} length={finalDisplayData?.length} name="Team Attendance" />
-      
-
-      {/* ── Stat Cards ── */}
+      <div className="flex items-center justify-between gap-2">
+        <AttendenceHeader icon={Users} length={finalDisplayData?.length} name="Team Attendance" />
+        <button
+          onClick={handleExportToExcel}
+          className="cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+          title="Export to Excel"
+        >
+          <Download size={16} className="text-emerald-600" />
+          <span className="text-xs font-black text-emerald-700 uppercase tracking-tight hidden sm:inline">
+            Export Attendance Summary Report
+          </span>
+        </button>
+      </div>{/* ── Stat Cards ── */}
       <StatsSection
         statCards={statCards}
         activeFilter={activeFilter}
