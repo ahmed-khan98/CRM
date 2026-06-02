@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 export const createPaymentSchema = Yup.object().shape({
-  brandId: Yup.string().required("Please select a brand"),
+  // brandId: Yup.string().required("Please select a brand"),
   email: Yup.string().required("email is required"),
   name: Yup.string().required("name is required"),
   phoneNo: Yup.string().required("phone No. is required"),

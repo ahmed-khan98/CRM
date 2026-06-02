@@ -869,7 +869,6 @@ const TeamAttendence = () => {
         toggleFilter={toggleFilter}
       />
 
-
       {/* ── Active filter banner ── */}
       {activeFilter && (
         <ActiveFilterShowing activeFilter={activeFilter} setActiveFilter={setActiveFilter} length={filteredRows?.length} />
@@ -928,4 +927,4 @@ const TeamAttendence = () => {
   );
 };
 
-export default React.memo(TeamAttendence);
+export default TeamAttendence;

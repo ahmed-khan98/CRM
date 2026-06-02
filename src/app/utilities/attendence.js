@@ -85,7 +85,7 @@ export const formatBreakMinutes = (minutes) => {
 
 export const getShiftEffectiveDate = (reference = moment().tz("Asia/Karachi")) => {
   const now = moment(reference).tz("Asia/Karachi");
-  return now.hour() < 5
+  return now.hour() < 11
     ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
     : now.format("YYYY-MM-DD");
 };
@@ -99,7 +99,7 @@ export const isDiscrepancyRecord = (record) => {
   const timeInMoment = moment(record.timeIn).tz("Asia/Karachi");
   const hoursSinceIn = now.diff(timeInMoment, "hours", true);
 
-  return hoursSinceIn > 20 || moment(recordDateStr).isBefore(shiftEffectiveDate);
+  return hoursSinceIn > 18 || moment(recordDateStr).isBefore(shiftEffectiveDate);
 };
 
 const STATUS_CONFIG = {
@@ -289,7 +289,7 @@ export const getAllTableData = (isFetching, data, viewType, customRange) => {
     const now2 = moment().tz("Asia/Karachi");
     const currentHour = now2.hour();
     const effectiveTodayStr =
-      currentHour < 5
+      currentHour < 11
         ? now2.clone().subtract(1, "days").format("YYYY-MM-DD")
         : now2.format("YYYY-MM-DD");
     const isPastShift = moment(dateStr).isBefore(effectiveTodayStr, "day");
@@ -302,7 +302,7 @@ export const getAllTableData = (isFetching, data, viewType, customRange) => {
     const isDiscrepancy =
       !!record?.timeIn &&
       !record?.timeOut &&
-      (hoursSinceIn > 20 || isPastShift);
+      (hoursSinceIn > 18 || isPastShift);
 
     // computedStatus: API record.status handles "half-day" directly
     let computedStatus = "upcoming";
@@ -530,6 +530,7 @@ export const calculateAttendanceStats = (data, options = {}) => {
       if (isDiscrepancy(item)) acc.discrepancy++;
       if (status === "late") acc.late++;
       if (status === "half-day") acc.halfday++;
+      
       if (status === "present" && item?.record?.timeOut ) acc.present++;
 
       return acc;

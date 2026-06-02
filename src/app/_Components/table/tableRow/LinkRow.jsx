@@ -118,7 +118,7 @@ export const LinkRow = memo(
         </td>
 
         <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
-          {emp?.brandId?.name || "-"}
+          {emp?.brandId?.name || "None Brand"}
         </td>
 
         <td className="px-2 py-1.5 ">

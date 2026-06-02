@@ -112,12 +112,21 @@ export default function page() {
                 console.log(values, "values---->>>>");
                 console.log(errors, "errors---->>>>");
 
-                const brandOptions =
-                  Brand?.data?.map((b) => ({
-                    value: b?._id,
-                    label: b?.name,
-                  })) ?? [];
-
+                // const brandOptions =
+                //   Brand?.data?.map((b) => ({
+                //     value: b?._id,
+                //     label: b?.name,
+                //   })) ?? [];
+const brandOptions = [
+  {
+    value: '',
+    label: 'None',
+  },
+  ...(Brand?.data?.map((b) => ({
+    value: b?._id,
+    label: b?.name,
+  })) ?? []),
+];
                 const merchantOptions =
                   merchant?.map((b) => ({
                     value: b?.id,

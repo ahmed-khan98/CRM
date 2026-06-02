@@ -241,7 +241,7 @@ const filteredMenuItems = menuItems
                               : "border-transparent text-zinc-600 hover:bg-white/[0.04] hover:text-zinc-400"
                             }`}
                         >
-                          <span className={subActive ? "text-zinc-300" : "text-zinc-600"}>
+                          <span className={subActive ? "text-zinc-300" : "text-zinc-600 group-hover:text-zinc-300"}>
                             {subItem.icon}
                           </span>
                           <span className="text-xs font-normal tracking-wide">{subItem.name}</span>
