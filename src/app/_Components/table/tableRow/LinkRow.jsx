@@ -25,6 +25,13 @@ import { getStatusColor } from "@/app/utilities/color";
 import { useUpdatePaymentStatusMutation } from "@/app/_Services/paymentLink/page";
 import toast from "react-hot-toast";
 
+const currencySymbols = {
+  USD: "$",
+  CAD: "C$",
+  AUD: "A$",
+  EUR: "€",
+};
+
 export const LinkRow = memo(
   function LeadRow({ emp, setConfirmDelete, refetchAll }) {
     const [updatePaymentStatus, { isLoading: isUpdatingStatus, originalArgs }] =
@@ -160,10 +167,10 @@ export const LinkRow = memo(
         </td>
 
         <td className="px-2 py-1.5 whitespace-nowrap">
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-bold bg-zinc-200 text-zinc-800">
-            <DollarSign className="text-amber-500 h-5 w-5" /> {emp?.amount}
-          </span>
-        </td>
+  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm font-bold bg-zinc-200 text-zinc-800">
+    {currencySymbols[emp?.currency] || emp?.currency} {emp?.amount}
+  </span>
+</td>
         <td className="px-2 py-1.5  whitespace-nowrap">
           {emp?.createdAt && (
             <span className="text-[12px] text-gray-600">

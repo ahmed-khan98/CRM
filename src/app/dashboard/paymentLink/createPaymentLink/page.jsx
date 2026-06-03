@@ -55,8 +55,10 @@ export default function page() {
   ];
 
   const currencyType = [
-    { id: "USD", name: "USD" },
-    { id: "PKR", name: "PKR" },
+   { name: "US Dollar (USD)", id: "USD" },
+  { name: "Canadian Dollar (CAD)", id: "CAD" },
+  { name: "Australian Dollar (AUD)", id: "AUD" },
+  { name: "Euro (EUR)", id: "EUR" },
   ];
 
     const services = [

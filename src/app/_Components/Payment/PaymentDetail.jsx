@@ -211,6 +211,8 @@ const PaymentDetail = async ({ id, searchParams }) => {
                 id={paymentData?._id}
                 paypalClientId={paymentData?.paypalClientId}
                 brandParam={brandParam}
+                currency={paymentData?.currency}
+
               />
             </div>
           </div>
@@ -223,6 +225,7 @@ const PaymentDetail = async ({ id, searchParams }) => {
                 id={paymentData?._id}
                 paypalClientId={paymentData?.paypalClientId}
                 brandParam={brandParam}
+                currency={paymentData?.currency}
               />
             </div>
           </aside>

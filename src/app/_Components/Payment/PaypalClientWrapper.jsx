@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import PayPalButton from "./PayPalButton";
 import { CreditCard } from "lucide-react";
 
-export default function PayPalClientWrapper({ id, paypalClientId,brandParam }) {
+export default function PayPalClientWrapper({ id, paypalClientId,brandParam,currency }) {
   const router = useRouter();
 
   const handleSuccess = () => router.push("/payment-success");
@@ -28,6 +28,7 @@ export default function PayPalClientWrapper({ id, paypalClientId,brandParam }) {
           onSuccess={handleSuccess}
           onError={handleError}
           brandParam={brandParam}
+          currency={currency}
         />
       </div>
     </div>

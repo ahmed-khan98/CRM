@@ -2,6 +2,13 @@ import { Info, ShieldCheck } from 'lucide-react'
 import React from 'react'
 import DetailRow from './DetailRow'
 
+const currencySymbols = {
+  USD: "$",
+  CAD: "$",
+  AUD: "$",
+  EUR: "€"
+};
+
 const PaymentOrderSummary = ({name, email, brand, currency, amount, service}) => {
   return (
     <>
@@ -63,14 +70,16 @@ const PaymentOrderSummary = ({name, email, brand, currency, amount, service}) =>
               Payable via PayPal or Card
             </p>
           </div>
-          <div className="text-right">
-            <span className="text-white font-extrabold text-2xl tracking-tight">
-              ${Number(amount).toFixed(2)}
-              <span className="text-zinc-400 text-sm font-normal ml-1">
-                {currency || 'USD'}
-              </span>
-            </span>
-          </div>
+         <div className="text-right">
+  <span className="text-white font-extrabold text-2xl tracking-tight">
+    {currencySymbols[currency] || "$"}
+    {Number(amount).toFixed(2)}
+
+    <span className="text-zinc-400 text-sm font-normal ml-1">
+      {currency || "USD"}
+    </span>
+  </span>
+</div>
         </div>
       </section>
 

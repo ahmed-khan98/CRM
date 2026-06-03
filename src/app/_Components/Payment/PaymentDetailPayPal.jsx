@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import PayPalClientWrapper from "./PaypalClientWrapper";
 
-const PaymentDetailPayPal = ({ id, paypalClientId, position, brandParam }) => {
+const PaymentDetailPayPal = ({ id, paypalClientId, position, brandParam,currency }) => {
   const [show, setShow] = useState(undefined);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const PaymentDetailPayPal = ({ id, paypalClientId, position, brandParam }) => {
     return null;
   }
 
-  return <PayPalClientWrapper id={id} paypalClientId={paypalClientId} brandParam={brandParam} />;
+  return <PayPalClientWrapper id={id} paypalClientId={paypalClientId} brandParam={brandParam} currency={currency} />;
 };
 
 export default PaymentDetailPayPal;

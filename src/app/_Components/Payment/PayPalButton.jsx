@@ -11,9 +11,10 @@ const PayPalButton = ({
   onSuccess,
   onError,
   brandParam,
+  currency,
   className = "",
 }) => {
-
+console.log("SDK Currency:", currency);
   const paypalRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,7 +30,7 @@ const PayPalButton = ({
 
       const script = document.createElement("script");
 
-      script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}`;
+      script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&currency=${currency}`;
 
       script.onload = () => {
         initializePayPal();
