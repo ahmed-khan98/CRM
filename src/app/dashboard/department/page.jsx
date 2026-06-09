@@ -112,7 +112,7 @@ export default function AppointmentBooking() {
                       {["Department Name", "createdAt", "Actions"].map((h) => (
                         <th
                           key={h}
-                          className="px-4 py-3.5 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-500"
+                          className="px-4 py-2.5 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-300"
                         >
                           {h}
                         </th>
@@ -128,24 +128,24 @@ export default function AppointmentBooking() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-zinc-100 transition-colors"
                       >
-                        <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          <span className="text-sm font-semibold text-zinc-800 capitalize">
+                        <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-600 capitalize">
+                          <span className="text-[12px] font-semibold text-zinc-800 capitalize">
                             {depart?.name}
                           </span>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          <span className="text-[12px] text-zinc-400 font-medium">
+                        <td className="px-4 py-2.5 whitespace-nowrap">
+                          <span className="text-[11px] text-zinc-600">
                             {formatDate(depart.createdAt)}
                           </span>
                         </td>
 
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-2.5 whitespace-nowrap">
                           <div className="flex items-center gap-2">
                             <motion.button
                               whileHover={{ scale: 1.08 }}
                               whileTap={{ scale: 0.93 }}
                               onClick={() => handleEdit(depart)}
-                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                              className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
                             >
                               <Edit className="h-3.5 w-3.5" />
                             </motion.button>
@@ -153,7 +153,7 @@ export default function AppointmentBooking() {
                               whileHover={{ scale: 1.08 }}
                               whileTap={{ scale: 0.93 }}
                               onClick={() => setConfirmDelete(depart._id)}
-                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
+                              className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
                             >
                               <DeleteIcon className="h-3.5 w-3.5" />
                             </motion.button>

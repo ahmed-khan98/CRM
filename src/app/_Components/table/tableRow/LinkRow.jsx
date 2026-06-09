@@ -1,29 +1,15 @@
-import React, { memo, useState } from "react"; // <-- useState import kiya
-import { motion } from "framer-motion";
+import React, { memo, useState } from "react";
 import { formatDate } from "@/app/utilities/date";
-import {
-  Copy,
-  DollarSign,
-  EllipsisVertical,
-  Link,
-  Mail,
-  Pencil,
-  Trash2,
-  Power,
-  Check,
-  Eye, // <-- New icon for 'Copied' state
-} from "lucide-react";
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Transition,
-} from "@headlessui/react";
-import { useRouter } from "next/navigation";
-import { getStatusColor } from "@/app/utilities/color";
 import { useUpdatePaymentStatusMutation } from "@/app/_Services/paymentLink/page";
 import toast from "react-hot-toast";
+import RowMenu from "../../Payment/RowMenu";
+
+const STATUS_STYLES = {
+  paid:    "bg-emerald-50 text-emerald-700 border-emerald-200",
+  pending: "bg-amber-50 text-amber-700 border-amber-200",
+  failed:  "bg-red-50 text-red-700 border-red-200",
+  expired: "bg-zinc-100 text-zinc-500 border-zinc-200",
+};
 
 const currencySymbols = {
   USD: "$",
@@ -34,63 +20,45 @@ const currencySymbols = {
 
 export const LinkRow = memo(
   function LeadRow({ emp, setConfirmDelete, refetchAll }) {
-    const [updatePaymentStatus, { isLoading: isUpdatingStatus, originalArgs }] =
+    const [updatePaymentStatus, { isLoading: isUpdatingStatus }] =
       useUpdatePaymentStatusMutation();
-
-    const router = useRouter();
 
     const [isCopied, setIsCopied] = useState(false);
 
-    const isEnabled =
+    // ── isEnabled state ──
+    const [isEnabled, setIsEnabled] = useState(
       emp?.isActive === undefined ||
       emp?.isActive === null ||
       emp?.isActive === true ||
       emp?.isActive === "true" ||
       emp?.isActive === "enabled" ||
-      emp?.isActive === "active";
-
-    const rowBgClass = !isEnabled
-      ? "bg-gray-200"
-      : emp?.paymentStatus === "paid"
-      ? "bg-green-100"
-      : emp?.paymentStatus === "failed"
-      ? "bg-red-100"
-      : "bg-white-200";
+      emp?.isActive === "active"
+    );
 
     const onCopy = (payId) => {
-      if (!payId) {
-        console.error("Payment ID is missing.");
-        return;
-      }
-
+      if (!payId) return;
       const baseUrl = "https://customer-payment-link.vercel.app/";
       const fullUrl = `${baseUrl}${payId}`;
+      navigator.clipboard.writeText(fullUrl).then(() => {
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 3000);
+      }).catch((err) => console.error("Failed to copy URL: ", err));
+    };
 
-      navigator.clipboard
-        .writeText(fullUrl)
-        .then(() => {
-          // Set state to show 'Copied' text
-          setIsCopied(true);
-
-          // Reset state after 3 seconds
-          setTimeout(() => {
-            setIsCopied(false);
-          }, 3000); // 3000 milliseconds = 3 seconds
-        })
-        .catch((err) => {
-          console.error("Failed to copy URL: ", err);
-          // Optional: show a temporary error message
-        });
+    // ── Toggle enable/disable ──
+    const handleToggle = () => {
+      const newVal = !isEnabled;
+      setIsEnabled(newVal);
+      handleStatus(emp?._id); // calls your existing API
     };
 
     const handleStatus = async (id) => {
       try {
         const response = await updatePaymentStatus({ id }).unwrap();
-        console.log(response, "response");
         if (response.success) {
           toast.success(response.message);
         } else {
-          toast.error(response.message || "Failed to changed status");
+          toast.error(response.message || "Failed to change status");
         }
         refetchAll();
       } catch (error) {
@@ -101,178 +69,118 @@ export const LinkRow = memo(
           error?.data?.message ||
           "Failed to update payment status";
         toast.error(msg);
+        // revert optimistic toggle on error
+        setIsEnabled((prev) => !prev);
       }
     };
 
+    const statusStyle = STATUS_STYLES[emp?.paymentStatus] ?? "bg-zinc-100 text-zinc-500 border-zinc-200";
+    const sym = currencySymbols[emp?.currency] || emp?.currency || "$";
+
+    // ── Row background ──
+    const rowBg = !isEnabled
+      ? "bg-gray-200"
+      // : emp?.paymentStatus === "paid"
+      // ? "bg-green-100"
+      // : emp?.paymentStatus === "failed"
+      // ? "bg-red-50"
+      : "bg-white";
+
     return (
-      <motion.tr
-        key={emp?._id}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.2 }}
-        className={`${rowBgClass} transition-colors relative `}
-      >
-        <td className="px-4 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
-          {emp?.name || "-"}
+      <tr className={`group border-b border-zinc-100 transition-colors ${rowBg} hover:brightness-95`}>
+
+        {/* Customer */}
+        <td className="px-3 py-2.5 min-w-[160px]">
+          <p className="text-[12px] font-semibold text-zinc-800 capitalize truncate max-w-[150px]" title={emp?.name}>
+            {emp?.name || "—"}
+          </p>
         </td>
 
-        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600">
-          {emp?.email || "-"}
+        {/* Email */}
+        <td className="px-3 py-2.5 min-w-[180px]">
+          <p className="text-[11px] text-zinc-500 truncate max-w-[170px]" title={emp?.email}>
+            {emp?.email || "—"}
+          </p>
         </td>
 
-        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] text-gray-800">
-          {emp?.phoneNo || "-"}
+        {/* Phone */}
+        <td className="px-3 py-2.5 min-w-[130px]">
+          <p className="text-[11px] text-zinc-600 whitespace-nowrap">{emp?.phoneNo || "—"}</p>
         </td>
 
-        <td className="px-2 py-1.5 whitespace-nowrap text-[12px] font-normal text-gray-600 capitalize">
-          {emp?.brandId?.name || "None Brand"}
+        {/* Brand */}
+        <td className="px-3 py-2.5 min-w-[150px]">
+          <p className="text-[11px] text-zinc-600 capitalize truncate max-w-[140px]" title={emp?.brandId?.name}>
+            {emp?.brandId?.name || "No Brand"}
+          </p>
         </td>
 
-        <td className="px-2 py-1.5 ">
-          {Array.isArray(emp?.service) ? (
-            emp.service.length > 0 ? (
-              emp.service.map((tagItem, index) => (
-                <span
-                  key={index}
-                  className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium capitalize whitespace-nowrap"
-                >
-                  {tagItem}
-                </span>
-              ))
+        {/* Services */}
+        <td className="px-3 py-2.5 min-w-[160px]">
+          <div className="flex flex-wrap gap-1 max-w-[155px]">
+            {Array.isArray(emp?.service) && emp.service.length > 0 ? (
+              <>
+                {emp.service.slice(0, 2).map((s, i) => (
+                  <span key={i} className="inline-flex px-1.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-full text-[10px] font-medium capitalize whitespace-nowrap">
+                    {s}
+                  </span>
+                ))}
+                {emp.service.length > 2 && (
+                  <span className="inline-flex px-1.5 py-0.5 bg-zinc-100 text-zinc-500 border border-zinc-200 rounded-full text-[10px] font-medium">
+                    +{emp.service.length - 2}
+                  </span>
+                )}
+              </>
             ) : (
-              <span className="text-[12px] text-gray-600">No Service</span>
-            )
-          ) : (
-            <span className="capitalize inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-              {emp?.service || "No Service"}
-            </span>
-          )}
+              <span className="text-[11px] text-zinc-400">No service</span>
+            )}
+          </div>
         </td>
 
-        <td className="px-2 py-1.5  whitespace-nowrap">
-          <span className="text-[12px] text-gray-600">{emp?.merchantType}</span>
+        {/* Merchant */}
+        <td className="px-3 py-2.5 min-w-[100px]">
+          <p className="text-[11px] text-zinc-600 truncate max-w-[95px]">{emp?.merchantType || "—"}</p>
         </td>
 
-        <td className="px-3  whitespace-nowrap">
-          <span
-            className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-              emp?.paymentStatus,
-            )}`}
-          >
+        {/* Status */}
+        <td className="px-3 py-2.5 min-w-[100px]">
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border whitespace-nowrap ${statusStyle}`}>
+            <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
             {emp?.paymentStatus
-              ? emp.paymentStatus.charAt(0).toUpperCase() +
-                emp.paymentStatus.slice(1)
-              : "-"}
+              ? emp.paymentStatus.charAt(0).toUpperCase() + emp.paymentStatus.slice(1)
+              : "—"}
           </span>
         </td>
 
-        <td className="px-2 py-1.5 whitespace-nowrap">
-  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm font-bold bg-zinc-200 text-zinc-800">
-    {currencySymbols[emp?.currency] || emp?.currency} {emp?.amount}
-  </span>
-</td>
-        <td className="px-2 py-1.5  whitespace-nowrap">
-          {emp?.createdAt && (
-            <span className="text-[12px] text-gray-600">
-              {formatDate(emp.createdAt)}
-            </span>
-          )}
+        {/* Amount */}
+        <td className="px-3 py-2.5 min-w-[90px]">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-[12px] font-bold bg-zinc-800 text-white whitespace-nowrap">
+            {sym}{emp?.amount?.toLocaleString() ?? "0"}
+          </span>
         </td>
 
-        <td className="pl-2  whitespace-nowrap">
-          <div className="relative inline-block">
-            {" "}
-            {/* important: relative container */}
-            <Menu>
-              <MenuButton className="inline-flex cursor-pointer items-center justify-center rounded-md p-1 border-1 border-gray-200 hover:bg-zinc-200">
-                <EllipsisVertical className="h-4 w-4 text-gray-700" />
-              </MenuButton>
-
-              <Transition
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <MenuItems
-                  anchor="bottom end"
-                  className="z-20 mt-1 w-32 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none
-                  data-[closed]:opacity-0"
-                >
-                  <div className="py-1">
-                    {emp?.paymentStatus !== "paid" && (
-                      <>
-                        <MenuItem>
-                          {({ active }) => (
-                            <button
-                              onClick={() => router.push(`/pay/${emp?._id}`)}
-                              className={`${
-                                active ? "bg-gray-100" : ""
-                              } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-black-800`}
-                            >
-                              <Eye className="h-4 w-4" />
-                              View
-                            </button>
-                          )}
-                        </MenuItem>
-                        <MenuItem>
-                          {({ active }) => (
-                            <button
-                              onClick={() => onCopy(emp?._id)} // Updated to use local onCopy
-                              className={`${
-                                active ? "bg-gray-100" : ""
-                              } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] ${
-                                isCopied ? "text-green-600" : "text-blue-700" // Text color change
-                              }`}
-                            >
-                              {/* Icon change based on state */}
-                              {isCopied ? (
-                                <Check className="h-4 w-4 text-green-600" />
-                              ) : (
-                                <Copy className="h-4 w-4" />
-                              )}
-                              {/* Text change based on state */}
-                              {isCopied ? "Copied!" : "Copy Link"}{" "}
-                            </button>
-                          )}
-                        </MenuItem>
-                        <MenuItem>
-                          {({ active }) => (
-                            <button
-                              onClick={() => handleStatus(emp?._id)}
-                              className={`${
-                                active ? "bg-gray-200" : ""
-                              } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-gray-600`}
-                            >
-                              <Power className="h-4 w-4" />
-                              {isEnabled ? "Disable" : "Enable"}
-                            </button>
-                          )}
-                        </MenuItem>
-                        <MenuItem>
-                          {({ active }) => (
-                            <button
-                              onClick={() => setConfirmDelete(emp?._id)}
-                              className={`${
-                                active ? "bg-gray-100" : ""
-                              } cursor-pointer flex w-full items-center gap-2 p-1.5 text-[12px] text-red-600`}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              Delete
-                            </button>
-                          )}
-                        </MenuItem>  
-                      </>
-                    )}
-                  </div>
-                </MenuItems>
-              </Transition>
-            </Menu>
-          </div>
+        {/* Created */}
+        <td className="px-3 py-2.5 min-w-[110px]">
+          <p className="text-[11px] text-zinc-400 whitespace-nowrap">{formatDate(emp?.createdAt)}</p>
         </td>
-      </motion.tr>
+
+        {/* Updated */}
+        <td className="px-3 py-2.5 min-w-[110px]">
+          <p className="text-[11px] text-zinc-400 whitespace-nowrap">{formatDate(emp?.updatedAt)}</p>
+        </td>
+
+        {/* Actions — sticky right */}
+        <td className={`px-2 py-2.5 sticky right-0 transition-colors border-l border-zinc-100 w-10 ${rowBg}`}>
+          <RowMenu
+            emp={emp}
+            isCopied={isCopied}
+            onCopy={onCopy}
+            onDelete={(id) => setConfirmDelete(id)}
+            isEnabled={isEnabled}
+            onToggle={handleToggle}
+          />
+        </td>
+      </tr>
     );
   },
   (prev, next) => prev.emp === next.emp,

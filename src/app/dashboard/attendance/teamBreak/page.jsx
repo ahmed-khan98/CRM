@@ -16,6 +16,7 @@ import {
   HandHeart,
   Briefcase,
   Monitor,
+  Zap,
 } from "lucide-react";
 import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/AttendenceHeader";
 import StatsSection from "@/app/_Components/attendence/StatsSection";
@@ -41,10 +42,8 @@ export default function BreakPage() {
   const { data: employees, isFetching: isEmployeesFetching } =
     useAllEmployeesQuery();
 
-  /* ── Build query params ── */
-  console.log("Selected Employee:", selectedEmployee);
   const queryParams = useMemo(() => {
-    const base = { page, limit: 5 };
+    const base = { page, limit: 10 };
     const now = moment().tz("Asia/Karachi");
     let params = { ...base };
 
@@ -76,11 +75,19 @@ export default function BreakPage() {
     if (selectedEmployee) {
       params.userId = selectedEmployee;
     }
+    
+    // 👈 Backend pr agar active status filter ho (jaise live break) ya type filter ho
+    if (activeFilter) {
+      if (activeFilter === "live") {
+        params.status = "break-in";
+      } else {
+        params.type = activeFilter.toUpperCase();
+      }
+    }
 
     return params;
-  }, [viewType, customRange, selectedEmployee, page]);
+  }, [viewType, customRange, selectedEmployee, page, activeFilter]);
 
-  /* ── Fetch ── */
   useEffect(() => {
     if (abortRef.current) abortRef.current.abort();
     const controller = new AbortController();
@@ -99,7 +106,6 @@ export default function BreakPage() {
           ),
         ).toString();
 
-        // ── Replace this URL with your actual API endpoint ──
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}employee/breaks?${search}`, {
           signal: controller.signal,
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -117,13 +123,16 @@ export default function BreakPage() {
       }
     };
 
-    fetchBreaks();
+    if (queryParams) {
+      fetchBreaks();
+    }
     return () => controller.abort();
   }, [queryParams]);
 
+  // Filter change hone pr hamesha page 1 pr reset krein
   useEffect(() => {
     setPage(1);
-  }, [viewType, customRange, selectedEmployee]);
+  }, [viewType, customRange, selectedEmployee, activeFilter]);
 
   const employeeOptions = useMemo(() => {
     const options =
@@ -137,26 +146,24 @@ export default function BreakPage() {
 
   const items = data?.items ?? [];
   const meta = data?.meta ?? null;
+  const apiStats = data?.stats ?? null; // 👈 API se direct stats object extract kiya
 
   const onPageChange = useCallback((p) => setPage(p), []);
 
+  // 🛠️ FIX: Frontend calculations ko khatam kr k backend state map ki hy
   const stats = useMemo(() => {
     return {
-      total: meta?.total ?? items.length,
-      smoking: items.filter((i) => i.type?.toUpperCase() === "SMOKING").length,
-      "rest room": items.filter((i) => i.type?.toUpperCase() === "REST ROOM")
-        .length,
-      tea: items.filter((i) => i.type?.toUpperCase() === "TEA").length,
-      meal: items.filter((i) => i.type?.toUpperCase() === "MEAL").length,
-      prayer: items.filter((i) => i.type?.toUpperCase() === "PRAYER").length,
-      official: items.filter((i) => i.type?.toUpperCase() === "OFFICIAL")
-        .length,
-      "system idle": items.filter(
-        (i) => i.type?.toUpperCase() === "SYSTEM IDLE",
-      ).length,
-      active: items.filter((i) => i.status === "break-in").length,
+      total: apiStats?.TOTAL_ALL ?? 0,
+      live: apiStats?.LIVE ?? 0,
+      meal: apiStats?.MEAL ?? 0,
+      smoking: apiStats?.SMOKING ?? 0,
+      prayer: apiStats?.PRAYER ?? 0,
+      tea: apiStats?.TEA ?? 0,
+      official: apiStats?.OFFICIAL ?? 0,
+      "rest room": apiStats?.["REST ROOM"] ?? 0,
+      "system idle": apiStats?.["SYSTEM IDLE"] ?? 0,
     };
-  }, [items, meta]);
+  }, [apiStats]);
 
   const statCards = useMemo(() => {
     return getStatCards({
@@ -164,6 +171,7 @@ export default function BreakPage() {
       data: items,
       palettes: PALETTES,
       config: {
+        live: { label: "Live Break", icon: Zap },
         smoking: { label: "Smoking", icon: Cigarette },
         "rest room": { label: "Rest Room", icon: Bath },
         tea: { label: "Tea", icon: Coffee },
@@ -171,7 +179,6 @@ export default function BreakPage() {
         prayer: { label: "Prayer", icon: HandHeart },
         official: { label: "Official", icon: Briefcase },
         "system idle": { label: "System Idle", icon: Monitor },
-        active: { label: "On Break", icon: Clock },
       },
       extraCard: {
         label: "Total",
@@ -182,31 +189,8 @@ export default function BreakPage() {
     });
   }, [stats, items]);
 
-  const tableData = useMemo(() => {
-    if (!activeFilter) return items;
-
-    const TYPE_FILTERS = [
-      "SMOKING",
-      "REST ROOM",
-      "TEA",
-      "MEAL",
-      "PRAYER",
-      "SYSTEM IDLE",
-      "OFFICIAL",
-    ];
-
-    if (TYPE_FILTERS.includes(activeFilter.toUpperCase())) {
-      return items.filter(
-        (i) => i.type?.toUpperCase() === activeFilter.toUpperCase(),
-      );
-    }
-
-    if (activeFilter === "active") {
-      return items.filter((i) => i.status === "break-in");
-    }
-
-    return items.filter((i) => i.status === activeFilter);
-  }, [items, activeFilter]);
+  // Backend se filtered items hi aa rhe hain, direct pass krein table ko
+  const tableData = items;
 
   const toggleFilter = useCallback((key) => {
     setActiveFilter((prev) => (prev === key ? null : key));
@@ -220,7 +204,7 @@ export default function BreakPage() {
   }, []);
 
   const showClearBtn =
-    viewType !== "today" || customRange.start || selectedEmployee;
+    viewType !== "today" || customRange.start || selectedEmployee || activeFilter;
 
   return (
     <div className="min-h-screen text-zinc-800 p-2 md:p-4 flex flex-col gap-3">
@@ -257,7 +241,7 @@ export default function BreakPage() {
         <ActiveFilterShowing
           activeFilter={activeFilter}
           setActiveFilter={setActiveFilter}
-          length={tableData?.length}
+          length={meta?.total} // 👈 Total items from meta object according to pagination
         />
       )}
 

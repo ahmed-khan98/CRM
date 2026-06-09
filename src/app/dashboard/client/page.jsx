@@ -124,7 +124,7 @@ export default function Client() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handleEdit()}
-            className="flex items-center justify-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-3 rounded-2xl text-[13px] font-bold shadow-lg shadow-purple-100 hover:bg-zinc-900 transition-all"
+            className="flex items-center justify-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2.5 rounded-2xl text-[13px] font-bold shadow-lg shadow-purple-100 hover:bg-zinc-900 transition-all"
           >
             <Plus className="h-5 w-5" />
             Add New Client
@@ -176,23 +176,23 @@ export default function Client() {
                   <thead className="">
                     <tr>
                       {/* Sticky Name Column */}
-                      <th className=" px-4 py-3 text-left text-[13px] font-bold text-zinc-300">
+                      <th className=" px-4 py-2.5 text-left text-[13px] font-bold text-zinc-300">
                         Client Info
                       </th>
-                      <th className="px-4 py-3 text-left text-[13px] font-bold text-zinc-300">
+                      <th className="px-4 py-2.5 text-left text-[13px] font-bold text-zinc-300">
                         Company
                       </th>
-                      <th className="px-4 py-3 text-left text-[13px] font-bold text-zinc-300">
+                      <th className="px-4 py-2.5 text-left text-[13px] font-bold text-zinc-300">
                         Contact Details
                       </th>
-                      <th className="px-4 py-3 text-center text-[13px] font-bold text-zinc-300">
+                      <th className="px-4 py-2.5 text-center text-[13px] font-bold text-zinc-300">
                         Tags
                       </th>
-                      <th className="px-4 py-3 text-left text-[13px] font-bold text-zinc-300">
+                      <th className="px-4 py-2.5 text-left text-[13px] font-bold text-zinc-300">
                         Handled By
                       </th>
                       {/* Sticky Action Column */}
-                      <th className="px-4 py-3 text-center text-[13px] font-bold text-zinc-300 ">
+                      <th className="px-4 py-2.5 text-center text-[13px] font-bold text-zinc-300 ">
                         Actions
                       </th>
                     </tr>
@@ -205,12 +205,12 @@ export default function Client() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className=" hover:bg-zinc-50  transition-colors"
+                        className="group   transition-colors hover:brightness-95"
                       >
                         {/* Sticky Client Info (Image + Name + Email) */}
-                        <td className="px-4 py-3 border-b border-gray-50 ">
+                        <td className="border-b border-zinc-100 px-4 py-2.5  ">
                           <div className="flex items-center gap-3">
-                            <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
+                            <div className="relative w-8 h-8 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
                               <Image
                                 src={emp?.image || "/placeholder.svg"}
                                 alt="Client"
@@ -219,7 +219,7 @@ export default function Client() {
                               />
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-sm font-bold text-gray-800 leading-none capitalize">
+                              <span className="text-[12px] font-bold text-gray-800 leading-none capitalize">
                                 {emp?.name || "Unknown"}
                               </span>
                               <span className="text-[12px] text-gray-500 mt-1">
@@ -230,19 +230,19 @@ export default function Client() {
                         </td>
 
                         {/* Company */}
-                        <td className="px-4 py-3 border-b border-gray-50 whitespace-nowrap">
-                          <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-md">
+                        <td className="border-b border-zinc-100 px-4 py-2.5  whitespace-nowrap">
+                          <span className="text-[11px] text-gray-600 ">
                             {emp?.companyName || "No Company"}
                           </span>
                         </td>
 
                         {/* Phone */}
-                        <td className="px-4 py-3 border-b border-gray-50 whitespace-nowrap text-xs text-gray-500 font-medium">
+                        <td className="border-b border-zinc-100 text-[11px] px-4 py-2.5  whitespace-nowrap text-xs text-gray-500 font-medium">
                           {emp?.phoneNo || "-"}
                         </td>
 
                         {/* Combined Tags (Brand + Department) */}
-                        <td className="px-4 py-3 border-b border-gray-50">
+                        <td className="border-b border-zinc-100 px-4 py-2.5 ">
                           <div className="flex flex-wrap justify-center gap-1.5">
                             {emp?.brandId?.name && (
                               <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-tighter bg-blue-50 text-blue-600 border border-blue-100">
@@ -258,16 +258,16 @@ export default function Client() {
                         </td>
 
                         {/* Handle By */}
-                        <td className="px-4 py-3 border-b border-gray-50">
+                        <td className="border-b border-zinc-100 px-4 py-2.5 ">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-600 font-medium capitalize">
+                            <span className="text-[11px] text-gray-600 font-medium capitalize">
                               {emp?.handleBy?.fullName || "-"}
                             </span>
                           </div>
                         </td>
 
                         {/* Sticky Actions */}
-                        <td className=" px-4 py-3 border-b border-gray-50 ">
+                        <td className="border-b border-zinc-100 px-4 py-2.5 ">
                           <div className="flex items-center justify-center gap-2">
                             <motion.button
                               whileHover={{ scale: 1.1 }}

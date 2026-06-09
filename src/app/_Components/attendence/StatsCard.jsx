@@ -40,12 +40,10 @@ export const StatCard = memo(({
   palette 
 }) => {
   const isActive = activeFilter === filterId;
-
-  // Optimization: Classes ko memoize kar diya taake string manipulation bar bar na ho
   const containerClasses = useMemo(() => `
     cursor-pointer flex-1 min-w-[100px] relative overflow-hidden flex flex-col gap-1 p-2 
     rounded-2xl border-2 transition-all duration-300 text-left select-none
-    ${palette.bg} 
+    ${palette?.bg} 
     ${isActive 
       ? `${palette.activeBorder} ring-4 ${palette.ring} scale-[1.03] shadow-lg z-10` 
       : `${palette.border} hover:scale-[1.02] hover:shadow-md `

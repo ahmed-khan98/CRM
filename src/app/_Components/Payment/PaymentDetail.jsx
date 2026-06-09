@@ -180,7 +180,7 @@ const PaymentDetail = async ({ id, searchParams }) => {
     return <PaymentLinkDisabled paymentData={paymentData} />;
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans text-slate-900">
+    <div className="min-h-screen bg-zinc-100 font-sans text-slate-900">
       {/* Top Brand Bar - Loads dynamic logo natively */}
       <PaymentPagHeader image={paymentData?.brandId?.image} />
 

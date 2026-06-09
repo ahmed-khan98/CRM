@@ -41,7 +41,6 @@ export default function BreakPage() {
   const queryParams = useMemo(() => {
     const base = { page, limit: 5 };
     if (viewType === "current_month") {
-      // send month/year so backend filters; adjust to your actual API contract
       return {
         ...base,
         startDate: moment().tz(TZ).startOf("month").format("YYYY-MM-DD"),
@@ -122,7 +121,6 @@ export default function BreakPage() {
       prayer: items.filter((i) => i.type?.toUpperCase() === "PRAYER").length,
       official: items.filter((i) => i.type?.toUpperCase() === "OFFICIAL").length,
       "system idle": items.filter((i) => i.type?.toUpperCase() === "SYSTEM IDLE").length,
-      active: items.filter((i) => i.status === "break-in").length,
     };
   }, [items, meta]);
 
@@ -139,7 +137,6 @@ export default function BreakPage() {
         prayer: { label: "Prayer", icon: HandHeart },
         official: { label: "Official", icon: Briefcase },
         'system idle': { label: "System Idle", icon: Monitor },
-        active: { label: "On Break", icon: Clock },
       },
       extraCard: {
         label: "Total",
@@ -165,10 +162,6 @@ export default function BreakPage() {
 
     if (TYPE_FILTERS.includes(activeFilter.toUpperCase())) {
       return items.filter((i) => i.type?.toUpperCase() === activeFilter.toUpperCase());
-    }
-
-    if (activeFilter === "active") {
-      return items.filter((i) => i.status === "break-in");
     }
 
     return items.filter((i) => i.status === activeFilter);

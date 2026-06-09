@@ -2,17 +2,19 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { X, User, BadgeDollarSign } from "lucide-react";
+import { X, BadgeDollarSign, Calendar } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
   useCreateSaleMutation,
   useUpdateSaleMutation,
 } from "@/app/_Services/sale/page";
-import { useDepartmentsCLientQuery } from "@/app/_Services/Client/page";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import { saleSchema } from "@/app/schema/sale";
 import { useGetdepartmentsEmployeeQuery } from "@/app/_Services/employee/page";
 import FormikSelect from "./formikSelect";
+import { modalVariants, SALE_OPTIONS,CURRENCY_OPTIONS } from "../Form/DropDownOptions";
+import { useMemo, useState } from "react";
+import InputField from "../Form/InputField";
 
 const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
   const [createSale] = useCreateSaleMutation();
@@ -24,86 +26,70 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
     isLoading,
   } = useAllDepartmentsQuery();
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    console.log(values, "Sale");
-    try {
-      const response = await (data
-        ? updateSale({ ...values, id: data?._id }).unwrap()
-        : createSale({ ...values }).unwrap());
+    const [departmentId, setDepartmentId] = useState(
+    data?.departmentId?._id || "",
+  );
 
-      if (response.success) {
-        toast.success(
-          data ? "Sale updated successfully!" : "Sale created successfully!"
-        );
-      } else {
-        toast.error(response.message || "Failed to process Sale");
-      }
+  const { data: departEmployee } = useGetdepartmentsEmployeeQuery(
+    departmentId,
+    {
+      skip: !departmentId,
+    },
+  );
+  
+  const deptOptions =
+    departments?.data?.map((d) => ({
+      value: d?._id,
+      label: d?.name,
+    })) ?? [];
+
+  const empOptions =
+    departEmployee?.data?.map((d) => ({
+      value: d?._id,
+      label: d?.fullName,
+    })) ?? [];
+
+  const initialValues = useMemo(
+    () => ({
+      departmentId: data?.departmentId?._id || "",
+      agent: data?.agent?._id || "",
+      fronter: data?.fronter?._id || "",
+      name: data?.name || "",
+      email: data?.email || "",
+      phoneNo: data?.phoneNo || "",
+      serialNo: data?.serialNo || "",
+      brandMark: data?.brandMark || "",
+      brandName: data?.brandName || "",
+      amount: data?.amount || "",
+      currency: data?.currency || "",
+      type: data?.type || "",
+      saleDate: data?.saleDate
+        ? new Date(data.saleDate).toISOString().split("T")[0]
+        : "",
+    }),
+    [data],
+  );
+
+    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      const payload = data ? { ...values, id: data._id } : values;
+
+      const response = await (
+        data ? updateSale(payload) : createSale(payload)
+      ).unwrap();
+
+      toast.success(
+        data ? "Sale updated successfully!" : "Sale created successfully!",
+      );
+
       resetForm();
       closeModal();
       refetch();
     } catch (error) {
-      console.log(error, "error");
-      toast.error(error.data?.message || "Failed to create department");
+      toast.error(error?.data?.message || "Failed to process sale");
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 50 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { type: "spring", damping: 25, stiffness: 300 },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: 50,
-      transition: { duration: 0.2 },
-    },
-  };
-
-  const currencyType = [
-    { id: "USD", name: "USD" },
-    { id: "PKR", name: "PKR" },
-  ];
-  const saleType = [
-    { id: "FRESH", name: "FRESH" },
-    { id: "UP SELL", name: "UP SELL" },
-  ];
-
-  const initialValues = {
-    departmentId: data?.departmentId?._id || "",
-    agent: data?.agent?._id || "",
-    fronter: data?.fronter?._id || "",
-    name: data?.name || "",
-    email: data?.email || "",
-    phoneNo: data?.phoneNo || "",
-    serialNo: data?.serialNo || "",
-    brandMark: data?.brandMark || "",
-    brandName: data?.brandName || "",
-    amount: data?.amount || "",
-    currency: data?.currency || "",
-    type: data?.type || "",
-  };
-
-  const handleDepartmentChange = (newDeptId) => {
-    setFieldValue("departmentId", newDeptId);
-  };
-  const handleAgentChange = (newDeptId) => {
-    setFieldValue("agent", newDeptId);
-  };
-  const handleFronterChange = (newDeptId) => {
-    setFieldValue("fronter", newDeptId);
-  };
-
-  const handleCurrencyChange = (ser) => {
-    setFieldValue("currency", ser);
-  };
-  const handleTypeChange = (ser) => {
-    setFieldValue("type", ser);
   };
 
   return (
@@ -166,204 +152,72 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                   setFieldTouched,
                 }) => {
                   console.log(errors, "errors---->>>>");
-                  // if (values.type !== selectedMethod) {
-                  //     setSelectedMethod(values.type)
-                  // }
-                  const {
-                    data: departEmployee,
-                    error,
-                    isLoading: isEmployeeLoading,
-                  } = useGetdepartmentsEmployeeQuery(values.departmentId, {
-                    skip: !values.departmentId,
-                  });
-
-                  const deptOptions =
-                    departments?.data?.map((d) => ({
-                      value: d?._id,
-                      label: d?.name,
-                    })) ?? [];
-
-                  const empOptions =
-                    departEmployee?.data?.map((d) => ({
-                      value: d?._id,
-                      label: d?.fullName,
-                    })) ?? [];
-
-                  const currencyOptions =
-                    currencyType?.map((b) => ({
-                      value: b?.id,
-                      label: b?.name,
-                    })) ?? [];
-
-                  const saleOptions =
-                    saleType?.map((b) => ({
-                      value: b?.id,
-                      label: b?.name,
-                    })) ?? [];
 
                   return (
                     <Form className="space-y-3">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Client Name
-                          </label>
-                          <Field
-                            type="text"
+                          <InputField
                             name="name"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.name && touched.name
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="name"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
+                            label="Client Name"
+                            error={errors.name}
+                            touched={touched.name}
                           />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Client Email
-                          </label>
-                          <Field
+                     
+                          <InputField
                             type="email"
-                            name="email"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.email && touched.email
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="email"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
+                            name="email" 
+                            label="Client Email"
+                            error={errors.email}
+                            touched={touched.email}
                           />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Client Phone No.
-                          </label>
-                          <Field
-                            type="text"
-                            name="phoneNo"
-                            // placeholder="0300-1234567"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.phoneNo && touched.phoneNo
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="phoneNo"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
+                     <InputField
+                            name="phoneNo" 
+                            label="Client Phone No."
+                            error={errors.phoneNo}
+                            touched={touched.phoneNo}
+                          /> 
+                          <InputField
+                            name="serialNo" 
+                            label="Serial No"
+                            error={errors.serialNo}
+                            touched={touched.serialNo}
                           />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Serial No
-                          </label>
-                          <Field
-                            type="text"
-                            name="serialNo"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.serialNo && touched.serialNo
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="serialNo"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2  gap-4 mb-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Brand Name
-                          </label>
-                          <Field
-                            type="text"
+                        <InputField
                             name="brandName"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.brandName && touched.brandName
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="brandName"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
+                            label="Brand Name"
+                            error={errors.brandName}
+                            touched={touched.brandName}
                           />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Brand Mark
-                          </label>
-                          <Field
-                            type="text"
+                          <InputField
                             name="brandMark"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.brandMark && touched.brandMark
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="brandMark"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
+                            label="Brand Mark"
+                            error={errors.brandMark}
+                            touched={touched.brandMark}
                           />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-800 mb-1">
-                            Amount
-                          </label>
-                          <Field
+                   
+                       <InputField
                             type="number"
                             name="amount"
-                            className={`w-full px-4 py-2 border-1 ${
-                              errors.amount && touched.amount
-                                ? "border-zinc-500 focus:border-zinc-500"
-                                : "border-gray-200 focus:border-blue-500"
-                            } rounded-xl focus:outline-none transition-colors`}
-                          ></Field>
-                          <ErrorMessage
-                            name="amount"
-                            component="div"
-                            className="text-red-500 text-sm mt-1"
+                            label="Amount"
+                            error={errors.amount}
+                            touched={touched.amount}
                           />
-                        </div>
+                      
                         <FormikSelect
                           name="currency"
                           label="Select Currency Type"
-                          options={currencyOptions}
+                          options={CURRENCY_OPTIONS}
                           value={values.currency}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           error={errors.currency}
                           touched={touched.currency}
                           placeholder="currency"
-                          onChangeExtra={handleCurrencyChange}
+                          onChangeExtra={(value) =>
+                            setFieldValue("currency", value)
+                          }
                         />
-                       
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <FormikSelect
+                      <FormikSelect
                           name="departmentId"
                           label="Select Department"
                           options={deptOptions}
@@ -373,7 +227,10 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                           error={errors.departmentId}
                           touched={touched.departmentId}
                           placeholder="Select Department"
-                          onChangeExtra={handleDepartmentChange}
+                          onChangeExtra={(value) => {
+                            setDepartmentId(value);
+                            setFieldValue("departmentId", value);
+                          }}
                         />
                         <FormikSelect
                           name="agent"
@@ -385,37 +242,49 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                           error={errors.agent}
                           touched={touched.agent}
                           placeholder="Select agent"
-                          onChangeExtra={handleAgentChange}
+                          onChangeExtra={(value) =>
+                            setFieldValue("agent", value)
+                          }
                         />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                         <FormikSelect
+                      <FormikSelect
                           name="type"
                           label="Select Sale Type"
-                          options={saleOptions}
+                          options={SALE_OPTIONS}
                           value={values.type}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}
                           error={errors.type}
                           touched={touched.type}
                           placeholder="select type"
-                          onChangeExtra={handleTypeChange}
+                          onChangeExtra={(value) =>
+                            setFieldValue("type", value)
+                          }
                         />
                         {values?.type === "FRESH" && (
-                            <FormikSelect
-                          name="fronter"
-                          label="Select Sale Fronter"
-                          options={empOptions}
-                          value={values.fronter}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.fronter}
-                          touched={touched.fronter}
-                          placeholder="Select fronter"
-                          onChangeExtra={handleFronterChange}
-                        />
+                          <FormikSelect
+                            name="fronter"
+                            label="Select Sale Fronter"
+                            options={empOptions}
+                            value={values.fronter}
+                            setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
+                            error={errors.fronter}
+                            touched={touched.fronter}
+                            placeholder="Select fronter"
+                            onChangeExtra={(value) =>
+                              setFieldValue("fronter", value)
+                            }
+                          />
                         )}
+
+                     <InputField
+                            type="date" 
+                            name="saleDate"
+                            label="Sale Date"
+                            error={errors.saleDate}
+                            touched={touched.saleDate}
+                          />
+                          
                       </div>
 
                       <div className="flex gap-2 md:gap-4 pt-2">

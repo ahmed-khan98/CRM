@@ -114,7 +114,7 @@ const DashboardLayout = ({ children }) => {
 
   const handleBreakOut = async () => {
     try {
-      const res = await breakOut({ attendanceId: attendence?._id }).unwrap();
+      const res = await breakOut({shiftDate:attendence?.shiftDate }).unwrap();
       if (res.success) {
         console.log("breakOutResponse", res);
         dispatch(resumeWork());
@@ -131,7 +131,7 @@ const DashboardLayout = ({ children }) => {
 
   const handleBreakIn = async () => {
     try {
-      const res = await breakIn({ attendanceId: attendence?._id }).unwrap();
+      const res = await breakIn({ shiftDate: attendence?.shiftDate }).unwrap();
 
       if (res.success) {
         dispatch(

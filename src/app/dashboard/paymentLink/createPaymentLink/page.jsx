@@ -68,7 +68,6 @@ export default function page() {
   "Stationery Design",
   "Brochure Design",
   "Website Development",
-  "Project Status",
   "Content Writing",
   "Social Media Design",
   "Copy Right Design",
@@ -78,6 +77,11 @@ export default function page() {
   "SEO Questionnaire",
   "Academic Writing Questionnaire",
   "Illustrations",
+  "Publishing package",
+  "Promotional Publishing Package",
+  "Promotional Publishing & Writing Package",
+  "Trademark Application Revival",
+  "Trademark Logo Application Revival",
   "Other",
   "No Package"
 ];

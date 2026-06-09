@@ -4,6 +4,8 @@ export const saleSchema = Yup.object().shape({
   name: Yup.string().required("client name is required"),
   email: Yup.string().required("client email is required"),
   phoneNo: Yup.string().required("client phone no. is required"),
+    saleDate: Yup.string().required("Sale date is required"),
+  
   // serialNo: Yup.string().required("serial number is required"),
   // brandMark: Yup.string().required("brand mark is required"),
   // brandName: Yup.string().required("brand name is required"),

@@ -12,7 +12,7 @@ const currencySymbols = {
 const PaymentOrderSummary = ({name, email, brand, currency, amount, service}) => {
   return (
     <>
-      <section className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-visible">
+      <section className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-visible">
         <div className="p-6 border-b border-slate-100 bg-slate-50/50">
           <h2 className="text-lg font-bold flex items-center gap-2">
             <Info size={20} className="text-zinc-600" /> Order Summary

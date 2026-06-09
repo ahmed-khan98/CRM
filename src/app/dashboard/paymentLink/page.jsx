@@ -215,9 +215,10 @@ export default function Paymentlink() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-2xl border border-zinc-200 shadow-2xl">
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
+            <div className="w-full rounded-2xl border border-zinc-200 bg-white shadow-sm" style={{ overflow: "hidden" }}>
+  <div style={{ overflowX: "auto", overflowY: "auto", maxHeight: "90vh" }}>
+    <table className="text-left border-collapse" style={{ minWidth: "1100px", width: "100%" }}>
+
                   <thead className="sticky top-0 z-20">
                     <tr>
                       {PAYMENTLINKHEADERS?.map((h) => (

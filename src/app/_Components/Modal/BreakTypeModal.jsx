@@ -21,7 +21,7 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
   const handleSubmit = async (data) => {
     console.log("Form submitted with data:", data);
     try {
-      const res = await breakIn({ attendanceId: attendence?._id,...data }).unwrap();
+      const res = await breakIn({shiftDate:attendence?.shiftDate,...data }).unwrap();
       if (res.success) {
         closeModal();
         dispatch(

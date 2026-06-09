@@ -9,6 +9,6 @@ export const SALEHEADERS = [
   "Fronter",
   "Amount",
   "Status",
-  "Date",
+  "Sale Date",
   "Action",
 ];

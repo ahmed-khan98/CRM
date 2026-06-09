@@ -120,7 +120,7 @@
 //             <button
 //               key={e}
 //               onClick={() => setActiveFilter(e)}
-//               className={`px-3 py-1.5 text-xs rounded-lg cursor-pointer transition-all duration-150 capitalize font-semibold border ${
+//               className={`px-3 py-2.5 text-[11px] rounded-lg cursor-pointer transition-all duration-150 capitalize font-semibold border ${
 //                 activeFilter === e
 //                   ? "bg-white/10 border-white/[0.14] text-zinc-100"
 //                   : "border-transparent text-zinc-600 hover:text-zinc-400"
@@ -139,7 +139,7 @@
 //                 <Users className="w-6 h-6 text-zinc-700" />
 //               </div>
 //               <p className="text-sm font-bold mb-1 text-zinc-600">No Employees Found</p>
-//               <p className="text-xs text-zinc-700">
+//               <p className="text-[11px] text-zinc-700">
 //                 {activeFilter === "all"
 //                   ? "You don't have any employees yet."
 //                   : `No employees in ${activeFilter} department.`}
@@ -183,19 +183,19 @@
 //                           </div>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap">
-//                           <span className="text-xs font-semibold capitalize text-zinc-300">{emp?.fullName || "-"}</span>
+//                           <span className="text-[11px] font-semibold capitalize text-zinc-300">{emp?.fullName || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap">
-//                           <span className="text-xs text-zinc-500">{emp?.email || "-"}</span>
+//                           <span className="text-[11px] text-zinc-500">{emp?.email || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
-//                           <span className="text-xs text-zinc-500">{emp?.designation || "-"}</span>
+//                           <span className="text-[11px] text-zinc-500">{emp?.designation || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
-//                           <span className="text-xs font-mono text-zinc-500">{emp?.CNIC || "-"}</span>
+//                           <span className="text-[11px] font-mono text-zinc-500">{emp?.CNIC || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
-//                           <span className="text-xs font-mono text-zinc-500">{emp?.phoneNo || "-"}</span>
+//                           <span className="text-[11px] font-mono text-zinc-500">{emp?.phoneNo || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
 //                           {emp?.departmentId?.name ? (
@@ -299,7 +299,7 @@ import EmployeeModal from "@/app/_Components/Modal/EmployeeModal";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import Image from "next/image";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
-import { getActionStatusColor } from "@/app/utilities/color";
+import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
 import toast from "react-hot-toast";
 import { EMPLOYEE_HEADERS } from "@/app/_Components/table/tableRow/tableHeader/employeeHeader";
 import { getStatusConfig } from "@/app/utilities/attendence";
@@ -357,18 +357,28 @@ export default function AppointmentBooking() {
     }
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "scheduled":
-        return "text-blue-600 bg-blue-300";
-      case "completed":
-        return "text-green-600 bg-green-300";
-      case "missed":
-        return "text-red-600 bg-red-300";
-      case "cancelled":
-        return "text-gray-600 bg-gray-300";
+  const formatBadgeLabel = (value) => {
+    if (!value) return "-";
+    return value
+      .toString()
+      .replace(/_/g, " ")
+      .toLowerCase()
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  };
+
+  const getDepartmentBadgeClass = (department) => {
+    switch (department?.toString().toLowerCase()) {
+      case "sales":
+        return "text-blue-700 bg-blue-200";
+      case "hr":
+      case "human resources":
+        return "text-green-700 bg-green-200";
+      case "finance":
+        return "text-indigo-700 bg-indigo-200";
+      case "marketing":
+        return "text-purple-700 bg-purple-200";
       default:
-        return "text-gray-800 bg-purple-300";
+        return "text-zinc-700 bg-zinc-100";
     }
   };
 
@@ -401,8 +411,6 @@ export default function AppointmentBooking() {
   } = useAllDepartmentsQuery();
 
   const filterData = ["all", ...(departments?.data?.map((e) => e?.name) || [])];
-
-  
 
   if (isLoading) {
     return (
@@ -450,7 +458,7 @@ export default function AppointmentBooking() {
               <button
                 key={index}
                 onClick={() => setActiveFilter(e)}
-                className={`px-4 py-2 text-sm rounded-full cursor-pointer transition-all capitalize ${
+                className={`px-4 py-1.5 text-[12px] font-medium rounded-full cursor-pointer transition-all capitalize ${
                   activeFilter === e
                     ? "bg-zinc-800 text-white shadow-md"
                     : "text-gray-600 hover:bg-gray-100"
@@ -489,7 +497,7 @@ export default function AppointmentBooking() {
                       {EMPLOYEE_HEADERS.map((col, index) => (
                         <th
                           key={index}
-                          className={`text-center text-[11px] font-medium text-zinc-300 capitalize tracking-wider           ${col === "Sr" ? "px-2 py-3" : ""}           ${col === "Status" ? "px-5 py-3" : ""}           ${col !== "Sr" && col !== "Status" ? "p-3" : ""}  `}
+                          className={`text-center text-[11px] font-medium text-zinc-300 capitalize tracking-wider           ${col === "Sr" ? "px-2 py-2.5" : ""}           ${col === "Status" ? "px-5 py-3" : ""}           ${col !== "Sr" && col !== "Status" ? "p-3" : ""}  `}
                         >
                           {col}
                         </th>
@@ -497,145 +505,143 @@ export default function AppointmentBooking() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredNotifications().map((emp, index) => {0
+                    {filteredNotifications().map((emp, index) => {
                       const cfg = getStatusConfig(emp?.status);
                       return (
-                      <motion.tr
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="hover:bg-zinc-50 transition-colors"
-                      >
-                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600 capitalize">
-                          {index + 1}
-                        </td>
+                        <motion.tr
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="hover:bg-zinc-50 transition-colors"
+                        >
+                          <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600 capitalize">
+                            {index + 1}
+                          </td>
 
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-3">
-                            <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
-                              <Image
-                                src={emp?.image || "/placeholder.svg"}
-                                alt="employee-img"
-                                fill
-                                className="object-cover"
+                          <td className="px-4 py-2.5">
+                            <div className="flex items-center gap-2">
+                              <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
+                                <Image
+                                  src={emp?.image || "/placeholder.svg"}
+                                  alt="employee-img"
+                                  fill
+                                  sizes
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[12px] font-semibold text-gray-800 leading-none capitalize">
+                                  {emp?.fullName || "-"}
+                                </span>
+                                <span className="text-[11px] text-gray-600 mt-1">
+                                  {emp?.email || "-"}
+                                </span>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-2 py-2.5 whitespace-nowrap text-[12px] font-bold text-zinc-800">
+                            {emp?.designation || "-"}
+                          </td>
+
+                          <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600">
+                            {emp?.CNIC || "-"}
+                          </td>
+
+                          <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600">
+                            {emp?.phoneNo || "-"}
+                          </td>
+                          <td className="px-3 py-2.5 whitespace-normal min-w-[200px]">
+                            <div className="flex flex-wrap gap-1 items-center">
+                              <span
+                                className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium uppercase ${getStatusColor(
+                                  emp?.departmentId?.name,
+                                )}`}
+                              >
+                                {formatBadgeLabel(emp?.departmentId?.name)}
+                              </span>
+                              <span
+                                className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium uppercase ${getActionStatusColor(
+                                  emp?.role,
+                                )}`}
+                              >
+                                {formatBadgeLabel(emp?.role)}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="px-1 py-2.5 whitespace-normal text-center">
+                            <span
+                              onClick={() => handleStatus(emp?._id)}
+                              disabled={statusLoading}
+                              className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
+                            >
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`}
                               />
-                            </div>
-                            <div className="flex flex-col">
-                              <span className="text-sm font-bold text-gray-800 leading-none capitalize">
-                                {emp?.fullName || "-"}
-                              </span>
-                              <span className="text-[12px] text-gray-500 mt-1">
-                                {emp?.email || "-"}
-                              </span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-2 py-1.5 whitespace-nowrap text-xs font-bold text-zinc-700">
-                          {emp?.designation || "-"}
-                        </td>
-
-                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
-                          {emp?.CNIC || "-"}
-                        </td>
-
-                        <td className="px-2 py-1.5 whitespace-nowrap text-xs text-gray-600">
-                          {emp?.phoneNo || "-"}
-                        </td>
-                        <td className="px-3 py-2">
-                            <div className="flex flex-col gap-1">
-                              <span
-                                className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(emp?.departmentId?.name)}`}
-                              >
-                                {emp?.departmentId?.name
-                                  .charAt(0)
-                                  .toUpperCase() +
-                                  emp?.departmentId?.name.slice(1)}
-                              </span>
-
-                              <span
-                                className={`px-2 py-1 rounded-full text-xs font-medium ${getActionStatusColor(emp?.role)}`}
-                              >
-                                {emp?.role
-                                  ? emp.role.charAt(0).toUpperCase() +
-                                    emp.role.slice(1)
+                              {statusLoading && statusArgs?.id === emp?._id ? (
+                                <div className="flex items-center gap-1">
+                                  <svg
+                                    className="animate-spin h-3 w-3 text-current"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <circle
+                                      className="opacity-25"
+                                      cx="12"
+                                      cy="12"
+                                      r="10"
+                                      stroke="currentColor"
+                                      strokeWidth="4"
+                                      fill="none"
+                                    />
+                                    <path
+                                      className="opacity-75"
+                                      fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    />
+                                  </svg>
+                                  <span>Wait...</span>
+                                </div>
+                              ) : emp?.status ? (
+                                emp.status.charAt(0).toUpperCase() +
+                                emp.status.slice(1)
+                              ) : (
+                                "-"
+                              )}
+                            </span>
+                          </td>
+                          <td className="px-2 py-2.5 whitespace-nowrap">
+                            <div className="flex items-center gap-1">
+                              <span className="text-[11px] text-gray-600">
+                                {emp?.joiningDate
+                                  ? formatDate(emp.joiningDate)
                                   : "-"}
                               </span>
-                            
-                          </div>
-                        </td>
-
-                        <td className="px-1 whitespace-normal text-center">
-                           <span
-                           onClick={() => handleStatus(emp?._id)}
-                           disabled={statusLoading}
-          className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
-        >
-          <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-          {statusLoading && statusArgs?.id === emp?._id ? (
-                              <div className="flex items-center gap-1">
-                                <svg
-                                  className="animate-spin h-3 w-3 text-current"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <circle
-                                    className="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    strokeWidth="4"
-                                    fill="none"
-                                  />
-                                  <path
-                                    className="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                  />
-                                </svg>
-                                <span>Wait...</span>
-                              </div>
-                            ) : emp?.status ? (
-                              emp.status.charAt(0).toUpperCase() +
-                              emp.status.slice(1)
-                            ) : (
-                              "-"
-                            )}
-        </span>
-                         
-                        </td>
-                        <td className="p-2 whitespace-nowrap">
-                          <div className="flex items-center gap-1">
-                            <span className="text-[12px] text-gray-600">
-                              {emp?.joiningDate
-                                ? formatDate(emp.joiningDate)
-                                : "-"}
-                            </span>
-                          </div>
-                        </td>
-                        <td className=" px-3 py-3">
-                          <div className="flex items-center justify-center gap-2">
+                            </div>
+                          </td>
+                          <td className="px-4 py-2.5 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
                             <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
+                              whileHover={{ scale: 1.08 }}
+                              whileTap={{ scale: 0.93 }}
                               onClick={() => handleEdit(emp)}
-                              className="cursor-pointer p-1 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
+                              className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
                             >
-                              <Edit className="h-4 w-4" />
+                              <Edit className="h-3.5 w-3.5" />
                             </motion.button>
                             <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
+                              whileHover={{ scale: 1.08 }}
+                              whileTap={{ scale: 0.93 }}
                               onClick={() => setConfirmDelete(emp._id)}
-                              className="cursor-pointer p-1 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                              className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
                             >
-                              <DeleteIcon className="h-4 w-4" />
+                              <DeleteIcon className="h-3.5 w-3.5" />
                             </motion.button>
                           </div>
                         </td>
-                      </motion.tr>
-                      )
-})}
+                        </motion.tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

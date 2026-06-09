@@ -15,10 +15,9 @@ import {
   Timer,
   Activity,
   CheckCircle,
-  LogOut,
-  PowerOff,
 } from "lucide-react";
 import LeftNav from "./LeftNav";
+import ActionButtons from "./NavbarActions";
 import {
   useGetLoggedUserQuery,
   useLogoutMutation,
@@ -28,19 +27,20 @@ import {
   useTimeInMutation,
   useTimeOutMutation,
 } from "@/app/_Services/attendence/page";
-import {
-  useBreakInMutation,
-  useBreakOutMutation,
-} from "@/app/_Services/employee/page";
+import { useBreakOutMutation } from "@/app/_Services/employee/page";
 
 import {
   removeAttendence,
   resumeWork,
-  setActivity,
   setAttendence,
 } from "@/redux/filterSlice";
 import TimeOutModal from "../Modal/TimeOutModal";
 import BreakTypeModal from "../Modal/BreakTypeModal";
+
+const formatTime = (value) =>
+  moment(value).tz("Asia/Karachi").format("hh:mm A");
+
+const mobileWidthClass = (mobile) => (mobile ? "w-full" : "");
 
 const Navbar = () => {
   const router = useRouter();
@@ -91,7 +91,7 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
-  const handleTimeIn = async () => {
+  const handleTimeIn = useCallback(async () => {
     try {
       const response = await TimeIn().unwrap();
       if (response.success) {
@@ -101,9 +101,9 @@ const Navbar = () => {
     } catch (error) {
       toast.error(error?.data?.message || "Time In failed");
     }
-  };
+  }, [dispatch, TimeIn]);
 
-  const clearExtensionAndRedirect = () => {
+  const clearExtensionAndRedirect = useCallback(() => {
     if (
       typeof window !== "undefined" &&
       window.chrome &&
@@ -112,7 +112,7 @@ const Navbar = () => {
       window.postMessage({ type: "LOGOUT" }, "*");
     }
     router.push("/");
-  };
+  }, [router]);
 
   const handleTimeOut = async () => {
     try {
@@ -129,7 +129,7 @@ const Navbar = () => {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       const response = await logout().unwrap();
       if (response.statusCode === 200) {
@@ -143,16 +143,14 @@ const Navbar = () => {
     } catch (error) {
       toast.error(error?.data?.message);
     }
-  };
+  }, [dispatch, logout, clearExtensionAndRedirect]);
 
-  const handleBreakOut = async () => {
+  const handleBreakOut = useCallback(async () => {
     try {
-      const res = await breakOut({ attendanceId: attendence?._id }).unwrap();
+      const res = await breakOut({ shiftDate:attendence?.shiftDate }).unwrap();
       if (res.success) {
-        console.log("breakOutResponse", res);
         dispatch(resumeWork());
         if (res.data?.mustLogout) {
-          console.log("backend ne kaha logout kro");
           handleLogout();
         }
         toast.success(res?.message);
@@ -160,102 +158,73 @@ const Navbar = () => {
     } catch (err) {
       toast.error(err?.data?.message || "Update failed");
     }
-  };
-
-  const Spinner = () => (
-    <svg
-      className="animate-spin h-4 w-4"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      />
-    </svg>
-  );
+  }, [attendence?.shiftDate, breakOut, dispatch, handleLogout]);
 
   const AttendanceStatus = ({ mobile = false }) => {
- if (loggedUser?.data?.activeBreak?.type === "OFFICIAL") {
-  const brea = loggedUser?.data?.activeBreak;
+    if (activeBreak?.type === "OFFICIAL") {
+      const duration = activeBreak.breakIn
+        ? moment().diff(moment(activeBreak.breakIn), "minutes")
+        : 0;
 
-  const duration = brea?.breakIn
-    ? moment().diff(moment(brea.breakIn), "minutes")
-    : 0;
-
-  return (
-    <div
-      className={`flex flex-col md:flex-row md:items-center gap-3 rounded-xl px-4 py-3 bg-yellow-500/[0.07] border border-yellow-500/15 ${
-        mobile ? "w-full" : ""
-      }`}
-    >
-      {/* Row 1 (mobile) / All inline (desktop) */}
-      <div className="flex flex-wrap items-center gap-3 w-full">
-
-        {/* Status */}
-        <div className="flex flex-col min-w-[120px]">
-          <span className="text-[9px] text-zinc-500 uppercase">Status</span>
-          <span className="text-xs font-bold text-yellow-400 break-words">
-            {`User on ${brea?.type?.toLowerCase()} break`}
-          </span>
-        </div>
-
-        {/* Divider (desktop only) */}
-        <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
-
-        {/* Break In */}
-        <div className="flex flex-col min-w-[80px]">
-          <span className="text-[9px] text-zinc-500 uppercase">Break In</span>
-          <span className="text-xs text-zinc-200">
-            {moment(brea?.breakIn).tz("Asia/Karachi").format("hh:mm A")}
-          </span>
-        </div>
-
-        <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
-
-        {/* Duration */}
-        <div className="flex flex-col min-w-[70px]">
-          <span className="text-[9px] text-zinc-500 uppercase">Duration</span>
-          <span className="text-xs font-mono text-white">
-            {duration} min
-          </span>
-        </div>
-
-        <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
-
-        {/* Reason */}
-        <div className="flex flex-col flex-1 min-w-[120px]">
-          <span className="text-[9px] text-zinc-500 uppercase">Reason</span>
-          <span className="text-xs text-zinc-300 break-words">
-            {brea?.reason || "-"}
-          </span>
-        </div>
-
-      </div>
-    </div>
-  );
-}
-    if (attendence?.timeIn && !attendence?.timeOut) {
       return (
         <div
-          className={`flex items-center gap-4 rounded-xl px-4 py-2 bg-white/5 border border-white/[0.08] ${mobile ? "w-full" : ""}`}
+          className={`flex flex-col md:flex-row md:items-center gap-3 rounded-xl px-4 py-1 bg-yellow-500/[0.07] border border-yellow-500/15 ${
+            mobileWidthClass(mobile)
+          }`}
+        >
+          <div className="flex flex-wrap items-center gap-3 w-full">
+            <div className="flex flex-col min-w-[120px]">
+              <span className="text-[9px] text-zinc-500 uppercase">Status</span>
+              <span className="text-xs font-bold text-yellow-400 break-words">
+                {`User on ${activeBreak.type.toLowerCase()} break`}
+              </span>
+            </div>
+
+            <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+
+            <div className="flex flex-col min-w-[80px]">
+              <span className="text-[9px] text-zinc-500 uppercase">Break In</span>
+              <span className="text-xs text-zinc-200">{formatTime(activeBreak.breakIn)}</span>
+            </div>
+
+            <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+
+            <div className="flex flex-col min-w-[70px]">
+              <span className="text-[9px] text-zinc-500 uppercase">Duration</span>
+              <span className="text-xs font-mono text-white">
+                {duration} min
+              </span>
+            </div>
+
+            <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+
+            <div className="flex flex-col flex-1 min-w-[120px]">
+              <span className="text-[9px] text-zinc-500 uppercase">Reason</span>
+              <span className="text-xs text-zinc-300 break-words">
+                {activeBreak.reason || "-"}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (attendence?.timeIn && !attendence?.timeOut) {
+      const statusClasses =
+        attendence.status === "present"
+          ? "bg-green-500/15 text-green-400 border-green-500/25"
+          : "bg-yellow-500/15 text-yellow-400 border-yellow-500/25";
+
+      return (
+        <div
+          className={`flex items-center gap-4 rounded-xl px-4 py-2 bg-white/5 border border-white/[0.08] ${mobileWidthClass(mobile)}`}
         >
           <div className="flex flex-col items-center gap-0.5">
             <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
               <Clock size={9} /> Time In
             </span>
             <span className="text-xs font-bold text-zinc-200">
-              {moment(attendence.timeIn).tz("Asia/Karachi").format("hh:mm A")}
+              {formatTime(attendence.timeIn)}
             </span>
           </div>
           <div className="w-px h-7 bg-white/[0.08]" />
@@ -272,23 +241,18 @@ const Navbar = () => {
             <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
               <Activity size={9} /> Status
             </span>
-            <span
-              className={`text-[9px] font-bold px-2 py-[2px] rounded-full uppercase border ${
-                attendence.status === "present"
-                  ? "bg-green-500/15 text-green-400 border-green-500/25"
-                  : "bg-yellow-500/15 text-yellow-400 border-yellow-500/25"
-              }`}
-            >
+            <span className={`text-[9px] font-bold px-2 py-[2px] rounded-full uppercase border ${statusClasses}`}>
               {attendence.status}
             </span>
           </div>
         </div>
       );
     }
+
     if (attendence?.timeIn && attendence?.timeOut) {
       return (
         <div
-          className={`flex items-center gap-2.5 rounded-xl px-4 py-2 bg-green-500/[0.07] border border-green-500/15 ${mobile ? "w-full" : ""}`}
+          className={`flex items-center gap-2.5 rounded-xl px-4 py-2 bg-green-500/[0.07] border border-green-500/15 ${mobileWidthClass(mobile)}`}
         >
           <CheckCircle size={15} className="text-green-400 shrink-0" />
           <div>
@@ -303,7 +267,7 @@ const Navbar = () => {
 
     return (
       <div
-        className={`flex items-center gap-2.5 rounded-xl px-4 py-2 animate-pulse bg-red-500/[0.07] border border-red-500/[0.18] ${mobile ? "w-full" : ""}`}
+        className={`flex items-center gap-2.5 rounded-xl px-4 py-2 animate-pulse bg-red-500/[0.07] border border-red-500/[0.18] ${mobileWidthClass(mobile)}`}
       >
         <Clock size={15} className="text-red-400 shrink-0" />
         <div>
@@ -317,89 +281,28 @@ const Navbar = () => {
       </div>
     );
   };
-  const isOnBreak = loggedUser?.data?.activeBreak;
 
-  const ActionButtons = ({ mobile = false }) => (
-    <div
-      className={`flex ${mobile ? "flex-col w-full" : "items-center"} gap-2`}
-    >
-      {!attendence?.timeIn ? (
-        <button
-          onClick={handleTimeIn}
-          disabled={isTimeIn}
-          className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-green-500/[0.12] border border-green-500/25 text-green-400 hover:bg-green-500/20 ${mobile ? "w-full" : ""}`}
-        >
-          {isTimeIn ? (
-            <Spinner />
-          ) : (
-            <>
-              <Clock size={14} />
-              <span>Time In</span>
-            </>
-          )}
-        </button>
-      ) : !attendence?.timeOut ? (
-        <>
-          {!isOnBreak ? (
-            <button
-              type="button"
-              onClick={() => setIsBreakOpen(true)}
-              className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-yellow-500/[0.12] border border-yellow-500/25 text-yellow-400 hover:bg-yellow-500/20 ${mobile ? "w-full" : ""}`}
-            >
-              Break In
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => handleBreakOut()}
-              className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-yellow-500/[0.12] border border-yellow-500/25 text-yellow-400 hover:bg-yellow-500/20 ${mobile ? "w-full" : ""}`}
-            >
-              Break Out
-            </button>
-          )}
-          <button
-            onClick={() => setConfirmDelete(true)}
-            disabled={isTimeOut}
-            className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed bg-red-500/10 border border-red-500/[0.22] text-red-400 hover:bg-red-500/[0.18] ${mobile ? "w-full" : ""}`}
-          >
-            {isTimeOut ? (
-              <Spinner />
-            ) : (
-              <>
-                <PowerOff size={14} />
-                <span>Time Out</span>
-              </>
-            )}
-          </button>
-        </>
-      ) : (
-        <span
-          className={`px-4 py-2 rounded-xl text-xs font-bold uppercase bg-white/5 border border-white/[0.08] text-zinc-500 ${mobile ? "text-center" : ""}`}
-        >
-          Shift Over
-        </span>
-      )}
+  const activeBreak = loggedUser?.data?.activeBreak;
+  const isOnBreak = Boolean(activeBreak);
 
-      {token && (
-        <button
-          onClick={handleLogout}
-          className={`cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09] hover:text-zinc-200 ${mobile ? "w-full" : ""}`}
-        >
-          <LogOut size={14} />
-          <span>Log Out</span>
-        </button>
-      )}
-    </div>
-  );
+  
 
   const closeBreakModal = useCallback(() => {
     setIsBreakOpen(false);
   }, []);
 
+  const openBreakModal = useCallback(() => {
+    setIsBreakOpen(true);
+  }, []);
+
+  const confirmTimeOut = useCallback(() => {
+    setConfirmDelete(true);
+  }, []);
+
   return (
     <>
       {/* Main Navbar */}
-      <div className="fixed top-0 left-0 w-full z-50 bg-[#0f0f11] border-b border-white/[0.07] shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+      <div className="fixed top-0 left-0 w-full z-50 bg-[#0f0f11] border-b border-white/[0.07] ">
         <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-white/5" />
         <nav className="flex items-center justify-between px-3 md:px-6 py-1 gap-3">
           <Link href="/dashboard/statistics" className="shrink-0">
@@ -409,7 +312,18 @@ const Navbar = () => {
             <AttendanceStatus />
           </div>
           <div className="hidden lg:flex items-center">
-            <ActionButtons />
+            <ActionButtons
+              attendence={attendence}
+              token={token}
+              isTimeIn={isTimeIn}
+              isTimeOut={isTimeOut}
+              isOnBreak={isOnBreak}
+              onTimeIn={handleTimeIn}
+              onBreakOpen={openBreakModal}
+              onBreakOut={handleBreakOut}
+              onConfirmDelete={confirmTimeOut}
+              onLogout={handleLogout}
+            />
           </div>
           <button
             className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-150 cursor-pointer bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09]"
@@ -451,7 +365,19 @@ const Navbar = () => {
           <AttendanceStatus mobile />
         </div>
         <div className="px-3 pt-2 pb-2 shrink-0">
-          <ActionButtons mobile />
+          <ActionButtons
+            mobile
+            attendence={attendence}
+            token={token}
+            isTimeIn={isTimeIn}
+            isTimeOut={isTimeOut}
+            isOnBreak={isOnBreak}
+            onTimeIn={handleTimeIn}
+            onBreakOpen={openBreakModal}
+            onBreakOut={handleBreakOut}
+            onConfirmDelete={confirmTimeOut}
+            onLogout={handleLogout}
+          />
         </div>
         <div className="mx-3 shrink-0 h-px bg-white/[0.06]" />
         <div className="flex-1 overflow-y-auto pt-2 overscroll-contain">

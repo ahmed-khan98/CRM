@@ -8,5 +8,6 @@ export const PAYMENTLINKHEADERS = [
   "Status",
   "Amount",
   "createdAt",
-  "Action",
+  "Paid Date",
+  "",
 ];

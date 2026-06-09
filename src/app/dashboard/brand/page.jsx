@@ -115,7 +115,7 @@ export default function AppointmentBooking() {
                       ].map((h) => (
                         <th
                           key={h}
-                          className="px-4 py-3.5 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-500"
+                          className="px-4 py-3 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-300"
                         >
                           {h}
                         </th>
@@ -132,7 +132,7 @@ export default function AppointmentBooking() {
                         transition={{ delay: index * 0.1 }}
                         className="hover:bg-zinc-50 transition-colors group"
                       >
-                        <td className="px-2 py-1.5 whitespace-nowrap text-sm text-gray-600">
+                        <td className="px-2 py-2.5 whitespace-nowrap text-sm text-gray-600">
                           <Image
                             src={br?.image || "/placeholder.svg"}
                             alt="brand-logo"
@@ -142,23 +142,23 @@ export default function AppointmentBooking() {
                           />
                           {/* </div> */}
                         </td>
-                        <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          <span className="text-sm font-semibold text-zinc-800 capitalize">
+                        <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-600 capitalize">
+                          <span className="text-[12px] font-semibold text-zinc-800 capitalize">
                             {br?.name}
                           </span>
                         </td>
-                        <td className="px-4 py-1.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          <span className="text-[12px] font-semibold text-zinc-800 capitalize">
+                        <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-600 capitalize">
+                          <span className="text-[12px] font-semibold text-zinc-600 capitalize">
                             {br?.departmentId?.name}
                           </span>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          <span className="text-[12px] text-zinc-400 font-medium">
+                        <td className="px-4 py-2.5 whitespace-nowrap">
+                          <span className="text-[11px] text-zinc-400 font-medium">
                             {formatDate(br.createdAt)}
                           </span>
                         </td>
 
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-2.5 whitespace-nowrap">
                           <div className="flex items-center gap-2">
                             <motion.button
                               whileHover={{ scale: 1.08 }}

@@ -9,7 +9,6 @@ import {
   useDeleteSaleMutation,
 } from "@/app/_Services/sale/page";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
-import Image from "next/image";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import SaleModal from "@/app/_Components/Modal/SaleModal";
 import toast from "react-hot-toast";
@@ -289,7 +288,7 @@ export default function Client() {
                         <td className="p-4 whitespace-nowrap">
                           {/* <div className="flex items-center gap-3"> */}
                           <span className="text-[12px]  text-gray-600 ">
-                            {emp?.createdAt ? formatDate(emp.createdAt) : "-"}
+                            {emp?.saleDate ? formatDate(emp.saleDate) : "-"}
                           </span>
                           {/* </div> */}
                         </td>

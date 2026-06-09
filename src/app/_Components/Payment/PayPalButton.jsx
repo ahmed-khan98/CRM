@@ -229,17 +229,13 @@ console.log("SDK Currency:", currency);
       </div>
 
       {/* Security Notice */}
-      <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-3">
-        <div className="flex items-start">
-          <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0" />
-          <div>
-            <p className="text-xs text-gray-600">
-              <strong>Secure Payment:</strong> Your payment is processed
-              securely by PayPal. We never store your payment information.
+      <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3">
+            <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+            <p className="text-amber-700 text-[11px] leading-relaxed">
+              This is a one-time secure payment link. Do not share it with others.
+              It will expire once payment is completed.
             </p>
           </div>
-        </div>
-      </div>
     </div>
   );
 };

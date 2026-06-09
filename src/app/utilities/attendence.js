@@ -110,7 +110,7 @@ const STATUS_CONFIG = {
     border: "border-emerald-200",
     dot: "bg-emerald-500",
   },
-  active: {
+  live: {
     label: "Active",
     bg: "bg-emerald-50",
     text: "text-emerald-700",
@@ -130,6 +130,13 @@ const STATUS_CONFIG = {
     text: "text-rose-700",
     border: "border-rose-200",
     dot: "bg-rose-500",
+  },
+  "active": {
+    label: "Active",
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
+    dot: "bg-emerald-500",
   },
   "de active": {
     label: "Deactive",
@@ -495,17 +502,17 @@ export const PALETTES = {
     ghost: "text-blue-300",
     badge: "bg-blue-200 text-blue-700",
   },
-  active: {
-    bg: "bg-emerald-50",
-    border: "border-emerald-200",
-    activeBorder: "border-emerald-400",
-    ring: "ring-emerald-200",
-    iconBg: "bg-emerald-100",
-    iconText: "text-emerald-600",
-    labelText: "text-emerald-500",
-    valueText: "text-emerald-800",
-    ghost: "text-emerald-300",
-    badge: "bg-emerald-200 text-emerald-700",
+  live: {
+    bg: "bg-zinc-100",
+    border: "border-zinc-400",
+    activeBorder: "border-zinc-400",
+    ring: "ring-zinc-100",
+    iconBg: "bg-zinc-200",
+    iconText: "text-zinc-700",
+    labelText: "text-zinc-700",
+    valueText: "text-zinc-800",
+    ghost: "text-zinc-300",
+    badge: "bg-zinc-200 text-zinc-700",
   },
 };
 

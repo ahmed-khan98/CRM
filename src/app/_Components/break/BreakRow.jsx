@@ -9,7 +9,7 @@ const BreakRow = ({ item }) => {
   const statusCfg = useMemo(() => getStatusConfig(item.status), [item.status]);
 
   const isActive = item.status === "break-in";
-  const localDate = item.attendanceId?.shiftDate ? moment(item.attendanceId?.shiftDate).tz(TZ) : null;
+  const localDate = item?.shiftDate ? moment(item?.shiftDate).tz(TZ) : null;
   const isToday = localDate ? localDate.isSame(moment().tz(TZ), "day") : false;
 
   return (
@@ -27,12 +27,12 @@ const BreakRow = ({ item }) => {
             <span
               className={`text-xs font-extrabold ${isToday ? "text-zinc-800" : "text-zinc-700"}`}
             >
-              {formatOnlyDate(item.attendanceId?.shiftDate)}
+              {formatOnlyDate(item?.shiftDate)}
             </span>
             <span
               className={`text-[9px] font-semibold uppercase tracking-wider text-zinc-400`}
             >
-              {formatDay(item.attendanceId?.shiftDate)}
+              {formatDay(item?.shiftDate)}
               {isToday && " · Today"}
             </span>
           </div>
