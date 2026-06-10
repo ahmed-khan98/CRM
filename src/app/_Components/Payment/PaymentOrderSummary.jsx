@@ -9,7 +9,7 @@ const currencySymbols = {
   EUR: "€"
 };
 
-const PaymentOrderSummary = ({name, email, brand, currency, amount, service}) => {
+const PaymentOrderSummary = ({name, email, brand, currency, amount, service,description}) => {
   return (
     <>
       <section className="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-visible">
@@ -19,9 +19,9 @@ const PaymentOrderSummary = ({name, email, brand, currency, amount, service}) =>
           </h2>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-1">
           {name &&
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3">
             {/* Agar name or email null/falsy hain to component hide ho jaye ga */}
             {name && <DetailRow label="Customer" value={name} />}
             
@@ -38,7 +38,7 @@ const PaymentOrderSummary = ({name, email, brand, currency, amount, service}) =>
           </div>}
 
           <div className={name ? "pt-4" : "pt-1"}>
-            <p className="text-sm font-semibold text-slate-500 mb-3 uppercase tracking-wider">
+            <p className="text-[11px] font-semibold text-slate-500 mb-2 uppercase tracking-wider">
               Services Provided
             </p>
             <div className="flex flex-wrap gap-2">
@@ -58,6 +58,17 @@ const PaymentOrderSummary = ({name, email, brand, currency, amount, service}) =>
               )}
             </div>
           </div>
+          {description && (
+  <div className="pt-2">
+    <p className="text-[11px] font-semibold text-slate-500 mb-2 uppercase tracking-wider">
+      Description
+    </p>
+
+    <div className="p-2 text-[12px] bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-zinc-700 whitespace-pre-wrap">
+      {description}
+    </div>
+  </div>
+)}
         </div>
 
         {/* Total Display */}

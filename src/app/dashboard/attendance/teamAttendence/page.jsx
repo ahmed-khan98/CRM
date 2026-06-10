@@ -702,7 +702,7 @@ import { exportAttendanceToExcel } from "@/app/utilities/exportToExcel";
 import moment from "moment-timezone";
 import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
 import {
- PALETTES,
+  PALETTES,
   calculateAttendanceStats,
   getStatCards,
   isDiscrepancyRecord,
@@ -722,16 +722,21 @@ const TeamAttendence = () => {
   const [customRange, setCustomRange] = useState({ start: "", end: "" });
   const [modalConfig, setModalConfig] = useState({ isOpen: false, data: null });
   const [activeFilter, setActiveFilter] = useState(null);
+  console.log("activeFilter:", activeFilter);
 
-  const toggleFilter = useCallback((key) => setActiveFilter((prev) => (prev === key ? null : key)), []);
+  const toggleFilter = useCallback(
+    (key) => setActiveFilter((prev) => (prev === key ? null : key)),
+    [],
+  );
 
   const queryParams = useMemo(() => {
     const params = { employeeId: selectedEmployee || undefined };
     const now = moment().tz("Asia/Karachi");
     if (viewType === "today") {
-      const shiftDate = now.hour() < 8
-        ? now.subtract(1, "days").format("YYYY-MM-DD")
-        : now.format("YYYY-MM-DD");
+      const shiftDate =
+        now.hour() < 8
+          ? now.subtract(1, "days").format("YYYY-MM-DD")
+          : now.format("YYYY-MM-DD");
       params.startDate = shiftDate;
       params.endDate = shiftDate;
     } else if (viewType === "month") {
@@ -744,16 +749,19 @@ const TeamAttendence = () => {
     return params;
   }, [viewType, selectedEmployee, customRange]);
 
-  const [updateTeamAttendence, { isLoading }] = useUpdateTeamAttendenceMutation();
+  const [updateTeamAttendence, { isLoading }] =
+    useUpdateTeamAttendenceMutation();
   const { data: employees, isFetching } = useAllEmployeesQuery();
-  const { data: attendanceData, refetch } = useGetDepartEmployeeAttendanceQuery(queryParams);
+  const { data: attendanceData, refetch } =
+    useGetDepartEmployeeAttendanceQuery(queryParams);
 
   const employeeOptions = useMemo(() => {
-    const options = employees?.data?.map((emp) => ({
-      value: emp._id,
-      label: emp.fullName,
-      designation: emp.designation,
-    })) || [];
+    const options =
+      employees?.data?.map((emp) => ({
+        value: emp._id,
+        label: emp.fullName,
+        designation: emp.designation,
+      })) || [];
     return [{ value: "", label: "All Employees (Department)" }, ...options];
   }, [employees]);
 
@@ -769,14 +777,13 @@ const TeamAttendence = () => {
     selectedEmployee,
     viewType,
     queryParams,
-    employeeOptions
+    employeeOptions,
   });
 
   const stats = useMemo(() => {
     return calculateAttendanceStats(finalDisplayData, {
       getStatus: (item) => item.record?.status,
-      isWeekend: (item) =>
-        item.isWeekend || item.record?.status === "weekend",
+      isWeekend: (item) => item.isWeekend || item.record?.status === "weekend",
       isAbsent: (item) => item.isAbsent,
       isDiscrepancy: (item) => isDiscrepancyRecord(item.record),
     });
@@ -798,36 +805,63 @@ const TeamAttendence = () => {
 
   const filteredRows = useMemo(() => {
     if (!activeFilter) return finalDisplayData;
+
     return finalDisplayData.filter((item) => {
       const isWeekend = item.isWeekend || item.record?.status === "weekend";
       if (activeFilter === "weekend") return isWeekend;
       if (isWeekend) return false;
       const status = item.record?.status;
-      if (activeFilter === "present")     return !item.isAbsent && status === "present" && item?.record?.timeOut ;
-      if (activeFilter === "late")        return status === "late";
-      if (activeFilter === "absent")      return item.isAbsent || status === "absent";
-      if (activeFilter === "discrepancy") return isDiscrepancyRecord(item.record);
+
+      const now = moment().tz("Asia/Karachi");
+      const shiftEffectiveDate =
+        now.hour() < 6
+          ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
+          : now.format("YYYY-MM-DD");
+      const recordDateStr = moment(item?.record?.shiftDate).format(
+        "YYYY-MM-DD",
+      );
+      const isToday = recordDateStr === shiftEffectiveDate;
+
+      if (activeFilter === "present")
+        return (
+          !item.isAbsent &&
+          status === "present" &&
+          (item?.record?.timeOut || isToday)
+        );
+      if (activeFilter === "late") return status === "late";
+      if (activeFilter === "absent")
+        return item.isAbsent || status === "absent";
+      if (activeFilter === "discrepancy")
+        return isDiscrepancyRecord(item.record);
       if (activeFilter === "half-day") return status === "half-day";
       return true;
     });
   }, [finalDisplayData, activeFilter]);
 
   const handleOpenModal = useCallback((emp, record, date) => {
-    setModalConfig({ isOpen: true, data: { emp, record, date: record?.shiftDate || date } });
+    setModalConfig({
+      isOpen: true,
+      data: { emp, record, date: record?.shiftDate || date },
+    });
   }, []);
 
-  const handleSaveAttendance = useCallback(async (data) => {
-    try {
-      const res = await updateTeamAttendence(data).unwrap();
-      if (res.success) {
-        refetch();
-        setModalConfig({ isOpen: false, data: null });
-        toast.success(`Attendance ${data?.record ? "updated" : "marked"} successfully`);
+  const handleSaveAttendance = useCallback(
+    async (data) => {
+      try {
+        const res = await updateTeamAttendence(data).unwrap();
+        if (res.success) {
+          refetch();
+          setModalConfig({ isOpen: false, data: null });
+          toast.success(
+            `Attendance ${data?.record ? "updated" : "marked"} successfully`,
+          );
+        }
+      } catch (err) {
+        toast.error(err?.data?.message || "Update failed");
       }
-    } catch (err) {
-      toast.error(err?.data?.message || "Update failed");
-    }
-  }, [updateTeamAttendence, refetch]);
+    },
+    [updateTeamAttendence, refetch],
+  );
 
   const handleExportToExcel = useCallback(() => {
     try {
@@ -845,13 +879,17 @@ const TeamAttendence = () => {
     }
   }, [finalDisplayData, queryParams, selectedEmployee, employees?.data]);
 
-
-  const showClearBtn = viewType !== "today" || customRange.start || selectedEmployee;
+  const showClearBtn =
+    viewType !== "today" || customRange.start || selectedEmployee;
 
   return (
     <div className="h-screen flex flex-col gap-3 overflow-hidden p-2 md:p-3">
       <div className="flex items-center justify-between gap-2">
-        <AttendenceHeader icon={Users} length={finalDisplayData?.length} name="Team Attendance" />
+        <AttendenceHeader
+          icon={Users}
+          length={finalDisplayData?.length}
+          name="Team Attendance"
+        />
         <button
           onClick={handleExportToExcel}
           className="cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors"
@@ -862,7 +900,8 @@ const TeamAttendence = () => {
             Export Attendance Summary Report
           </span>
         </button>
-      </div>{/* ── Stat Cards ── */}
+      </div>
+      {/* ── Stat Cards ── */}
       <StatsSection
         statCards={statCards}
         activeFilter={activeFilter}
@@ -871,10 +910,14 @@ const TeamAttendence = () => {
 
       {/* ── Active filter banner ── */}
       {activeFilter && (
-        <ActiveFilterShowing activeFilter={activeFilter} setActiveFilter={setActiveFilter} length={filteredRows?.length} />
+        <ActiveFilterShowing
+          activeFilter={activeFilter}
+          setActiveFilter={setActiveFilter}
+          length={filteredRows?.length}
+        />
       )}
 
-       <FiltersBar
+      <FiltersBar
         employeeOptions={employeeOptions}
         selectedEmployee={selectedEmployee}
         setSelectedEmployee={setSelectedEmployee}
@@ -888,30 +931,41 @@ const TeamAttendence = () => {
 
       {/* ── Table ── */}
       <div className="flex-1 rounded-2xl border border-zinc-200 overflow-hidden bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] min-h-0">
-        <div className="overflow-auto h-full scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent"
-         style={{
-                  scrollbarWidth: "thin",
-                  scrollbarColor: "#52525b transparent",
-                }}>
+        <div
+          className="overflow-auto h-full scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent"
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "#52525b transparent",
+          }}
+        >
           <table className="w-full text-left border-collapse min-w-[700px]">
             <thead className="sticky top-0 z-20">
               <tr className="bg-zinc-800">
-                {["Employee", "Shift Date", "In / Out", "Work Hours", "Status", "Action"].map((h) => (
-                  <th key={h} className="px-4 py-3 text-[10px] font-black text-zinc-300 uppercase tracking-widest">
+                {[
+                  "Employee",
+                  "Shift Date",
+                  "In / Out",
+                  "Work Hours",
+                  "Status",
+                  "Action",
+                ].map((h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-3 text-[10px] font-black text-zinc-300 uppercase tracking-widest"
+                  >
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
 
-              <TeamAttendanceTableBody
-                isFetching={isFetching}
-                filteredRows={filteredRows}
-                queryParams={queryParams}
-                handleOpenModal={handleOpenModal}
-                activeFilter={activeFilter}
-              />
-        
+            <TeamAttendanceTableBody
+              isFetching={isFetching}
+              filteredRows={filteredRows}
+              queryParams={queryParams}
+              handleOpenModal={handleOpenModal}
+              activeFilter={activeFilter}
+            />
           </table>
         </div>
       </div>

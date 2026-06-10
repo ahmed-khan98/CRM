@@ -173,6 +173,8 @@ const PaymentDetail = async ({ id, searchParams }) => {
         name={paymentData?.name}
         email={paymentData?.email}
         brand={paymentData?.brandId?.name}
+        service={paymentData?.service}
+        description={paymentData?.description}
       />
     );
 
@@ -203,6 +205,7 @@ const PaymentDetail = async ({ id, searchParams }) => {
               }
               amount={paymentData?.amount}
               service={paymentData?.service}
+              description={paymentData?.description}
             />
 
             <div className="block lg:hidden">

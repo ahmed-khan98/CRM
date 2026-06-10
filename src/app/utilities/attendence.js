@@ -83,7 +83,9 @@ export const formatBreakMinutes = (minutes) => {
   return `${hrs}hr ${mins}min`;
 };
 
-export const getShiftEffectiveDate = (reference = moment().tz("Asia/Karachi")) => {
+export const getShiftEffectiveDate = (
+  reference = moment().tz("Asia/Karachi"),
+) => {
   const now = moment(reference).tz("Asia/Karachi");
   return now.hour() < 11
     ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
@@ -99,7 +101,9 @@ export const isDiscrepancyRecord = (record) => {
   const timeInMoment = moment(record.timeIn).tz("Asia/Karachi");
   const hoursSinceIn = now.diff(timeInMoment, "hours", true);
 
-  return hoursSinceIn > 18 || moment(recordDateStr).isBefore(shiftEffectiveDate);
+  return (
+    hoursSinceIn > 18 || moment(recordDateStr).isBefore(shiftEffectiveDate)
+  );
 };
 
 const STATUS_CONFIG = {
@@ -131,7 +135,7 @@ const STATUS_CONFIG = {
     border: "border-rose-200",
     dot: "bg-rose-500",
   },
-  "active": {
+  active: {
     label: "Active",
     bg: "bg-emerald-50",
     text: "text-emerald-700",
@@ -250,15 +254,14 @@ const STATUS_CONFIG = {
     border: "border-purple-200",
     dot: "bg-purple-400",
   },
-  MEAL:{
+  MEAL: {
     label: "Meal",
     icon: UtensilsCrossed,
     bg: "bg-green-50",
     text: "text-green-700",
     border: "border-green-200",
     dot: "bg-green-400",
-    
-  }
+  },
 };
 
 export const getStatusConfig = (s) =>
@@ -430,7 +433,7 @@ export const PALETTES = {
     ghost: "text-amber-300",
     badge: "bg-amber-200 text-amber-700",
   },
-  'rest room': {
+  "rest room": {
     bg: "bg-sky-50",
     border: "border-sky-200",
     activeBorder: "border-sky-400",
@@ -466,7 +469,7 @@ export const PALETTES = {
     ghost: "text-green-300",
     badge: "bg-green-200 text-green-700",
   },
-  'system idle': {
+  "system idle": {
     bg: "bg-orange-50",
     border: "border-orange-200",
     activeBorder: "border-orange-400",
@@ -537,8 +540,19 @@ export const calculateAttendanceStats = (data, options = {}) => {
       if (isDiscrepancy(item)) acc.discrepancy++;
       if (status === "late") acc.late++;
       if (status === "half-day") acc.halfday++;
-      
-      if (status === "present" && item?.record?.timeOut ) acc.present++;
+
+      const now = moment().tz("Asia/Karachi");
+      const shiftEffectiveDate =
+        now.hour() < 6
+          ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
+          : now.format("YYYY-MM-DD");
+      const recordDateStr = moment(item?.record?.shiftDate).format(
+        "YYYY-MM-DD",
+      );
+      const isToday = recordDateStr === shiftEffectiveDate;
+
+      if (status === "present" && (item?.record?.timeOut || isToday))
+        acc.present++;
 
       return acc;
     },

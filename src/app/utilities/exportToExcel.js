@@ -6,12 +6,25 @@ const isWeekendRecord = (item) =>
   item?.isWeekend || ["weekend", "off"].includes(getAttendanceStatus(item));
 const isAbsentRecord = (item) =>
   item?.isAbsent || getAttendanceStatus(item) === "absent";
-const isPresentRecord = (item) =>
-  getAttendanceStatus(item) === "present" && !!item?.record?.timeOut;
+
+const isPresentRecord = (item) => {
+  console.log("Checking present record for item:", item);
+  const now = moment().tz("Asia/Karachi");
+  const shiftEffectiveDate =
+    now.hour() < 6
+      ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
+      : now.format("YYYY-MM-DD");
+  const recordDateStr = moment(item?.record?.shiftDate).format("YYYY-MM-DD");
+  const isToday = recordDateStr === shiftEffectiveDate;
+
+  return getAttendanceStatus(item) === "present" && (!item?.record?.timeOut || isToday);
+};
+
 const isLateRecord = (item) => getAttendanceStatus(item) === "late";
 const isHalfDayRecord = (item) => getAttendanceStatus(item) === "half-day";
 const isDiscrepancyRecord = (item) =>
-  item?.record?._id && !item?.record?.timeOut &&
+  item?.record?._id &&
+  !item?.record?.timeOut &&
   moment(item?.record?.shiftDate).isBefore(moment().startOf("day"));
 
 const getDateRange = (startDate, endDate) => {
@@ -33,12 +46,17 @@ const getDateRange = (startDate, endDate) => {
   return dates;
 };
 
-const buildSummaryForAllEmployees = (records, startDate, endDate, employeeList) => {
+const buildSummaryForAllEmployees = (
+  records,
+  startDate,
+  endDate,
+  employeeList,
+) => {
   const employeeMap = new Map();
   const dates = getDateRange(startDate, endDate);
 
   employeeList.forEach((emp) => {
-    if (!emp?._id) return;
+    if (!emp?._id || emp?.status === "de active") return;
     employeeMap.set(emp._id, {
       name: emp.fullName || emp.label || "Unknown",
       present: 0,
@@ -53,7 +71,8 @@ const buildSummaryForAllEmployees = (records, startDate, endDate, employeeList) 
 
   const recordMap = new Map();
   records.forEach((rec) => {
-    const empId = rec?.employeeId?._id || rec?.employeeId?.value || rec?.employeeId?.label;
+    const empId =
+      rec?.employeeId?._id || rec?.employeeId?.value || rec?.employeeId?.label;
     const date = rec?.record?.shiftDate || rec?.shiftDate;
     if (!empId || !date) return;
     recordMap.set(`${empId}||${date}`, rec);
@@ -91,7 +110,9 @@ const buildSummaryForAllEmployees = (records, startDate, endDate, employeeList) 
     });
   });
 
-  return Array.from(employeeMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+  return Array.from(employeeMap.values()).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 };
 
 /**
@@ -133,7 +154,9 @@ export const exportAttendanceToExcel = (
           record?.employeeId?.label ||
           "unknown";
         const empName =
-          record?.employeeId?.fullName || record?.employeeId?.label || "Unknown";
+          record?.employeeId?.fullName ||
+          record?.employeeId?.label ||
+          "Unknown";
 
         if (!employeeSummary[empId]) {
           employeeSummary[empId] = {
@@ -166,8 +189,9 @@ export const exportAttendanceToExcel = (
         summary.totalDays += 1;
       });
 
-      summaryArray = Object.values(employeeSummary)
-        .sort((a, b) => a.name.localeCompare(b.name));
+      summaryArray = Object.values(employeeSummary).sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
     }
 
     // Create workbook and worksheet
@@ -181,10 +205,9 @@ export const exportAttendanceToExcel = (
 
     // Create worksheet with merged cells for header
     const worksheet = XLSX.utils.aoa_to_sheet([
+      [`ATTENDANCE SUMMARY (${formattedStartDate} to ${formattedEndDate})`],
       [
-        `ATTENDANCE SUMMARY (${formattedStartDate} to ${formattedEndDate})`,
-      ],
-      [
+        "Sr. No.",
         "Employee Name",
         "Present",
         "Absent",
@@ -194,7 +217,8 @@ export const exportAttendanceToExcel = (
         "Weekend",
         "Total Days",
       ],
-      ...summaryArray.map((emp) => [
+      ...summaryArray.map((emp, index) => [
+        index + 1,
         emp["Employee Name"] || emp.name,
         emp.Present ?? emp.present,
         emp.Absent ?? emp.absent,
@@ -207,11 +231,12 @@ export const exportAttendanceToExcel = (
     ]);
 
     // Merge cells for title
-    worksheet["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+    worksheet["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 8 } }];
 
     // Set column widths
     worksheet["!cols"] = [
-      { wch: 25 },
+      { wch: 5 },
+      { wch: 30 },
       { wch: 12 },
       { wch: 12 },
       { wch: 10 },
@@ -272,7 +297,11 @@ export const exportAttendanceToExcel = (
 /**
  * Alternative simpler version for summary export
  */
-export const exportAttendanceSummarySimple = (summaryData, startDate, endDate) => {
+export const exportAttendanceSummarySimple = (
+  summaryData,
+  startDate,
+  endDate,
+) => {
   try {
     const startMoment = moment(startDate);
     const endMoment = moment(endDate);
