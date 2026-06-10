@@ -50,7 +50,7 @@ const PaidPaymentLink = ({ currency, amount, name, email, brand,service,descript
            {/* <p className="text-zinc-400 text-xs">A confirmation has been sent to {email}</p> */}
           {(service  && service[0] === 'none brand payment')  && (
   <div className="mt-1 text-left  border-b border-zinc-100 pb-1">
-    <p className="text-[11px] text-zinc-400 mb-1 uppercase tracking-wider">
+    <p className="text-[11px] text-zinc-400 mb-1 tracking-wider">
       Services Provided
     </p>
 
@@ -74,7 +74,7 @@ const PaidPaymentLink = ({ currency, amount, name, email, brand,service,descript
 )}
           {description && (
   <div className="mt-2 text-left">
-    <p className="text-[11px] text-zinc-400 mb-1 uppercase tracking-wider">
+    <p className="text-[11px] text-zinc-400 mb-1 tracking-wider">
       Description
     </p>
 
