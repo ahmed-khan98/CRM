@@ -25,7 +25,7 @@ const PaidPaymentLink = ({ currency, amount, name, email, brand,service,descript
            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-emerald-100">
              <CheckCircle2 className="w-10 h-10 text-emerald-500" />
            </div>
-           <h2 className="text-2xl font-bold text-zinc-800 mb-2">Payment Successful</h2>
+           <h2 className="text-2xl font-bold text-zinc-800 mb-2">Payment Successfull</h2>
            <p className="text-zinc-500 text-sm mb-6">
              Your payment of{" "}
             {/* <div className="mt-3 mb-6"> */}
