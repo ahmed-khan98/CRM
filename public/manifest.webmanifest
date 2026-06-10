@@ -1,0 +1,37 @@
+{
+  "name": "CRM ZYTRON WORLD",
+  "short_name": "CRM",
+  "description": "CRM PWA for Zytron World",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#27272a",
+  "icons": [
+    {
+      "src": "/favicon.192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+     {
+      "src": "/favicon.512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"}
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+}

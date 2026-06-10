@@ -37,7 +37,7 @@ const PaymentOrderSummary = ({name, email, brand, currency, amount, service,desc
             {currency && <DetailRow label="Currency" value={currency} />}
           </div>}
 
-          <div className={name ? "pt-4" : "pt-1"}>
+          <div className="pt-1 ">
             <p className="text-[11px] font-semibold text-slate-500 mb-2 uppercase tracking-wider">
               Services Provided
             </p>

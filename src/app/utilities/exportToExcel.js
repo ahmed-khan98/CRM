@@ -11,7 +11,7 @@ const isPresentRecord = (item) => {
   console.log("Checking present record for item:", item);
   const now = moment().tz("Asia/Karachi");
   const shiftEffectiveDate =
-    now.hour() < 6
+    now.hour() < 8
       ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
       : now.format("YYYY-MM-DD");
   const recordDateStr = moment(item?.record?.shiftDate).format("YYYY-MM-DD");
@@ -90,11 +90,11 @@ const buildSummaryForAllEmployees = (
           summary.late += 1;
         } else if (isHalfDayRecord(record)) {
           summary.halfday += 1;
-        } else if (isDiscrepancyRecord(record)) {
-          summary.discrepency += 1;
         } else if (isPresentRecord(record)) {
           summary.present += 1;
-        } else if (isWeekend) {
+        }else if (isDiscrepancyRecord(record)) {
+          summary.discrepency += 1;
+        }  else if (isWeekend) {
           summary.weekend += 1;
         } else {
           summary.absent += 1;
@@ -180,11 +180,11 @@ export const exportAttendanceToExcel = (
           summary.late += 1;
         } else if (isHalfDayRecord(record)) {
           summary.halfday += 1;
-        } else if (isDiscrepancyRecord(record)) {
-          summary.discrepency += 1;
         } else if (isPresentRecord(record)) {
           summary.present += 1;
-        }
+        }else if (isDiscrepancyRecord(record)) {
+          summary.discrepency += 1;
+        } 
 
         summary.totalDays += 1;
       });
