@@ -43,11 +43,12 @@ const PaidPaymentLink = ({ currency, amount, name, email, brand,service,descript
            <div className="bg-zinc-50 border border-zinc-100 rounded-xl sm:p-2 p-4 text-left space-y-2.5 mb-5">
              <SuccessRow label="Customer" value={name} />
              <SuccessRow label="Email"    value={email} />
-             <SuccessRow label="Brand"    value={brand} />
+                          {brand && <SuccessRow label="Brand"    value={brand} /> }
+
              {/* <SuccessRow label="Date"     value={new Date().toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })} /> */}
           
            {/* <p className="text-zinc-400 text-xs">A confirmation has been sent to {email}</p> */}
-          {service && (
+          {(service  && service[0] === 'none brand payment')  && (
   <div className="mt-1 text-left  border-b border-zinc-100 pb-1">
     <p className="text-[11px] text-zinc-400 mb-1 uppercase tracking-wider">
       Services Provided

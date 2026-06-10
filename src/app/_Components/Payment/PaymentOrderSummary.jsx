@@ -21,7 +21,7 @@ const PaymentOrderSummary = ({name, email, brand, currency, amount, service,desc
 
         <div className="p-6 space-y-1">
           {name &&
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2">
             {/* Agar name or email null/falsy hain to component hide ho jaye ga */}
             {name && <DetailRow label="Customer" value={name} />}
             
