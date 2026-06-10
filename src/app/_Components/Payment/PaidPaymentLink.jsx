@@ -48,7 +48,7 @@ const PaidPaymentLink = ({ currency, amount, name, email, brand,service,descript
              {/* <SuccessRow label="Date"     value={new Date().toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })} /> */}
           
            {/* <p className="text-zinc-400 text-xs">A confirmation has been sent to {email}</p> */}
-          {service  &&  && (
+          {service  &&  (
   <div className="mt-1 text-left  border-b border-zinc-100 pb-1">
     <p className="text-[11px] text-zinc-400 mb-1 tracking-wider">
       Services Provided
