@@ -1,13 +1,14 @@
 export const PAYMENTLINKHEADERS = [
-  "Client Name",
-  "Client Email",
-  "Client Phone",
+  "Client Info",
+  // "Client Email",
+  // "Client Phone",
   "Brand Name",
   "Services",
   "Merchant",
   "Status",
   "Amount",
-  "createdAt",
+  // "Type",
+  "created At",
   "Paid Date",
   "",
 ];

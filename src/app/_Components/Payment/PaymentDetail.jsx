@@ -143,6 +143,7 @@ const PaymentDetail = async ({ id, searchParams }) => {
       amount: dynamicAmount,
       currency: "USD",
       service: ["Promotional Publishing Package"],
+      isMasterPayemntLink: true,
       name: null,
       email: null,
       phoneNo: null,
@@ -168,10 +169,11 @@ const PaymentDetail = async ({ id, searchParams }) => {
   if (paymentData?.paymentStatus === "paid")
     return (
       <PaidPaymentLink
+              isMasterPayemntLink={paymentData?.isMasterPayemntLink}
         currency={paymentData?.currency}
         amount={paymentData?.amount}
-        name={paymentData?.name}
-        email={paymentData?.email}
+        name={paymentData?.clientId?.name || paymentData?.name}
+        email={paymentData?.clientId?.email || paymentData?.email}
         brand={paymentData?.brandId?.name}
         service={paymentData?.service}
         description={paymentData?.description}
@@ -182,7 +184,7 @@ const PaymentDetail = async ({ id, searchParams }) => {
     return <PaymentLinkDisabled paymentData={paymentData} />;
 
   return (
-    <div className="min-h-screen bg-zinc-100 font-sans text-slate-900">
+    <div className="min-h-screen font-sans text-slate-900">
       {/* Top Brand Bar - Loads dynamic logo natively */}
       <PaymentPagHeader image={paymentData?.brandId?.image} />
 
@@ -191,8 +193,9 @@ const PaymentDetail = async ({ id, searchParams }) => {
           {/* LEFT: Invoice Summary */}
           <div className="lg:col-span-7 lg:h-full lg:overflow-y-auto space-y-4">
             <PaymentOrderSummary
-              name={paymentData?.name}
-              email={paymentData?.email}
+              isMasterPayemntLink={paymentData?.isMasterPayemntLink}
+              name={paymentData?.clientId?.name || paymentData?.name}
+              email={paymentData?.clientId?.email || paymentData?.email}
               brand={
                 isMasterLink
                   ? paymentData?.brandNameForSummary

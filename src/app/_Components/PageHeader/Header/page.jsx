@@ -5,7 +5,7 @@ const Header = ({ icon: Icon, length, name }) => {
 
   return (
     <div className="flex items-center gap-2.5 shrink-0 select-none">
-      <div className="p-2.5 rounded-xl bg-zinc-800 shadow-lg shadow-zinc-200 transition-transform hover:scale-105">
+      <div className="p-2.5 rounded-xl bg-zinc-900 shadow-lg shadow-zinc-200 transition-transform hover:scale-105">
         {Icon && <Icon className="h-5 w-5 text-white" />}
       </div>
 

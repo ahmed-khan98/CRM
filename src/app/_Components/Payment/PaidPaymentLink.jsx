@@ -1,94 +1,111 @@
-import React, { memo } from 'react'
-import Screen from './Screen'
-import { CheckCircle2 } from 'lucide-react'
-import SuccessRow from './SuccessRow'
+import React, { memo } from "react";
+import Screen from "./Screen";
+import { CheckCircle2, User, Mail, Building2, Tag, FileText, Download } from "lucide-react";
+import SuccessRow from "./SuccessRow";
 
 const getCurrencyPrefix = (currency) => {
   switch (currency) {
-    case "EUR":
-      return "€";
-    case "AED":
-      return "AED ";
-    case "SAR":
-      return "SAR ";
-    case "PKR":
-      return "₨";
-    default:
-      return "$"; // USD, CAD, AUD
+    case "EUR": return "€";
+    case "AED": return "AED ";
+    case "SAR": return "SAR ";
+    case "PKR": return "₨";
+    default:    return "$";
   }
 };
 
-const PaidPaymentLink = ({ currency, amount, name, email, brand,service,description }) => {
+const PaidPaymentLink = ({ isMasterPayemntLink,currency, amount, name, email, brand, service, description }) => {
+  const sym      = getCurrencyPrefix(currency);
+  const services = Array.isArray(service) ? service : service ? [service] : [];
   return (
-     <Screen>
-         <div className="bg-white border border-zinc-200 rounded-2xl sm:p-6 p-10 max-w-md w-full text-center shadow-xl">
-           <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5 ring-4 ring-emerald-100">
-             <CheckCircle2 className="w-10 h-10 text-emerald-500" />
-           </div>
-           <h2 className="text-2xl font-bold text-zinc-800 mb-2">Payment Successfull</h2>
-           <p className="text-zinc-500 text-sm mb-6">
-             Your payment of{" "}
-            {/* <div className="mt-3 mb-6"> */}
-  <span className=" text-emerald-600">
-    {getCurrencyPrefix(currency)}
-    {Number(amount).toFixed(2)}
-  </span>
-  <span className="ml-2 text-zinc-500 font-medium">
-    {currency || "USD"}
-  </span>
-{/* </div> */}
-{" "}
-             has been received.
-           </p>
-           <div className="bg-zinc-50 border border-zinc-100 rounded-xl sm:p-2 p-4 text-left space-y-2.5 mb-5">
-             <SuccessRow label="Customer" value={name} />
-             <SuccessRow label="Email"    value={email} />
-                          {brand && <SuccessRow label="Brand"    value={brand} /> }
+    <Screen>
+      <div className="max-w-md w-full">
 
-             {/* <SuccessRow label="Date"     value={new Date().toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" })} /> */}
-          
-           {/* <p className="text-zinc-400 text-xs">A confirmation has been sent to {email}</p> */}
-          {service  &&  (
-  <div className="mt-1 text-left  border-b border-zinc-100 pb-1">
-    <p className="text-[11px] text-zinc-400 mb-1 tracking-wider">
-      Services Provided
-    </p>
+        {/* ── Success card ── */}
+        <div className="bg-white border border-zinc-200 rounded-2xl shadow-sm overflow-hidden">
 
-    <div className="flex flex-wrap gap-2">
-      {Array.isArray(service) ? (
-        service.map((item, index) => (
-          <span
-            key={index}
-            className="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-medium"
-          >
-            {item}
-          </span>
-        ))
-      ) : (
-        <span className="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-medium">
-          {service}
-        </span>
-      )}
-    </div>
-  </div>
-)}
-          {description && (
-  <div className="mt-2 text-left">
-    <p className="text-[11px] text-zinc-400 mb-1 tracking-wider">
-      Description
-    </p>
+          {/* Green top banner */}
+          <div className="bg-emerald-600 px-6 pt-5 pb-6 text-center">
+            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-white/30">
+              <CheckCircle2 className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-xl font-black text-white tracking-tight mb-1">
+              Payment Successful
+            </h2>
+            <p className="text-emerald-100 text-[12px]">
+              Your payment has been received and confirmed
+            </p>
+          </div>
 
-    <div className="p-2 bg-zinc-100 border border-zinc-200 rounded-xl">
-      <p className="text-[11px] text-zinc-700 leading-relaxed whitespace-pre-wrap">
-        {description}
-      </p>
-    </div>
-  </div>
-)}
- </div>
-         </div>
-      </Screen> 
-  )
-}
+          {/* Amount pill — overlapping banner and card */}
+          <div className="flex justify-center -mt-5 mb-1 px-6">
+            <div className="bg-white border border-zinc-200 shadow-md rounded-full px-6 py-2 flex items-baseline gap-1.5">
+              <span className="text-zinc-400 text-sm font-bold">{sym}</span>
+              <span className="text-zinc-900 font-black text-2xl tracking-tight">
+                {Number(amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+              <span className="text-zinc-400 text-[11px] font-bold uppercase ml-1">
+                {currency || "USD"}
+              </span>
+            </div>
+          </div>
 
-export default memo(PaidPaymentLink)
+        
+          {/* Details */}
+          <div className="px-5 pb-5 space-y-0">
+
+            {/* Customer info */}
+            <div className="border border-zinc-100 rounded-xl overflow-hidden divide-y divide-zinc-100">
+              {(!isMasterPayemntLink && name) && (
+              <SuccessRow icon={User} label="Customer Name" value={name} />
+              )}
+              {(!isMasterPayemntLink && email) && (
+              <SuccessRow icon={Mail} label="Email" value={email} />
+              )}
+              {brand && (
+              <SuccessRow icon={Building2} label="Brand" value={brand} />
+              )}
+            </div>
+
+            {/* Services */}
+            {services.length > 0 && (
+              <div className="pt-4">
+                <p className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">
+                  <Tag className="w-3 h-3" /> Services Provided
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {services.map((s, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 capitalize"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Description */}
+            {(!isMasterPayemntLink && description) && (
+              <div className="pt-4">
+                <p className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">
+                  <FileText className="w-3 h-3" /> Description
+                </p>
+                <div className="px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl">
+                  <p className="text-[12px] text-zinc-600 leading-relaxed whitespace-pre-wrap">
+                    {description}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+        
+        </div>
+
+      </div>
+    </Screen>
+  );
+};
+
+export default memo(PaidPaymentLink);

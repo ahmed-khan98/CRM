@@ -9,6 +9,7 @@ import {
   useCreateDepartmentMutation,
   useUpdateDepartmentMutation,
 } from "@/app/_Services/department/page";
+import ModalHeader from "./ModalHeader/page";
 
 const departSchema = Yup.object().shape({
   name: Yup.string().required("department name is required"),
@@ -17,6 +18,8 @@ const departSchema = Yup.object().shape({
 const DepartmentModal = ({ isOpen, closeModal, data, refetch }) => {
   const [createDeaprtment] = useCreateDepartmentMutation();
   const [updateDeaprtment] = useUpdateDepartmentMutation();
+
+  const isEdit = !!data;
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
@@ -84,37 +87,20 @@ const DepartmentModal = ({ isOpen, closeModal, data, refetch }) => {
             animate="visible"
             exit="exit"
             // ⬇️ Make the modal a flex column and allow tall content
-            className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
+            className=" rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header (fixed) */}
-            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-2 md:px-8 py-3 text-white relative overflow-hidden shrink-0">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex items-center gap-1 md:gap-4">
-                  <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-                    <Building className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg mdtext-2xl font-bold">
-                      {data ? "Edit Department" : "Add New Department"}
-                    </h2>
-                  </div>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={closeModal}
-                  className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
-                >
-                  <X className="w-6 h-6" />
-                </motion.button>
-              </div>
-            </div>
+           <ModalHeader
+                       icon={Building}
+                       closeModal={closeModal}
+                       isEdit={isEdit}
+                       name={"Department"}
+                     />
 
             {/* Body (scrollable) */}
             {/* ⬇️ flex-1 + min-h-0 is critical for scroll inside flex parent */}
-            <div className="px-6 md:px-8 py-4 flex-1 min-h-0 overflow-y-auto">
+            <div className="px-6 md:px-8 py-4 flex-1 min-h-0 overflow-y-auto bg-white">
               <Formik
                 initialValues={initialValues}
                 validationSchema={departSchema}

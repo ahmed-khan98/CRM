@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Plus,
-  Calendar,
-} from "lucide-react";
+import { Plus, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   useAllMonthsQuery,
@@ -14,10 +11,9 @@ import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { formatDate } from "@/app/utilities/date";
 import MonthCard from "@/app/_Components/Month/MonthCard";
 import MonthModal from "@/app/_Components/Modal/MonthModal";
-
+import PageHeader from "@/app/_Components/PageHeader/page";
 
 export default function Announcement() {
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
@@ -27,7 +23,6 @@ export default function Announcement() {
     isLoading: isMonthsLoading,
     refetch,
   } = useAllMonthsQuery();
-
 
   const [closeMonth, { isLoading: isUpdatingStatus, originalArgs }] =
     useCloseMonthMutation();
@@ -76,34 +71,15 @@ export default function Announcement() {
   }
 
   return (
-    <div className="min-h-screen  px-4 py-4">
-      <div className="max-w-7xl mx-auto space-y-4">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-          <div>
-            <p className="text-xs font-semibold text-zinc-600 uppercase tracking-widest mb-1">
-              Finance
-            </p>
-            <h2 className="text-2xl font-black tracking-tight text-zinc-900">
-              Month Cycles
-            </h2>
-          </div>
-
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="cursor-pointer group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-800 text-white text-sm font-semibold border border-zinc-700 hover:bg-zinc-700 hover:border-zinc-600 hover:scale-[1.03] transition-all duration-200 shadow-lg shadow-black/30"
-          >
-            <Plus
-              size={15}
-              className="group-hover:rotate-90 transition-transform duration-200"
-            />
-            Create Month
-          </button>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-black/20 to-transparent" />
-
+        <div className="min-h-screen">
+      <div className="w-full mx-auto px-1  flex flex-col space-y-3">
+        <PageHeader
+          icon={Calendar}
+          length={data?.data?.length}
+          name="Month Cycles"
+          btnName="Create Month"
+          handleEdit={() => setIsModalOpen(true)}
+        />
         {/* Empty State */}
         {data?.data?.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -116,21 +92,19 @@ export default function Announcement() {
             </p>
           </div>
         ) : (
-
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
-  {data?.data?.map((month, index) => (
-    <MonthCard
-      key={month?._id}
-      month={month}
-      index={index}
-      formatDate={formatDate}
-      closeMonth={handleMonthClose}
-      isUpdatingStatus={isUpdatingStatus}
-      originalArgs={originalArgs}
-    />
-  ))}
-</div>
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
+            {data?.data?.map((month, index) => (
+              <MonthCard
+                key={month?._id}
+                month={month}
+                index={index}
+                formatDate={formatDate}
+                closeMonth={handleMonthClose}
+                isUpdatingStatus={isUpdatingStatus}
+                originalArgs={originalArgs}
+              />
+            ))}
+          </div>
         )}
 
         {confirmDelete && (

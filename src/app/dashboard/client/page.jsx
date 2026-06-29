@@ -1,16 +1,8 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import {
-  Users,
-  Edit,
-  Plus,
-  DeleteIcon,
-  MoreVertical,
-  Search,
-} from "lucide-react";
+import { Users} from "lucide-react";
 import { motion } from "framer-motion";
-import { formatDate } from "@/app/utilities/date";
 import {
   useAllClientsQuery,
   useDeleteClientMutation,
@@ -20,6 +12,9 @@ import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import Image from "next/image";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import toast from "react-hot-toast";
+import SignupTypeBadge from "@/app/_Components/table/SignupTypeBadge";
+import PageHeader from "@/app/_Components/PageHeader/page";
+import ClientRowMenu from "@/app/_Components/table/tableRow/tableHeader/ClientRowMenu";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -48,7 +43,6 @@ export default function Client() {
     setIsModalOpen(false);
     setEditingAppointment(null);
   };
-
 
   const filteredNotifications = () => {
     if (!data?.data) return [];
@@ -103,33 +97,15 @@ export default function Client() {
   return (
     <div className="min-h-screen">
       {/* Container: Bari screen pe max-w-full aur 1600px tak jayega */}
-      <div className="w-full max-w-[1600px] mx-auto px-1  flex flex-col space-y-4">
+      <div className="w-full mx-auto px-1  flex flex-col space-y-3">
         {/* 1. Header Section */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between bg-white p-3 rounded-3xl shadow-sm border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-zinc-200 rounded-2xl">
-              <Users className="h-6 w-6 text-gray-800" />
-            </div>
-            <div>
-              <h3 className="text-[#242424] text-lg font-black tracking-tight leading-none">
-                All Clients
-              </h3>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
-                Management Hub
-              </p>
-            </div>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => handleEdit()}
-            className="flex items-center justify-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2.5 rounded-2xl text-[13px] font-bold shadow-lg shadow-purple-100 hover:bg-zinc-900 transition-all"
-          >
-            <Plus className="h-5 w-5" />
-            Add New Client
-          </motion.button>
-        </div>
+        <PageHeader
+          icon={Users}
+          length={data?.data?.length}
+          name=" All Clients"
+          btnName="Create Client"
+          handleEdit={handleEdit}
+        />
 
         {/* 2. Smart Filters: Laptop pe fit, Mobile pe scrollable */}
         <div className="relative w-fit max-w-full overflow-hidden group">
@@ -142,7 +118,7 @@ export default function Client() {
                 <button
                   key={e}
                   onClick={() => setActiveFilter(e)}
-                  className={`px-5 py-2 text-[12px] font-bold rounded-xl cursor-pointer transition-all capitalize whitespace-nowrap ${
+                  className={`px-2.5 py-2 text-[11px] font-medium rounded-xl cursor-pointer transition-all capitalize whitespace-nowrap ${
                     activeFilter === e
                       ? "bg-zinc-800 text-white shadow-md shadow-purple-100"
                       : "text-gray-500 hover:bg-zinc-100 hover:text-gray-800"
@@ -155,10 +131,7 @@ export default function Client() {
           </div>
         </div>
 
-        <motion.div
-          variants={itemVariants}
-          className=" md:mx-0"
-        >
+        <motion.div variants={itemVariants} className=" md:mx-0">
           {filteredNotifications()?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <Users className="h-16 w-16 text-gray-300 mbg-zinc-800" />
@@ -170,47 +143,45 @@ export default function Client() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden bg-zinc-800 rounded-2xl shadow-lg">
+            <div className="overflow-hidden bg-zinc-900 rounded-2xl shadow-lg">
               <div className="overflow-x-auto">
                 <table className="min-w-full border-separate border-spacing-0">
                   <thead className="">
                     <tr>
                       {/* Sticky Name Column */}
-                      <th className=" px-4 py-2.5 text-left text-[13px] font-bold text-zinc-300">
+                      <th className=" p-3 text-left text-[12px] font-bold text-zinc-300">
                         Client Info
                       </th>
-                      <th className="px-4 py-2.5 text-left text-[13px] font-bold text-zinc-300">
-                        Company
+                      <th className="p-3 text-left text-[12px] font-bold text-zinc-300">
+                        Business/Brand Name
                       </th>
-                      <th className="px-4 py-2.5 text-left text-[13px] font-bold text-zinc-300">
-                        Contact Details
+                      <th className="p-3 text-left text-[12px] font-bold text-zinc-300">
+                        Contact
                       </th>
-                      <th className="px-4 py-2.5 text-center text-[13px] font-bold text-zinc-300">
+                      <th className="p-3 text-center text-[12px] font-bold text-zinc-300">
+                        Signup Type
+                      </th>
+                      <th className="p-3 text-center text-[12px] font-bold text-zinc-300">
                         Tags
                       </th>
-                      <th className="px-4 py-2.5 text-left text-[13px] font-bold text-zinc-300">
+                      <th className="p-3 text-left text-[12px] font-bold text-zinc-300">
                         Handled By
                       </th>
                       {/* Sticky Action Column */}
-                      <th className="px-4 py-2.5 text-center text-[13px] font-bold text-zinc-300 ">
-                        Actions
+                      <th className="p-3 text-center text-[12px] font-bold text-zinc-300 ">
+                        
                       </th>
                     </tr>
                   </thead>
 
                   <tbody className="bg-white">
                     {filteredNotifications().map((emp, index) => (
-                      <motion.tr
-                        key={emp?._id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="group   transition-colors hover:brightness-95"
-                      >
+                          <tr className={`group border-b border-zinc-100 transition-colors hover:brightness-95`}>
+
                         {/* Sticky Client Info (Image + Name + Email) */}
                         <td className="border-b border-zinc-100 px-4 py-2.5  ">
                           <div className="flex items-center gap-3">
-                            <div className="relative w-8 h-8 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
+                            <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
                               <Image
                                 src={emp?.image || "/placeholder.svg"}
                                 alt="Client"
@@ -240,6 +211,9 @@ export default function Client() {
                         <td className="border-b border-zinc-100 text-[11px] px-4 py-2.5  whitespace-nowrap text-xs text-gray-500 font-medium">
                           {emp?.phoneNo || "-"}
                         </td>
+                        <td className="border-b border-zinc-100  whitespace-nowrap ">
+                          {<SignupTypeBadge type={emp?.signupType} /> || "-"}
+                        </td>
 
                         {/* Combined Tags (Brand + Department) */}
                         <td className="border-b border-zinc-100 px-4 py-2.5 ">
@@ -266,28 +240,16 @@ export default function Client() {
                           </div>
                         </td>
 
-                        {/* Sticky Actions */}
-                        <td className="border-b border-zinc-100 px-4 py-2.5 ">
-                          <div className="flex items-center justify-center gap-2">
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => handleEdit(emp)}
-                              className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </motion.button>
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => setConfirmDelete(emp._id)}
-                              className="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
-                            >
-                              <DeleteIcon className="h-4 w-4" />
-                            </motion.button>
-                          </div>
+                        <td
+                          className={`border-b border-zinc-100 px-2 sticky right-0 transition-colors  w-10`}
+                        >
+                          <ClientRowMenu
+                            emp={emp}
+                            handleEdit={() => handleEdit(emp)}
+                            onDelete={() => setConfirmDelete(emp._id)}
+                          />
                         </td>
-                      </motion.tr>
+                      </tr>
                     ))}
                   </tbody>
                 </table>

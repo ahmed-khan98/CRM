@@ -17,7 +17,7 @@ const isPresentRecord = (item) => {
   const recordDateStr = moment(item?.record?.shiftDate).format("YYYY-MM-DD");
   const isToday = recordDateStr === shiftEffectiveDate;
 
-  return getAttendanceStatus(item) === "present" && (!item?.record?.timeOut || isToday);
+  return getAttendanceStatus(item) === "present" && (item?.record?.timeOut || isToday);
 };
 
 const isLateRecord = (item) => getAttendanceStatus(item) === "late";

@@ -80,43 +80,38 @@ export const LinkRow = memo(
     // ── Row background ──
     const rowBg = !isEnabled
       ? "bg-gray-200"
-      // : emp?.paymentStatus === "paid"
-      // ? "bg-green-100"
-      // : emp?.paymentStatus === "failed"
-      // ? "bg-red-50"
       : "bg-white";
 
     return (
       <tr className={`group border-b border-zinc-100 transition-colors ${rowBg} hover:brightness-95`}>
 
         {/* Customer */}
-        <td className="px-3 py-2.5 min-w-[160px]">
-          <p className="text-[12px] font-semibold text-zinc-800 capitalize truncate max-w-[150px]" title={emp?.name}>
-            {emp?.name || "—"}
-          </p>
+        <td className="px-2 py-2.5 min-w-[150px]">
+         
+          <div className="flex flex-col gap-0.5">
+          <span className="text-[12px] font-semibold text-zinc-600 capitalize truncate max-w-[135px]">
+          {emp?.clientId?.name || emp?.name || "Master Link"}
+          </span>
+          <span className="text-[11px] text-zinc-600 truncate max-w-[160px]">
+            {emp?.clientId?.email || emp?.email || "—"}
+          </span>
+            <span className="text-[10px] text-zinc-600 truncate max-w-[160px]">
+              {emp?.clientId?.phoneNo || emp?.phoneNo || '-'}
+            </span>
+        </div>
         </td>
 
-        {/* Email */}
-        <td className="px-3 py-2.5 min-w-[180px]">
-          <p className="text-[11px] text-zinc-500 truncate max-w-[170px]" title={emp?.email}>
-            {emp?.email || "—"}
-          </p>
-        </td>
-
-        {/* Phone */}
-        <td className="px-3 py-2.5 min-w-[130px]">
-          <p className="text-[11px] text-zinc-600 whitespace-nowrap">{emp?.phoneNo || "—"}</p>
-        </td>
+    
 
         {/* Brand */}
-        <td className="px-3 py-2.5 min-w-[150px]">
-          <p className="text-[11px] text-zinc-600 capitalize truncate max-w-[140px]" title={emp?.brandId?.name}>
+        <td className="px-1 py-2.5 min-w-[120px]">
+          <p className="text-[11px] text-zinc-700 font-medium capitalize truncate max-w-[130px]" title={emp?.brandId?.name}>
             {emp?.brandId?.name || "No Brand"}
           </p>
         </td>
 
         {/* Services */}
-        <td className="px-3 py-2.5 min-w-[160px]">
+        <td className="px-1 py-2.5 min-w-[160px]">
           <div className="flex flex-wrap gap-1 max-w-[155px]">
             {Array.isArray(emp?.service) && emp.service.length > 0 ? (
               <>
@@ -138,12 +133,12 @@ export const LinkRow = memo(
         </td>
 
         {/* Merchant */}
-        <td className="px-3 py-2.5 min-w-[100px]">
+        <td className="px-1 py-2.5 min-w-[100px]">
           <p className="text-[11px] text-zinc-600 truncate max-w-[95px]">{emp?.merchantType || "—"}</p>
         </td>
 
         {/* Status */}
-        <td className="px-3 py-2.5 min-w-[100px]">
+        <td className="px-1 py-2.5 min-w-[80px]">
           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border whitespace-nowrap ${statusStyle}`}>
             <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
             {emp?.paymentStatus
@@ -153,20 +148,20 @@ export const LinkRow = memo(
         </td>
 
         {/* Amount */}
-        <td className="px-3 py-2.5 min-w-[90px]">
+        <td className="px-1 py-2.5 min-w-[60px]">
           <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-[12px] font-bold bg-zinc-800 text-white whitespace-nowrap">
             {sym}{emp?.amount?.toLocaleString() ?? "0"}
           </span>
         </td>
 
         {/* Created */}
-        <td className="px-3 py-2.5 min-w-[110px]">
+        <td className="px-1 py-2.5 min-w-[100px]">
           <p className="text-[11px] text-zinc-400 whitespace-nowrap">{formatDate(emp?.createdAt)}</p>
         </td>
 
         {/* Updated */}
-        <td className="px-3 py-2.5 min-w-[110px]">
-          <p className="text-[11px] text-zinc-400 whitespace-nowrap">{formatDate(emp?.updatedAt)}</p>
+        <td className="px-1 py-2.5 min-w-[100px]">
+          <p className="text-[11px] text-zinc-400 whitespace-nowrap text-center">{emp?.paidAt ? formatDate(emp?.paidAt):'-'}</p>
         </td>
 
         {/* Actions — sticky right */}

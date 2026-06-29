@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MegaphoneIcon, Edit, Plus, DeleteIcon, Megaphone } from "lucide-react";
+import { MegaphoneIcon, Edit, DeleteIcon, Megaphone } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   useAllAnnouncementsQuery,
@@ -40,26 +40,6 @@ export default function Announcement() {
     setEditingAppointment(null);
   };
 
-  const handleStatus = async (id) => {
-    try {
-      const response = await updateAnnouncementStatus({ id }).unwrap();
-      console.log(response, "response");
-      if (response.success) {
-        toast.success(response.message);
-      } else {
-        toast.error(response.message || "Failed to changed status");
-      }
-      refetch();
-    } catch (error) {
-      const msg =
-        error?.response?.data?.message ||
-        error?.message ||
-        error?.data?.message ||
-        "Failed to update announcement status";
-      toast.error(msg);
-    }
-  };
-
   const handleDelete = async () => {
     try {
       await deleteAnnouncement(confirmDelete).unwrap();
@@ -71,8 +51,6 @@ export default function Announcement() {
     }
   };
 
-// Loading State
-// Loading State
 if (isAnnoucementLoading) {
   return (
     <div className="min-h-screen bg-zinc-100 flex items-center justify-center gap-4">
@@ -89,17 +67,11 @@ if (isAnnoucementLoading) {
 }
 
 return (
-  <div className="min-h-screen bg-zinc-100 px-3 py-4">
-    <div className=" mx-auto flex flex-col space-y-4">
+   <div className="mx-1">
+      <div className="w-full mx-auto p-1 flex flex-col space-y-3">
 
-      {/* Header */}
             <PageHeader icon={MegaphoneIcon} length={'Management'} name=" All Announcements" btnName="Create Announcement" handleEdit={handleEdit} />
       
-
-      {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-zinc-300 to-transparent" />
-
-      {/* Empty State */}
       {data?.data?.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-[20px] bg-zinc-900 border border-white/[0.06] p-16 text-center shadow-xl shadow-zinc-400/10">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white/[0.07] border border-white/10 mb-4">
@@ -127,7 +99,7 @@ return (
                   {["Title", "Message", "Status", "Created At", "Actions"].map((h) => (
                     <th
                       key={h}
-                      className="px-4 py-3.5 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-500"
+                      className="p-3 text-left text-[10px] font-bold tracking-[0.14em] uppercase text-zinc-300"
                     >
                       {h}
                     </th>

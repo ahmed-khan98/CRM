@@ -53,11 +53,11 @@ export const StatCard = memo(({
   return (
     <button onClick={onClick} className={containerClasses}>
       {/* Background Ghost Icon */}
-      <Icon className={`absolute -right-2 -bottom-2 h-12 w-12 opacity-[0.10] ${palette.ghost} transition-transform duration-500 ${isActive ? 'scale-110 rotate-12' : ''}`} />
+      <Icon className={`absolute -right-2 -bottom-2 h-10 w-10 opacity-[0.10] ${palette.ghost} transition-transform duration-500 ${isActive ? 'scale-110 rotate-12' : ''}`} />
 
       <div className="flex items-center justify-between relative z-10 mb-1">
         <div className={`p-1 rounded-xl ${palette.iconBg} transition-colors`}>
-          <Icon className={`h-4 w-4 ${palette.iconText}`} />
+          <Icon className={`h-3 w-3 ${palette.iconText}`} />
         </div>
         
         {isActive && filterId && (

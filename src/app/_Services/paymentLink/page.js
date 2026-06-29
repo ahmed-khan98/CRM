@@ -27,7 +27,7 @@ const paymentApi = createApiAuction.injectEndpoints({
           lastComment: formData?.lastComment,
           lastActionDate: new Date().toISOString(),
           ...(formData?.lastAction === "schedule" && formData?.scheduleDate
-            ? { scheduleDate:formData?.scheduleDate }
+            ? { scheduleDate: formData?.scheduleDate }
             : { scheduleDate: null }),
         },
       }),
@@ -43,7 +43,7 @@ const paymentApi = createApiAuction.injectEndpoints({
     }),
 
     getPaymentLinkById: builder.query({
-      query: ({id}) => ({
+      query: ({ id }) => ({
         url: `paymentlink/${id}`,
         method: "GET",
       }),
@@ -51,20 +51,34 @@ const paymentApi = createApiAuction.injectEndpoints({
     }),
 
     brandPaymentLink: builder.query({
-      query: ({ page = 1, limit = 50 ,id} = {}) =>
+      query: ({ page = 1, limit = 50, id } = {}) =>
         `paymentlink/${id}/brandPaymentLink?page=${page}&limit=${limit}`,
       providesTags: ["brandPaymentLinks"],
     }),
 
     allPaymentLinks: builder.query({
-      query: ({ page = 1, limit = 50 } = {}) =>
-        `paymentlink?page=${page}&limit=${limit}`,
+      query: ({
+        page = 1,
+        limit = 50,
+        search = "",
+        departmentId = "",
+      } = {}) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+
+        if (search) params.set("search", search);
+        if (departmentId) params.set("departmentId", departmentId);
+
+        return `paymentlink?${params.toString()}`;
+      },
       providesTags: ["allPaymentlinks"],
       keepUnusedDataFor: 180,
       refetchOnMountOrArgChange: false,
     }),
 
-     updatePaymentStatus: builder.mutation({
+    updatePaymentStatus: builder.mutation({
       query: ({ id }) => {
         console.log(id, "updateStatusID");
         return {
@@ -80,7 +94,8 @@ const paymentApi = createApiAuction.injectEndpoints({
             (draft) => {
               const emp = draft.find((e) => e._id === id);
               if (emp) {
-                emp.isActive = emp.isActive === "enabled" ? "disabled" : "enabled";
+                emp.isActive =
+                  emp.isActive === "enabled" ? "disabled" : "enabled";
               }
             },
           ),
@@ -99,11 +114,11 @@ const paymentApi = createApiAuction.injectEndpoints({
 });
 
 export const {
- useAllPaymentLinksQuery,
- useBrandPaymentLinkQuery,
- useCreatePaymentLinkMutation,
- useDeletePaymentLinkMutation,
- useGetPaymentLinkByIdQuery,
- useUpdatePaymentLinkMutation,
- useUpdatePaymentStatusMutation
+  useAllPaymentLinksQuery,
+  useBrandPaymentLinkQuery,
+  useCreatePaymentLinkMutation,
+  useDeletePaymentLinkMutation,
+  useGetPaymentLinkByIdQuery,
+  useUpdatePaymentLinkMutation,
+  useUpdatePaymentStatusMutation,
 } = paymentApi;

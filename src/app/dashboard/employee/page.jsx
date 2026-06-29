@@ -286,8 +286,8 @@
 
 "use client";
 
-import { useState } from "react";
-import { Users, Edit, Plus, DeleteIcon } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { Users, Edit, DeleteIcon, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/app/utilities/date";
 import {
@@ -303,6 +303,7 @@ import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
 import toast from "react-hot-toast";
 import { EMPLOYEE_HEADERS } from "@/app/_Components/table/tableRow/tableHeader/employeeHeader";
 import { getStatusConfig } from "@/app/utilities/attendence";
+import PageHeader from "@/app/_Components/PageHeader/page";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -318,6 +319,7 @@ export default function AppointmentBooking() {
   const [editingAppointment, setEditingAppointment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data, error: isError, isLoading, refetch } = useAllEmployeesQuery();
   const [deleteEmployee, { isLoading: isDeleting }] =
@@ -332,10 +334,10 @@ export default function AppointmentBooking() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setEditingAppointment(null);
-  };
+  }, []);
 
   const handleStatus = async (id) => {
     try {
@@ -366,32 +368,20 @@ export default function AppointmentBooking() {
       .replace(/\b\w/g, (letter) => letter.toUpperCase());
   };
 
-  const getDepartmentBadgeClass = (department) => {
-    switch (department?.toString().toLowerCase()) {
-      case "sales":
-        return "text-blue-700 bg-blue-200";
-      case "hr":
-      case "human resources":
-        return "text-green-700 bg-green-200";
-      case "finance":
-        return "text-indigo-700 bg-indigo-200";
-      case "marketing":
-        return "text-purple-700 bg-purple-200";
-      default:
-        return "text-zinc-700 bg-zinc-100";
-    }
-  };
-
-  const filteredNotifications = () => {
+  const filteredEmployees = useMemo(() => {
     if (!data?.data) return [];
-    if (activeFilter !== "all") {
-      return data.data.filter(
-        (item) => item?.departmentId?.name === activeFilter,
-      );
-    } else {
-      return data.data;
-    }
-  };
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return data.data.filter((item) => {
+      const matchesDepartment =
+        activeFilter === "all" || item?.departmentId?.name === activeFilter;
+      const matchesName =
+        !normalizedSearch ||
+        item?.fullName?.toLowerCase().includes(normalizedSearch);
+
+      return matchesDepartment && matchesName;
+    });
+  }, [activeFilter, data, searchTerm]);
 
   const handleDelete = async () => {
     try {
@@ -434,31 +424,21 @@ export default function AppointmentBooking() {
 
   return (
     <div className="mx-1">
-      <div className="w-full mx-auto p-1 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-1 justify-between items-center md:flex-row">
-          <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-gray-800" />
-            <h3 className="text-[#242424] text-xl font-bold">All Employees</h3>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              Add
-            </motion.button>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-1">
+      <div className="w-full mx-auto p-1 flex flex-col space-y-3">
+        <PageHeader
+          icon={Users}
+          length={filteredEmployees.length}
+          name=" All Employees"
+          btnName="Add Employee"
+          handleEdit={handleEdit}
+        />
+        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-white p-2 shadow-sm md:flex-row md:items-center md:justify-between">
           <div className="flex bg-white rounded-full shadow-sm p-1">
             {filterData?.map((e, index) => (
               <button
                 key={index}
                 onClick={() => setActiveFilter(e)}
-                className={`px-4 py-1.5 text-[12px] font-medium rounded-full cursor-pointer transition-all capitalize ${
+                className={`px-2.5 py-1.5 text-[12px] font-medium rounded-xl cursor-pointer transition-all capitalize ${
                   activeFilter === e
                     ? "bg-zinc-800 text-white shadow-md"
                     : "text-gray-600 hover:bg-gray-100"
@@ -468,9 +448,18 @@ export default function AppointmentBooking() {
               </button>
             ))}
           </div>
+          <div className="relative w-full md:max-w-xs">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+            <input
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Search employee by full name..."
+              className="h-10 w-full rounded-xl border border-zinc-200 bg-zinc-50 pl-9 pr-3 text-sm font-medium text-zinc-800 outline-none transition focus:border-zinc-800 focus:bg-white"
+            />
+          </div>
         </div>
         <motion.div variants={itemVariants} className="">
-          {filteredNotifications()?.length === 0 ? (
+          {filteredEmployees.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <Users className="h-16 w-16 text-gray-300 mbg-zinc-800" />
               <h3 className="text-xl font-semibold text-gray-700">
@@ -478,7 +467,7 @@ export default function AppointmentBooking() {
               </h3>
               <p className="text-gray-500 mt-2">
                 {activeFilter === "all"
-                  ? "You don't have any Employee yet."
+                  ? "No employee matched your search."
                   : `You don't have any ${activeFilter} Employee.`}
               </p>
             </div>
@@ -492,7 +481,7 @@ export default function AppointmentBooking() {
                 }}
               >
                 <table className="min-w-full">
-                  <thead className="bg-zinc-800 py-0 sticky top-0 z-10">
+                  <thead className="bg-zinc-900 py-0 sticky top-0 z-10">
                     <tr>
                       {EMPLOYEE_HEADERS.map((col, index) => (
                         <th
@@ -505,7 +494,7 @@ export default function AppointmentBooking() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredNotifications().map((emp, index) => {
+                    {filteredEmployees.map((emp, index) => {
                       const cfg = getStatusConfig(emp?.status);
                       return (
                         <motion.tr
@@ -515,11 +504,11 @@ export default function AppointmentBooking() {
                           transition={{ delay: index * 0.1 }}
                           className="hover:bg-zinc-50 transition-colors"
                         >
-                          <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600 capitalize">
+                          <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600 capitalize ">
                             {index + 1}
                           </td>
 
-                          <td className="px-4 py-2.5">
+                          <td className="px-2 py-2.5 min-w-[60px]">
                             <div className="flex items-center gap-2">
                               <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
                                 <Image
@@ -540,18 +529,18 @@ export default function AppointmentBooking() {
                               </div>
                             </div>
                           </td>
-                          <td className="px-2 py-2.5 whitespace-nowrap text-[12px] font-bold text-zinc-800">
+                          <td className="px-2 py-2.5 whitespace-nowrap text-[12px] font-bold text-zinc-800 min-w-[60px]">
                             {emp?.designation || "-"}
                           </td>
 
-                          <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600">
+                          <td className="px-1 py-2.5 whitespace-nowrap text-[11px] text-gray-600">
                             {emp?.CNIC || "-"}
                           </td>
 
                           <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600">
                             {emp?.phoneNo || "-"}
                           </td>
-                          <td className="px-3 py-2.5 whitespace-normal min-w-[200px]">
+                          <td className="px-2 py-2.5 whitespace-normal min-w-[100px]">
                             <div className="flex flex-wrap gap-1 items-center">
                               <span
                                 className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium uppercase ${getStatusColor(
@@ -570,11 +559,11 @@ export default function AppointmentBooking() {
                             </div>
                           </td>
 
-                          <td className="px-1 py-2.5 whitespace-normal text-center">
+                          <td className="px-1 py-2.5 whitespace-normal text-center min-w-[100px]">
                             <span
                               onClick={() => handleStatus(emp?._id)}
                               disabled={statusLoading}
-                              className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
+                              className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font font-medium uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
                             >
                               <span
                                 className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`}
@@ -619,26 +608,26 @@ export default function AppointmentBooking() {
                               </span>
                             </div>
                           </td>
-                          <td className="px-4 py-2.5 whitespace-nowrap">
-                          <div className="flex items-center gap-2">
-                            <motion.button
-                              whileHover={{ scale: 1.08 }}
-                              whileTap={{ scale: 0.93 }}
-                              onClick={() => handleEdit(emp)}
-                              className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
-                            >
-                              <Edit className="h-3.5 w-3.5" />
-                            </motion.button>
-                            <motion.button
-                              whileHover={{ scale: 1.08 }}
-                              whileTap={{ scale: 0.93 }}
-                              onClick={() => setConfirmDelete(emp._id)}
-                              className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
-                            >
-                              <DeleteIcon className="h-3.5 w-3.5" />
-                            </motion.button>
-                          </div>
-                        </td>
+                          <td className="px-2 py-2.5 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <motion.button
+                                whileHover={{ scale: 1.08 }}
+                                whileTap={{ scale: 0.93 }}
+                                onClick={() => handleEdit(emp)}
+                                className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                              >
+                                <Edit className="h-3.5 w-3.5" />
+                              </motion.button>
+                              <motion.button
+                                whileHover={{ scale: 1.08 }}
+                                whileTap={{ scale: 0.93 }}
+                                onClick={() => setConfirmDelete(emp._id)}
+                                className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
+                              >
+                                <DeleteIcon className="h-3.5 w-3.5" />
+                              </motion.button>
+                            </div>
+                          </td>
                         </motion.tr>
                       );
                     })}

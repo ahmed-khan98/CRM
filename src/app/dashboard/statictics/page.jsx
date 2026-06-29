@@ -189,7 +189,7 @@ export default function DashboardPage() {
 
           <StatCard
             icon={ShoppingBag}
-            title="Total Client"
+            title="New Client"
             value={data?.data?.clientCount}
             color="bg-gradient-to-br from-yellow-600 to-yellow-700"
             trend="up"

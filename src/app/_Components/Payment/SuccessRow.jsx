@@ -1,12 +1,19 @@
 import { memo } from "react";
 
-const SuccessRow = ({ label, value }) => {
+const SuccessRow = ({ icon: Icon, label, value }) => {
   return (
-    <div className="flex justify-between text-sm gap-4 py-1  border-b border-zinc-100">
-      <span className="text-zinc-400 shrink-0 text-[12px]">{label}</span>
-      <span className="text-zinc-700 font-medium text-right">{value}</span>
+    <div className="flex items-center gap-3 px-3.5 py-2.5 bg-zinc-50">
+      <div className="w-6 h-6 rounded-md bg-zinc-200 flex items-center justify-center shrink-0">
+        <Icon className="w-3 h-3 text-zinc-500" />
+      </div>
+      <div>
+        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+          {label}
+        </p>
+        <p className="text-[12px] font-semibold text-zinc-800">{value}</p>
+      </div>
     </div>
   );
-}
+};
 
-export default memo(SuccessRow)
+export default memo(SuccessRow);

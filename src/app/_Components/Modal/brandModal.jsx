@@ -12,6 +12,7 @@ import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import FormikSelect from "./formikSelect";
 import { brandSchema } from "@/app/schema/brand";
 import { useEffect, useRef } from "react";
+import ModalHeader from "./ModalHeader/page";
 
 const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
   const [createBrand] = useCreateBrandMutation();
@@ -23,9 +24,8 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
   } = useAllDepartmentsQuery();
   const isEdit = !!data;
 
-  
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    console.log(values,'values')
+    console.log(values, "values");
     try {
       const payload = new FormData();
       payload.append("id", data?._id);
@@ -46,7 +46,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
               : {
                   id: data?._id,
                   body: payload,
-                }
+                },
           ).unwrap()
         : createBrand(payload).unwrap());
 
@@ -56,7 +56,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
 
       if (response.success) {
         toast.success(
-          data ? "Brand updated successfully!" : "Brand created successfully!"
+          data ? "Brand updated successfully!" : "Brand created successfully!",
         );
       } else {
         toast.error(response.message || "Failed to process Brand");
@@ -109,34 +109,17 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
+            className="rounded-3xl shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-2 md:px-8 py-3 text-white relative overflow-hidden shrink-0">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex items-center gap-1 md:gap-4">
-                  <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-                    <Home className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg mdtext-2xl font-bold">
-                      {data ? "Edit Brand" : "Add New Brand"}
-                    </h2>
-                  </div>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={closeModal}
-                  className="p-2 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
-                >
-                  <X className="w-6 h-6" />
-                </motion.button>
-              </div>
-            </div>
+            <ModalHeader
+              icon={Home}
+              closeModal={closeModal}
+              isEdit={isEdit}
+              name={"Brand"}
+            />
 
-            <div className="px-6 md:px-8 py-4 flex-1 min-h-0 overflow-y-auto">
+            <div className="bg-white px-6 md:px-8 py-4 flex-1 min-h-0 overflow-y-auto">
               <Formik
                 initialValues={initialValues}
                 validationSchema={brandSchema}
@@ -192,13 +175,13 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
                         accept="image/*"
                       />
 
-                      <div className="flex justify-center items-center my-3">
-                        <div className="relative w-28 h-28">
+                      <div className="flex justify-center items-center my-1">
+                        <div className="relative w-24 h-24">
                           <div
                             role="button"
                             tabIndex={0}
                             onClick={() => fileInputRef1.current?.click()}
-                            className={`w-28 h-28 rounded-full border 
+                            className={`w-24 h-24 rounded-full border 
                               ${
                                 previewSrc
                                   ? "overflow-hidden"
@@ -214,7 +197,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
                               />
                             ) : (
                               <>
-                                <Upload className="w-6 h-6 text-gray-500 mb-1" />
+                                <Upload className="w-4 h-4 text-gray-500 mb-1" />
                                 <span className="text-[11px] text-gray-600 leading-tight">
                                   Upload Client Image
                                 </span>

@@ -36,7 +36,7 @@ function FormikCreateableSelect({
       {label ? (
         <label
           htmlFor={name}
-          className="block text-sm font-medium text-gray-800 mb-1"
+          className="block text-[12px] font-medium text-gray-800 mb-1"
         >
           {label}
         </label>

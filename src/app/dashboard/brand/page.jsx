@@ -11,6 +11,7 @@ import BrandModal from "@/app/_Components/Modal/brandModal";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import Image from "next/image";
 import { formatDate, formatOnlyDate } from "@/app/utilities/date";
+import PageHeader from "@/app/_Components/PageHeader/page";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -71,25 +72,9 @@ export default function AppointmentBooking() {
   }
 
   return (
-    <div className="min-h-screen mx-1">
-      <div className="w-full mx-auto p-1 flex flex-col space-y-6">
-        <div className="flex flex-col gap-2 justify-between items-center md:flex-row">
-          <div className="flex items-center gap-3">
-            <Home className="h-6 w-6 text-gray-800" />
-            <h3 className="text-[#242424] text-[20px] font-bold">All Brand</h3>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-900 transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              Create
-            </motion.button>
-          </div>
-        </div>
+    <div className="mx-1">
+      <div className="w-full mx-auto p-1 flex flex-col space-y-3">
+        <PageHeader icon={Home} length={data?.data?.length} name=" All Brands" btnName="Create Brand" handleEdit={handleEdit} />
 
         <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
           {data?.data?.length === 0 ? (

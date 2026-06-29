@@ -56,7 +56,7 @@ const LeftNav = ({ set }) => {
       ],
     },
     { name: "All Months", icon: <Calendar className="w-4 h-4" />, path: ["/dashboard/month"] ,roles: ["DEP_ADMIN","HR_ADMIN",'FINANCE_ADMIN']},
-    { name: "Sales", icon: <BadgeDollarSign className="w-4 h-4" />, path: ["/dashboard/sale"],roles: ["DEP_ADMIN",'FINANCE_ADMIN'] },
+    { name: "Sales", icon: <BadgeDollarSign className="w-4 h-4" />, path: ["/dashboard/sale"],roles: ["DEP_ADMIN",'FINANCE_ADMIN',"USER","HR_ADMIN"] },
     { name: "My Account", icon: <User className="w-4 h-4" />, path: ["/dashboard/profile", "/dashboard/changepassword"],roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'] },
     {
       name: "Attendance",
@@ -139,12 +139,12 @@ const filteredMenuItems = menuItems
         >
           <button
             onClick={() => setIsCollapsed((prev) => !prev)}
-            className="cursor-pointer flex items-center justify-center w-5 h-5 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-200 transition-all duration-150"
+            className="cursor-pointer flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-200 transition-all duration-150"
             title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {isCollapsed
-              ? <ArrowRight  className="w-3 h-3" />
-              : <ArrowLeft className="w-3 h-3" />
+              ? <ArrowRight  className="w-4 h-4" />
+              : <ArrowLeft className="w-4 h-4" />
             }
           </button>
         </div>
@@ -182,7 +182,7 @@ const filteredMenuItems = menuItems
                   }}
                   title={isCollapsed ? label : undefined}
                   className={`relative flex items-center cursor-pointer rounded-xl border transition-all duration-150 group
-                    ${isCollapsed ? "justify-center px-2 py-[2px]" : "justify-between px-3 py-1 my-1"}
+                    ${isCollapsed ? "justify-center py-[2px]" : "justify-between px-2 py-1 my-1"}
                     ${isActive
                       ? "bg-white/[0.09] border-white/[0.12]"
                       : "border-transparent hover:bg-white/[0.04]"
@@ -195,7 +195,7 @@ const filteredMenuItems = menuItems
 
                   <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-2"}`}>
                     {/* Icon */}
-                    <span className={`flex items-center justify-center w-7 h-7 rounded-lg transition-all duration-150 flex-shrink-0
+                    <span className={` ${isCollapsed ? "w-8 h-8" : "w-7 h-7"} flex items-center justify-center  rounded-lg transition-all duration-150 flex-shrink-0
                       ${isActive ? "bg-white/15 text-white" : "bg-white/5 text-zinc-500 group-hover:text-zinc-300"}`}
                     >
                       {item.icon}

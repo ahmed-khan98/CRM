@@ -1,14 +1,12 @@
 export const SALEHEADERS = [
   "Client Info",
-  // "Serial No.",
-  // "Brand Name",
-  "Serial / Brand ",
-  "Department",
-  "Agent",
+  "Depart / Brand",
   "Type",
-  "Fronter",
+  "Seller / Agent",
   "Amount",
   "Status",
+  "Merchant",
+  "Month",
   "Sale Date",
   "Action",
 ];

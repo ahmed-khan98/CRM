@@ -2,9 +2,13 @@ import * as Yup from "yup";
 
 export const clientSchema = Yup.object().shape({
   departmentId: Yup.string().required("Please select a department"),
+  brandId: Yup.string().required("Please select a brand"),
   handleBy: Yup.string().required("Please select a agent"),
   name: Yup.string().required("name is required"),
   signupType: Yup.string().required("signup type is required"),
+   email: Yup.string()
+      .email("Please enter a valid email address")
+      .required("Email is required"),
   phoneNo: Yup.string()
     .required("Phone number is required")
     // .matches(

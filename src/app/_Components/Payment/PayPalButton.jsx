@@ -200,7 +200,6 @@ console.log("SDK Currency:", currency);
 
   return (
     <div className={`relative ${className}`}>
-    
       <div className="relative">
         {isLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center rounded-xl">
@@ -224,12 +223,12 @@ console.log("SDK Currency:", currency);
 
         <div
           ref={paypalRef}
-          className="min-h-[45px] rounded-xl overflow-hidden"
+          className="min-h-[45px] rounded-xl overflow-hidden "
         />
       </div>
 
       {/* Security Notice */}
-      <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3">
+        <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3">
             <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
             <p className="text-amber-700 text-[11px] leading-relaxed">
               This is a one-time secure payment link. Do not share it with others.

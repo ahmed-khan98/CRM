@@ -244,7 +244,7 @@ const DashboardLayout = ({ children }) => {
           //   border: "1px solid rgba(255,255,255,0.07)",
           //   // boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
           // }}
-          className="min-h-screen bg-zinc-50 flex flex-col pt-14 md:pt-18"
+          className="min-h-screen bg-zinc-100 flex flex-col pt-14 md:pt-18"
         >
           <div className="flex flex-1 relative overflow-hidden">
             {isMobile && isSidebarOpen && (
@@ -273,7 +273,7 @@ const DashboardLayout = ({ children }) => {
             ${isMobile ? "w-full" : ""}`}
             >
               <AnnouncementMarquee />
-              <div className="w-full h-auto py-2">{children}</div>
+              <div className="w-full h-auto py-4">{children}</div>
             </main>
           </div>
         </div>

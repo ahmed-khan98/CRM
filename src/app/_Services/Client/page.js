@@ -42,6 +42,15 @@ const ClientApi = createApiAuction.injectEndpoints({
       },
       invalidatesTags: ["departmentClient"],
     }),
+    getClient: builder.query({
+      query: (id) => {
+        return {
+          url: `client/${id}`,
+          method: "GET",
+        };
+      },
+      invalidatesTags: ["clientById"],
+    }),
     allClients: builder.query({
       query: (data) => `client/`,
       providesTags: ["allClients"],
@@ -56,5 +65,6 @@ export const {
   useCreateClientMutation,
   useUpdateClientMutation,
   useDeleteClientMutation,
-  useDepartmentsCLientQuery
+  useDepartmentsCLientQuery,
+  useGetClientQuery
 } = ClientApi;

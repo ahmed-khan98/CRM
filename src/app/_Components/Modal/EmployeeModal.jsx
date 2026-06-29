@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { X, User, Upload, Trash2, Calendar } from "lucide-react";
+import { User, Upload, Trash2, Calendar } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
   useCreateEmployeeMutation,
@@ -12,9 +12,10 @@ import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import { useEffect, useRef } from "react";
 import { empSchema } from "@/app/schema/employee";
 import FormikSelect from "./formikSelect";
+import ModalHeader from "./ModalHeader/page";
 
 const inputClass = (hasError) =>
-  `w-full px-3.5 py-2.5 rounded-[10px] text-[13px] font-medium bg-white/[0.04] border text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-white/25 transition-colors duration-150 ${
+  `w-full px-3.5 py-2.5 rounded-[10px] text-[12px] font-medium bg-white/[0.04] border text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-white/25 transition-colors duration-150 ${
     hasError ? "border-red-500/50" : "border-white/10"
   }`;
 
@@ -76,7 +77,11 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
         : createEmployee(payload).unwrap());
 
       if (response.success) {
-        toast.success(isEdit ? "Employee updated successfully!" : "Employee created successfully!");
+        toast.success(
+          isEdit
+            ? "Employee updated successfully!"
+            : "Employee created successfully!",
+        );
       } else {
         toast.error(response.message || "Failed to process Employee");
       }
@@ -122,7 +127,6 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/75 backdrop-blur-md"
-          onClick={closeModal}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 20 }}
@@ -132,36 +136,12 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
             className="w-full max-w-3xl max-h-[95vh] flex flex-col overflow-hidden rounded-[20px] bg-zinc-950 border border-white/[0.08] shadow-[0_32px_80px_rgba(0,0,0,0.7)]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Top accent */}
-            <div className="h-[1.5px] w-full flex-shrink-0 bg-gradient-to-r from-transparent via-white/25 to-white/[0.06]" />
-
-            {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 flex-shrink-0 border-b border-white/[0.07]">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/[0.07] border border-white/10 flex-shrink-0">
-                  <User className="w-4 h-4 text-zinc-400" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black tracking-[0.18em] uppercase text-zinc-600">
-                    {isEdit ? "Edit Record" : "New Record"}
-                  </p>
-                  <h2 className="text-base font-black text-zinc-100">
-                    {isEdit ? "Edit Employee" : "Add New Employee"}
-                  </h2>
-                </div>
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={closeModal}
-                className="cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 border border-white/[0.08] text-zinc-500 hover:text-zinc-300 hover:bg-white/10 transition-all duration-150"
-              >
-                <X className="w-4 h-4" />
-              </motion.button>
-            </div>
-
-            {/* Scrollable Form */}
+            <ModalHeader
+              icon={User}
+              closeModal={closeModal}
+              isEdit={isEdit}
+              name={"Employee"}
+            />
             <div className="flex-1 overflow-y-auto px-6 py-5">
               <Formik
                 initialValues={initialValues}
@@ -169,9 +149,24 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                 onSubmit={handleSubmit}
                 enableReinitialize
               >
-                {({ errors, touched, isSubmitting, values, setFieldValue, setFieldTouched }) => {
-                  const deptOptions = departments?.data?.map((d) => ({ value: d?._id, label: d?.name })) ?? [];
-                  const roleOptions = roleOption?.map((d) => ({ value: d?.value, label: d?.name })) ?? [];
+                {({
+                  errors,
+                  touched,
+                  isSubmitting,
+                  values,
+                  setFieldValue,
+                  setFieldTouched,
+                }) => {
+                  const deptOptions =
+                    departments?.data?.map((d) => ({
+                      value: d?._id,
+                      label: d?.name,
+                    })) ?? [];
+                  const roleOptions =
+                    roleOption?.map((d) => ({
+                      value: d?.value,
+                      label: d?.name,
+                    })) ?? [];
 
                   const fileInputRef1 = useRef(null);
 
@@ -181,7 +176,8 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                     setFieldValue("image", file);
                   };
 
-                  const handleDeleteMainImage = () => setFieldValue("image", "");
+                  const handleDeleteMainImage = () =>
+                    setFieldValue("image", "");
 
                   const previewSrc =
                     values.image instanceof File
@@ -197,7 +193,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                   }, [previewSrc, values?.image]);
 
                   return (
-                    <Form className="space-y-5">
+                    <Form className="space-y-3">
                       <input
                         type="file"
                         ref={fileInputRef1}
@@ -214,13 +210,18 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                             tabIndex={0}
                             onClick={() => fileInputRef1.current?.click()}
                             className={`w-24 h-24 rounded-full cursor-pointer overflow-hidden flex items-center justify-center transition-all duration-150
-                              ${previewSrc
-                                ? "ring-2 ring-white/15"
-                                : "border-2 border-dashed border-white/12 bg-white/[0.04] hover:bg-white/[0.07]"
+                              ${
+                                previewSrc
+                                  ? "ring-2 ring-white/15"
+                                  : "border-2 border-dashed border-white/12 bg-white/[0.04] hover:bg-white/[0.07]"
                               }`}
                           >
                             {previewSrc ? (
-                              <img src={previewSrc} alt="Employee" className="w-full h-full object-cover" />
+                              <img
+                                src={previewSrc}
+                                alt="Employee"
+                                className="w-full h-full object-cover"
+                              />
                             ) : (
                               <div className="flex flex-col items-center gap-1">
                                 <Upload className="w-5 h-5 text-zinc-600" />
@@ -245,8 +246,23 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
 
                       {/* Divider */}
                       <div className="h-px bg-white/[0.06]" />
+                      <div>
+                        <FieldLabel>Full Name</FieldLabel>
+                        <Field name="fullName">
+                          {({ field }) => (
+                            <input
+                              {...field}
+                              type="text"
+                              placeholder="John Smith"
+                              className={inputClass(
+                                errors.fullName && touched.fullName,
+                              )}
+                            />
+                          )}
+                        </Field>
+                        <ErrMsg name="fullName" />
+                      </div>
 
-                      {/* Row 1 — Department + Joining Date */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <FormikSelect
@@ -268,31 +284,31 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                           </FieldLabel>
                           <Field name="joiningDate">
                             {({ field }) => (
-                              <input {...field} type="date" className={inputClass(errors.joiningDate && touched.joiningDate)} />
+                              <input
+                                {...field}
+                                type="date"
+                                className={inputClass(
+                                  errors.joiningDate && touched.joiningDate,
+                                )}
+                              />
                             )}
                           </Field>
                           <ErrMsg name="joiningDate" />
                         </div>
-                      </div>
 
-                      {/* Row 2 — Full Name */}
-                      <div>
-                        <FieldLabel>Full Name</FieldLabel>
-                        <Field name="fullName">
-                          {({ field }) => (
-                            <input {...field} type="text" placeholder="John Smith" className={inputClass(errors.fullName && touched.fullName)} />
-                          )}
-                        </Field>
-                        <ErrMsg name="fullName" />
-                      </div>
-
-                      {/* Row 3 — Email + Designation */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Row 3 — Email + Designation */}
                         <div>
                           <FieldLabel>Email</FieldLabel>
                           <Field name="email">
                             {({ field }) => (
-                              <input {...field} type="email" placeholder="example@gmail.com" className={inputClass(errors.email && touched.email)} />
+                              <input
+                                {...field}
+                                type="email"
+                                placeholder="example@gmail.com"
+                                className={inputClass(
+                                  errors.email && touched.email,
+                                )}
+                              />
                             )}
                           </Field>
                           <ErrMsg name="email" />
@@ -301,20 +317,31 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                           <FieldLabel>Designation</FieldLabel>
                           <Field name="designation">
                             {({ field }) => (
-                              <input {...field} type="text" placeholder="e.g. Senior Developer" className={inputClass(errors.designation && touched.designation)} />
+                              <input
+                                {...field}
+                                type="text"
+                                placeholder="e.g. Senior Developer"
+                                className={inputClass(
+                                  errors.designation && touched.designation,
+                                )}
+                              />
                             )}
                           </Field>
                           <ErrMsg name="designation" />
                         </div>
-                      </div>
 
-                      {/* Row 4 — CNIC + Phone */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <FieldLabel>CNIC</FieldLabel>
                           <Field name="CNIC">
                             {({ field }) => (
-                              <input {...field} type="text" placeholder="40000-1234567-8" className={inputClass(errors.CNIC && touched.CNIC)} />
+                              <input
+                                {...field}
+                                type="text"
+                                placeholder="40000-1234567-8"
+                                className={inputClass(
+                                  errors.CNIC && touched.CNIC,
+                                )}
+                              />
                             )}
                           </Field>
                           <ErrMsg name="CNIC" />
@@ -323,42 +350,50 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                           <FieldLabel>Phone No.</FieldLabel>
                           <Field name="phoneNo">
                             {({ field }) => (
-                              <input {...field} type="text" placeholder="0300-1234567" className={inputClass(errors.phoneNo && touched.phoneNo)} />
+                              <input
+                                {...field}
+                                type="text"
+                                placeholder="0300-1234567"
+                                className={inputClass(
+                                  errors.phoneNo && touched.phoneNo,
+                                )}
+                              />
                             )}
                           </Field>
                           <ErrMsg name="phoneNo" />
                         </div>
-                      </div>
 
-                      {/* Row 5 — Password + Role */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {!isEdit && (
                           <div>
                             <FieldLabel>Password</FieldLabel>
                             <Field name="password">
                               {({ field }) => (
-                                <input {...field} type="text" placeholder="••••••••" className={inputClass(errors.password && touched.password)} />
+                                <input
+                                  {...field}
+                                  type="text"
+                                  placeholder="••••••••"
+                                  className={inputClass(
+                                    errors.password && touched.password,
+                                  )}
+                                />
                               )}
                             </Field>
                             <ErrMsg name="password" />
                           </div>
                         )}
-                        <div className={isEdit ? "md:col-span-2" : ""}>
-                          <FormikSelect
-                            name="role"
-                            label="Select User Role"
-                            options={roleOptions}
-                            value={values.role}
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            error={errors.role}
-                            touched={touched.role}
-                            placeholder="User, Sub Admin"
-                          />
-                        </div>
+                        <FormikSelect
+                          name="role"
+                          label="Select User Role"
+                          options={roleOptions}
+                          value={values.role}
+                          setFieldValue={setFieldValue}
+                          setFieldTouched={setFieldTouched}
+                          error={errors.role}
+                          touched={touched.role}
+                          placeholder="User, Sub Admin"
+                        />
                       </div>
 
-                      {/* Row 6 — Address */}
                       <div>
                         <FieldLabel>Address</FieldLabel>
                         <Field name="address">
@@ -398,13 +433,32 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                         >
                           {isSubmitting ? (
                             <span className="flex items-center justify-center gap-2">
-                              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                              <svg
+                                className="animate-spin h-4 w-4"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                  fill="none"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
                               </svg>
                               Processing...
                             </span>
-                          ) : isEdit ? "Save Changes" : "Add Employee"}
+                          ) : isEdit ? (
+                            "Save Changes"
+                          ) : (
+                            "Add Employee"
+                          )}
                         </motion.button>
                       </div>
                     </Form>

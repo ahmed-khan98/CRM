@@ -1,5 +1,18 @@
 import { createApiAuction } from "@/redux/createApi";
 
+const buildSaleUrl = (params = {}) => {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value && value !== "all") {
+      searchParams.set(key, value);
+    }
+  });
+
+  const queryString = searchParams.toString();
+  return `sale/${queryString ? `?${queryString}` : ""}`;
+};
+
 const saleApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({
     createSale: builder.mutation({
@@ -17,27 +30,26 @@ const saleApi = createApiAuction.injectEndpoints({
           method: "PATCH",
           body: {
             departmentId: formData?.departmentId,
+            clientId: formData?.clientId,
+            brandId: formData?.brandId,
+            seller: formData?.seller,
             agent: formData?.agent,
-            fronter: formData?.fronter,
-            name: formData?.name,
-            email: formData?.email,
-            phoneNo: formData?.phoneNo,
-            serialNo: formData?.serialNo,
-            brandMark: formData?.brandMark,
-            brandName: formData?.brandName,
             amount: formData?.amount,
             currency: formData?.currency,
             type: formData?.type,
+            saleDate: formData?.saleDate,
+            merchantType: formData?.merchantType,
+            description: formData?.description,
           },
         };
       },
       invalidatesTags: ["allSales"],
     }),
     allSales: builder.query({
-      query: (data) => `sale/`,
+      query: buildSaleUrl,
       providesTags: ["allSales"],
       keepUnusedDataFor: 180,
-      refetchOnMountOrArgChange: false,
+      refetchOnMountOrArgChange: true,
     }),
     deleteSale: builder.mutation({
       query: (id) => {

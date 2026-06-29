@@ -1,12 +1,4 @@
-const CURRENCY_OPTIONS = [
-  { value: "USD", label: "USD" },
-  { value: "PKR", label: "PKR" },
-];
 
-const SALE_OPTIONS = [
-  { value: "FRESH", label: "FRESH" },
-  { value: "UP SELL", label: "UP SELL" },
-];
 
 const modalVariants = {
   hidden: { opacity: 0, scale: 0.8, y: 50 },
@@ -28,4 +20,4 @@ const modalVariants = {
   },
 };
 
-export { CURRENCY_OPTIONS, SALE_OPTIONS, modalVariants };
+export {modalVariants };

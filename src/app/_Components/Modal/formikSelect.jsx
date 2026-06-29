@@ -28,7 +28,7 @@ function FormikSelect({
       {label ? (
         <label
           htmlFor={name}
-          className="block text-sm font-medium text-gray-800 mb-1"
+          className="block text-[12px] font-medium text-gray-800 mb-1"
         >
           {label}
         </label>
@@ -66,7 +66,7 @@ function FormikSelect({
       borderRadius: 16, 
       minHeight: "2.5rem",
       textTransform: "capitalize",
-      fontSize: "14px",
+      fontSize: "13px",
       cursor: "pointer",
       backgroundColor: "white", // Agar dark mode input chahiye toh isay #18181b kar dein
       borderColor: state.isFocused

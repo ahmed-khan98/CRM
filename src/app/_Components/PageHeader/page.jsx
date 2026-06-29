@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 
 const page = ({icon,name,length,btnName,handleEdit}) => {
   return (
+    <>
     <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
       <Header
         icon={icon}
@@ -22,6 +23,9 @@ const page = ({icon,name,length,btnName,handleEdit}) => {
         {btnName}
       </motion.button>
     </div>
+          <div className="h-px bg-gradient-to-r from-transparent via-zinc-300 to-transparent" />
+    </>
+
   );
 };
 
