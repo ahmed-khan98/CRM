@@ -119,6 +119,7 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
       merchantType: data?.merchantType || "",
       amount: data?.amount || "",
       currency: data?.currency || "",
+      description: data?.description || "",
       type: data?.type || "",
       saleDate: data?.saleDate
         ? new Date(data.saleDate).toISOString().split("T")[0]
@@ -203,8 +204,8 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                   console.log(errors, "errors---->>>>");
 
                   return (
-                    <Form className="py-2">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2 space-y-1">
+                    <Form className="py-1">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2 space-y-1">
                         {/* 🛠️ Admin / SubAdmin Check: Department select filter */}
                         {isAdminOrSubAdmin && (
                           <FormikSelect
@@ -257,8 +258,6 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                             setFieldValue("clientId", value)
                           }
                         />
-
-                      
 
                         <FormikSelect
                           name="type"
@@ -352,6 +351,13 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
                           touched={touched.saleDate}
                         />
                       </div>
+                        <InputField
+                          name="description"
+                          label="Payment Description"
+                          as="textarea"
+                          errors={errors.description}
+                          touched={touched.description}
+                        />
 
                       <div className="flex gap-2 md:gap-4 pt-2">
                         <motion.button

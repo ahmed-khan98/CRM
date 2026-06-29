@@ -193,7 +193,7 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
         <div className="flex flex-col gap-0.5">
           {emp?.seller?.fullName ? (
             <div className="flex items-center gap-1.5">
-              {/* <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">Seller</span> */}
+              <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">Seller</span>
               <span className="text-[11px] text-zinc-300 font-medium capitalize">
                 {emp.seller.fullName}
               </span>
@@ -201,7 +201,7 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
           ) : null}
           {emp?.agent?.fullName ? (
             <div className="flex items-center gap-1.5">
-              {/* <span className="text-[9px] text-sky-500 uppercase tracking-wider font-bold">Agent</span> */}
+              <span className="text-[9px] text-sky-500 uppercase tracking-wider font-bold">Agent</span>
               <span className="text-[11px] text-zinc-400 capitalize">{emp.agent.fullName}</span>
             </div>
           ) : null}

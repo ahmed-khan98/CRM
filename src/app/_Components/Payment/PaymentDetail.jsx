@@ -92,7 +92,12 @@ import PaymentLinkDisabled from "./PaymentLinkDisabled";
 import PaymentOrderSummary from "./PaymentOrderSummary";
 import PaymentPagHeader from "./PaymentPagHeader";
 
+const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+const isValidObjectId = (id) => objectIdRegex.test(String(id || ""));
+
 async function getPaymentData(id) {
+  if (!isValidObjectId(id)) return null;
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}paymentlink/${id}`,
     {
@@ -105,6 +110,8 @@ async function getPaymentData(id) {
 }
 
 async function getBrandData(id) {
+  if (!isValidObjectId(id)) return null;
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}brand/${id}`, {
     cache: "no-store",
   });
@@ -117,6 +124,10 @@ const PaymentDetail = async ({ id, searchParams }) => {
   // URL context se search param nikalain (Next.js server component standard)
   const resolvedSearchParams = await searchParams;
   const brandParam = await resolvedSearchParams?.brand;
+
+  if (!isValidObjectId(id)) {
+    return <ErrorState message={"Invalid payment link"} />;
+  }
 
   let paymentData = null;
   let isMasterLink = false;
@@ -169,7 +180,7 @@ const PaymentDetail = async ({ id, searchParams }) => {
   if (paymentData?.paymentStatus === "paid")
     return (
       <PaidPaymentLink
-              isMasterPayemntLink={paymentData?.isMasterPayemntLink}
+        isMasterPayemntLink={paymentData?.isMasterPayemntLink}
         currency={paymentData?.currency}
         amount={paymentData?.amount}
         name={paymentData?.clientId?.name || paymentData?.name}
@@ -218,7 +229,6 @@ const PaymentDetail = async ({ id, searchParams }) => {
                 paypalClientId={paymentData?.paypalClientId}
                 brandParam={brandParam}
                 currency={paymentData?.currency}
-
               />
             </div>
           </div>
