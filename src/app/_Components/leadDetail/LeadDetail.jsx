@@ -23,6 +23,7 @@ import LeadSentEmail from "../LeadSentEmail/LeadSentEmail";
 import Comment from "./Comment";
 import InfoItem from "./InfoItem";
 import AssignmentItem from "./AssignmentItem";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const getAgentName = (userId) => {
   switch (userId) {
@@ -62,21 +63,10 @@ const LeadDetail = ({ id }) => {
 
   if (isLoading)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f0f13]">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-10 h-10 rounded-full border-2 border-transparent"
-          style={{ borderTopColor: "#a855f7", borderRightColor: "#6366f1" }}
-        />
-        <span className="ml-4 text-white/60 text-sm font-medium tracking-wide">
-          Loading ... 🚀
-        </span>
-      </div>
+      <PageLoader
+        title="Loading lead details"
+        subtitle="Fetching lead activity and comments..."
+      />
     );
 
   if (error)
@@ -200,7 +190,7 @@ const LeadDetail = ({ id }) => {
                       label="Signup Date"
                       value={formatDate(data?.data?.signupDate || "")}
                     />
-                    
+
                     <div className="space-y-2 flex items-start gap-3">
                       <div
                         className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
@@ -213,9 +203,8 @@ const LeadDetail = ({ id }) => {
                           className="w-3.5 h-3.5"
                           style={{ color: "#818cf8" }}
                         />
-                        
                       </div>
-                      <div>    
+                      <div>
                         <p className="text-[10px] font-semibold tracking-[0.15em] text-white/40 uppercase pb-1">
                           Payment Status
                         </p>

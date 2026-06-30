@@ -409,7 +409,8 @@ export default function Page() {
       clientId: "", // Empty rakha hy taake controller isko fresh client samjhe
       departmentId: isAdminOrSubAdmin ? "" : userDepartmentId,
       brandId: "",
-      agent: isAdminOrSubAdmin ? "" : currentUserId,
+      agent: "",
+      // isAdminOrSubAdmin ? "" : currentUserId,
       name: "",
       email: "",
       companyName: "",
@@ -627,7 +628,7 @@ export default function Page() {
                             setFieldValue("type", value)
                           }
                         />
-                        {isAdminOrSubAdmin && values?.type === "FRESH" ? (
+                        {values?.type === "FRESH" ? (
                           <FormikSelect
                             name="agent"
                             label="Select Agent"

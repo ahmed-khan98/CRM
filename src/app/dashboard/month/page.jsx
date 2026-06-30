@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Plus, Calendar } from "lucide-react";
-import { motion } from "framer-motion";
 import {
   useAllMonthsQuery,
   useCloseMonthMutation,
@@ -12,6 +11,7 @@ import { formatDate } from "@/app/utilities/date";
 import MonthCard from "@/app/_Components/Month/MonthCard";
 import MonthModal from "@/app/_Components/Modal/MonthModal";
 import PageHeader from "@/app/_Components/PageHeader/page";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 export default function Announcement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,25 +53,12 @@ export default function Announcement() {
 
   if (isMonthsLoading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your months... 🚀
-        </span>
-      </div>
+      <PageLoader title="Loading months" subtitle="Preparing month cycles..." />
     );
   }
 
   return (
-        <div className="min-h-screen">
+    <div className="min-h-screen">
       <div className="w-full mx-auto px-1  flex flex-col space-y-3">
         <PageHeader
           icon={Calendar}

@@ -287,7 +287,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Users, Edit, DeleteIcon, Search } from "lucide-react";
+import { Users, Edit, DeleteIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/app/utilities/date";
 import {
@@ -304,6 +304,9 @@ import toast from "react-hot-toast";
 import { EMPLOYEE_HEADERS } from "@/app/_Components/table/tableRow/tableHeader/employeeHeader";
 import { getStatusConfig } from "@/app/utilities/attendence";
 import PageHeader from "@/app/_Components/PageHeader/page";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
+import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -320,6 +323,11 @@ export default function AppointmentBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { data: loggedUser } = useGetLoggedUserQuery();
+  const userRole = loggedUser?.data?.role?.toUpperCase();
+  const userDeptName = loggedUser?.data?.departmentId?.name;
+  const canFilterDept = userRole === "ADMIN" || userRole === "SUBADMIN";
 
   const { data, error: isError, isLoading, refetch } = useAllEmployeesQuery();
   const [deleteEmployee, { isLoading: isDeleting }] =
@@ -373,15 +381,21 @@ export default function AppointmentBooking() {
     const normalizedSearch = searchTerm.trim().toLowerCase();
 
     return data.data.filter((item) => {
+      // DEP_ADMIN / USER: always restrict to their own department
+      const deptName = canFilterDept
+        ? activeFilter === "all"
+          ? null
+          : activeFilter
+        : userDeptName;
       const matchesDepartment =
-        activeFilter === "all" || item?.departmentId?.name === activeFilter;
+        !deptName || item?.departmentId?.name === deptName;
       const matchesName =
         !normalizedSearch ||
         item?.fullName?.toLowerCase().includes(normalizedSearch);
 
       return matchesDepartment && matchesName;
     });
-  }, [activeFilter, data, searchTerm]);
+  }, [activeFilter, data, searchTerm, canFilterDept, userDeptName]);
 
   const handleDelete = async () => {
     try {
@@ -401,24 +415,16 @@ export default function AppointmentBooking() {
   } = useAllDepartmentsQuery();
 
   const filterData = ["all", ...(departments?.data?.map((e) => e?.name) || [])];
+  const deptTabItems = canFilterDept
+    ? filterData.map((name) => ({ label: name, value: name }))
+    : [];
 
   if (isLoading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your Employees... 🚀
-        </span>
-      </div>
+      <PageLoader
+        title="Loading employees"
+        subtitle="Building your team directory..."
+      />
     );
   }
 
@@ -432,32 +438,14 @@ export default function AppointmentBooking() {
           btnName="Add Employee"
           handleEdit={handleEdit}
         />
-        <div className="flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-white p-2 shadow-sm md:flex-row md:items-center md:justify-between">
-          <div className="flex bg-white rounded-full shadow-sm p-1">
-            {filterData?.map((e, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveFilter(e)}
-                className={`px-2.5 py-1.5 text-[12px] font-medium rounded-xl cursor-pointer transition-all capitalize ${
-                  activeFilter === e
-                    ? "bg-zinc-800 text-white shadow-md"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-              >
-                {e}
-              </button>
-            ))}
-          </div>
-          <div className="relative w-full md:max-w-xs">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
-            <input
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search employee by full name..."
-              className="h-10 w-full rounded-xl border border-zinc-200 bg-zinc-50 pl-9 pr-3 text-sm font-medium text-zinc-800 outline-none transition focus:border-zinc-800 focus:bg-white"
-            />
-          </div>
-        </div>
+        <SearchFilterBar
+          tabItems={deptTabItems}
+          activeTab={activeFilter}
+          onTabChange={setActiveFilter}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder="Search employee by full name..."
+        />
         <motion.div variants={itemVariants} className="">
           {filteredEmployees.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
@@ -472,21 +460,21 @@ export default function AppointmentBooking() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-2xl border border-gray-200">
+            <div className="-mx-1 overflow-hidden rounded-2xl md:mx-0 md:border md:border-gray-200">
               <div
-                className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-220px)]"
+                className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-220px)] "
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#52525b transparent",
                 }}
               >
                 <table className="min-w-full">
-                  <thead className="bg-zinc-900 py-0 sticky top-0 z-10">
+                  <thead className="bg-zinc-900 py-0 sticky top-0 z-10 ">
                     <tr>
                       {EMPLOYEE_HEADERS.map((col, index) => (
                         <th
                           key={index}
-                          className={`text-center text-[11px] font-medium text-zinc-300 capitalize tracking-wider           ${col === "Sr" ? "px-2 py-2.5" : ""}           ${col === "Status" ? "px-5 py-3" : ""}           ${col !== "Sr" && col !== "Status" ? "p-3" : ""}  `}
+                          className={`text-center text-[10px] font-medium text-zinc-300 capitalize tracking-wider           ${col === "Sr" ? "px-2 py-2.5" : ""}           ${col === "Status" ? "px-5 py-3" : ""}           ${col !== "Sr" && col !== "Status" ? "p-3" : ""}  `}
                         >
                           {col}
                         </th>

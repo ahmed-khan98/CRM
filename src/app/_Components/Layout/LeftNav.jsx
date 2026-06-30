@@ -4,10 +4,27 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import {
-  Home, Calendar, User, Users, LogOut, ChevronRight, ChevronDown,
-  LayoutDashboard, BadgeDollarSign, ChartBar, Mail, LayoutPanelTop,
-  AtSign, List, Mails, Building, Link, MegaphoneIcon,
-  ArrowLeft, ArrowRight, CalendarDays,
+  Home,
+  Calendar,
+  User,
+  Users,
+  LogOut,
+  ChevronRight,
+  ChevronDown,
+  LayoutDashboard,
+  BadgeDollarSign,
+  ChartBar,
+  Mail,
+  LayoutPanelTop,
+  AtSign,
+  List,
+  Mails,
+  Building,
+  Link,
+  MegaphoneIcon,
+  ArrowLeft,
+  ArrowRight,
+  CalendarDays,
   Coffee,
 } from "lucide-react";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
@@ -20,6 +37,7 @@ const LeftNav = ({ set }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const sidebars = [];
+  const isMobileDrawer = Boolean(set);
   const [expandedMenus, setExpandedMenus] = useState({});
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [logout] = useLogoutMutation();
@@ -28,70 +46,187 @@ const LeftNav = ({ set }) => {
   const user = userCookie ? JSON.parse(userCookie) : null;
 
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard className="w-4 h-4" />, path: ["/dashboard/statictics"],roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'] },
-    { name: "Department", icon: <Building className="w-4 h-4" />, path: ["/dashboard/department"],roles: ["HR_ADMIN",] },
-    { name: "Brand", icon: <Home className="w-4 h-4" />, path: ["/dashboard/brand"],roles: ["HR_ADMIN",'DEP_ADMIN'] },
-    { name: "Announcement", icon: <MegaphoneIcon className="w-4 h-4" />, path: ["/dashboard/announcement"],roles: ["HR_ADMIN",'DEP_ADMIN','FINANCE_ADMIN'] },
-    { name: "Employee", icon: <Users className="w-4 h-4" />, path: ["/dashboard/employee"],roles: ["HR_ADMIN",'DEP_ADMIN'] },
-    { name: "Client", icon: <User className="w-4 h-4" />, path: ["/dashboard/client"],roles: ["USER",'DEP_ADMIN'] },
-    { name: "leads", icon: <ChartBar className="w-4 h-4" />, path: ["/dashboard/lead"],roles: ["USER","DEP_ADMIN",] },
+    {
+      name: "Dashboard",
+      icon: <LayoutDashboard className="w-4 h-4" />,
+      path: ["/dashboard/statictics"],
+      roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+    },
+    {
+      name: "Department",
+      icon: <Building className="w-4 h-4" />,
+      path: ["/dashboard/department"],
+      roles: ["HR_ADMIN"],
+    },
+    {
+      name: "Brand",
+      icon: <Home className="w-4 h-4" />,
+      path: ["/dashboard/brand"],
+      roles: ["HR_ADMIN", "DEP_ADMIN"],
+    },
+    {
+      name: "Announcement",
+      icon: <MegaphoneIcon className="w-4 h-4" />,
+      path: ["/dashboard/announcement"],
+      roles: ["HR_ADMIN", "DEP_ADMIN", "FINANCE_ADMIN"],
+    },
+    {
+      name: "Employee",
+      icon: <Users className="w-4 h-4" />,
+      path: ["/dashboard/employee"],
+      roles: ["HR_ADMIN", "DEP_ADMIN"],
+    },
+    {
+      name: "Client",
+      icon: <User className="w-4 h-4" />,
+      path: ["/dashboard/client"],
+      roles: ["USER", "DEP_ADMIN"],
+    },
+    {
+      name: "leads",
+      icon: <ChartBar className="w-4 h-4" />,
+      path: ["/dashboard/lead"],
+      roles: ["USER", "DEP_ADMIN"],
+    },
     {
       name: "Payment Link",
       icon: <Link className="w-4 h-4" />,
-      path: ["/dashboard/paymentLink", "/dashboard/createLeadPayment", "/dashboard/createPaymentLink"],
-      roles: ["USER",'FINANCE_ADMIN','DEP_ADMIN']
+      path: [
+        "/dashboard/paymentLink",
+        "/dashboard/createLeadPayment",
+        "/dashboard/createPaymentLink",
+      ],
+      roles: ["USER", "FINANCE_ADMIN", "DEP_ADMIN"],
     },
     {
       name: "Email",
       icon: <Mail className="w-4 h-4" />,
-      path: ["/dashboard/EmailTemplate", "/dashboard/BrandEmail", "/dashboard/SendEmail", "/dashboard/EmailList", "/dashboard/TmEmailList", "/dashboard/BulkEmail", "/dashboard/SentBulkEmail", "/dashboard/SentTMBulkEmail"],
-      roles: ["USER",'DEP_ADMIN'],
+      path: [
+        "/dashboard/EmailTemplate",
+        "/dashboard/BrandEmail",
+        "/dashboard/SendEmail",
+        "/dashboard/EmailList",
+        "/dashboard/TmEmailList",
+        "/dashboard/BulkEmail",
+        "/dashboard/SentBulkEmail",
+        "/dashboard/SentTMBulkEmail",
+      ],
+      roles: ["USER", "DEP_ADMIN"],
       submenu: [
-        { name: "Brand Email", path: "/dashboard/BrandEmail", icon: <AtSign className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
-        { name: "Email Template", path: "/dashboard/EmailTemplate", icon: <LayoutPanelTop className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
-        { name: "Email List", path: "/dashboard/EmailList", icon: <List className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
-        { name: "TM Email List", path: "/dashboard/TmEmailList", icon: <List className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
-        { name: "Bulk Email", path: "/dashboard/BulkEmail", icon: <Mails className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
-        { name: "TM Bulk Email", path: "/dashboard/TmBulkEmail", icon: <Mails className="w-3.5 h-3.5" /> ,roles: ["USER",'DEP_ADMIN']},
+        {
+          name: "Brand Email",
+          path: "/dashboard/BrandEmail",
+          icon: <AtSign className="w-3.5 h-3.5" />,
+          roles: ["USER", "DEP_ADMIN"],
+        },
+        {
+          name: "Email Template",
+          path: "/dashboard/EmailTemplate",
+          icon: <LayoutPanelTop className="w-3.5 h-3.5" />,
+          roles: ["USER", "DEP_ADMIN"],
+        },
+        {
+          name: "Email List",
+          path: "/dashboard/EmailList",
+          icon: <List className="w-3.5 h-3.5" />,
+          roles: ["USER", "DEP_ADMIN"],
+        },
+        {
+          name: "TM Email List",
+          path: "/dashboard/TmEmailList",
+          icon: <List className="w-3.5 h-3.5" />,
+          roles: ["USER", "DEP_ADMIN"],
+        },
+        {
+          name: "Bulk Email",
+          path: "/dashboard/BulkEmail",
+          icon: <Mails className="w-3.5 h-3.5" />,
+          roles: ["USER", "DEP_ADMIN"],
+        },
+        {
+          name: "TM Bulk Email",
+          path: "/dashboard/TmBulkEmail",
+          icon: <Mails className="w-3.5 h-3.5" />,
+          roles: ["USER", "DEP_ADMIN"],
+        },
       ],
     },
-    { name: "All Months", icon: <Calendar className="w-4 h-4" />, path: ["/dashboard/month"] ,roles: ["DEP_ADMIN","HR_ADMIN",'FINANCE_ADMIN']},
-    { name: "Sales", icon: <BadgeDollarSign className="w-4 h-4" />, path: ["/dashboard/sale"],roles: ["DEP_ADMIN",'FINANCE_ADMIN',"USER","HR_ADMIN"] },
-    { name: "My Account", icon: <User className="w-4 h-4" />, path: ["/dashboard/profile", "/dashboard/changepassword"],roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'] },
+    {
+      name: "All Months",
+      icon: <Calendar className="w-4 h-4" />,
+      path: ["/dashboard/month"],
+      roles: ["DEP_ADMIN", "HR_ADMIN", "FINANCE_ADMIN"],
+    },
+    {
+      name: "Sales",
+      icon: <BadgeDollarSign className="w-4 h-4" />,
+      path: ["/dashboard/sale"],
+      roles: ["DEP_ADMIN", "FINANCE_ADMIN", "USER", "HR_ADMIN"],
+    },
+    {
+      name: "My Account",
+      icon: <User className="w-4 h-4" />,
+      path: ["/dashboard/profile", "/dashboard/changepassword"],
+      roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+    },
     {
       name: "Attendance",
-      icon: <CalendarDays  className="w-4 h-4" />,
+      icon: <CalendarDays className="w-4 h-4" />,
       path: ["/dashboard/attendance", "/dashboard/attendance"],
-      roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'],
+      roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
       submenu: [
-        { name: "My Attendance", path: "/dashboard/attendance" ,roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'], icon: <CalendarDays className="w-3.5 h-3.5" />},
-        { name: "Team Attendance", path: "/dashboard/attendance/teamAttendence" ,roles: ["HR_ADMIN",'DEP_ADMIN'], icon: <CalendarDays className="w-3.5 h-3.5" />},
-        { name: "My Break", path: "/dashboard/attendance/break" ,roles: ["USER","HR_ADMIN",'FINANCE_ADMIN','DEP_ADMIN'], icon: <Coffee className="w-3.5 h-3.5" />},
-        { name: "Team Break", path: "/dashboard/attendance/teamBreak" ,roles: ["HR_ADMIN",'DEP_ADMIN'], icon: <Coffee className="w-3.5 h-3.5" />},
+        {
+          name: "My Attendance",
+          path: "/dashboard/attendance",
+          roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+          icon: <CalendarDays className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Team Attendance",
+          path: "/dashboard/attendance/teamAttendence",
+          roles: ["HR_ADMIN", "DEP_ADMIN"],
+          icon: <CalendarDays className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "My Break",
+          path: "/dashboard/attendance/break",
+          roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+          icon: <Coffee className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Team Break",
+          path: "/dashboard/attendance/teamBreak",
+          roles: ["HR_ADMIN", "DEP_ADMIN"],
+          icon: <Coffee className="w-3.5 h-3.5" />,
+        },
       ],
     },
   ];
 
-const filteredMenuItems = menuItems
-  .filter((item) => {
-    if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
-    
-    return item.roles?.includes(user?.role);
-  })
-  .map((item) => {
-    if (item.submenu) {
-      const filteredSub = item.submenu.filter((sub) => {
-        if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
-        return sub.roles?.includes(user?.role);
-      });
+  const filteredMenuItems = menuItems
+    .filter((item) => {
+      if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
 
-      return { ...item, submenu: filteredSub };
-    }
-    return item;
-  });
+      return item.roles?.includes(user?.role);
+    })
+    .map((item) => {
+      if (item.submenu) {
+        const filteredSub = item.submenu.filter((sub) => {
+          if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
+          return sub.roles?.includes(user?.role);
+        });
+
+        return { ...item, submenu: filteredSub };
+      }
+      return item;
+    });
 
   const clearExtensionAndRedirect = () => {
-    if (typeof window !== "undefined" && window.chrome && window.chrome.runtime) {
+    if (
+      typeof window !== "undefined" &&
+      window.chrome &&
+      window.chrome.runtime
+    ) {
       window.postMessage({ type: "LOGOUT" }, "*");
       router.push("/");
     } else {
@@ -118,51 +253,59 @@ const filteredMenuItems = menuItems
     }
   };
 
-  const toggleSubmenu = (index) => setExpandedMenus((prev) => ({ ...prev, [index]: !prev[index] }));
-  const isMenuActive  = (paths) => paths.some((path) => pathname.startsWith(path));
+  const toggleSubmenu = (index) =>
+    setExpandedMenus((prev) => ({ ...prev, [index]: !prev[index] }));
+  const isMenuActive = (paths) =>
+    paths.some((path) => pathname.startsWith(path));
   const isSubmenuActive = (path) => pathname === path;
 
   return (
     /* ── Outer wrapper: width transitions here ── */
     <div
-    className={`h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out
-        ${isCollapsed ? "w-[74px]" : "w-[230px]"}`}
-    
+      className={`h-full flex flex-col overflow-hidden transition-all duration-300 ease-in-out
+        ${isMobileDrawer ? "w-full" : isCollapsed ? "w-[74px]" : "w-[230px]"}`}
     >
-<div className="flex flex-col min-h-0 flex-1 overflow-hidden rounded-2xl mx-1 bg-zinc-950 border border-white/[0.07] shadow-2xl">
+      <div
+        className={`flex flex-col min-h-0 flex-1 overflow-hidden bg-zinc-950 border-white/[0.07] shadow-2xl ${isMobileDrawer ? "mx-3 mb-3 rounded-3xl border" : "mx-1 rounded-2xl border"}`}
+      >
         {/* Top accent line */}
         <div className="h-[1.5px] w-full flex-shrink-0 bg-gradient-to-r from-transparent via-white/30 to-white/5" />
 
         {/* ── Header: logo / toggle button ── */}
-        <div className={`flex-shrink-0 flex items-center px-2 py-1
+        {!isMobileDrawer && (
+          <div
+            className={`flex-shrink-0 flex items-center px-2 py-1
           ${isCollapsed ? "justify-center" : "justify-end"}`}
-        >
-          <button
-            onClick={() => setIsCollapsed((prev) => !prev)}
-            className="cursor-pointer flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-200 transition-all duration-150"
-            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {isCollapsed
-              ? <ArrowRight  className="w-4 h-4" />
-              : <ArrowLeft className="w-4 h-4" />
-            }
-          </button>
-        </div>
+            <button
+              onClick={() => setIsCollapsed((prev) => !prev)}
+              className="cursor-pointer flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-200 transition-all duration-150"
+              title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {isCollapsed ? (
+                <ArrowRight className="w-4 h-4" />
+              ) : (
+                <ArrowLeft className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+        )}
 
         {/* ── Scrollable nav ── */}
         <nav
-  className="sidebar-scroll flex-1 overflow-y-auto p-1"
-            style={{
+          className={`sidebar-scroll flex-1 overflow-y-auto ${isMobileDrawer ? "p-2" : "p-1"}`}
+          style={{
             scrollbarWidth: "thin",
             scrollbarColor: "#52525b transparent",
-          }}        // className="flex-1 overflow-y-auto py-1 px-2 scrollbar-none"
+          }} // className="flex-1 overflow-y-auto py-1 px-2 scrollbar-none"
           // style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {filteredMenuItems.map((item, index) => {
-            const isActive   = isMenuActive(item.path);
+            const isActive = isMenuActive(item.path);
             const hasSubmenu = item.submenu && item.submenu.length > 0;
-            const isExpanded = !isCollapsed && (expandedMenus[index] || isActive);
-            const label      = sidebars?.data?.[index]?.title ?? item?.name;
+            const isExpanded =
+              !isCollapsed && (expandedMenus[index] || isActive);
+            const label = sidebars?.data?.[index]?.title ?? item?.name;
 
             return (
               <div key={index} className="mb-[1px]">
@@ -182,10 +325,11 @@ const filteredMenuItems = menuItems
                   }}
                   title={isCollapsed ? label : undefined}
                   className={`relative flex items-center cursor-pointer rounded-xl border transition-all duration-150 group
-                    ${isCollapsed ? "justify-center py-[2px]" : "justify-between px-2 py-1 my-1"}
-                    ${isActive
-                      ? "bg-white/[0.09] border-white/[0.12]"
-                      : "border-transparent hover:bg-white/[0.04]"
+                    ${isCollapsed ? "justify-center py-[2px]" : isMobileDrawer ? "justify-between px-3 py-2.5 my-1.5" : "justify-between px-2 py-1 my-1"}
+                    ${
+                      isActive
+                        ? "bg-white/[0.09] border-white/[0.12]"
+                        : "border-transparent hover:bg-white/[0.04]"
                     }`}
                 >
                   {/* Active left pill */}
@@ -193,9 +337,12 @@ const filteredMenuItems = menuItems
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[18px] bg-white rounded-r-full" />
                   )}
 
-                  <div className={`flex items-center ${isCollapsed ? "justify-center" : "gap-2"}`}>
+                  <div
+                    className={`flex items-center ${isCollapsed ? "justify-center" : "gap-2"}`}
+                  >
                     {/* Icon */}
-                    <span className={` ${isCollapsed ? "w-8 h-8" : "w-7 h-7"} flex items-center justify-center  rounded-lg transition-all duration-150 flex-shrink-0
+                    <span
+                      className={` ${isCollapsed ? "w-8 h-8" : isMobileDrawer ? "w-9 h-9" : "w-7 h-7"} flex items-center justify-center  rounded-lg transition-all duration-150 flex-shrink-0
                       ${isActive ? "bg-white/15 text-white" : "bg-white/5 text-zinc-500 group-hover:text-zinc-300"}`}
                     >
                       {item.icon}
@@ -204,7 +351,8 @@ const filteredMenuItems = menuItems
                     {/* Label — hidden when collapsed */}
                     {!isCollapsed && (
                       <>
-                        <span className={`text-[12px] font-normal capitalize tracking-wide leading-none transition-colors duration-150 whitespace-nowrap
+                        <span
+                          className={`${isMobileDrawer ? "text-[13px] font-semibold" : "text-[12px] font-normal"} capitalize tracking-wide leading-none transition-colors duration-150 whitespace-nowrap
                           ${isActive ? "text-zinc-100" : "text-zinc-500 group-hover:text-zinc-300"}`}
                         >
                           {label}
@@ -220,32 +368,54 @@ const filteredMenuItems = menuItems
 
                   {/* Chevron — only when expanded */}
                   {hasSubmenu && !isCollapsed && (
-                    <span className={`flex-shrink-0 transition-all duration-200 ${isActive ? "text-zinc-300" : "text-zinc-700 group-hover:text-zinc-500"}`}>
-                      {isExpanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                    <span
+                      className={`flex-shrink-0 transition-all duration-200 ${isActive ? "text-zinc-300" : "text-zinc-700 group-hover:text-zinc-500"}`}
+                    >
+                      {isExpanded ? (
+                        <ChevronDown size={13} />
+                      ) : (
+                        <ChevronRight size={13} />
+                      )}
                     </span>
                   )}
                 </div>
 
                 {/* ── Submenu (hidden when collapsed) ── */}
                 {hasSubmenu && isExpanded && !isCollapsed && (
-                  <div className="ml-3 mb-1 pl-2 py-1 space-y-[1px] border-l border-white/[0.07]">
+                  <div
+                    className={`${isMobileDrawer ? "ml-5 mb-2 mt-1" : "ml-3 mb-1"} pl-2 py-1 space-y-[1px] border-l border-white/[0.07]`}
+                  >
                     {item.submenu.map((subItem, subIndex) => {
                       const subActive = isSubmenuActive(subItem.path);
                       return (
                         <div
                           key={subIndex}
-                          onClick={() => { if (set) set(); router.push(subItem.path); }}
-                          className={`flex items-center gap-2 py-1.5 px-3 rounded-lg cursor-pointer transition-all duration-150 border
-                            ${subActive
-                              ? "bg-white/[0.08] border-white/10 text-zinc-200"
-                              : "border-transparent text-zinc-600 hover:bg-white/[0.04] hover:text-zinc-400"
+                          onClick={() => {
+                            if (set) set();
+                            router.push(subItem.path);
+                          }}
+                          className={`flex items-center gap-2 ${isMobileDrawer ? "py-2 px-3" : "py-1.5 px-3"} rounded-lg cursor-pointer transition-all duration-150 border
+                            ${
+                              subActive
+                                ? "bg-white/[0.08] border-white/10 text-zinc-200"
+                                : "border-transparent text-zinc-600 hover:bg-white/[0.04] hover:text-zinc-400"
                             }`}
                         >
-                          <span className={subActive ? "text-zinc-300" : "text-zinc-600 group-hover:text-zinc-300"}>
+                          <span
+                            className={
+                              subActive
+                                ? "text-zinc-300"
+                                : "text-zinc-600 group-hover:text-zinc-300"
+                            }
+                          >
                             {subItem.icon}
                           </span>
-                          <span className="text-xs font-normal tracking-wide">{subItem.name}</span>
-                          {subActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" />}
+                          <span className="text-xs font-normal tracking-wide">
+                            {subItem.name}
+                          </span>
+                          {subActive && (
+                            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" />
+                          )}
                         </div>
                       );
                     })}
@@ -260,12 +430,14 @@ const filteredMenuItems = menuItems
         <div className="mx-3 flex-shrink-0 h-px bg-white/[0.06]" />
 
         {/* ── Logout ── */}
-        <div className="flex-shrink-0 px-2 py-1">
+        <div
+          className={`flex-shrink-0 px-2 ${isMobileDrawer ? "py-2" : "py-1"}`}
+        >
           <div
             onClick={handleLogout}
             title={isCollapsed ? "Logout" : undefined}
             className={`flex items-center cursor-pointer rounded-xl border border-transparent hover:bg-white/5 hover:border-white/[0.08] transition-all duration-150 group
-              ${isCollapsed ? "justify-center px-0 py-[4px]" : "gap-3 px-3 py-1"}`}
+              ${isCollapsed ? "justify-center px-0 py-[4px]" : isMobileDrawer ? "gap-3 px-3 py-2.5" : "gap-3 px-3 py-1"}`}
           >
             <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-500 group-hover:text-zinc-300 flex-shrink-0">
               <LogOut className="w-3.5 h-3.5" />
@@ -277,7 +449,6 @@ const filteredMenuItems = menuItems
             )}
           </div>
         </div>
-
       </div>
     </div>
   );
@@ -512,4 +683,3 @@ export default LeftNav;
 // };
 
 // export default LeftNav;
-

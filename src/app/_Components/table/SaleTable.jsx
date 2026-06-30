@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -10,6 +10,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import TableLoader from "@/app/_Components/Loaders/TableLoader";
+import { currencySymbols } from "@/app/utilities/currencyType";
 
 /* ── helpers ── */
 const formatDate = (str) => {
@@ -21,32 +23,64 @@ const formatDate = (str) => {
   });
 };
 
+const getCurrencySymbol = (currency) => {
+  const code = currency?.toString().trim().toUpperCase();
+  return currencySymbols[code] || code || "$";
+};
+
+const formatCurrencyAmount = (amount, currency) => {
+  const value = Number(amount || 0).toLocaleString("en-US", {
+    maximumFractionDigits: 2,
+  });
+
+  return `${getCurrencySymbol(currency)} ${value}`;
+};
+
 /* ── Status badge styles ── */
 const getStatusStyle = (status) => {
-  if (!status) return { pill: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20", dot: "bg-zinc-400" };
+  if (!status)
+    return {
+      pill: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+      dot: "bg-zinc-400",
+    };
   const s = status.toLowerCase();
   if (s === "paid")
-    return { pill: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", dot: "bg-emerald-400" };
+    return {
+      pill: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      dot: "bg-emerald-400",
+    };
   if (s === "charge back" || s === "refund")
-    return { pill: "bg-red-500/10 text-red-400 border-red-500/20", dot: "bg-red-400" };
+    return {
+      pill: "bg-red-500/10 text-red-400 border-red-500/20",
+      dot: "bg-red-400",
+    };
   if (s === "fresh")
-    return { pill: "bg-sky-500/10 text-sky-400 border-sky-500/20", dot: "bg-sky-400" };
+    return {
+      pill: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+      dot: "bg-sky-400",
+    };
   if (s === "up sell")
-    return { pill: "bg-violet-500/10 text-violet-400 border-violet-500/20", dot: "bg-violet-400" };
-  return { pill: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20", dot: "bg-zinc-400" };
+    return {
+      pill: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+      dot: "bg-violet-400",
+    };
+  return {
+    pill: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+    dot: "bg-zinc-400",
+  };
 };
 
 const HEADERS = [
-  { key: "client",     label: "Client",      w: "min-w-[100px]" },
+  { key: "client", label: "Client", w: "min-w-[100px]" },
   { key: "dept_brand", label: "Dept / Brand", w: "min-w-[120px]" },
-  { key: "type",       label: "Type",         w: "min-w-[60px]" },
-  { key: "seller",     label: "Seller / Agent", w: "min-w-[130px]" },
-  { key: "amount",     label: "Amount",       w: "min-w-[80px]" },
-  { key: "merchant",   label: "Merchant",     w: "min-w-[120px]" },
-  { key: "month",      label: "Month",        w: "min-w-[100px]"  },
-  { key: "status",     label: "Status",       w: "min-w-[80px]" },
-  { key: "saleDate",   label: "Sale Date",    w: "min-w-[80px]" },
-  { key: "actions",    label: "",             w: "w-20"          },
+  { key: "type", label: "Type", w: "min-w-[60px]" },
+  { key: "seller", label: "Seller / Agent", w: "min-w-[130px]" },
+  { key: "amount", label: "Amount", w: "min-w-[80px]" },
+  { key: "merchant", label: "Merchant", w: "min-w-[120px]" },
+  { key: "month", label: "Month", w: "min-w-[100px]" },
+  { key: "status", label: "Status", w: "min-w-[80px]" },
+  { key: "saleDate", label: "Sale Date", w: "min-w-[80px]" },
+  { key: "actions", label: "", w: "w-20" },
 ];
 
 /* ── Stats Bar ── */
@@ -56,15 +90,36 @@ function StatsBar({ rows }) {
   const revenue = rows
     .filter((r) => r?.status?.toLowerCase() === "paid")
     .reduce((s, r) => s + (Number(r.amount) || 0), 0);
+  const paidCurrencies = [
+    ...new Set(
+      rows
+        .filter((r) => r?.status?.toLowerCase() === "paid")
+        .map((r) => r?.currency?.toString().trim().toUpperCase())
+        .filter(Boolean),
+    ),
+  ];
+  const revenueCurrency =
+    paidCurrencies.length === 1
+      ? paidCurrencies[0]
+      : paidCurrencies.length
+        ? "Mixed"
+        : "USD";
   const chargebacks = rows.filter(
-    (r) => r?.status?.toLowerCase() === "charge back"
+    (r) => r?.status?.toLowerCase() === "charge back",
   ).length;
 
   const stats = [
     { label: "Total Sales", value: total, color: "text-zinc-200" },
     { label: "Paid", value: paid, color: "text-emerald-400" },
     { label: "Charge Backs", value: chargebacks, color: "text-red-400" },
-    { label: "Revenue", value: `$${revenue.toLocaleString()}`, color: "text-indigo-400" },
+    {
+      label: "Revenue",
+      value:
+        revenueCurrency === "Mixed"
+          ? `${revenue.toLocaleString()} Mixed`
+          : formatCurrencyAmount(revenue, revenueCurrency),
+      color: "text-indigo-400",
+    },
   ];
 
   return (
@@ -91,8 +146,10 @@ function Pagination({ total, page, perPage, onChange }) {
   return (
     <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-800/60">
       <p className="text-[11px] text-zinc-500">
-        <span className="font-bold text-zinc-300">{from}–{to}</span> of{" "}
-        <span className="font-bold text-zinc-300">{total}</span> records
+        <span className="font-bold text-zinc-300">
+          {from}–{to}
+        </span>{" "}
+        of <span className="font-bold text-zinc-300">{total}</span> records
       </p>
       <div className="flex items-center gap-1">
         <button
@@ -193,7 +250,9 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
         <div className="flex flex-col gap-0.5">
           {emp?.seller?.fullName ? (
             <div className="flex items-center gap-1.5">
-              <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">Seller</span>
+              <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">
+                Seller
+              </span>
               <span className="text-[11px] text-zinc-300 font-medium capitalize">
                 {emp.seller.fullName}
               </span>
@@ -201,8 +260,12 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
           ) : null}
           {emp?.agent?.fullName ? (
             <div className="flex items-center gap-1.5">
-              <span className="text-[9px] text-sky-500 uppercase tracking-wider font-bold">Agent</span>
-              <span className="text-[11px] text-zinc-400 capitalize">{emp.agent.fullName}</span>
+              <span className="text-[9px] text-sky-500 uppercase tracking-wider font-bold">
+                Agent
+              </span>
+              <span className="text-[11px] text-zinc-400 capitalize">
+                {emp.agent.fullName}
+              </span>
             </div>
           ) : null}
           {!emp?.seller?.fullName && !emp?.agent?.fullName && (
@@ -213,9 +276,13 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
 
       {/* Amount */}
       <td className="px-4 py-3 min-w-[60px]">
-        <span className="inline-flex items-center gap-0.5 text-[13px] font-black text-emerald-400 whitespace-nowrap">
-          <DollarSign className="h-3.5 w-3.5 text-amber-400" />
-          {emp?.amount ?? "0"}
+        <span className="inline-flex items-center gap-1 text-[12px] font-medium text-emerald-400 whitespace-nowrap">
+          <span className="rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[12px] font-medium text-amber-400">
+            {getCurrencySymbol(emp?.currency)}
+          </span>
+          {Number(emp?.amount || 0).toLocaleString("en-US", {
+            maximumFractionDigits: 2,
+          })}
         </span>
       </td>
 
@@ -263,7 +330,7 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
       </td>
 
       {/* Actions */}
-      <td className="px-3 py-3 sticky right-0 bg-zinc-900 border-l border-zinc-800/60 w-20 group-hover:bg-zinc-800/80 transition-colors">
+      <td className="px-3 py-3 sticky right-0 bg-zinc-900 md:border-l md:border-zinc-800/60 w-20 group-hover:bg-zinc-800/80 transition-colors">
         <div className="flex items-center gap-1.5">
           <motion.button
             whileHover={{ scale: 1.08 }}
@@ -299,29 +366,17 @@ export default function SalesTable({ data = [], onEdit, onDelete, isLoading }) {
       r?.clientId?.name?.toLowerCase().includes(search.toLowerCase()) ||
       r?.clientId?.email?.toLowerCase().includes(search.toLowerCase()) ||
       r?.departmentId?.name?.toLowerCase().includes(search.toLowerCase()) ||
-      r?.brandId?.name?.toLowerCase().includes(search.toLowerCase())
+      r?.brandId?.name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   if (isLoading) {
-    return (
-      <div className="min-h-[300px] flex items-center justify-center bg-zinc-900 rounded-2xl border border-zinc-800/60">
-        <div className="flex items-center gap-3">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full"
-          />
-          <span className="text-zinc-400 text-sm font-medium">Loading Sales...</span>
-        </div>
-      </div>
-    );
+    return <TableLoader dark title="Loading sales" rows={6} />;
   }
 
   return (
-    <div className="w-full rounded-2xl border border-zinc-800/60 bg-zinc-900 shadow-2xl overflow-hidden">
-
+    <div className="-mx-1 overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl md:mx-0 md:border md:border-zinc-800/60">
       {/* Top bar */}
       <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-zinc-800/60">
         <div className="flex items-center gap-2">
@@ -329,8 +384,12 @@ export default function SalesTable({ data = [], onEdit, onDelete, isLoading }) {
             <TrendingUp className="h-3.5 w-3.5 text-indigo-400" />
           </div>
           <div>
-            <h2 className="text-[13px] font-black text-zinc-100 leading-none">Sales</h2>
-            <p className="text-[10px] text-zinc-500 mt-0.5">{filtered.length} records</p>
+            <h2 className="text-[13px] font-black text-zinc-100 leading-none">
+              Sales
+            </h2>
+            <p className="text-[10px] text-zinc-500 mt-0.5">
+              {filtered.length} records
+            </p>
           </div>
         </div>
 
@@ -341,7 +400,10 @@ export default function SalesTable({ data = [], onEdit, onDelete, isLoading }) {
             type="text"
             placeholder="Search client, brand..."
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             className="pl-7 pr-3 py-1.5 text-[11px] bg-zinc-800/60 border border-zinc-700/50 rounded-lg text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500/50 focus:bg-zinc-800 transition-all w-48"
           />
         </div>
@@ -352,7 +414,10 @@ export default function SalesTable({ data = [], onEdit, onDelete, isLoading }) {
 
       {/* Table */}
       <div style={{ overflowX: "auto", overflowY: "auto", maxHeight: "62vh" }}>
-        <table className="text-left border-collapse" style={{ minWidth: "1100px", width: "100%" }}>
+        <table
+          className="text-left border-collapse"
+          style={{ minWidth: "1100px", width: "100%" }}
+        >
           <thead style={{ position: "sticky", top: 0, zIndex: 20 }}>
             <tr className="bg-zinc-950/90 backdrop-blur-sm border-b border-zinc-800/80">
               {HEADERS.map((h) => (
@@ -360,7 +425,7 @@ export default function SalesTable({ data = [], onEdit, onDelete, isLoading }) {
                   key={h.key}
                   className={`px-3 py-2.5 text-[9px] font-black text-zinc-500 uppercase tracking-[0.12em] whitespace-nowrap ${h.w} ${
                     h.key === "actions"
-                      ? "sticky right-0 bg-zinc-950 border-l border-zinc-800/60"
+                      ? "sticky right-0 bg-zinc-950 md:border-l md:border-zinc-800/60"
                       : ""
                   }`}
                 >
@@ -390,9 +455,13 @@ export default function SalesTable({ data = [], onEdit, onDelete, isLoading }) {
                         <DollarSign className="h-5 w-5 text-zinc-600" />
                       </div>
                       <div>
-                        <p className="text-[13px] font-semibold text-zinc-400">No sales found</p>
+                        <p className="text-[13px] font-semibold text-zinc-400">
+                          No sales found
+                        </p>
                         <p className="text-[11px] text-zinc-600 mt-0.5">
-                          {search ? "Try adjusting your search" : "No sales recorded yet"}
+                          {search
+                            ? "Try adjusting your search"
+                            : "No sales recorded yet"}
                         </p>
                       </div>
                     </div>

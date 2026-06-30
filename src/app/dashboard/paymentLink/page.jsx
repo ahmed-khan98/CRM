@@ -1,16 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useMemo } from "react";
-import {
-  ChartBar,
-  Link,
-  CheckCheck,
-  Copy,
-  Search,
-  SlidersHorizontal,
-} from "lucide-react";
+import { ChartBar, Link, CheckCheck, Copy } from "lucide-react";
 import { motion } from "framer-motion";
-import Select from "react-select";
 import { toast } from "react-hot-toast";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import Pagination from "@/app/_Components/PaginationComponent/Pagination";
@@ -24,6 +16,8 @@ import { LinkRow } from "@/app/_Components/table/tableRow/LinkRow";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 import PageHeader from "@/app/_Components/PageHeader/page";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
 
 const paymentPageUrl = process.env.NEXT_PUBLIC_PAYMENT_PAGE_URL;
 
@@ -59,24 +53,23 @@ export default function Paymentlink() {
     isLoading: isLoggedLoading,
     refetch: isLoggedRefetch,
   } = useGetLoggedUserQuery();
+  
   const userRole =
     loggedUser?.data?.role?.toUpperCase() || loggedUser?.role?.toUpperCase();
   const canFilterDepartment = userRole === "ADMIN" || userRole === "SUBADMIN";
   const { data: departments, isLoading: isDepartmentLoading } =
     useAllDepartmentsQuery(undefined, { skip: !canFilterDepartment });
-  const departmentOptions = useMemo(
+
+  const deptTabItems = useMemo(
     () => [
-      { value: "", label: "All Departments" },
-      ...(departments?.data?.map((department) => ({
-        value: department?._id,
-        label: department?.name,
+      { label: "All", value: "" },
+      ...(departments?.data?.map((d) => ({
+        label: d?.name,
+        value: d?._id,
       })) ?? []),
     ],
     [departments],
   );
-  const selectedDepartmentOption =
-    departmentOptions.find((option) => option.value === selectedDepartment) ||
-    departmentOptions[0];
 
   const [deletePaymentLink, { isLoading: isDeleting }] =
     useDeletePaymentLinkMutation();
@@ -135,20 +128,10 @@ export default function Paymentlink() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your Payment links... 🚀
-        </span>
-      </div>
+      <PageLoader
+        title="Loading payment links"
+        subtitle="Syncing payment records..."
+      />
     );
   }
 
@@ -210,103 +193,15 @@ export default function Paymentlink() {
           }
         />
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-3 shadow-sm">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-900 text-white">
-                <SlidersHorizontal className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-zinc-400">
-                  Filters
-                </p>
-                <p className="text-sm font-black text-zinc-900">
-                  Search payment links
-                </p>
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col gap-3 md:flex-row lg:max-w-3xl">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
-                <input
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  placeholder="Search by client, seller, or agent..."
-                  className="h-11 w-full rounded-2xl border border-zinc-200 bg-zinc-50 pl-9 pr-10 text-sm font-medium text-zinc-800 outline-none transition focus:border-zinc-900 focus:bg-white focus:ring-4 focus:ring-zinc-100"
-                />
-                {searchTerm && searchTerm !== debouncedSearchTerm ? (
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-zinc-400">
-                    typing...
-                  </span>
-                ) : null}
-              </div>
-
-              {canFilterDepartment && (
-                <div className="w-full md:w-72">
-                  <Select
-                    instanceId="payment-department-filter"
-                    options={departmentOptions}
-                    value={selectedDepartmentOption}
-                    isLoading={isDepartmentLoading}
-                    isSearchable
-                    onChange={(option) =>
-                      setSelectedDepartment(option?.value || "")
-                    }
-                    classNamePrefix="payment-filter"
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        minHeight: "2.75rem",
-                        borderRadius: "1rem",
-                        backgroundColor: "#fafafa",
-                        borderColor: state.isFocused ? "#18181b" : "#e4e4e7",
-                        boxShadow: state.isFocused
-                          ? "0 0 0 4px #f4f4f5"
-                          : "none",
-                        cursor: "pointer",
-                        fontSize: "0.775rem",
-                        fontWeight: 600,
-                        textTransform: "capitalize",
-                        ":hover": { borderColor: "#18181b" },
-                      }),
-                      option: (base, state) => ({
-                        ...base,
-                        cursor: "pointer",
-                        
-                        fontSize: "0.675rem",
-                        fontWeight: 500,
-                        textTransform: "capitalize",
-                        backgroundColor: state.isSelected
-                          ? "#18181b"
-                          : state.isFocused
-                            ? "#f4f4f5"
-                            : "white",
-                        color: state.isSelected ? "white" : "#27272a",
-                      }),
-                      menu: (base) => ({
-                        ...base,
-                        zIndex: 50,
-                        borderRadius: "1rem",
-                        overflow: "hidden",
-                        border: "1px solid #e4e4e7",
-                        boxShadow: "0 18px 35px rgba(0,0,0,0.12)",
-                      }),
-                      singleValue: (base) => ({
-                        ...base,
-                        color: "#18181b",
-                      }),
-                      placeholder: (base) => ({
-                        ...base,
-                        color: "#a1a1aa",
-                      }),
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <SearchFilterBar
+          tabItems={canFilterDepartment ? deptTabItems : []}
+          activeTab={selectedDepartment}
+          onTabChange={setSelectedDepartment}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder="Search by client, seller, or agent..."
+          debouncedSearchTerm={debouncedSearchTerm}
+        />
 
         <motion.div
           variants={itemVariants}
@@ -323,10 +218,7 @@ export default function Paymentlink() {
               </p>
             </div>
           ) : (
-            <div
-              className="w-full rounded-2xl border border-zinc-200 bg-white shadow-sm"
-              style={{ overflow: "hidden" }}
-            >
+            <div className="-mx-1 overflow-hidden rounded-2xl bg-white shadow-sm md:mx-0 md:border md:border-zinc-200">
               <div
                 style={{
                   overflowX: "auto",

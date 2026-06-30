@@ -149,8 +149,6 @@ import {
   getStatusConfig,
 } from "@/app/utilities/attendence";
 
-
-
 function AttendanceRow({ row }) {
   const { record, isWeekend, isPastOrToday, date } = row;
 
@@ -216,7 +214,7 @@ function AttendanceRow({ row }) {
   return (
     <tr
       className={`group border-b border-zinc-100 transition-colors duration-100
-${isToday ? "bg-zinc-50 border-l-2 border-l-zinc-400" : isWeekend ? "bg-sky-50/40" : "hover:bg-zinc-50/80"}`}
+${isToday ? "bg-zinc-50 md:border-l-2 md:border-l-zinc-400" : isWeekend ? "bg-sky-50/40" : "hover:bg-zinc-50/80"}`}
     >
       <td className="px-5 py-3.5">
         <div className="flex items-center gap-2.5">

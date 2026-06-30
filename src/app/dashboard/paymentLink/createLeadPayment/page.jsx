@@ -10,12 +10,18 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 import { useGetLeadByIdQuery } from "@/app/_Services/lead/page";
 import { useCreatePaymentLinkMutation } from "@/app/_Services/paymentLink/page";
-import { currencyOptions, merchantOptions, sale_Options, serviceOptions } from "@/app/utilities/paymentLink";
+import {
+  currencyOptions,
+  merchantOptions,
+  sale_Options,
+  serviceOptions,
+} from "@/app/utilities/paymentLink";
 import InputField from "@/app/_Components/Form/InputField";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import { useGetdepartmentsEmployeeQuery } from "@/app/_Services/employee/page";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
-import { useGetDepartmentBrandQuery } from "@/app/_Services/brand/page"; 
+import { useGetDepartmentBrandQuery } from "@/app/_Services/brand/page";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 function LeadPayment() {
   const searchParams = useSearchParams();
@@ -23,15 +29,21 @@ function LeadPayment() {
   const router = useRouter();
 
   // 1. Logged In User & Lead Data Fetching
-  const { data: loggedUser, isLoading: isLoggedLoading } = useGetLoggedUserQuery();
+  const { data: loggedUser, isLoading: isLoggedLoading } =
+    useGetLoggedUserQuery();
   const { data, error, isLoading } = useGetLeadByIdQuery({ id });
   const [createPaymentLink] = useCreatePaymentLinkMutation();
 
   // Role aur Safe access settings
-  const userRole = loggedUser?.data?.role?.toUpperCase() || loggedUser?.role?.toUpperCase();
+  const userRole =
+    loggedUser?.data?.role?.toUpperCase() || loggedUser?.role?.toUpperCase();
   const isAdminOrSubAdmin = userRole === "ADMIN" || userRole === "SUBADMIN";
-  
-  const userDepartmentId = loggedUser?.data?.departmentId?._id || loggedUser?.data?.departmentId || loggedUser?.departmentId || "";
+
+  const userDepartmentId =
+    loggedUser?.data?.departmentId?._id ||
+    loggedUser?.data?.departmentId ||
+    loggedUser?.departmentId ||
+    "";
   const currentUserId = loggedUser?.data?._id || loggedUser?._id || "";
 
   // 2. All Departments Query (Sirf Admin/SubAdmin ke liye chalegi)
@@ -45,35 +57,45 @@ function LeadPayment() {
   // Sync state with lead data or logged user on mount/load
   useEffect(() => {
     if (data?.data?.departmentId?._id || data?.data?.departmentId) {
-      setActiveDeptId(data?.data?.departmentId?._id || data?.data?.departmentId);
+      setActiveDeptId(
+        data?.data?.departmentId?._id || data?.data?.departmentId,
+      );
     } else if (!isAdminOrSubAdmin && userDepartmentId) {
       setActiveDeptId(userDepartmentId);
     }
   }, [data, isAdminOrSubAdmin, userDepartmentId]);
 
   // 3. Dynamic Queries (Depends completely on active department context)
-  const { data: departEmployee, isLoading: isEmployeeLoading } = useGetdepartmentsEmployeeQuery(activeDeptId, {
-    skip: !activeDeptId,
-  });
+  const { data: departEmployee, isLoading: isEmployeeLoading } =
+    useGetdepartmentsEmployeeQuery(activeDeptId, {
+      skip: !activeDeptId,
+    });
 
-  const { data: departBrand, isLoading: isBrandLoading } = useGetDepartmentBrandQuery(activeDeptId, {
-    skip: !activeDeptId,
-  });
+  const { data: departBrand, isLoading: isBrandLoading } =
+    useGetDepartmentBrandQuery(activeDeptId, {
+      skip: !activeDeptId,
+    });
 
   // 4. Memoized Select Options Configuration
-  const departOptions = useMemo(() => 
-    departData?.data?.map((b) => ({ value: b?._id, label: b?.name })) ?? [], 
-    [departData]
+  const departOptions = useMemo(
+    () =>
+      departData?.data?.map((b) => ({ value: b?._id, label: b?.name })) ?? [],
+    [departData],
   );
 
-  const brandOptions = useMemo(() => 
-    departBrand?.data?.map((b) => ({ value: b?._id, label: b?.name })) ?? [], 
-    [departBrand]
+  const brandOptions = useMemo(
+    () =>
+      departBrand?.data?.map((b) => ({ value: b?._id, label: b?.name })) ?? [],
+    [departBrand],
   );
 
-  const empOptions = useMemo(() => 
-    departEmployee?.data?.map((d) => ({ value: d?._id, label: d?.fullName })) ?? [], 
-    [departEmployee]
+  const empOptions = useMemo(
+    () =>
+      departEmployee?.data?.map((d) => ({
+        value: d?._id,
+        label: d?.fullName,
+      })) ?? [],
+    [departEmployee],
   );
 
   // 5. Smart Initial Values
@@ -83,7 +105,8 @@ function LeadPayment() {
       leadId: id,
       departmentId: leadDept || (isAdminOrSubAdmin ? "" : userDepartmentId),
       brandId: data?.data?.brandId?._id || data?.data?.brandId || "",
-      agent: isAdminOrSubAdmin ? "" : currentUserId, // Other roles par automatic logged user ki ID secure hojayegi
+      agent: "",
+      // isAdminOrSubAdmin ? "" : currentUserId, // Other roles par automatic logged user ki ID secure hojayegi
       name: data?.data?.name || "",
       email: data?.data?.email || "",
       companyName: data?.data?.companyName || data?.data?.brandMark || "",
@@ -119,30 +142,33 @@ function LeadPayment() {
   // Safe check loading states
   if (isLoading || isLoggedLoading)
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">Loading ... 🚀</span>
-      </div>
+      <PageLoader
+        title="Loading lead"
+        subtitle="Preparing the payment link form..."
+      />
     );
 
   if (error)
-    return <div className="p-10 text-center text-red-600 font-semibold">Error fetching data.</div>;
-    
+    return (
+      <div className="p-10 text-center text-red-600 font-semibold">
+        Error fetching data.
+      </div>
+    );
+
   if (!data)
-    return <div className="p-10 text-center text-gray-600 font-semibold">No Lead Found.</div>;
+    return (
+      <div className="p-10 text-center text-gray-600 font-semibold">
+        No Lead Found.
+      </div>
+    );
 
   return (
     <div className="min-h-screen py-6 md:py-2 px-2">
       <div className="max-w-5xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           <div className="bg-white rounded-3xl shadow-md p-6 mt-3">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-700 flex items-center">
@@ -150,15 +176,21 @@ function LeadPayment() {
                 Create Lead Payment Link
               </h2>
             </div>
-            
+
             <Formik
               initialValues={initialValues}
               validationSchema={createPaymentSchema}
               onSubmit={handleSubmit}
               enableReinitialize
             >
-              {({ errors, touched, isSubmitting, values, setFieldValue, setFieldTouched }) => {
-                
+              {({
+                errors,
+                touched,
+                isSubmitting,
+                values,
+                setFieldValue,
+                setFieldTouched,
+              }) => {
                 const handleDepartChange = (newDeptId) => {
                   setFieldValue("departmentId", newDeptId);
                   setFieldValue("brandId", "");
@@ -170,7 +202,6 @@ function LeadPayment() {
                 return (
                   <Form className="space-y-3">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      
                       <InputField
                         label="Customer Name"
                         type="text"
@@ -202,7 +233,9 @@ function LeadPayment() {
                         label="Business Name / Brand Name"
                         type="text"
                         name="companyName"
-                        readOnly={!!(data?.data?.companyName || data?.data?.brandMark)}
+                        readOnly={
+                          !!(data?.data?.companyName || data?.data?.brandMark)
+                        }
                         errors={errors.companyName}
                         touched={touched.companyName}
                       />
@@ -238,7 +271,9 @@ function LeadPayment() {
                         placeholder="Select Brand"
                         isLoading={isBrandLoading}
                         isDisabled={!values.departmentId}
-                        onChangeExtra={(value) => setFieldValue("brandId", value)}
+                        onChangeExtra={(value) =>
+                          setFieldValue("brandId", value)
+                        }
                       />
 
                       <FormikSelect
@@ -265,7 +300,9 @@ function LeadPayment() {
                         error={errors.merchantType}
                         touched={touched.merchantType}
                         placeholder="Merchant"
-                        onChangeExtra={(val) => setFieldValue("merchantType", val)}
+                        onChangeExtra={(val) =>
+                          setFieldValue("merchantType", val)
+                        }
                       />
 
                       <InputField
@@ -303,7 +340,9 @@ function LeadPayment() {
                           placeholder="Select agent"
                           isLoading={isEmployeeLoading}
                           isDisabled={!values.departmentId}
-                          onChangeExtra={(value) => setFieldValue("agent", value)}
+                          onChangeExtra={(value) =>
+                            setFieldValue("agent", value)
+                          }
                         />
                       ) : (
                         <Field type="hidden" name="agent" />
@@ -335,7 +374,9 @@ function LeadPayment() {
                           placeholder="Select fronter"
                           isLoading={isEmployeeLoading}
                           isDisabled={!values.departmentId}
-                          onChangeExtra={(value) => setFieldValue("fronter", value)}
+                          onChangeExtra={(value) =>
+                            setFieldValue("fronter", value)
+                          }
                         />
                       )}
                     </div>
@@ -381,7 +422,14 @@ function LeadPayment() {
 
 export default function CreateLeadPayment() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <PageLoader
+          title="Loading lead"
+          subtitle="Preparing the payment link form..."
+        />
+      }
+    >
       <LeadPayment />
     </Suspense>
   );

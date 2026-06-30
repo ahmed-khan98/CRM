@@ -12,6 +12,7 @@ import WarningModal from "@/app/_Components/Modal/WarningModal";
 import Image from "next/image";
 import { formatDate, formatOnlyDate } from "@/app/utilities/date";
 import PageHeader from "@/app/_Components/PageHeader/page";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -54,27 +55,20 @@ export default function AppointmentBooking() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your departments... 🚀
-        </span>
-      </div>
+      <PageLoader title="Loading brands" subtitle="Fetching brand records..." />
     );
   }
 
   return (
     <div className="mx-1">
       <div className="w-full mx-auto p-1 flex flex-col space-y-3">
-        <PageHeader icon={Home} length={data?.data?.length} name=" All Brands" btnName="Create Brand" handleEdit={handleEdit} />
+        <PageHeader
+          icon={Home}
+          length={data?.data?.length}
+          name=" All Brands"
+          btnName="Create Brand"
+          handleEdit={handleEdit}
+        />
 
         <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
           {data?.data?.length === 0 ? (
@@ -86,15 +80,15 @@ export default function AppointmentBooking() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-2xl ">
+            <div className="-mx-1 overflow-hidden rounded-2xl md:mx-0">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
                     <tr className="bg-zinc-900 border-b border-white/[0.07]">
                       {[
-                        "Brand Logo",
-                        "Brand Name",
-                        "Department Name",
+                        "Logo",
+                        "Name",
+                        "Department",
                         "createdAt",
                         "Actions",
                       ].map((h) => (

@@ -273,7 +273,7 @@ const DashboardLayout = ({ children }) => {
             ${isMobile ? "w-full" : ""}`}
             >
               <AnnouncementMarquee />
-              <div className="w-full h-auto py-4">{children}</div>
+              <div className="w-full h-auto py-2">{children}</div>
             </main>
           </div>
         </div>

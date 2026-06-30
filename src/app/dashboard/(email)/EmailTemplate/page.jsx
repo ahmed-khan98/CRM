@@ -7,8 +7,12 @@ import { formatDate } from "@/app/utilities/date";
 
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import CreateTemplateModal from "@/app/_Components/Modal/CreateTemplateModal";
-import { useAllEmailTemplatesQuery, useDeleteEmailTemplateMutation } from "@/app/_Services/emailTemplate/page";
+import {
+  useAllEmailTemplatesQuery,
+  useDeleteEmailTemplateMutation,
+} from "@/app/_Services/emailTemplate/page";
 import toast from "react-hot-toast";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -24,8 +28,14 @@ export default function Client() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const { data, error: isError, isLoading, refetch } = useAllEmailTemplatesQuery();
-  const [deleteEmailTemplate, { isLoading: isDeleting }] = useDeleteEmailTemplateMutation();
+  const {
+    data,
+    error: isError,
+    isLoading,
+    refetch,
+  } = useAllEmailTemplatesQuery();
+  const [deleteEmailTemplate, { isLoading: isDeleting }] =
+    useDeleteEmailTemplateMutation();
 
   const handleEdit = (emp) => {
     setEditingAppointment(emp);
@@ -36,7 +46,6 @@ export default function Client() {
     setIsModalOpen(false);
     setEditingAppointment(null);
   };
-
 
   const handleDelete = async () => {
     try {
@@ -51,20 +60,10 @@ export default function Client() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your Templates... 🚀
-        </span>
-      </div>
+      <PageLoader
+        title="Loading templates"
+        subtitle="Preparing email templates..."
+      />
     );
   }
 
@@ -90,21 +89,20 @@ export default function Client() {
             </motion.button>
           </div>
         </div>
-      
-        <motion.div
-          variants={itemVariants}
-          className="shadow-lg rounded-2xl"
-        >
+
+        <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
           {data?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <LayoutPanelTop className="h-16 w-16 text-gray-300 bg-zinc-800" />
-              <h3 className="text-xl font-semibold text-gray-700">No Template</h3>
+              <h3 className="text-xl font-semibold text-gray-700">
+                No Template
+              </h3>
               <p className="text-gray-500 mt-2">
-                  You don't have any Template yet.
+                You don't have any Template yet.
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-gray-200">
+            <div className="overflow-hidden rounded-xl md:border md:border-gray-200">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead className="bg-zinc-800">

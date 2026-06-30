@@ -6,7 +6,11 @@ import { motion } from "framer-motion";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import TmEmailListModal from "@/app/_Components/Modal/TmEmailListModal";
 import toast from "react-hot-toast";
-import { useAllTmEmailListsQuery, useDeleteTmEmailListMutation } from "@/app/_Services/TmEmailList/page";
+import {
+  useAllTmEmailListsQuery,
+  useDeleteTmEmailListMutation,
+} from "@/app/_Services/TmEmailList/page";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -21,7 +25,12 @@ export default function page() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const { data, error: isError, isLoading, refetch } = useAllTmEmailListsQuery();
+  const {
+    data,
+    error: isError,
+    isLoading,
+    refetch,
+  } = useAllTmEmailListsQuery();
 
   const [deleteEmailList, { isLoading: isDeleting }] =
     useDeleteTmEmailListMutation();
@@ -43,20 +52,10 @@ export default function page() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your Email List... 🚀
-        </span>
-      </div>
+      <PageLoader
+        title="Loading TM email list"
+        subtitle="Fetching imported contacts..."
+      />
     );
   }
 
@@ -98,7 +97,7 @@ export default function page() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-gray-200">
+            <div className="overflow-hidden rounded-xl md:border md:border-gray-200">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead className="bg-zinc-100">
@@ -162,7 +161,7 @@ export default function page() {
 
         <TmEmailListModal
           isOpen={isModalOpen}
-        //   data={editingAppointment}
+          //   data={editingAppointment}
           closeModal={closeModal}
           refetch={refetch}
         />

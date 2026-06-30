@@ -11,6 +11,7 @@ import DepartmentModal from "@/app/_Components/Modal/DepartmentModal";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { formatDate } from "@/app/utilities/date";
 import PageHeader from "@/app/_Components/PageHeader/page";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -53,20 +54,10 @@ export default function AppointmentBooking() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your departments... 🚀
-        </span>
-      </div>
+      <PageLoader
+        title="Loading departments"
+        subtitle="Fetching department records..."
+      />
     );
   }
 
@@ -93,12 +84,12 @@ export default function AppointmentBooking() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-xl ">
+            <div className="-mx-1 overflow-hidden rounded-xl md:mx-0">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
                     <tr className="bg-zinc-900 border-b border-white/[0.07]">
-                      {["Department Name", "createdAt", "Actions"].map((h) => (
+                      {["Name", "createdAt", "Actions"].map((h) => (
                         <th
                           key={h}
                           className="px-4 py-2.5 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-300"

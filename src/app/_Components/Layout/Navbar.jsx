@@ -8,14 +8,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment-timezone";
 import Main from "../../../app/Assets/zytronlogo.png";
-import {
-  X,
-  Menu,
-  Clock,
-  Timer,
-  Activity,
-  CheckCircle,
-} from "lucide-react";
+import { X, Menu, Clock, Timer, Activity, CheckCircle } from "lucide-react";
 import LeftNav from "./LeftNav";
 import ActionButtons from "./NavbarActions";
 import {
@@ -54,7 +47,7 @@ const Navbar = () => {
     isLoading: isLoggedLoading,
     refetch: isLoggedRefetch,
   } = useGetLoggedUserQuery();
-  
+
   const [workingTime, setWorkingTime] = useState("00:00:00");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -147,7 +140,7 @@ const Navbar = () => {
 
   const handleBreakOut = useCallback(async () => {
     try {
-      const res = await breakOut({ shiftDate:attendence?.shiftDate }).unwrap();
+      const res = await breakOut({ shiftDate: attendence?.shiftDate }).unwrap();
       if (res.success) {
         dispatch(resumeWork());
         if (res.data?.mustLogout) {
@@ -168,9 +161,9 @@ const Navbar = () => {
 
       return (
         <div
-          className={`flex flex-col md:flex-row md:items-center gap-3 rounded-xl px-4 py-1 bg-yellow-500/[0.07] border border-yellow-500/15 ${
-            mobileWidthClass(mobile)
-          }`}
+          className={`flex flex-col md:flex-row md:items-center gap-3 rounded-xl px-4 py-1 bg-yellow-500/[0.07] border border-yellow-500/15 ${mobileWidthClass(
+            mobile,
+          )}`}
         >
           <div className="flex flex-wrap items-center gap-3 w-full">
             <div className="flex flex-col min-w-[120px]">
@@ -183,14 +176,20 @@ const Navbar = () => {
             <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
 
             <div className="flex flex-col min-w-[80px]">
-              <span className="text-[9px] text-zinc-500 uppercase">Break In</span>
-              <span className="text-xs text-zinc-200">{formatTime(activeBreak.breakIn)}</span>
+              <span className="text-[9px] text-zinc-500 uppercase">
+                Break In
+              </span>
+              <span className="text-xs text-zinc-200">
+                {formatTime(activeBreak.breakIn)}
+              </span>
             </div>
 
             <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
 
             <div className="flex flex-col min-w-[70px]">
-              <span className="text-[9px] text-zinc-500 uppercase">Duration</span>
+              <span className="text-[9px] text-zinc-500 uppercase">
+                Duration
+              </span>
               <span className="text-xs font-mono text-white">
                 {duration} min
               </span>
@@ -241,7 +240,9 @@ const Navbar = () => {
             <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
               <Activity size={9} /> Status
             </span>
-            <span className={`text-[9px] font-bold px-2 py-[2px] rounded-full uppercase border ${statusClasses}`}>
+            <span
+              className={`text-[9px] font-bold px-2 py-[2px] rounded-full uppercase border ${statusClasses}`}
+            >
               {attendence.status}
             </span>
           </div>
@@ -285,8 +286,6 @@ const Navbar = () => {
   const activeBreak = loggedUser?.data?.activeBreak;
   const isOnBreak = Boolean(activeBreak);
 
-  
-
   const closeBreakModal = useCallback(() => {
     setIsBreakOpen(false);
   }, []);
@@ -326,7 +325,7 @@ const Navbar = () => {
             />
           </div>
           <button
-            className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-150 cursor-pointer bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09]"
+            className="lg:hidden flex h-10 w-10 items-center justify-center rounded-2xl border border-white/[0.1] bg-white/[0.07] text-zinc-300 shadow-lg shadow-black/20 transition-all duration-150 cursor-pointer hover:bg-white/[0.12]"
             onClick={() => setIsMenuOpen(true)}
             aria-label="Open Menu"
           >
@@ -338,7 +337,7 @@ const Navbar = () => {
       {/* Mobile Backdrop */}
       <div
         onClick={() => setIsMenuOpen(false)}
-        className={`lg:hidden fixed inset-0 z-[60] transition-all duration-300 bg-black/60 backdrop-blur-sm ${
+        className={`lg:hidden fixed inset-0 z-[60] transition-all duration-300 bg-black/70 backdrop-blur-md ${
           isMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -347,16 +346,16 @@ const Navbar = () => {
 
       {/* Mobile Drawer */}
       <div
-        className={`lg:hidden fixed top-0 left-0 z-[70] h-full flex flex-col transition-transform duration-300 ease-in-out w-[min(300px,85vw)] bg-[#0d0d0f] border border-white/[0.07] shadow-[8px_0_40px_rgba(0,0,0,0.6)] ${
+        className={`lg:hidden fixed top-0 left-0 z-[70] h-full flex flex-col transition-transform duration-300 ease-in-out w-[min(330px,88vw)] rounded-r-[28px] bg-[#0d0d0f] border-r border-white/[0.08] shadow-[18px_0_60px_rgba(0,0,0,0.65)] ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="h-[1.5px] w-full shrink-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        <div className="flex items-center justify-between px-4 py-3 shrink-0 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between px-4 py-4 shrink-0 border-b border-white/[0.06]">
           <Image src={Main} alt="Logo" width={110} height={36} />
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="flex items-center justify-center w-8 h-8 rounded-lg cursor-pointer transition-all duration-150 bg-white/5 border border-white/[0.08] text-zinc-500 hover:bg-white/[0.09] hover:text-zinc-400"
+            className="flex h-9 w-9 items-center justify-center rounded-2xl cursor-pointer transition-all duration-150 bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09] hover:text-zinc-200"
           >
             <X size={15} />
           </button>

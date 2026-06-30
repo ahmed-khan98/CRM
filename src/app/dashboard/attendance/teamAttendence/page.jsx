@@ -883,7 +883,7 @@ const TeamAttendence = () => {
     viewType !== "today" || customRange.start || selectedEmployee;
 
   return (
-    <div className="h-screen flex flex-col gap-3 overflow-hidden p-2 md:p-3">
+    <div className="h-screen flex flex-col gap-3 overflow-hidden p-1">
       <div className="flex items-center justify-between gap-2">
         <AttendenceHeader
           icon={Users}
@@ -930,7 +930,7 @@ const TeamAttendence = () => {
       />
 
       {/* ── Table ── */}
-      <div className="flex-1 rounded-2xl border border-zinc-200 overflow-hidden bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] min-h-0">
+      <div className="-mx-1 min-h-0 flex-1 overflow-hidden rounded-2xl bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] md:mx-0 md:border md:border-zinc-200">
         <div
           className="overflow-auto h-full scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent"
           style={{

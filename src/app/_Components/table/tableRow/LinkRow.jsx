@@ -3,20 +3,15 @@ import { formatDate } from "@/app/utilities/date";
 import { useUpdatePaymentStatusMutation } from "@/app/_Services/paymentLink/page";
 import toast from "react-hot-toast";
 import RowMenu from "../../Payment/RowMenu";
+import { currencySymbols } from "@/app/utilities/currencyType";
 
 const STATUS_STYLES = {
-  paid:    "bg-emerald-50 text-emerald-700 border-emerald-200",
+  paid: "bg-emerald-50 text-emerald-700 border-emerald-200",
   pending: "bg-amber-50 text-amber-700 border-amber-200",
-  failed:  "bg-red-50 text-red-700 border-red-200",
+  failed: "bg-red-50 text-red-700 border-red-200",
   expired: "bg-zinc-100 text-zinc-500 border-zinc-200",
 };
 
-const currencySymbols = {
-  USD: "$",
-  CAD: "C$",
-  AUD: "A$",
-  EUR: "€",
-};
 
 export const LinkRow = memo(
   function LeadRow({ emp, setConfirmDelete, refetchAll }) {
@@ -28,21 +23,24 @@ export const LinkRow = memo(
     // ── isEnabled state ──
     const [isEnabled, setIsEnabled] = useState(
       emp?.isActive === undefined ||
-      emp?.isActive === null ||
-      emp?.isActive === true ||
-      emp?.isActive === "true" ||
-      emp?.isActive === "enabled" ||
-      emp?.isActive === "active"
+        emp?.isActive === null ||
+        emp?.isActive === true ||
+        emp?.isActive === "true" ||
+        emp?.isActive === "enabled" ||
+        emp?.isActive === "active",
     );
 
     const onCopy = (payId) => {
       if (!payId) return;
       const baseUrl = "https://customer-payment-link.vercel.app/";
       const fullUrl = `${baseUrl}${payId}`;
-      navigator.clipboard.writeText(fullUrl).then(() => {
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 3000);
-      }).catch((err) => console.error("Failed to copy URL: ", err));
+      navigator.clipboard
+        .writeText(fullUrl)
+        .then(() => {
+          setIsCopied(true);
+          setTimeout(() => setIsCopied(false), 3000);
+        })
+        .catch((err) => console.error("Failed to copy URL: ", err));
     };
 
     // ── Toggle enable/disable ──
@@ -74,38 +72,39 @@ export const LinkRow = memo(
       }
     };
 
-    const statusStyle = STATUS_STYLES[emp?.paymentStatus] ?? "bg-zinc-100 text-zinc-500 border-zinc-200";
+    const statusStyle =
+      STATUS_STYLES[emp?.paymentStatus] ??
+      "bg-zinc-100 text-zinc-500 border-zinc-200";
     const sym = currencySymbols[emp?.currency] || emp?.currency || "$";
 
     // ── Row background ──
-    const rowBg = !isEnabled
-      ? "bg-gray-200"
-      : "bg-white";
+    const rowBg = !isEnabled ? "bg-gray-200" : "bg-white";
 
     return (
-      <tr className={`group border-b border-zinc-100 transition-colors ${rowBg} hover:brightness-95`}>
-
+      <tr
+        className={`group border-b border-zinc-100 transition-colors ${rowBg} hover:brightness-95`}
+      >
         {/* Customer */}
         <td className="px-2 py-2.5 min-w-[150px]">
-         
           <div className="flex flex-col gap-0.5">
-          <span className="text-[12px] font-semibold text-zinc-600 capitalize truncate max-w-[135px]">
-          {emp?.clientId?.name || emp?.name || "Master Link"}
-          </span>
-          <span className="text-[11px] text-zinc-600 truncate max-w-[160px]">
-            {emp?.clientId?.email || emp?.email || "—"}
-          </span>
-            <span className="text-[10px] text-zinc-600 truncate max-w-[160px]">
-              {emp?.clientId?.phoneNo || emp?.phoneNo || '-'}
+            <span className="text-[12px] font-semibold text-zinc-600 capitalize truncate max-w-[135px]">
+              {emp?.clientId?.name || emp?.name || "Master Link"}
             </span>
-        </div>
+            <span className="text-[11px] text-zinc-600 truncate max-w-[160px]">
+              {emp?.clientId?.email || emp?.email || "—"}
+            </span>
+            <span className="text-[10px] text-zinc-600 truncate max-w-[160px]">
+              {emp?.clientId?.phoneNo || emp?.phoneNo || "-"}
+            </span>
+          </div>
         </td>
-
-    
 
         {/* Brand */}
         <td className="px-1 py-2.5 min-w-[120px]">
-          <p className="text-[11px] text-zinc-700 font-medium capitalize truncate max-w-[130px]" title={emp?.brandId?.name}>
+          <p
+            className="text-[11px] text-zinc-700 font-medium capitalize truncate max-w-[130px]"
+            title={emp?.brandId?.name}
+          >
             {emp?.brandId?.name || "No Brand"}
           </p>
         </td>
@@ -116,7 +115,10 @@ export const LinkRow = memo(
             {Array.isArray(emp?.service) && emp.service.length > 0 ? (
               <>
                 {emp.service.slice(0, 2).map((s, i) => (
-                  <span key={i} className="inline-flex px-1.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-full text-[10px] font-medium capitalize whitespace-nowrap">
+                  <span
+                    key={i}
+                    className="inline-flex px-1.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-full text-[10px] font-medium capitalize whitespace-nowrap"
+                  >
                     {s}
                   </span>
                 ))}
@@ -134,15 +136,20 @@ export const LinkRow = memo(
 
         {/* Merchant */}
         <td className="px-1 py-2.5 min-w-[100px]">
-          <p className="text-[11px] text-zinc-600 truncate max-w-[95px]">{emp?.merchantType || "—"}</p>
+          <p className="text-[11px] text-zinc-600 truncate max-w-[95px]">
+            {emp?.merchantType || "—"}
+          </p>
         </td>
 
         {/* Status */}
         <td className="px-1 py-2.5 min-w-[80px]">
-          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border whitespace-nowrap ${statusStyle}`}>
+          <span
+            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border whitespace-nowrap ${statusStyle}`}
+          >
             <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
             {emp?.paymentStatus
-              ? emp.paymentStatus.charAt(0).toUpperCase() + emp.paymentStatus.slice(1)
+              ? emp.paymentStatus.charAt(0).toUpperCase() +
+                emp.paymentStatus.slice(1)
               : "—"}
           </span>
         </td>
@@ -150,22 +157,29 @@ export const LinkRow = memo(
         {/* Amount */}
         <td className="px-1 py-2.5 min-w-[60px]">
           <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-[12px] font-bold bg-zinc-800 text-white whitespace-nowrap">
-            {sym}{emp?.amount?.toLocaleString() ?? "0"}
+            {sym}
+            {emp?.amount?.toLocaleString() ?? "0"}
           </span>
         </td>
 
         {/* Created */}
         <td className="px-1 py-2.5 min-w-[100px]">
-          <p className="text-[11px] text-zinc-400 whitespace-nowrap">{formatDate(emp?.createdAt)}</p>
+          <p className="text-[11px] text-zinc-400 whitespace-nowrap">
+            {formatDate(emp?.createdAt)}
+          </p>
         </td>
 
         {/* Updated */}
         <td className="px-1 py-2.5 min-w-[100px]">
-          <p className="text-[11px] text-zinc-400 whitespace-nowrap text-center">{emp?.paidAt ? formatDate(emp?.paidAt):'-'}</p>
+          <p className="text-[11px] text-zinc-400 whitespace-nowrap text-center">
+            {emp?.paidAt ? formatDate(emp?.paidAt) : "-"}
+          </p>
         </td>
 
         {/* Actions — sticky right */}
-        <td className={`px-2 py-2.5 sticky right-0 transition-colors border-l border-zinc-100 w-10 ${rowBg}`}>
+        <td
+          className={`px-2 py-2.5 sticky right-0 transition-colors md:border-l md:border-zinc-100 w-10 ${rowBg}`}
+        >
           <RowMenu
             emp={emp}
             isCopied={isCopied}

@@ -1,10 +1,5 @@
 import { memo, useState, useRef, useEffect } from "react";
-import {
-  Trash2,
-  Edit, 
-  EllipsisVertical,
-  Link
-} from "lucide-react";
+import { Trash2, Edit, EllipsisVertical, Link } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 
@@ -68,8 +63,7 @@ function PortalMenu({ btnRef, open, onClose, children }) {
 function ClientRowMenu({ emp, handleEdit, onDelete, isEnabled, onToggle }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
-      const router = useRouter();
-  
+  const router = useRouter();
 
   return (
     <div className="relative">
@@ -84,7 +78,10 @@ function ClientRowMenu({ emp, handleEdit, onDelete, isEnabled, onToggle }) {
       <PortalMenu btnRef={btnRef} open={open} onClose={() => setOpen(false)}>
         {/* 1. Create Payment Link */}
         <button
-         onClick={() => router.push(`/dashboard/paymentLink/${emp?._id}`)}
+          onClick={() => {
+            router.push(`/dashboard/paymentLink/${emp?._id}`);
+            setOpen(false);
+          }}
           className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] text-blue-600 hover:bg-blue-50"
         >
           <Link className="h-3.5 w-3.5" />
@@ -107,9 +104,10 @@ function ClientRowMenu({ emp, handleEdit, onDelete, isEnabled, onToggle }) {
 
         {/* 3. Edit */}
         <button
-          onClick={()=>{
-            setOpen()
-            handleEdit()}}
+          onClick={() => {
+            setOpen(false);
+            handleEdit();
+          }}
           className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] text-amber-600 hover:bg-amber-50"
         >
           <Edit className="h-3.5 w-3.5" />
@@ -120,9 +118,10 @@ function ClientRowMenu({ emp, handleEdit, onDelete, isEnabled, onToggle }) {
 
         {/* 4. Delete (existing logic) */}
         <button
-          onClick={()=>{
-            setOpen()
-            onDelete()}}
+          onClick={() => {
+            setOpen(false);
+            onDelete();
+          }}
           className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] text-red-500 hover:bg-red-50"
         >
           <Trash2 className="h-3.5 w-3.5" />

@@ -10,6 +10,7 @@ import {
 } from "@/app/_Services/emaillist/page";
 import EmailListModal from "@/app/_Components/Modal/EmaillistModal";
 import toast from "react-hot-toast";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -46,20 +47,10 @@ export default function page() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen  flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your Email List... 🚀
-        </span>
-      </div>
+      <PageLoader
+        title="Loading email list"
+        subtitle="Fetching imported contacts..."
+      />
     );
   }
 
@@ -69,9 +60,7 @@ export default function page() {
         <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
             <List className="h-5 w-5 text-gray-800" />
-            <h3 className="text-[#242424] text-xl font-bold">
-              All Email List
-            </h3>
+            <h3 className="text-[#242424] text-xl font-bold">All Email List</h3>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -86,10 +75,7 @@ export default function page() {
           </div>
         </div>
 
-        <motion.div
-          variants={itemVariants}
-          className="rounded-2xl shadow-lg"
-        >
+        <motion.div variants={itemVariants} className="rounded-2xl shadow-lg">
           {data?.data?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
               <List className="h-16 w-16 text-gray-300 mbg-zinc-800" />
@@ -101,8 +87,8 @@ export default function page() {
               </p>
             </div>
           ) : (
-            <div className="overflow-hidden ">
-              <div className="overflow-x-auto rounded-2xl">
+            <div className="overflow-hidden rounded-2xl">
+              <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead className="bg-zinc-800 ">
                     <tr>
@@ -165,7 +151,7 @@ export default function page() {
 
         <EmailListModal
           isOpen={isModalOpen}
-        //   data={editingAppointment}
+          //   data={editingAppointment}
           closeModal={closeModal}
           refetch={refetch}
         />

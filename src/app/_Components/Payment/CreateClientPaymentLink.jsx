@@ -30,6 +30,7 @@ import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 import { useGetDepartmentBrandQuery } from "@/app/_Services/brand/page";
 import { useGetClientQuery } from "@/app/_Services/Client/page";
 import FormikCreateableSelect from "../Modal/CreateableSelect";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const CreateClientPaymentLink = ({ id }) => {
   const router = useRouter();
@@ -154,18 +155,10 @@ const CreateClientPaymentLink = ({ id }) => {
   // Safe check loading states
   if (isLoading || isLoggedLoading)
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">Loading ... 🚀</span>
-      </div>
+      <PageLoader
+        title="Loading client"
+        subtitle="Preparing the payment link form..."
+      />
     );
 
   if (error)
@@ -201,8 +194,6 @@ const CreateClientPaymentLink = ({ id }) => {
                   <LinkIcon className="h-6 w-6 text-emerald-300" />
                 </div>
                 <div>
-                 
-                  
                   <h6 className="text-lg font-black tracking-tight md:text-xl">
                     Create Payment Link
                   </h6>
@@ -225,7 +216,6 @@ const CreateClientPaymentLink = ({ id }) => {
           </div>
 
           <div className="p-4 md:p-6">
-       
             <Formik
               initialValues={initialValues}
               validationSchema={createPaymentSchema}
@@ -352,7 +342,7 @@ const CreateClientPaymentLink = ({ id }) => {
                             setFieldValue("seller", value)
                           }
                         />
- <FormikSelect
+                        <FormikSelect
                           name="type"
                           label="Select Sale Type"
                           options={sale_Options}
@@ -366,7 +356,7 @@ const CreateClientPaymentLink = ({ id }) => {
                             setFieldValue("type", value)
                           }
                         />
-                        
+
                         {isAdminOrSubAdmin && values?.type === "FRESH" ? (
                           <FormikSelect
                             name="agent"
@@ -447,8 +437,6 @@ const CreateClientPaymentLink = ({ id }) => {
                             setFieldValue("currency", val)
                           }
                         />
-
-                       
                       </div>
                     </FormSection>
 
@@ -476,7 +464,9 @@ const CreateClientPaymentLink = ({ id }) => {
                         <div className="flex gap-2">
                           <button
                             type="button"
-                            onClick={() => router.push("/dashboard/paymentLink")}
+                            onClick={() =>
+                              router.push("/dashboard/paymentLink")
+                            }
                             className="cursor-pointer rounded-xl border border-zinc-200 px-4 py-2.5 text-sm font-bold text-zinc-700 transition hover:bg-zinc-50"
                           >
                             Cancel

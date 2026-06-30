@@ -21,6 +21,7 @@ import {
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 import SaleFilters from "./_components/SaleFilters";
 import SaleSummary from "./_components/SaleSummary";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -52,7 +53,8 @@ export default function Client() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [filters, setFilters] = useState(initialFilters);
 
-  const { data: loggedUser, isLoading: isUserLoading } = useGetLoggedUserQuery();
+  const { data: loggedUser, isLoading: isUserLoading } =
+    useGetLoggedUserQuery();
   const user = loggedUser?.data || loggedUser;
   const userRole = user?.role?.toUpperCase();
   const canFilterDepartment = elevatedRoles.includes(userRole);
@@ -67,7 +69,7 @@ export default function Client() {
     useGetdepartmentsEmployeeQuery(filters.departmentId, {
       skip: !filters.departmentId || !canFilterEmployee,
     });
-    
+
   const { data: allEmployees, isLoading: isAllEmployeesLoading } =
     useAllEmployeesQuery(undefined, {
       skip: !!filters.departmentId || !canFilterDepartment,
@@ -129,13 +131,31 @@ export default function Client() {
 
   const totals = useMemo(() => {
     const paidRows = rows.filter((sale) => sale?.status === "paid");
-    const chargeBackRows = rows.filter((sale) => sale?.status === "charge back");
+    const chargeBackRows = rows.filter(
+      (sale) => sale?.status === "charge back",
+    );
+    const paidCurrencies = [
+      ...new Set(
+        paidRows
+          .map((sale) => sale?.currency?.toString().trim().toUpperCase())
+          .filter(Boolean),
+      ),
+    ];
 
     return {
       totalSales: rows.length,
       paidSales: paidRows.length,
       chargeBacks: chargeBackRows.length,
-      revenue: paidRows.reduce((sum, sale) => sum + (Number(sale?.amount) || 0), 0),
+      revenue: paidRows.reduce(
+        (sum, sale) => sum + (Number(sale?.amount) || 0),
+        0,
+      ),
+      currency:
+        paidCurrencies.length === 1
+          ? paidCurrencies[0]
+          : paidCurrencies.length
+            ? "Mixed"
+            : "USD",
       fresh: rows.filter((sale) => sale?.type === "FRESH").length,
       upsell: rows.filter((sale) => sale?.type === "UP SELL").length,
     };
@@ -181,23 +201,11 @@ export default function Client() {
   }, [canFilterDepartment, openMonth, userDepartmentId]);
 
   const isPageLoading =
-    isLoading ||
-    isUserLoading ||
-    isMonthsLoading ||
-    isDepartmentsLoading;
+    isLoading || isUserLoading || isMonthsLoading || isDepartmentsLoading;
 
   if (isPageLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center gap-4">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
-          className="w-9 h-9 border-[3px] border-zinc-200 border-t-zinc-800 rounded-full"
-        />
-        <span className="text-sm text-zinc-500 font-medium">
-          Loading sales…
-        </span>
-      </div>
+      <PageLoader title="Loading sales" subtitle="Preparing sale filters..." />
     );
   }
 

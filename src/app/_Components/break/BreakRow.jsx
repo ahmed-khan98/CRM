@@ -1,5 +1,10 @@
 import React, { useMemo } from "react";
-import { formatDay, formatDuration, formatOnlyDate, toLocal } from "@/app/utilities/date";
+import {
+  formatDay,
+  formatDuration,
+  formatOnlyDate,
+  toLocal,
+} from "@/app/utilities/date";
 import { getStatusConfig } from "@/app/utilities/attendence";
 import moment from "moment-timezone";
 const TZ = "Asia/Karachi";
@@ -15,7 +20,7 @@ const BreakRow = ({ item }) => {
   return (
     <tr
       className={`group border-b border-zinc-100 transition-colors duration-100
-          ${isToday ? "bg-zinc-50 border-l-2 border-l-zinc-400" : "hover:bg-zinc-50/80"}`}
+          ${isToday ? "bg-zinc-50 md:border-l-2 md:border-l-zinc-400" : "hover:bg-zinc-50/80"}`}
     >
       {/* Date */}
       <td className="px-5 py-3.5">

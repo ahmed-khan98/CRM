@@ -8,8 +8,6 @@
   --foreground: #171717;
 }
 
-
-
 /* Taake user ko hamesha scrollbar nazar aaye */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
@@ -29,7 +27,6 @@
   background: #a1a1aa; /* Zinc-400 */
 }
 
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -47,21 +44,24 @@
   text-align: center !important;
 }
 
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Roboto", sans-serif;}
+  font-family: "Roboto", sans-serif;
+}
 
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;
 }
 
-
 @keyframes marquee {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .animate-marquee {
@@ -71,26 +71,48 @@ body {
 
 .montserrat {
   font-family: "Roboto", sans-serif;
-    font-style: normal;
+  font-style: normal;
   font-optical-sizing: auto;
 }
-.orange-bg{
-  background:linear-gradient(90deg, #ff6a3d, #f33e0a);
+.orange-bg {
+  background: linear-gradient(90deg, #ff6a3d, #f33e0a);
 }
 
-html{
+html {
   scroll-behavior: smooth;
 }
-body{
+body {
   background-color: white;
 }
-ol, ul, menu {
+
+@media (max-width: 767px) {
+  table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+  }
+
+  th,
+  td {
+    border-left-width: 0 !important;
+    border-right-width: 0 !important;
+    border-top-width: 0 !important;
+    border-bottom-width: 0 !important;
+  }
+
+  tr {
+    border-bottom-width: 1px !important;
+    border-color: rgb(228 228 231) !important;
+  }
+}
+
+ol,
+ul,
+menu {
   list-style: disc;
 }
 /* a{
   color:#0578ff !important
 } */
-
 
 /* Tailwind CSS utility to hide scrollbar */
 @layer utilities {
@@ -98,8 +120,8 @@ ol, ul, menu {
     display: none;
   }
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 

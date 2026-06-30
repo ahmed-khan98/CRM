@@ -464,7 +464,7 @@ const statCards = useMemo(() => {
   }, []);
   
   return (
-    <div className="min-h-screen text-zinc-800 p-2 md:p-4 flex flex-col gap-3">
+    <div className="min-h-screen text-zinc-800 p-1 flex flex-col gap-3">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <AttendenceHeader

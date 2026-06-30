@@ -26,6 +26,7 @@ import Pagination from "@/app/_Components/PaginationComponent/Pagination";
 import { LeadRow } from "@/app/_Components/table/tableRow/LeadRow";
 import { LEADHEADERS } from "@/app/_Components/table/tableRow/tableHeader/leadHeader";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import PageLoader from "@/app/_Components/Loaders/PageLoader";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -143,20 +144,7 @@ function Leads() {
 
   if (isInitialLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
-          className="w-12 h-12 border-4 border-zinc-800 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-gray-800 font-semibold">
-          Loading your Leads... 🚀
-        </span>
-      </div>
+      <PageLoader title="Loading leads" subtitle="Fetching pipeline data..." />
     );
   }
 
@@ -254,14 +242,13 @@ function Leads() {
             </div>
           ) : (
             <div className="overflow-hidden rounded-2xl">
-             <div 
-  className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-260px)]"
-  style={{
-    scrollbarWidth: "thin",
-    scrollbarColor: "#52525b transparent",
-  }}
->
-
+              <div
+                className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-260px)]"
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#52525b transparent",
+                }}
+              >
                 <table className="min-w-full">
                   <thead className="sticky top-0 z-20 bg-zinc-800">
                     <tr className="">
