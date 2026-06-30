@@ -10,7 +10,7 @@ import {
   Sparkles,
   TrendingUp,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useGetDashboardCountQuery } from "@/app/_Services/about/page";
 import { useEffect, useMemo, useState } from "react";
@@ -88,9 +88,32 @@ function InsightCard({ title, description, icon: Icon }) {
   );
 }
 
+const QUOTES = [
+  {
+    text: "Success is not final, failure is not fatal — it's the courage to continue that counts.",
+    author: "Winston Churchill",
+  },
+  {
+    text: "The harder you work for something, the greater you'll feel when you achieve it.",
+    author: "Unknown",
+  },
+  {
+    text: "Don't watch the clock; do what it does — keep going.",
+    author: "Sam Levenson",
+  },
+  {
+    text: "Dream big, work hard, stay focused, and surround yourself with good people.",
+    author: "Unknown",
+  },
+  {
+    text: "Your only limit is your mind. Push further every single day.",
+    author: "Unknown",
+  },
+];
+
 export default function DashboardPage() {
-  const [greeting, setGreeting] = useState("");
   const [currentUser, setCurrentUser] = useState("");
+  const [quoteIndex, setQuoteIndex] = useState(0);
   const { data, isLoading } = useGetDashboardCountQuery();
 
   useEffect(() => {
@@ -102,13 +125,16 @@ export default function DashboardPage() {
         setCurrentUser("");
       }
     }
-
-    const hour = new Date().getHours();
-    if (hour >= 6 && hour < 12) setGreeting("Good Morning");
-    else if (hour >= 12 && hour < 17) setGreeting("Good Afternoon");
-    else if (hour >= 17 && hour < 23) setGreeting("Good Evening");
-    else setGreeting("Good Night");
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQuoteIndex((prev) => (prev + 1) % QUOTES.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const quote = QUOTES[quoteIndex];
 
   const stats = useMemo(
     () => [
@@ -174,21 +200,39 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen px-1 pb-6">
-      <section className="relative overflow-hidden rounded-[32px] border border-zinc-800 bg-zinc-950 p-5 text-white shadow-2xl shadow-zinc-300/40 sm:p-7">
+    <div className="min-h-screen px-1 pb-4">
+      <section className="relative overflow-hidden rounded-[32px] border border-zinc-800 bg-zinc-950 p-4 text-white shadow-2xl shadow-zinc-300/40 sm:p-7">
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-indigo-500/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-6 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl" />
 
         <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-zinc-300">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[14px] font-black uppercase tracking-[0.16em] text-zinc-300">
               <Sparkles className="h-3.5 w-3.5 text-indigo-300" />
-              CRM Overview
+              Hey, {currentUser?.fullName || "Team"} 👋
             </div>
-            <h1 className="max-w-3xl text-2xl font-black tracking-tight sm:text-4xl">
-              {greeting}, {currentUser?.fullName || "Team"}
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-zinc-400">
+
+            {/* Rotating motivational quote */}
+            <div className="relative min-h-[72px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={quoteIndex}
+                  initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                >
+                  <p className="max-w-3xl text-[10px] font-semibold tracking-tight sm:text-3xl">
+                    &ldquo;{quote.text}&rdquo;
+                  </p>
+                  <p className="mt-2 text-[11px] font-bold text-indigo-300">
+                    — {quote.author}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-zinc-400">
               Track leads, clients, sale revenue, and pending payment links from
               one clean command center.
             </p>
