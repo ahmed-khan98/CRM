@@ -26,6 +26,8 @@ import {
   ArrowRight,
   CalendarDays,
   Coffee,
+  FolderKanban,
+  ListTodo,
 } from "lucide-react";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
@@ -80,6 +82,18 @@ const LeftNav = ({ set }) => {
       name: "Client",
       icon: <User className="w-4 h-4" />,
       path: ["/dashboard/client"],
+      roles: ["USER", "DEP_ADMIN"],
+    },
+    {
+      name: "Projects",
+      icon: <FolderKanban className="w-4 h-4" />,
+      path: ["/dashboard/projects"],
+      roles: ["USER", "DEP_ADMIN"],
+    },
+    {
+      name: "All Tasks",
+      icon: <ListTodo className="w-4 h-4" />,
+      path: ["/dashboard/tasks"],
       roles: ["USER", "DEP_ADMIN"],
     },
     {

@@ -207,7 +207,7 @@ export default function DashboardPage() {
 
         <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[14px] font-black uppercase tracking-[0.16em] text-zinc-300">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[13px] font-black uppercase tracking-[0.16em] text-zinc-300">
               <Sparkles className="h-3.5 w-3.5 text-indigo-300" />
               Hey, {currentUser?.fullName || "Team"} 👋
             </div>
@@ -222,17 +222,17 @@ export default function DashboardPage() {
                   exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
                   transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
-                  <p className="max-w-3xl text-[10px] font-semibold tracking-tight sm:text-3xl">
+                  <p className="max-w-3xl sm:text-sm md:text-2xl sm:font-medium md:font-semibold tracking-tight ">
                     &ldquo;{quote.text}&rdquo;
                   </p>
                   <p className="mt-2 text-[11px] font-bold text-indigo-300">
                     — {quote.author}
                   </p>
-                </motion.div>
+                </motion.div>s
               </AnimatePresence>
             </div>
 
-            <p className="mt-2 max-w-2xl text-sm font-semibold leading-6 text-zinc-400">
+            <p className=" max-w-2xl sm:text-[1px] md:text-sm  font-semibold leading-6 text-zinc-400">
               Track leads, clients, sale revenue, and pending payment links from
               one clean command center.
             </p>

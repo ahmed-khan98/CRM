@@ -41,7 +41,7 @@ export default function ClientTable({ clients, handleEdit, onDelete }) {
                     <div className="flex items-center gap-3">
                       <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
                         <Image
-                          src={emp?.image || "/placeholder.svg"}
+                          src={emp?.image || "/dummy.png"}
                           alt="Client"
                           fill
                           className="object-cover"

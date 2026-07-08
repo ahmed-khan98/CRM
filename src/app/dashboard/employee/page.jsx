@@ -319,6 +319,7 @@ const itemVariants = {
 
 export default function AppointmentBooking() {
   const [activeFilter, setActiveFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [editingAppointment, setEditingAppointment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -381,7 +382,6 @@ export default function AppointmentBooking() {
     const normalizedSearch = searchTerm.trim().toLowerCase();
 
     return data.data.filter((item) => {
-      // DEP_ADMIN / USER: always restrict to their own department
       const deptName = canFilterDept
         ? activeFilter === "all"
           ? null
@@ -392,10 +392,12 @@ export default function AppointmentBooking() {
       const matchesName =
         !normalizedSearch ||
         item?.fullName?.toLowerCase().includes(normalizedSearch);
+      const matchesStatus =
+        statusFilter === "all" || item?.status === statusFilter;
 
-      return matchesDepartment && matchesName;
+      return matchesDepartment && matchesName && matchesStatus;
     });
-  }, [activeFilter, data, searchTerm, canFilterDept, userDeptName]);
+  }, [activeFilter, statusFilter, data, searchTerm, canFilterDept, userDeptName]);
 
   const handleDelete = async () => {
     try {
@@ -446,6 +448,43 @@ export default function AppointmentBooking() {
           onSearchChange={setSearchTerm}
           searchPlaceholder="Search employee by full name..."
         />
+
+        {/* Status filter pills */}
+        <div className="flex items-center gap-2">
+          {[
+            { value: "all", label: "All" },
+            { value: "active", label: "Active" },
+            { value: "de active", label: "de Active" },
+          ].map((s) => (
+            <button
+              key={s.value}
+              onClick={() => setStatusFilter(s.value)}
+              className={`cursor-pointer inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider transition-all border ${
+                statusFilter === s.value
+                  ? s.value === "active"
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                    : s.value === "de active"
+                    ? "bg-red-50 border-red-200 text-red-600"
+                    : "bg-zinc-900 border-zinc-900 text-white"
+                  : "border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:text-zinc-700"
+              }`}
+            >
+              {s.value !== "all" && (
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    s.value === "active" ? "bg-emerald-500" : "bg-red-400"
+                  }`}
+                />
+              )}
+              {s.label}
+              {s.value !== "all" && (
+                <span className="ml-0.5 opacity-70">
+                  ({data?.data?.filter((e) => e?.status === s.value).length ?? 0})
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
         <motion.div variants={itemVariants} className="">
           {filteredEmployees.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
@@ -500,11 +539,11 @@ export default function AppointmentBooking() {
                             <div className="flex items-center gap-2">
                               <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
                                 <Image
-                                  src={emp?.image || "/placeholder.svg"}
+                                  src={emp?.image || "/dummy.png"}
                                   alt="employee-img"
                                   fill
                                   sizes
-                                  className="object-cover"
+                                  className="object-cover w-full h-full rounded-full"
                                 />
                               </div>
                               <div className="flex flex-col">

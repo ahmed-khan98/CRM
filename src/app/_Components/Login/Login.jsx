@@ -69,10 +69,15 @@ export default function GenZLoginForm() {
             }),
           );
 
-          Cookies.set("token", accessToken, { expires: 7, secure: true });
+          Cookies.set("token", accessToken, {
+            expires: 7,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          });
           Cookies.set("currentuser", JSON.stringify(user), {
             expires: 7,
-            secure: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
           });
           toast.success(response.message);
           navigation.push("/dashboard/statictics");

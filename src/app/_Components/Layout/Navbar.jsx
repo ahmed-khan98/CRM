@@ -303,7 +303,7 @@ const Navbar = () => {
       {/* Main Navbar */}
       <div className="fixed top-0 left-0 w-full z-50 bg-[#0f0f11] border-b border-white/[0.07] ">
         <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-white/5" />
-        <nav className="flex items-center justify-between px-3 md:px-6 py-1 gap-3">
+        <nav className="flex items-center justify-between px-3 md:px-6 py-1.5 md:py-1 gap-3">
           <Link href="/dashboard/statistics" className="shrink-0">
             <Image src={Main} alt="Logo" height={48} width={130} priority />
           </Link>
@@ -325,11 +325,11 @@ const Navbar = () => {
             />
           </div>
           <button
-            className="lg:hidden flex h-10 w-10 items-center justify-center rounded-2xl border border-white/[0.1] bg-white/[0.07] text-zinc-300 shadow-lg shadow-black/20 transition-all duration-150 cursor-pointer hover:bg-white/[0.12]"
+            className="lg:hidden flex items-center justify-center"
             onClick={() => setIsMenuOpen(true)}
             aria-label="Open Menu"
           >
-            <Menu size={18} />
+            <Menu size={22} color='white'/>
           </button>
         </nav>
       </div>
