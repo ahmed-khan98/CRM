@@ -2,12 +2,12 @@ import { createApiAuction } from "@/redux/createApi";
 
 const getProjectId = (projectId) => projectId?._id || projectId;
 
-const taskMutationTags = (projectId) => {
+const taskMutationTags = (projectId, { includeAllProjects = true } = {}) => {
   const id = getProjectId(projectId);
   return [
     ...(id ? [{ type: "tasks", id }] : []),
     "allTasks",
-    "allProjects",
+    ...(includeAllProjects ? ["allProjects"] : []),
     ...(id ? [{ type: "project", id }] : []),
   ];
 };
@@ -20,12 +20,14 @@ const TaskApi = createApiAuction.injectEndpoints({
     getAllTasks: builder.query({
       query: () => "task/all",
       providesTags: ["allTasks"],
+      keepUnusedDataFor: 180,
     }),
 
     // ── Tasks for a specific project ──────────────────────────────
     getTasksByProject: builder.query({
       query: (projectId) => `task/project/${projectId}`,
       providesTags: (result, error, projectId) => [{ type: "tasks", id: projectId }],
+      keepUnusedDataFor: 180,
     }),
 
     // ── Create task (supports optional file attachment) ───────────
@@ -66,13 +68,15 @@ const TaskApi = createApiAuction.injectEndpoints({
     }),
 
     // ── Drag-and-drop status update ───────────────────────────────
+    // Status/order changes do not affect project list counts — skip allProjects.
     updateTaskStatus: builder.mutation({
       query: ({ id, status, order }) => ({
         url: `task/${id}/status`,
         method: "PATCH",
         body: { status, order },
       }),
-      invalidatesTags: (result, error, { projectId }) => taskMutationTags(projectId),
+      invalidatesTags: (result, error, { projectId }) =>
+        taskMutationTags(projectId, { includeAllProjects: false }),
     }),
 
     // ── Delete task ───────────────────────────────────────────────

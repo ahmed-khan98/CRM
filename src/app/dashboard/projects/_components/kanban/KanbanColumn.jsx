@@ -4,7 +4,7 @@ import { memo } from "react";
 import { Droppable } from "@hello-pangea/dnd";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
-import TaskCard from "../TaskCard";
+import TaskCard from "../task/TaskCard";
 
 function KanbanColumn({ column, tasks, onAddTask, onOpenTask, showProject, onProjectClick }) {
   return (

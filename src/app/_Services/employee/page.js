@@ -78,6 +78,11 @@ const employeeApi = createApiAuction.injectEndpoints({
       keepUnusedDataFor: 180,
       refetchOnMountOrArgChange: false,
     }),
+    getAssignees: builder.query({
+      query: () => `employee/assignees`,
+      providesTags: ["assignees"],
+      keepUnusedDataFor: 180,
+    }),
     breakIn: builder.mutation({
       query: (formData) => {
         return {
@@ -117,6 +122,7 @@ const employeeApi = createApiAuction.injectEndpoints({
 
 export const {
   useAllEmployeesQuery,
+  useGetAssigneesQuery,
   useCreateEmployeeMutation,
   useUpdateEmployeeMutation,
   useDeleteEmployeeMutation,

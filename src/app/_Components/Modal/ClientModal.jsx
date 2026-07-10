@@ -106,9 +106,10 @@ const ClientModal = ({ isOpen, closeModal, data, refetch }) => {
         const payload = new FormData();
         payload.append("id", data?._id || "");
         Object.keys(values).forEach((key) => {
-          if (values[key] !== undefined && values[key] !== null) {
-            payload.append(key, values[key]);
-          }
+          const value = values[key];
+          if (value === undefined || value === null || value === "") return;
+          if (key === "image" && !(value instanceof File)) return;
+          payload.append(key, value);
         });
         response = await (
           isEdit
@@ -266,7 +267,7 @@ const ClientModal = ({ isOpen, closeModal, data, refetch }) => {
                               <>
                                 <Upload className="w-5 h-5 text-gray-500 mb-1" />
                                 <span className="text-[11px] text-gray-600 leading-tight">
-                                  Upload Client Image
+                                  Upload Image (optional)
                                 </span>
                               </>
                             )}

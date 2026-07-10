@@ -4,7 +4,7 @@ import { memo } from "react";
 import { Edit2, Trash2, X } from "lucide-react";
 import { PRIORITY_CONFIG, STATUS_CONFIG } from "../constants";
 
-function TaskDetailHeader({ task, onClose, onEdit, onDelete, canEdit }) {
+function TaskDetailHeader({ task, onClose, onEdit, onDelete, canEdit, canDelete }) {
   const priority = PRIORITY_CONFIG[task.priority] || PRIORITY_CONFIG.medium;
   const statusCfg = STATUS_CONFIG[task.status] || STATUS_CONFIG.todo;
 
@@ -26,16 +26,16 @@ function TaskDetailHeader({ task, onClose, onEdit, onDelete, canEdit }) {
 
         <div className="flex items-center gap-1 shrink-0">
           {canEdit && (
-            <>
-              <button type="button" onClick={() => { onClose(); onEdit?.(task); }} title="Edit task"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 transition cursor-pointer">
-                <Edit2 className="h-3.5 w-3.5" />
-              </button>
-              <button type="button" onClick={() => onDelete?.(task)} title="Delete task"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 transition cursor-pointer">
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-            </>
+            <button type="button" onClick={() => { onClose(); onEdit?.(task); }} title="Edit task"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 transition cursor-pointer">
+              <Edit2 className="h-3.5 w-3.5" />
+            </button>
+          )}
+          {canDelete && (
+            <button type="button" onClick={() => onDelete?.(task)} title="Delete task"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 transition cursor-pointer">
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
           )}
           <button type="button" onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-100 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 transition cursor-pointer">

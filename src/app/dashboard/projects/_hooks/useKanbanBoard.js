@@ -1,12 +1,29 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { EMPTY_KANBAN_COLUMNS } from "../_components/constants";
 
+const COLUMN_KEYS = ["todo", "in-progress", "in-review", "done"];
+
+/** Stable signature of id+status+order so reference-only RTK updates don't reset local drag state. */
+function columnsSignature(cols) {
+  if (!cols) return "";
+  return COLUMN_KEYS.map((key) =>
+    (cols[key] || [])
+      .map((t) => `${t._id}:${t.status}:${t.order ?? ""}`)
+      .join(",")
+  ).join("|");
+}
+
 export function useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone }) {
   const [localColumns, setLocalColumns] = useState(null);
+  const prevSignatureRef = useRef("");
 
   useEffect(() => {
-    setLocalColumns(null);
+    const nextSig = columnsSignature(serverColumns);
+    if (nextSig !== prevSignatureRef.current) {
+      prevSignatureRef.current = nextSig;
+      setLocalColumns(null);
+    }
   }, [serverColumns]);
 
   const columns = localColumns || serverColumns || EMPTY_KANBAN_COLUMNS;
@@ -21,7 +38,7 @@ export function useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone })
       const movedTask = allTasks.find((t) => t._id === draggableId);
 
       if (destination.droppableId === "done" && movedTask && !canMoveToDone(movedTask)) {
-        toast.error("Only the task creator can mark it as Done");
+        toast.error("Only the creator or their department admin can mark it as Done");
         return;
       }
 

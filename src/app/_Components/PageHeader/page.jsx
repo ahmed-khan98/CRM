@@ -3,14 +3,22 @@ import Header from "./Header/page";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 
-const page = ({ icon, name, length, btnName, handleEdit }) => {
+const page = ({ icon, name, length, btnName, handleEdit, children }) => {
   return (
     <div className="relative overflow-hidden rounded-3xl border border-zinc-200/80 bg-white/90 p-3 md:p-2 shadow-sm shadow-zinc-200/60 backdrop-blur sm:p-4">
       {/* <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-zinc-900/[0.04]" />
       <div className="pointer-events-none absolute -bottom-12 left-8 h-24 w-24 rounded-full bg-indigo-500/[0.06]" /> */}
 
-      <div className="relative flex items-center justify-between gap-3">
-        <Header icon={icon} length={length} name={name} />
+      <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        <div className="shrink-0">
+          <Header icon={icon} length={length} name={name} />
+        </div>
+
+        {children && (
+          <div className="min-w-0 w-full flex-1">
+            {children}
+          </div>
+        )}
 
         {btnName && (
           <motion.button

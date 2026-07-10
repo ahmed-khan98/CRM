@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Flag, Users, AlignLeft, Type, Paperclip, FileText } from "lucide-react";
 import Select from "react-select";
@@ -47,8 +47,14 @@ export default memo(function TaskModal({
     ? STATUS_OPTIONS
     : STATUS_OPTIONS.filter((s) => s.value !== "done");
 
-  const employeeOptions = employees.map((e) => ({ value: e._id, label: e.fullName }));
-  const selectedAssignees = employeeOptions.filter((o) => form.assignees.includes(o.value));
+  const employeeOptions = useMemo(
+    () => employees.map((e) => ({ value: e._id, label: e.fullName })),
+    [employees]
+  );
+  const selectedAssignees = useMemo(
+    () => employeeOptions.filter((o) => form.assignees.includes(o.value)),
+    [employeeOptions, form.assignees]
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();

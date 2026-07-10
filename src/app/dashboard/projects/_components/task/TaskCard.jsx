@@ -20,7 +20,6 @@ function TaskCard({ task, index, onOpen, showProject = false, onProjectClick }) 
           style={provided.draggableProps.style}
         >
           <motion.div
-            layout
             onClick={handleClick}
             className={`group cursor-pointer rounded-xl border bg-white p-3.5 shadow-sm transition-all select-none
               ${snapshot.isDragging

@@ -27,27 +27,30 @@ export default function ProjectsPage() {
   const { data: projectsData, isLoading } = useGetAllProjectsQuery();
   const projects = projectsData?.data || [];
 
-  const { data: clientsData } = useAllClientsQuery();
+  const { data: clientsData } = useAllClientsQuery(undefined, { skip: !projectModalOpen });
   const clients = clientsData?.data || [];
 
   const [createProject] = useCreateProjectMutation();
   const [deleteProject, { isLoading: isDeleting }] = useDeleteProjectMutation();
 
-  const handleSaveProject = useCallback(async (form) => {
-    try {
-      await createProject({
-        name: form.name,
-        description: form.description,
-        status: form.status,
-        ...(form.clientId && { clientId: form.clientId }),
-      }).unwrap();
-      toast.success("Project created");
-    } catch (err) {
-      const msg = err?.data?.message || "Failed to create project";
-      toast.error(msg);
-      throw new Error(msg);
-    }
-  }, [createProject]);
+  const handleSaveProject = useCallback(
+    async (form) => {
+      try {
+        await createProject({
+          name: form.name,
+          description: form.description,
+          status: form.status,
+          ...(form.clientId && { clientId: form.clientId }),
+        }).unwrap();
+        toast.success("Project created");
+      } catch (err) {
+        const msg = err?.data?.message || "Failed to create project";
+        toast.error(msg);
+        throw new Error(msg);
+      }
+    },
+    [createProject],
+  );
 
   const handleConfirmDelete = useCallback(async () => {
     if (!confirmDelete) return;
@@ -55,14 +58,16 @@ export default function ProjectsPage() {
       await deleteProject(confirmDelete._id).unwrap();
       toast.success("Project deleted");
       setConfirmDelete(null);
-    } catch {
-      toast.error("Failed to delete project");
+    } catch (err) {
+      const msg = err?.data?.message || "Failed to delete project";
+      toast.error(msg);
+      throw new Error(msg);
     }
   }, [confirmDelete, deleteProject]);
 
   const handleNavigate = useCallback(
     (projectId) => router.push(`/dashboard/projects/${projectId}`),
-    [router]
+    [router],
   );
 
   if (isLoading) return <PageLoader />;
@@ -84,7 +89,7 @@ export default function ProjectsPage() {
               key={project._id}
               project={project}
               onDelete={setConfirmDelete}
-              onClick={() => handleNavigate(project._id)}
+              onClick={handleNavigate}
             />
           ))}
         </div>

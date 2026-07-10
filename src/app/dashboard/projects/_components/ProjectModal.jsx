@@ -28,8 +28,8 @@ export default memo(function ProjectModal({ isOpen, onClose, onSave, clients = [
 
   const clientOptions = clients.map((c) => ({
     value: c._id,
-    label: c.companyName || c.name,
-    sub: c.email,
+    label:  c.name || c.email ,
+    sub: c.companyName,
   }));
 
   const handleClientChange = (opt) => {

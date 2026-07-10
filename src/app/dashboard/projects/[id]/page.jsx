@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -15,6 +15,10 @@ import { EMPTY_KANBAN_COLUMNS } from "../_components/constants";
 
 import { useKanbanBoard } from "../_hooks/useKanbanBoard";
 import { useTaskPermissions } from "../_hooks/useTaskPermissions";
+import {
+  useSyncedViewingTask,
+  useTaskDeleteFlow,
+} from "../_hooks/useTaskKanbanPage";
 
 import {
   useGetProjectByIdQuery,
@@ -27,7 +31,7 @@ import {
   useUpdateTaskStatusMutation,
   useDeleteTaskMutation,
 } from "@/app/_Services/task/page";
-import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
+import { useGetAssigneesQuery } from "@/app/_Services/employee/page";
 import { useAllClientsQuery } from "@/app/_Services/Client/page";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 
@@ -41,20 +45,18 @@ export default function ProjectKanbanPage() {
   const [editingTask, setEditingTask] = useState(null);
   const [viewingTask, setViewingTask] = useState(null);
   const [defaultStatus, setDefaultStatus] = useState("todo");
-  const [confirmDeleteTask, setConfirmDeleteTask] = useState(null);
-  const [deletingTask, setDeletingTask] = useState(false);
 
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
-  const { isAdminRole, canMoveToDone } = useTaskPermissions(currentUser);
+  const { isAdminRole, canMoveToDone, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
 
   const { data: projectData, isLoading: projectLoading } = useGetProjectByIdQuery(id, { skip: !id });
   const project = projectData?.data;
 
   const { data: tasksData, isLoading: tasksLoading } = useGetTasksByProjectQuery(id, { skip: !id });
-  const { data: employeesData } = useAllEmployeesQuery();
+  const { data: employeesData } = useGetAssigneesQuery(undefined, { skip: !taskModalOpen });
   const employees = employeesData?.data || [];
-  const { data: clientsData } = useAllClientsQuery();
+  const { data: clientsData } = useAllClientsQuery(undefined, { skip: !editProjectOpen });
   const clients = clientsData?.data || [];
 
   const [updateProject] = useUpdateProjectMutation();
@@ -64,6 +66,7 @@ export default function ProjectKanbanPage() {
   const [deleteTask] = useDeleteTaskMutation();
 
   const serverColumns = tasksData?.data?.columns || EMPTY_KANBAN_COLUMNS;
+  const taskList = tasksData?.data?.tasks;
 
   const onStatusUpdate = useCallback(
     ({ id: taskId, status, order }) =>
@@ -73,18 +76,26 @@ export default function ProjectKanbanPage() {
 
   const { columns, handleDragEnd } = useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone });
 
-  useEffect(() => {
-    if (viewingTask && tasksData?.data?.tasks) {
-      const fresh = tasksData.data.tasks.find((t) => t._id === viewingTask._id);
-      if (fresh) setViewingTask(fresh);
-    }
-  }, [tasksData, viewingTask?._id]);
+  useSyncedViewingTask(taskList, viewingTask, setViewingTask);
+
+  const resolveProjectId = useCallback(() => id, [id]);
+  const onTaskDeleted = useCallback(() => setDetailModalOpen(false), []);
+  const {
+    confirmDelete: confirmDeleteTask,
+    setConfirmDelete: setConfirmDeleteTask,
+    deleting: deletingTask,
+    handleConfirmDelete: handleConfirmDeleteTask,
+  } = useTaskDeleteFlow({
+    deleteTask,
+    resolveProjectId,
+    onDeleted: onTaskDeleted,
+  });
 
   const { totalTasks, doneTasks, progress } = useMemo(() => {
-    const total = tasksData?.data?.tasks?.length || 0;
+    const total = taskList?.length || 0;
     const done = columns?.done?.length || 0;
     return { totalTasks: total, doneTasks: done, progress: total > 0 ? Math.round((done / total) * 100) : 0 };
-  }, [tasksData, columns?.done?.length]);
+  }, [taskList?.length, columns?.done?.length]);
 
   const handleAddTask = useCallback((statusId) => {
     setEditingTask(null);
@@ -95,6 +106,22 @@ export default function ProjectKanbanPage() {
   const handleOpenTask = useCallback((task) => {
     setViewingTask(task);
     setDetailModalOpen(true);
+  }, []);
+
+  const handleCloseDetail = useCallback(() => {
+    setDetailModalOpen(false);
+    setViewingTask(null);
+  }, []);
+
+  const handleCloseTaskModal = useCallback(() => {
+    setTaskModalOpen(false);
+    setEditingTask(null);
+  }, []);
+
+  const handleEditFromDetail = useCallback((task) => {
+    setEditingTask(task);
+    setDefaultStatus(task.status);
+    setTaskModalOpen(true);
   }, []);
 
   const handleSaveTask = useCallback(async (form) => {
@@ -120,21 +147,6 @@ export default function ProjectKanbanPage() {
     }
   }, [createTask, updateTask, id]);
 
-  const handleConfirmDeleteTask = useCallback(async () => {
-    if (!confirmDeleteTask) return;
-    setDeletingTask(true);
-    try {
-      await deleteTask({ id: confirmDeleteTask._id, projectId: id }).unwrap();
-      toast.success("Task deleted");
-      setConfirmDeleteTask(null);
-      setDetailModalOpen(false);
-    } catch {
-      toast.error("Failed to delete task");
-    } finally {
-      setDeletingTask(false);
-    }
-  }, [confirmDeleteTask, deleteTask, id]);
-
   const handleSaveProject = useCallback(async (form) => {
     try {
       await updateProject({
@@ -158,6 +170,13 @@ export default function ProjectKanbanPage() {
     }
   }, [updateProject, id, project?.status]);
 
+  const handleBack = useCallback(() => router.push("/dashboard/projects"), [router]);
+  const handleOpenEditProject = useCallback(() => setEditProjectOpen(true), []);
+  const handleCloseEditProject = useCallback(() => setEditProjectOpen(false), []);
+  const handleHeaderAddTask = useCallback(() => handleAddTask("todo"), [handleAddTask]);
+
+  const detailCanEdit = viewingTask ? canEditTask(viewingTask) : false;
+
   if (projectLoading) return <PageLoader />;
 
   return (
@@ -168,9 +187,9 @@ export default function ProjectKanbanPage() {
         totalTasks={totalTasks}
         doneTasks={doneTasks}
         isAdminRole={isAdminRole}
-        onBack={() => router.push("/dashboard/projects")}
-        onEdit={() => setEditProjectOpen(true)}
-        onAddTask={() => handleAddTask("todo")}
+        onBack={handleBack}
+        onEdit={handleOpenEditProject}
+        onAddTask={handleHeaderAddTask}
         onStatusChange={isAdminRole ? handleProjectStatusChange : undefined}
       />
 
@@ -189,7 +208,7 @@ export default function ProjectKanbanPage() {
 
       <TaskModal
         isOpen={taskModalOpen}
-        onClose={() => { setTaskModalOpen(false); setEditingTask(null); }}
+        onClose={handleCloseTaskModal}
         onSave={handleSaveTask}
         task={editingTask}
         employees={employees}
@@ -199,18 +218,20 @@ export default function ProjectKanbanPage() {
 
       <TaskDetailModal
         isOpen={detailModalOpen}
-        onClose={() => { setDetailModalOpen(false); setViewingTask(null); }}
+        onClose={handleCloseDetail}
         task={viewingTask}
         currentUser={currentUser}
         projectId={id}
         project={project}
-        onEdit={(task) => { setEditingTask(task); setDefaultStatus(task.status); setTaskModalOpen(true); }}
+        onEdit={handleEditFromDetail}
         onDelete={setConfirmDeleteTask}
+        canEdit={detailCanEdit}
+        canDelete={canDeleteTask}
       />
 
       <ProjectModal
         isOpen={editProjectOpen}
-        onClose={() => setEditProjectOpen(false)}
+        onClose={handleCloseEditProject}
         onSave={handleSaveProject}
         clients={clients}
         project={project}

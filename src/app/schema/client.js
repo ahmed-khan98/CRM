@@ -19,15 +19,9 @@ export const clientSchema = Yup.object().shape({
 
   image: Yup.mixed()
     .nullable()
-    // Required only on create
-    .test("required-on-create", "client image is required", (v, ctx) => {
-      const isEdit = !!ctx?.options?.context?.isEdit;
-      if (isEdit) return true;
-      return !!v; // must provide something on create
-    })
-    // Allow string (existing URL) in edit; otherwise must be a File of allowed type
+    .notRequired()
     .test("fileType", "Only JPG/PNG files are allowed", (v) => {
-      if (!v || typeof v === "string") return true; // URL allowed; empty handled above
+      if (!v || typeof v === "string") return true;
       return ["image/jpeg", "image/png"].includes(v.type);
     })
     .test("fileSize", "File size must be less than 2MB", (v) => {

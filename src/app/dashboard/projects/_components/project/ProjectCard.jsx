@@ -20,10 +20,12 @@ function ProjectCard({ project, onDelete, onClick }) {
   const clientName = getClientDisplayName(project.clientId);
   const deptName = project.clientId?.departmentId?.name;
 
+  const handleCardClick = () => onClick?.(project._id);
+
   return (
     <motion.div
       whileHover={{ y: -2 }}
-      onClick={onClick}
+      onClick={handleCardClick}
       className="group cursor-pointer rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm hover:shadow-md hover:border-zinc-200 transition-all flex flex-col gap-4"
     >
       <div className="flex items-start justify-between gap-1">

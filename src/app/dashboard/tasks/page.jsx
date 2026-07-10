@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ListTodo } from "lucide-react";
 import toast from "react-hot-toast";
@@ -17,6 +17,11 @@ import { groupTasksIntoColumns } from "@/app/dashboard/projects/_components/util
 
 import { useKanbanBoard } from "@/app/dashboard/projects/_hooks/useKanbanBoard";
 import { useTaskPermissions } from "@/app/dashboard/projects/_hooks/useTaskPermissions";
+import {
+  useDebouncedValue,
+  useSyncedViewingTask,
+  useTaskDeleteFlow,
+} from "@/app/dashboard/projects/_hooks/useTaskKanbanPage";
 
 import {
   useGetAllTasksQuery,
@@ -24,23 +29,24 @@ import {
   useUpdateTaskStatusMutation,
   useDeleteTaskMutation,
 } from "@/app/_Services/task/page";
-import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
+import { useGetAssigneesQuery } from "@/app/_Services/employee/page";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
+
+const resolveTaskProjectId = (task) => task?.projectId?._id || task?.projectId;
 
 export default function AllTasksPage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebouncedValue(search, 300);
   const [viewingTask, setViewingTask] = useState(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [taskModalOpen, setTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [defaultStatus, setDefaultStatus] = useState("todo");
-  const [confirmDelete, setConfirmDelete] = useState(null);
-  const [deleting, setDeleting] = useState(false);
 
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
-  const { canMoveToDone } = useTaskPermissions(currentUser);
+  const { canMoveToDone, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
 
   const { data: tasksData, isLoading } = useGetAllTasksQuery();
   const tasks = tasksData?.data || [];
@@ -49,12 +55,12 @@ export default function AllTasksPage() {
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
-  const { data: employeesData } = useAllEmployeesQuery(undefined, { skip: !taskModalOpen });
+  const { data: employeesData } = useGetAssigneesQuery(undefined, { skip: !taskModalOpen });
   const employees = employeesData?.data || [];
 
   const serverColumns = useMemo(
-    () => groupTasksIntoColumns(tasks, search),
-    [tasks, search]
+    () => groupTasksIntoColumns(tasks, debouncedSearch),
+    [tasks, debouncedSearch]
   );
 
   const onStatusUpdate = useCallback(
@@ -63,23 +69,40 @@ export default function AllTasksPage() {
         id,
         status,
         order,
-        projectId: task?.projectId?._id || task?.projectId,
+        projectId: resolveTaskProjectId(task),
       }).unwrap(),
     [updateTaskStatus]
   );
 
   const { columns, handleDragEnd } = useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone });
 
-  useEffect(() => {
-    if (viewingTask) {
-      const fresh = tasks.find((t) => t._id === viewingTask._id);
-      if (fresh) setViewingTask(fresh);
-    }
-  }, [tasks, viewingTask?._id]);
+  useSyncedViewingTask(tasks, viewingTask, setViewingTask);
+
+  const onTaskDeleted = useCallback(() => setDetailOpen(false), []);
+  const {
+    confirmDelete,
+    setConfirmDelete,
+    deleting,
+    handleConfirmDelete,
+  } = useTaskDeleteFlow({
+    deleteTask,
+    resolveProjectId: resolveTaskProjectId,
+    onDeleted: onTaskDeleted,
+  });
 
   const handleOpenTask = useCallback((task) => {
     setViewingTask(task);
     setDetailOpen(true);
+  }, []);
+
+  const handleCloseDetail = useCallback(() => {
+    setDetailOpen(false);
+    setViewingTask(null);
+  }, []);
+
+  const handleCloseTaskModal = useCallback(() => {
+    setTaskModalOpen(false);
+    setEditingTask(null);
   }, []);
 
   const handleProjectNavigate = useCallback((projectId) => {
@@ -93,7 +116,7 @@ export default function AllTasksPage() {
   }, []);
 
   const handleSaveTask = useCallback(async (form) => {
-    const projectId = editingTask?.projectId?._id || editingTask?.projectId;
+    const projectId = resolveTaskProjectId(editingTask);
     try {
       await updateTask({
         id: form.id,
@@ -113,42 +136,27 @@ export default function AllTasksPage() {
     }
   }, [updateTask, editingTask]);
 
-  const handleConfirmDelete = useCallback(async () => {
-    if (!confirmDelete) return;
-    setDeleting(true);
-    try {
-      await deleteTask({
-        id: confirmDelete._id,
-        projectId: confirmDelete.projectId?._id || confirmDelete.projectId,
-      }).unwrap();
-      toast.success("Task deleted");
-      setConfirmDelete(null);
-      setDetailOpen(false);
-    } catch {
-      toast.error("Failed to delete task");
-    } finally {
-      setDeleting(false);
-    }
-  }, [confirmDelete, deleteTask]);
-
   const totalTasks = tasks.length;
   const visibleTasks = useMemo(
     () => Object.values(columns).reduce((s, col) => s + col.length, 0),
     [columns]
   );
 
+  const detailCanEdit = viewingTask ? canEditTask(viewingTask) : false;
+
   if (isLoading) return <PageLoader />;
 
   return (
     <div className="flex flex-col gap-3 p-2">
-      <PageHeader name="All Tasks" icon={ListTodo} length={totalTasks} />
-
-      <TaskSearchBar
-        search={search}
-        onSearchChange={setSearch}
-        visibleCount={visibleTasks}
-        totalCount={totalTasks}
-      />
+      <PageHeader name="All Tasks" icon={ListTodo} length={totalTasks}>
+        <TaskSearchBar
+          embedded
+          search={search}
+          onSearchChange={setSearch}
+          visibleCount={visibleTasks}
+          totalCount={totalTasks}
+        />
+      </PageHeader>
 
       {visibleTasks > 0 ? (
         <KanbanBoard
@@ -163,24 +171,26 @@ export default function AllTasksPage() {
         <EmptyState
           icon={ListTodo}
           title="No tasks found"
-          description={search ? "Try a different search term." : "You have no tasks assigned yet."}
+          description={debouncedSearch ? "Try a different search term." : "You have no tasks assigned yet."}
         />
       )}
 
       <TaskDetailModal
         isOpen={detailOpen}
-        onClose={() => { setDetailOpen(false); setViewingTask(null); }}
+        onClose={handleCloseDetail}
         task={viewingTask}
         currentUser={currentUser}
-        projectId={viewingTask?.projectId?._id || viewingTask?.projectId}
+        projectId={resolveTaskProjectId(viewingTask)}
         onEdit={handleEditTask}
         onDelete={setConfirmDelete}
         onProjectClick={handleProjectNavigate}
+        canEdit={detailCanEdit}
+        canDelete={canDeleteTask}
       />
 
       <TaskModal
         isOpen={taskModalOpen}
-        onClose={() => { setTaskModalOpen(false); setEditingTask(null); }}
+        onClose={handleCloseTaskModal}
         onSave={handleSaveTask}
         task={editingTask}
         employees={employees}

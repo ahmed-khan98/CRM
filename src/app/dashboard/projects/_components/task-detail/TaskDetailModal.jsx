@@ -12,19 +12,23 @@ import { useTaskPermissions } from "../../_hooks/useTaskPermissions";
 
 function TaskDetailModal({
   isOpen, onClose, task, currentUser, onEdit, onDelete, projectId, onProjectClick, project,
+  canEdit: canEditProp, canDelete: canDeleteProp,
 }) {
-  const { currentUserId, isAdminRole } = useTaskPermissions(currentUser);
+  const { currentUserId, isAdminRole, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
 
   const permissions = useMemo(() => {
     if (!task) return {};
     const isCreator = task.createdBy?._id?.toString() === currentUserId?.toString();
     const isAssignee = task.assignees?.some((a) => a._id?.toString() === currentUserId?.toString());
+    const canEdit = canEditProp ?? canEditTask(task);
+    const canDelete = canDeleteProp ?? canDeleteTask;
     return {
-      canEdit: isCreator || isAdminRole,
-      canReplaceCreatorFile: isCreator || isAdminRole,
+      canEdit,
+      canDelete,
+      canReplaceCreatorFile: canEdit,
       canUploadAssigneeFile: isAssignee && !isCreator,
     };
-  }, [task, currentUserId, isAdminRole]);
+  }, [task, currentUserId, canEditTask, canDeleteTask, canEditProp, canDeleteProp]);
 
   if (!isOpen || !task) return null;
 
@@ -52,6 +56,7 @@ function TaskDetailModal({
             onEdit={onEdit}
             onDelete={onDelete}
             canEdit={permissions.canEdit}
+            canDelete={permissions.canDelete}
           />
 
           <TaskDetailMobileStrip
