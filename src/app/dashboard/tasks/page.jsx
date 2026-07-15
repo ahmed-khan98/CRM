@@ -46,7 +46,7 @@ export default function AllTasksPage() {
 
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
-  const { canMoveToDone, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
+  const { canMoveToDone, canMoveFromDone, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
 
   const { data: tasksData, isLoading } = useGetAllTasksQuery();
   const tasks = tasksData?.data || [];
@@ -74,7 +74,11 @@ export default function AllTasksPage() {
     [updateTaskStatus]
   );
 
-  const { columns, handleDragEnd } = useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone });
+  const { columns, handleDragEnd } = useKanbanBoard(serverColumns, {
+    onStatusUpdate,
+    canMoveToDone,
+    canMoveFromDone,
+  });
 
   useSyncedViewingTask(tasks, viewingTask, setViewingTask);
 

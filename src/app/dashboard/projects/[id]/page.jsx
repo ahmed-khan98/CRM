@@ -48,7 +48,7 @@ export default function ProjectKanbanPage() {
 
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
-  const { isAdminRole, canMoveToDone, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
+  const { isAdminRole, canMoveToDone, canMoveFromDone, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
 
   const { data: projectData, isLoading: projectLoading } = useGetProjectByIdQuery(id, { skip: !id });
   const project = projectData?.data;
@@ -74,7 +74,11 @@ export default function ProjectKanbanPage() {
     [updateTaskStatus, id]
   );
 
-  const { columns, handleDragEnd } = useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone });
+  const { columns, handleDragEnd } = useKanbanBoard(serverColumns, {
+    onStatusUpdate,
+    canMoveToDone,
+    canMoveFromDone,
+  });
 
   useSyncedViewingTask(taskList, viewingTask, setViewingTask);
 

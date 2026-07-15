@@ -14,7 +14,7 @@ function columnsSignature(cols) {
   ).join("|");
 }
 
-export function useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone }) {
+export function useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone, canMoveFromDone }) {
   const [localColumns, setLocalColumns] = useState(null);
   const prevSignatureRef = useRef("");
 
@@ -39,6 +39,16 @@ export function useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone })
 
       if (destination.droppableId === "done" && movedTask && !canMoveToDone(movedTask)) {
         toast.error("Only the creator or their department admin can mark it as Done");
+        return;
+      }
+
+      if (
+        source.droppableId === "done" &&
+        destination.droppableId !== "done" &&
+        movedTask &&
+        !canMoveFromDone?.(movedTask)
+      ) {
+        toast.error("Done tasks cannot be moved back. Contact the task creator.");
         return;
       }
 
@@ -69,7 +79,7 @@ export function useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone })
         toast.error(err?.data?.message || "Failed to update task status");
       }
     },
-    [columns, onStatusUpdate, canMoveToDone]
+    [columns, onStatusUpdate, canMoveToDone, canMoveFromDone]
   );
 
   return { columns, handleDragEnd };
