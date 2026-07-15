@@ -4,7 +4,7 @@ import { memo } from "react";
 import { Building2, Calendar, ExternalLink, FolderOpen, MessageSquare, Paperclip, User2 } from "lucide-react";
 import Image from "next/image";
 import { STATUS_CONFIG } from "../constants";
-import { formatDue, getClientDisplayName } from "../utils";
+import { formatDue, getClientDisplayName, getProjectDepartmentName } from "../utils";
 
 function TaskCardBadges({ task, showProject, onProjectClick }) {
   if (!showProject) return null;
@@ -96,7 +96,7 @@ function TaskCardFooter({ task }) {
 
 export default memo(function TaskCardContent({ task, showProject, priority, onProjectClick }) {
   const statusCfg = STATUS_CONFIG[task.status] || STATUS_CONFIG.todo;
-  const deptName = task.projectId?.clientId?.departmentId?.name;
+  const deptName = getProjectDepartmentName(task.projectId);
 
   return (
     <>

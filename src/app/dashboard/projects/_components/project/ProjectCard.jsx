@@ -4,7 +4,7 @@ import { memo, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Building2, Trash2, User2 } from "lucide-react";
 import { PROJECT_STATUS_CONFIG, PROJECT_STATUS_COUNTS } from "../constants";
-import { getClientDisplayName } from "../utils";
+import { getClientDisplayName, getProjectDepartmentName, hasProjectClient } from "../utils";
 import ProgressBar from "../ui/ProgressBar";
 
 function ProjectCard({ project, onDelete, onClick }) {
@@ -17,8 +17,10 @@ function ProjectCard({ project, onDelete, onClick }) {
     return { total: t, done: d, pct: t > 0 ? Math.round((d / t) * 100) : 0 };
   }, [counts.total, counts.done]);
 
+  const hasClient = hasProjectClient(project);
   const clientName = getClientDisplayName(project.clientId);
-  const deptName = project.clientId?.departmentId?.name;
+  const deptName = getProjectDepartmentName(project);
+  const creatorName = project.createdBy?.fullName;
 
   const handleCardClick = () => onClick?.(project._id);
 
@@ -47,8 +49,27 @@ function ProjectCard({ project, onDelete, onClick }) {
           </h3>
 
           <p className="flex items-center gap-1 text-xs text-zinc-500 mb-1">
-            <User2 className="h-3 w-3 shrink-0" />
-            <span className="truncate">{clientName}</span>
+            {hasClient ? (
+              <>
+                <User2 className="h-3 w-3 shrink-0" />
+                <span className="truncate">{clientName}</span>
+              </>
+            ) : deptName ? (
+              <>
+                <Building2 className="h-3 w-3 shrink-0" />
+                <span className="truncate">{deptName}</span>
+              </>
+            ) : creatorName ? (
+              <>
+                <User2 className="h-3 w-3 shrink-0" />
+                <span className="truncate">{creatorName}</span>
+              </>
+            ) : (
+              <>
+                <User2 className="h-3 w-3 shrink-0" />
+                <span className="truncate">No client</span>
+              </>
+            )}
           </p>
 
           {/* {project.description ? (

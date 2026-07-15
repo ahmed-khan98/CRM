@@ -17,14 +17,27 @@ export function formatRelativeTime(d) {
   return formatDate(d);
 }
 
+export function hasProjectClient(project) {
+  const client = project?.clientId;
+  if (!client) return false;
+  if (typeof client === "string") return true;
+  return Boolean(client._id || client.name || client.companyName);
+}
+
+export function getProjectDepartmentName(project) {
+  if (!project) return null;
+  if (project.clientId?.departmentId?.name) {
+    return project.clientId.departmentId.name;
+  }
+  return project.createdBy?.departmentId?.name || null;
+}
+
 export function getTaskProjectInfo(task, project) {
+  const resolvedProject = task?.projectId || project;
   return {
-    projectId: task?.projectId?._id || task?.projectId || project?._id,
-    projectName: task?.projectId?.name || project?.name || null,
-    departmentName:
-      task?.projectId?.clientId?.departmentId?.name
-      || project?.clientId?.departmentId?.name
-      || null,
+    projectId: resolvedProject?._id || resolvedProject || null,
+    projectName: resolvedProject?.name || null,
+    departmentName: getProjectDepartmentName(resolvedProject),
   };
 }
 
@@ -60,6 +73,7 @@ export function groupTasksIntoColumns(tasks, search = "") {
         task.assignees?.some((a) => a.fullName?.toLowerCase().includes(q)) ||
         task.createdBy?.fullName?.toLowerCase().includes(q) ||
         task.projectId?.clientId?.departmentId?.name?.toLowerCase().includes(q) ||
+        getProjectDepartmentName(task.projectId)?.toLowerCase().includes(q) ||
         task.createdBy?.departmentId?.name?.toLowerCase().includes(q);
       if (!matches) return;
     }

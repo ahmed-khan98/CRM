@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Select from "react-select";
 import { ArrowLeft, Building2, Pencil, Plus, User2 } from "lucide-react";
 import { PROJECT_STATUS_CONFIG, PROJECT_STATUS_OPTIONS, selectStyles } from "../constants";
-import { getClientDisplayName } from "../utils";
+import { getClientDisplayName, getProjectDepartmentName, hasProjectClient } from "../utils";
 import ProgressBar from "../ui/ProgressBar";
 
 function ProjectKanbanHeader({
@@ -20,8 +20,10 @@ function ProjectKanbanHeader({
   onStatusChange,
 }) {
   const statusCfg = PROJECT_STATUS_CONFIG[project?.status] || PROJECT_STATUS_CONFIG.active;
+  const hasClient = hasProjectClient(project);
   const clientName = getClientDisplayName(project?.clientId);
-  const deptName = project?.clientId?.departmentId?.name;
+  const deptName = getProjectDepartmentName(project);
+  const creatorName = project?.createdBy?.fullName;
 
   return (
     <div className="flex flex-col gap-3">
@@ -76,10 +78,22 @@ function ProjectKanbanHeader({
             <h1 className="text-lg font-bold text-zinc-900 leading-snug mb-1">{project?.name}</h1>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500 mb-2">
-              <span className="flex items-center gap-1">
-                <User2 className="h-3 w-3" />
-                {clientName}
-              </span>
+              {hasClient ? (
+                <span className="flex items-center gap-1">
+                  <User2 className="h-3 w-3" />
+                  {clientName}
+                </span>
+              ) : deptName ? (
+                <span className="flex items-center gap-1">
+                  <Building2 className="h-3 w-3" />
+                  {deptName}
+                </span>
+              ) : creatorName ? (
+                <span className="flex items-center gap-1">
+                  <User2 className="h-3 w-3" />
+                  {creatorName}
+                </span>
+              ) : null}
               {totalTasks > 0 && (
                 <span className="text-zinc-400">
                   {totalTasks} task{totalTasks !== 1 ? "s" : ""} · {doneTasks} completed
