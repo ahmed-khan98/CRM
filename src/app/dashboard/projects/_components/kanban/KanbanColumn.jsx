@@ -8,7 +8,7 @@ import TaskCard from "../task/TaskCard";
 
 function KanbanColumn({ column, tasks, onAddTask, onOpenTask, showProject, onProjectClick }) {
   return (
-    <div className={`flex min-w-[280px] w-[280px] shrink-0 flex-col rounded-xl border border-zinc-100 border-t-[3px] bg-zinc-50/80 shadow-sm ${column.accent}`}>
+    <div className={`flex min-w-0 w-full flex-col rounded-xl border border-zinc-100 border-t-[3px] bg-zinc-50/80 shadow-sm ${column.accent}`}>
       <div className="flex items-center justify-between px-3 pt-3 pb-2">
         <div className="flex items-center gap-2">
           <span className={`h-2 w-2 rounded-full ${column.dot}`} />
@@ -31,7 +31,7 @@ function KanbanColumn({ column, tasks, onAddTask, onOpenTask, showProject, onPro
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex flex-col gap-2 min-h-[120px] px-2 pb-2 transition-colors rounded-b-2xl ${snapshot.isDraggingOver ? "bg-zinc-100" : ""}`}
+            className={`flex flex-col gap-2 min-h-[120px] min-w-0 px-2 pb-2 transition-colors rounded-b-2xl ${snapshot.isDraggingOver ? "bg-zinc-100" : ""}`}
           >
             {tasks.map((task, index) => (
               <TaskCard key={task._id} task={task} index={index} onOpen={onOpenTask} showProject={showProject} onProjectClick={onProjectClick} />

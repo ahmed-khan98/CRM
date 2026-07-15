@@ -8,7 +8,7 @@ import KanbanColumn from "./KanbanColumn";
 function KanbanBoard({ columns, onDragEnd, onAddTask, onOpenTask, showProject = false, onProjectClick }) {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex gap-4 overflow-x-auto pb-4 items-start">
+      <div className="grid w-full min-w-0 grid-cols-1 items-start gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {KANBAN_COLUMNS.map((col) => (
           <KanbanColumn
             key={col.id}

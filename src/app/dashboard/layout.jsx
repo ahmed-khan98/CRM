@@ -269,7 +269,7 @@ const DashboardLayout = ({ children }) => {
             </div>
 
             <main
-              className={`flex-1 overflow-y-auto h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] transition-all duration-300 ease-in-out px-1 
+              className={`flex-1 min-w-0 overflow-y-auto overflow-x-hidden h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] transition-all duration-300 ease-in-out px-1 
             ${isMobile ? "w-full" : ""}`}
             >
               <AnnouncementMarquee />

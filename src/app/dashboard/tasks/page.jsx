@@ -151,7 +151,7 @@ export default function AllTasksPage() {
   if (isLoading) return <PageLoader />;
 
   return (
-    <div className="flex flex-col gap-3 p-2">
+    <div className="flex flex-col gap-3 p-2 min-w-0 max-w-full overflow-x-hidden">
       <PageHeader name="All Tasks" icon={ListTodo} length={totalTasks}>
         <TaskSearchBar
           embedded

@@ -21,7 +21,7 @@ function TaskCard({ task, index, onOpen, showProject = false, onProjectClick }) 
         >
           <motion.div
             onClick={handleClick}
-            className={`group cursor-pointer rounded-xl border bg-white p-3.5 shadow-sm transition-all select-none
+            className={`group cursor-pointer rounded-xl border bg-white p-3.5 shadow-sm transition-all select-none min-w-0 overflow-hidden
               ${snapshot.isDragging
                 ? "rotate-1 shadow-xl border-zinc-300 scale-[1.02]"
                 : "border-zinc-100 hover:border-zinc-200 hover:shadow-md"

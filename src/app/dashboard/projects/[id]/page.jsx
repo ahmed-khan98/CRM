@@ -184,7 +184,7 @@ export default function ProjectKanbanPage() {
   if (projectLoading) return <PageLoader />;
 
   return (
-    <div className="flex flex-col gap-5 p-2">
+    <div className="flex flex-col gap-5 p-2 min-w-0 max-w-full overflow-x-hidden">
       <ProjectKanbanHeader
         project={project}
         progress={progress}
