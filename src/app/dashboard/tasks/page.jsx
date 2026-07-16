@@ -189,7 +189,7 @@ export default function AllTasksPage() {
         onDelete={setConfirmDelete}
         onProjectClick={handleProjectNavigate}
         canEdit={detailCanEdit}
-        canDelete={canDeleteTask}
+        canDelete={viewingTask ? canDeleteTask(viewingTask) : false}
       />
 
       <TaskModal

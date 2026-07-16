@@ -4,6 +4,7 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Flag, Users, AlignLeft, Type, Paperclip, FileText } from "lucide-react";
 import Select from "react-select";
+import TaskRichTextEditor from "./ui/TaskRichTextEditor";
 import { TASK_PRIORITIES, TASK_STATUS_OPTIONS, selectStyles } from "./constants";
 
 const PRIORITIES = TASK_PRIORITIES;
@@ -88,7 +89,7 @@ export default memo(function TaskModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="relative w-full max-w-lg rounded-3xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-300/40 max-h-[90vh] overflow-y-auto"
+            className="relative w-full max-w-2xl rounded-3xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-300/40 max-h-[90vh] overflow-y-auto"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-4">
@@ -128,12 +129,11 @@ export default memo(function TaskModal({
                 <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-400">
                   <AlignLeft className="h-3 w-3" /> Description
                 </label>
-                <textarea
+                <TaskRichTextEditor
                   value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Add more context..."
-                  rows={2}
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-700 outline-none transition focus:border-zinc-800 focus:bg-white resize-none"
+                  onChange={(content) => setForm({ ...form, description: content })}
+                  placeholder="Add more context, steps, or notes..."
+                  minHeight={160}
                 />
               </div>
 

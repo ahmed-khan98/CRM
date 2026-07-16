@@ -15,6 +15,7 @@ import { EMPTY_KANBAN_COLUMNS } from "../_components/constants";
 
 import { useKanbanBoard } from "../_hooks/useKanbanBoard";
 import { useTaskPermissions } from "../_hooks/useTaskPermissions";
+import { useProjectPermissions } from "../_hooks/useProjectPermissions";
 import {
   useSyncedViewingTask,
   useTaskDeleteFlow,
@@ -48,7 +49,8 @@ export default function ProjectKanbanPage() {
 
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
-  const { isAdminRole, canMoveToDone, canMoveFromDone, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
+  const { canMoveToDone, canMoveFromDone, canEditTask, canDeleteTask } = useTaskPermissions(currentUser);
+  const { canManageProject } = useProjectPermissions(currentUser);
 
   const { data: projectData, isLoading: projectLoading } = useGetProjectByIdQuery(id, { skip: !id });
   const project = projectData?.data;
@@ -180,6 +182,7 @@ export default function ProjectKanbanPage() {
   const handleHeaderAddTask = useCallback(() => handleAddTask("todo"), [handleAddTask]);
 
   const detailCanEdit = viewingTask ? canEditTask(viewingTask) : false;
+  const canManageThisProject = canManageProject(project);
 
   if (projectLoading) return <PageLoader />;
 
@@ -190,11 +193,11 @@ export default function ProjectKanbanPage() {
         progress={progress}
         totalTasks={totalTasks}
         doneTasks={doneTasks}
-        isAdminRole={isAdminRole}
+        canManageProject={canManageThisProject}
         onBack={handleBack}
         onEdit={handleOpenEditProject}
         onAddTask={handleHeaderAddTask}
-        onStatusChange={isAdminRole ? handleProjectStatusChange : undefined}
+        onStatusChange={canManageThisProject ? handleProjectStatusChange : undefined}
       />
 
       {tasksLoading ? (
@@ -230,7 +233,7 @@ export default function ProjectKanbanPage() {
         onEdit={handleEditFromDetail}
         onDelete={setConfirmDeleteTask}
         canEdit={detailCanEdit}
-        canDelete={canDeleteTask}
+        canDelete={viewingTask ? canDeleteTask(viewingTask) : false}
       />
 
       <ProjectModal

@@ -4,7 +4,7 @@ import { memo } from "react";
 import { Building2, Calendar, ExternalLink, FolderOpen, MessageSquare, Paperclip, User2 } from "lucide-react";
 import Image from "next/image";
 import { STATUS_CONFIG } from "../constants";
-import { formatDue, getClientDisplayName, getProjectDepartmentName } from "../utils";
+import { formatDue, getClientDisplayName, getPlainTextFromHtml, getProjectDepartmentName } from "../utils";
 
 function TaskCardBadges({ task, showProject, onProjectClick }) {
   if (!showProject) return null;
@@ -126,7 +126,9 @@ export default memo(function TaskCardContent({ task, showProject, priority, onPr
       <p className="text-sm font-semibold text-zinc-800 leading-snug line-clamp-2 mb-1">{task.title}</p>
 
       {task.description && (
-        <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-1 mb-1">{task.description}</p>
+        <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-1 mb-1">
+          {getPlainTextFromHtml(task.description)}
+        </p>
       )}
 
       <TaskCardFooter task={task} />

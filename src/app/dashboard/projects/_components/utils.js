@@ -17,6 +17,14 @@ export function formatRelativeTime(d) {
   return formatDate(d);
 }
 
+export function getPlainTextFromHtml(html = "") {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function hasProjectClient(project) {
   const client = project?.clientId;
   if (!client) return false;

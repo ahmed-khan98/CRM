@@ -49,7 +49,10 @@ export function useTaskPermissions(currentUser) {
     [isAdminRole, isCreator, isCreatorInMyDept]
   );
 
-  const canDeleteTask = isAdminRole;
+  const canDeleteTask = useCallback(
+    (task) => isAdminRole || isCreator(task),
+    [isAdminRole, isCreator]
+  );
 
   return {
     currentUserId,

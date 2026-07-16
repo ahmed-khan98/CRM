@@ -7,7 +7,7 @@ import { PROJECT_STATUS_CONFIG, PROJECT_STATUS_COUNTS } from "../constants";
 import { getClientDisplayName, getProjectDepartmentName, hasProjectClient } from "../utils";
 import ProgressBar from "../ui/ProgressBar";
 
-function ProjectCard({ project, onDelete, onClick }) {
+function ProjectCard({ project, onDelete, onClick, canDelete = false }) {
   const counts = project.taskCounts || {};
   const statusCfg = PROJECT_STATUS_CONFIG[project.status] || PROJECT_STATUS_CONFIG.active;
 
@@ -80,14 +80,16 @@ function ProjectCard({ project, onDelete, onClick }) {
         </div>
 
         <div className="flex flex-col items-center gap-1 shrink-0">
-          <button
-            type="button"
-            title="Delete project"
-            onClick={(e) => { e.stopPropagation(); onDelete(project); }}
-            className="opacity-0 group-hover:opacity-100 flex h-7 w-7 items-center justify-center rounded-lg text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </button>
+          {canDelete && onDelete && (
+            <button
+              type="button"
+              title="Delete project"
+              onClick={(e) => { e.stopPropagation(); onDelete(project); }}
+              className="opacity-0 group-hover:opacity-100 flex h-7 w-7 items-center justify-center rounded-lg text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          )}
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-50 border border-zinc-100 text-zinc-400 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 transition-all">
             <ArrowRight className="h-3.5 w-3.5" />
           </div>

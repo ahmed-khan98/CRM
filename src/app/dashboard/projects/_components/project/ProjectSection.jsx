@@ -2,7 +2,14 @@
 
 import ProjectCard from "./ProjectCard";
 
-export default function ProjectSection({ title, description, projects, onDelete, onClick }) {
+export default function ProjectSection({
+  title,
+  description,
+  projects,
+  onDelete,
+  onClick,
+  canDeleteProject,
+}) {
   if (!projects?.length) return null;
 
   return (
@@ -19,6 +26,7 @@ export default function ProjectSection({ title, description, projects, onDelete,
             project={project}
             onDelete={onDelete}
             onClick={onClick}
+            canDelete={canDeleteProject ? canDeleteProject(project) : false}
           />
         ))}
       </div>

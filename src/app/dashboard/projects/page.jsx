@@ -20,6 +20,7 @@ import {
 } from "@/app/_Services/project/page";
 import { useAllClientsQuery } from "@/app/_Services/Client/page";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
+import { useProjectPermissions } from "./_hooks/useProjectPermissions";
 
 export default function ProjectsPage() {
   const router = useRouter();
@@ -29,6 +30,7 @@ export default function ProjectsPage() {
   const { data: projectsData, isLoading } = useGetAllProjectsQuery();
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
+  const { canManageProject } = useProjectPermissions(currentUser);
 
   const isGrouped = projectsData?.data?.grouped === true;
   const departmentProjects = isGrouped ? projectsData.data.departmentProjects || [] : [];
@@ -116,6 +118,7 @@ export default function ProjectsPage() {
               projects={departmentProjects}
               onDelete={setConfirmDelete}
               onClick={handleNavigate}
+              canDeleteProject={canManageProject}
             />
             <ProjectSection
               title="Other Department Projects"
@@ -123,6 +126,7 @@ export default function ProjectsPage() {
               projects={assignedProjects}
               onDelete={setConfirmDelete}
               onClick={handleNavigate}
+              canDeleteProject={canManageProject}
             />
           </div>
         ) : (
@@ -133,6 +137,7 @@ export default function ProjectsPage() {
                 project={project}
                 onDelete={setConfirmDelete}
                 onClick={handleNavigate}
+                canDelete={canManageProject(project)}
               />
             ))}
           </div>

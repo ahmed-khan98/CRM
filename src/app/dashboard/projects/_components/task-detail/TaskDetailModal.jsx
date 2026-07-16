@@ -8,6 +8,7 @@ import TaskDetailAttachments from "./TaskDetailAttachments";
 import TaskDetailComments from "./TaskDetailComments";
 import TaskDetailSidebar from "./TaskDetailSidebar";
 import TaskDetailMobileStrip from "./TaskDetailMobileStrip";
+import RichTextContent from "../ui/RichTextContent";
 import { useTaskPermissions } from "../../_hooks/useTaskPermissions";
 
 function TaskDetailModal({
@@ -21,7 +22,7 @@ function TaskDetailModal({
     const isCreator = task.createdBy?._id?.toString() === currentUserId?.toString();
     const isAssignee = task.assignees?.some((a) => a._id?.toString() === currentUserId?.toString());
     const canEdit = canEditProp ?? canEditTask(task);
-    const canDelete = canDeleteProp ?? canDeleteTask;
+    const canDelete = canDeleteProp ?? canDeleteTask(task);
     return {
       canEdit,
       canDelete,
@@ -69,10 +70,10 @@ function TaskDetailModal({
             <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3 sm:px-5 sm:py-4 flex flex-col gap-4 sm:gap-5">
               <div>
                 <SectionLabel text="Description" />
-                {task.description
-                  ? <p className="text-xs leading-relaxed font-normal text-zinc-600">{task.description}</p>
-                  : <p className="text-[11px] text-zinc-400 italic">No description provided.</p>
-                }
+                <RichTextContent
+                  html={task.description}
+                  emptyFallback={<p className="text-[11px] text-zinc-400 italic">No description provided.</p>}
+                />
               </div>
 
               <TaskDetailAttachments

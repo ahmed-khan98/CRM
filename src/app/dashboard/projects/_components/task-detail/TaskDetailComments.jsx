@@ -3,9 +3,11 @@
 import { memo, useState } from "react";
 import { MessageSquare, Send, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import TaskRichTextEditor from "../ui/TaskRichTextEditor";
 import SectionLabel from "../ui/SectionLabel";
 import Avatar from "../ui/Avatar";
-import { formatDate } from "../utils";
+import RichTextContent from "../ui/RichTextContent";
+import { formatDate, getPlainTextFromHtml } from "../utils";
 import { useAddCommentMutation, useDeleteCommentMutation } from "@/app/_Services/task/page";
 
 function CommentItem({ comment, currentUserId, isAdminRole, onDelete }) {
@@ -19,8 +21,8 @@ function CommentItem({ comment, currentUserId, isAdminRole, onDelete }) {
           <span className="text-xs font-medium text-zinc-800 capitalize">{comment.author?.fullName || "—"}</span>
           <span className="text-[10px] text-zinc-400">{formatDate(comment.createdAt)}</span>
         </div>
-        <div className="rounded-lg rounded-tl-sm border border-zinc-100 bg-zinc-50 px-2.5 py-1.5 text-xs leading-relaxed font-normal text-zinc-700">
-          {comment.text}
+        <div className="rounded-lg rounded-tl-sm border border-zinc-100 bg-zinc-50 px-2.5 py-1.5">
+          <RichTextContent html={comment.text} />
         </div>
       </div>
       {(isOwn || isAdminRole) && (
@@ -40,10 +42,10 @@ function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
   const [deleteComment] = useDeleteCommentMutation();
 
   const handleAddComment = async () => {
-    if (!commentText.trim()) return;
+    if (!getPlainTextFromHtml(commentText)) return;
     setSubmitting(true);
     try {
-      await addComment({ id: task._id, text: commentText.trim(), projectId }).unwrap();
+      await addComment({ id: task._id, text: commentText, projectId }).unwrap();
       setCommentText("");
     } catch {
       toast.error("Failed to add comment");
@@ -79,19 +81,25 @@ function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
         ))}
       </div>
 
-      <div className="flex items-end gap-2">
-        <textarea
+      <div className="flex flex-col gap-2">
+        <TaskRichTextEditor
+          compact
           value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleAddComment(); } }}
-          placeholder="Write a review or comment…"
-          rows={2}
-          className="flex-1 resize-none rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs font-normal text-zinc-700 placeholder-zinc-400 outline-none transition focus:border-zinc-400 focus:ring-1 focus:ring-zinc-200"
+          onChange={setCommentText}
+          placeholder="Write a review or comment..."
+          minHeight={90}
         />
-        <button type="button" onClick={handleAddComment} disabled={!commentText.trim() || submitting}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 text-white transition hover:bg-zinc-800 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed">
-          <Send className="h-3.5 w-3.5" />
-        </button>
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={handleAddComment}
+            disabled={!getPlainTextFromHtml(commentText) || submitting}
+            className="inline-flex items-center gap-1.5 rounded-2xl bg-zinc-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+          >
+            <Send className="h-3.5 w-3.5" />
+            {submitting ? "Posting..." : "Post comment"}
+          </button>
+        </div>
       </div>
     </div>
   );

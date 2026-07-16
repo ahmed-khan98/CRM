@@ -13,7 +13,7 @@ function ProjectKanbanHeader({
   progress,
   totalTasks,
   doneTasks = 0,
-  isAdminRole,
+  canManageProject = false,
   onBack,
   onEdit,
   onAddTask,
@@ -39,7 +39,7 @@ function ProjectKanbanHeader({
         <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              {isAdminRole && onStatusChange ? (
+              {canManageProject && onStatusChange ? (
                 <div className="w-[130px]">
                   <Select
                     options={PROJECT_STATUS_OPTIONS}
@@ -121,7 +121,7 @@ function ProjectKanbanHeader({
               </div>
             )}
             <div className="flex items-center gap-2">
-              {isAdminRole && (
+              {canManageProject && (
                 <button
                   type="button"
                   title="Edit project"
