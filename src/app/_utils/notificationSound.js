@@ -98,9 +98,11 @@ function getAudio() {
 /** Must run after a user click/key so the browser allows playback */
 export function unlockNotificationAudio() {
   const audio = getAudio();
-  if (!audio || unlocked) return;
+  if (!audio) return;
+  if (unlocked) return;
 
   audio.muted = true;
+  audio.volume = 0.01;
   const playPromise = audio.play();
   if (playPromise && typeof playPromise.then === "function") {
     playPromise
@@ -108,13 +110,16 @@ export function unlockNotificationAudio() {
         audio.pause();
         audio.currentTime = 0;
         audio.muted = false;
+        audio.volume = 0.65;
         unlocked = true;
       })
       .catch(() => {
         audio.muted = false;
+        audio.volume = 0.65;
       });
   } else {
     audio.muted = false;
+    audio.volume = 0.65;
     unlocked = true;
   }
 }
@@ -123,9 +128,9 @@ export function playNotificationSound() {
   if (typeof window === "undefined") return;
 
   try {
-    // Rebuild if older harsh chime was cached in memory this session
     if (audioEl && audioEl.dataset?.tone !== "pro-v2") {
       audioEl = null;
+      unlocked = false;
     }
 
     const audio = getAudio();
@@ -139,11 +144,17 @@ export function playNotificationSound() {
     const playPromise = audio.play();
     if (playPromise && typeof playPromise.catch === "function") {
       playPromise.catch(() => {
+        unlocked = false;
         unlockNotificationAudio();
         setTimeout(() => {
-          audio.currentTime = 0;
-          audio.play().catch(() => {});
-        }, 80);
+          try {
+            audio.muted = false;
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+          } catch {
+            /* ignore */
+          }
+        }, 100);
       });
     }
   } catch {
