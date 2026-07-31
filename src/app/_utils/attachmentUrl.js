@@ -1,8 +1,47 @@
 import Cookies from "js-cookie";
 
+const PROXY_EXTENSIONS = [
+  ".pdf",
+  ".zip",
+  ".rar",
+  ".psd",
+  ".ai",
+  ".eps",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".ppt",
+  ".pptx",
+];
+
 export function isPdfFile(url, filename) {
   const name = (filename || url || "").toLowerCase();
   return name.endsWith(".pdf") || name.includes(".pdf?");
+}
+
+/** Binary/raw files that must go through backend proxy (not direct Cloudinary) */
+export function needsProxyDownload(url, filename) {
+  const name = (filename || url || "").toLowerCase().split("?")[0];
+  return PROXY_EXTENSIONS.some((ext) => name.endsWith(ext));
+}
+
+/** Office / archive / design files cannot open in browser tab — force download */
+export function isDownloadOnlyFile(url, filename) {
+  const name = (filename || url || "").toLowerCase().split("?")[0];
+  return [
+    ".zip",
+    ".rar",
+    ".psd",
+    ".ai",
+    ".eps",
+    ".doc",
+    ".docx",
+    ".xls",
+    ".xlsx",
+    ".ppt",
+    ".pptx",
+  ].some((ext) => name.endsWith(ext));
 }
 
 export function getDirectOpenUrl(url) {

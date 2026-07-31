@@ -28,6 +28,7 @@ import {
   Coffee,
   FolderKanban,
   ListTodo,
+  Truck,
 } from "lucide-react";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
@@ -95,6 +96,26 @@ const LeftNav = ({ set }) => {
       icon: <ListTodo className="w-4 h-4" />,
       path: ["/dashboard/tasks"],
       roles: ["USER", "DEP_ADMIN"],
+    },
+    {
+      name: "Fleet",
+      icon: <Truck className="w-4 h-4" />,
+      path: ["/dashboard/fleet/vendors", "/dashboard/fleet/vehicles"],
+      roles: ["ADMIN", "SUBADMIN"],
+      submenu: [
+        {
+          name: "Vendors",
+          path: "/dashboard/fleet/vendors",
+          icon: <Building className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN"],
+        },
+        {
+          name: "Vehicles",
+          path: "/dashboard/fleet/vehicles",
+          icon: <Truck className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN"],
+        },
+      ],
     },
     {
       name: "leads",

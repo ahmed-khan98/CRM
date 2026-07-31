@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
@@ -39,6 +39,8 @@ import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 export default function ProjectKanbanPage() {
   const { id } = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const taskFromQuery = searchParams.get("task");
 
   const [taskModalOpen, setTaskModalOpen] = useState(false);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
@@ -83,6 +85,20 @@ export default function ProjectKanbanPage() {
   });
 
   useSyncedViewingTask(taskList, viewingTask, setViewingTask);
+
+  // Open specific task when landing from a notification (?task=id)
+  useEffect(() => {
+    if (!taskFromQuery || tasksLoading || !taskList?.length) return;
+
+    const match = taskList.find(
+      (t) => String(t._id) === String(taskFromQuery)
+    );
+    if (!match) return;
+
+    setViewingTask(match);
+    setDetailModalOpen(true);
+    router.replace(`/dashboard/projects/${id}`, { scroll: false });
+  }, [taskFromQuery, taskList, tasksLoading, id, router]);
 
   const resolveProjectId = useCallback(() => id, [id]);
   const onTaskDeleted = useCallback(() => setDetailModalOpen(false), []);

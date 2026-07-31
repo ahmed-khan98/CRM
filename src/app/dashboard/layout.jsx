@@ -27,6 +27,7 @@ import AnnouncementMarquee from "../_Components/Layout/AnnouncementMarquee";
 import Ip from "../_Components/ip";
 import Navbar from "../_Components/Layout/Navbar";
 import Footer from "../_Components/Layout/Footer";
+import NotificationSocketListener from "../_Components/Layout/NotificationSocketListener";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -232,6 +233,7 @@ const DashboardLayout = ({ children }) => {
   }
   return (
     <div className="app-container ">
+      <NotificationSocketListener />
       {isOnBreak 
        ? (
         <BreakOverlay startTime={breakInTime} onBreakOut={handleBreakOut} />

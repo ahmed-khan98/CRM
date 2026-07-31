@@ -11,6 +11,7 @@ import Main from "../../../app/Assets/zytronlogo.png";
 import { X, Menu, Clock, Timer, Activity, CheckCircle } from "lucide-react";
 import LeftNav from "./LeftNav";
 import ActionButtons from "./NavbarActions";
+import NotificationBell from "./NotificationBell";
 import {
   useGetLoggedUserQuery,
   useLogoutMutation,
@@ -310,7 +311,8 @@ const Navbar = () => {
           <div className="hidden lg:flex flex-1 justify-center px-4">
             <AttendanceStatus />
           </div>
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center gap-2">
+            <NotificationBell />
             <ActionButtons
               attendence={attendence}
               token={token}
@@ -363,7 +365,8 @@ const Navbar = () => {
         <div className="px-3 pt-3 shrink-0">
           <AttendanceStatus mobile />
         </div>
-        <div className="px-3 pt-2 pb-2 shrink-0">
+        <div className="px-3 pt-2 pb-2 shrink-0 flex flex-col gap-2">
+          <NotificationBell mobile />
           <ActionButtons
             mobile
             attendence={attendence}

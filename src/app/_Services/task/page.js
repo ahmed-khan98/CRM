@@ -21,6 +21,7 @@ const TaskApi = createApiAuction.injectEndpoints({
       query: () => "task/all",
       providesTags: ["allTasks"],
       keepUnusedDataFor: 180,
+      refetchOnMountOrArgChange: true,
     }),
 
     // ── Tasks for a specific project ──────────────────────────────
@@ -28,6 +29,7 @@ const TaskApi = createApiAuction.injectEndpoints({
       query: (projectId) => `task/project/${projectId}`,
       providesTags: (result, error, projectId) => [{ type: "tasks", id: projectId }],
       keepUnusedDataFor: 180,
+      refetchOnMountOrArgChange: true,
     }),
 
     // ── Create task (supports optional file attachment) ───────────
@@ -82,7 +84,10 @@ const TaskApi = createApiAuction.injectEndpoints({
     // ── Delete task ───────────────────────────────────────────────
     deleteTask: builder.mutation({
       query: ({ id }) => ({ url: `task/${id}`, method: "DELETE" }),
-      invalidatesTags: (result, error, { projectId }) => taskMutationTags(projectId),
+      invalidatesTags: (result, error, { projectId }) => [
+        ...taskMutationTags(projectId),
+        "notifications",
+      ],
     }),
 
     // ── Comments ──────────────────────────────────────────────────

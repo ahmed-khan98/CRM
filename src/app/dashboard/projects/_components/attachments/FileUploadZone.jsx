@@ -15,7 +15,13 @@ function FileUploadZone({
 }) {
   return (
     <>
-      <input ref={fileRef} type="file" className="hidden" onChange={onFileChange} />
+      <input
+        ref={fileRef}
+        type="file"
+        accept=".zip,.rar,.psd,.ai,.eps,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,image/*,video/*"
+        className="hidden"
+        onChange={onFileChange}
+      />
       {file ? (
         <div className="flex items-center gap-2 rounded-2xl border border-zinc-100 bg-zinc-50 px-3 py-2.5">
           <FileText className="h-4 w-4 shrink-0 text-zinc-400" />

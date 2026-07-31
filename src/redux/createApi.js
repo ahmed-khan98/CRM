@@ -32,6 +32,6 @@ const baseQueryWithAuthHandling = async (args, api, extraOptions) => {
 export const createApiAuction = createApi({
   reducerPath: 'auctions',
   baseQuery: baseQueryWithAuthHandling,
-  tagTypes: ['watch', 'tasks', 'allTasks', 'allProjects', 'project', 'assignees'],
+  tagTypes: ['watch', 'tasks', 'allTasks', 'allProjects', 'project', 'assignees', 'notifications', 'vendors', 'vehicles'],
   endpoints: () => ({}),
 });

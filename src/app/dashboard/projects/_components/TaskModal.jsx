@@ -76,7 +76,7 @@ export default memo(function TaskModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -89,7 +89,7 @@ export default memo(function TaskModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="relative w-full max-w-2xl rounded-3xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-300/40 max-h-[90vh] overflow-y-auto"
+            className="relative w-full max-w-5xl rounded-3xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-300/40"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-zinc-100 px-5 py-4">
@@ -109,99 +109,97 @@ export default memo(function TaskModal({
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 flex flex-col gap-4">
-              {/* Title */}
-              <div>
-                <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-400">
-                  <Type className="h-3 w-3" /> Title
-                </label>
-                <input
-                  required
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  placeholder="What needs to be done?"
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-semibold text-zinc-800 outline-none transition focus:border-zinc-800 focus:bg-white"
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-400">
-                  <AlignLeft className="h-3 w-3" /> Description
-                </label>
-                <TaskRichTextEditor
-                  value={form.description}
-                  onChange={(content) => setForm({ ...form, description: content })}
-                  placeholder="Add more context, steps, or notes..."
-                  minHeight={160}
-                />
-              </div>
-
-              {/* Priority + Status */}
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 p-5 md:grid-cols-[1.15fr_0.85fr]">
+              <div className="flex min-w-0 flex-col gap-4">
                 <div>
-                  <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-400">
-                    <Flag className="h-3 w-3" /> Priority
+                  <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-600">
+                    <Type className="h-3 w-3" /> Title
                   </label>
-                  <Select
-                    options={PRIORITIES}
-                    value={PRIORITIES.find((p) => p.value === form.priority)}
-                    onChange={(o) => setForm({ ...form, priority: o.value })}
-                    styles={selectStyles}
-                    isSearchable={false}
+                  <input
+                    required
+                    value={form.title}
+                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    placeholder="What needs to be done?"
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-semibold text-zinc-800 outline-none transition focus:border-zinc-800 focus:bg-white"
                   />
                 </div>
+
                 <div>
-                  <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-400">
-                    Status
+                  <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-600">
+                    <AlignLeft className="h-3 w-3" /> Description
                   </label>
-                  <Select
-                    options={statusOptions}
-                    value={statusOptions.find((s) => s.value === form.status)}
-                    onChange={(o) => setForm({ ...form, status: o.value })}
-                    styles={selectStyles}
-                    isSearchable={false}
+                  <TaskRichTextEditor
+                    value={form.description}
+                    onChange={(content) => setForm({ ...form, description: content })}
+                    placeholder="Add more context, steps, or notes..."
+                    minHeight={235}
                   />
                 </div>
               </div>
 
-              {/* Assignees */}
-              <div>
-                <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-400">
-                  <Users className="h-3 w-3" /> Assignees
-                </label>
-                <Select
-                  isMulti
-                  options={employeeOptions}
-                  value={selectedAssignees}
-                  onChange={(opts) => setForm({ ...form, assignees: opts.map((o) => o.value) })}
-                  styles={selectStyles}
-                  placeholder="Assign team members..."
-                />
-              </div>
+              <div className="flex min-w-0 flex-col gap-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-600">
+                      <Flag className="h-3 w-3" /> Priority
+                    </label>
+                    <Select
+                      options={PRIORITIES}
+                      value={PRIORITIES.find((p) => p.value === form.priority)}
+                      onChange={(o) => setForm({ ...form, priority: o.value })}
+                      styles={selectStyles}
+                      isSearchable={false}
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-600">
+                      Status
+                    </label>
+                    <Select
+                      options={statusOptions}
+                      value={statusOptions.find((s) => s.value === form.status)}
+                      onChange={(o) => setForm({ ...form, status: o.value })}
+                      styles={selectStyles}
+                      isSearchable={false}
+                    />
+                  </div>
+                </div>
 
-              {/* Due Date */}
-              <div>
-                <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-400">
-                  <Calendar className="h-3 w-3" /> Due Date
-                </label>
-                <input
-                  type="date"
-                  value={form.dueDate}
-                  onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-semibold text-zinc-700 outline-none transition focus:border-zinc-800 focus:bg-white cursor-pointer"
-                />
-              </div>
+                <div>
+                  <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-600">
+                    <Users className="h-3 w-3" /> Assignees
+                  </label>
+                  <Select
+                    isMulti
+                    options={employeeOptions}
+                    value={selectedAssignees}
+                    onChange={(opts) => setForm({ ...form, assignees: opts.map((o) => o.value) })}
+                    styles={selectStyles}
+                    placeholder="Assign team members..."
+                  />
+                </div>
 
-              {/* Attachment */}
-              <div>
-                <label className="mb-1.5 flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-zinc-400">
+                <div>
+                  <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-600">
+                    <Calendar className="h-3 w-3" /> Due Date
+                  </label>
+                  <input
+                    type="date"
+                    value={form.dueDate}
+                    onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
+                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-semibold text-zinc-700 outline-none transition focus:border-zinc-800 focus:bg-white cursor-pointer"
+                  />
+                </div>
+
+                <div>
+                <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-600">
                   <Paperclip className="h-3 w-3" /> Attachment{" "}
                   <span className="normal-case text-zinc-300">(optional)</span>
                 </label>
                 <input
                   ref={fileRef}
                   type="file"
+                  accept=".zip,.rar,.psd,.ai,.eps,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,image/*,video/*"
                   className="hidden"
                   onChange={(e) => setAttachmentFile(e.target.files?.[0] || null)}
                 />
@@ -228,7 +226,7 @@ export default memo(function TaskModal({
                     className="flex w-full items-center gap-2 rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-3 py-2.5 text-xs font-semibold text-zinc-400 transition hover:border-zinc-300 hover:text-zinc-600 cursor-pointer"
                   >
                     <Paperclip className="h-4 w-4" />
-                    Click to attach a file
+                    Attach a file (ZIP, RAR, PSD, AI supported)
                   </button>
                 )}
                 {isEdit && task?.creatorAttachment?.url && !attachmentFile && (
@@ -240,20 +238,20 @@ export default memo(function TaskModal({
                   </p>
                 )}
               </div>
+              </div>
 
-              {/* Actions */}
-              <div className="flex gap-2 pt-1">
+              <div className="flex justify-end gap-2 border-t border-zinc-100 pt-4 md:col-span-2">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 rounded-2xl border border-zinc-200 py-2.5 text-sm font-black text-zinc-600 transition hover:bg-zinc-50 cursor-pointer"
+                  className="min-w-32 rounded-2xl border border-zinc-200 px-6 py-2.5 text-sm font-black text-zinc-600 transition hover:bg-zinc-50 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 rounded-2xl bg-zinc-900 py-2.5 text-sm font-black text-white transition hover:bg-zinc-800 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                  className="min-w-40 rounded-2xl bg-zinc-900 px-6 py-2.5 text-sm font-black text-white transition hover:bg-zinc-800 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {saving ? "Saving..." : isEdit ? "Update Task" : "Create Task"}
                 </button>

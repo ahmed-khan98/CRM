@@ -25,33 +25,39 @@ export function useTaskPermissions(currentUser) {
 
   const isCreatorInMyDept = useCallback(
     (task) => {
-      if (!isDepAdmin || !currentUserDeptId) return false;
+      if (!currentUserDeptId) return false;
       const creatorDept =
         task?.createdBy?.departmentId?._id ||
         task?.createdBy?.departmentId;
       return creatorDept?.toString() === currentUserDeptId?.toString();
     },
-    [isDepAdmin, currentUserDeptId]
+    [currentUserDeptId]
   );
 
   const canEditTask = useCallback(
-    (task) => isAdminRole || isCreator(task),
-    [isAdminRole, isCreator]
+    (task) => isAdminRole || isCreator(task) || isCreatorInMyDept(task),
+    [isAdminRole, isCreator, isCreatorInMyDept]
   );
 
   const canMoveToDone = useCallback(
-    (task) => isAdminRole || isCreator(task) || isCreatorInMyDept(task),
-    [isAdminRole, isCreator, isCreatorInMyDept]
+    (task) =>
+      isAdminRole ||
+      isCreator(task) ||
+      (isDepAdmin && isCreatorInMyDept(task)),
+    [isAdminRole, isCreator, isDepAdmin, isCreatorInMyDept]
   );
 
   const canMoveFromDone = useCallback(
-    (task) => isAdminRole || isCreator(task) || isCreatorInMyDept(task),
-    [isAdminRole, isCreator, isCreatorInMyDept]
+    (task) =>
+      isAdminRole ||
+      isCreator(task) ||
+      (isDepAdmin && isCreatorInMyDept(task)),
+    [isAdminRole, isCreator, isDepAdmin, isCreatorInMyDept]
   );
 
   const canDeleteTask = useCallback(
-    (task) => isAdminRole || isCreator(task),
-    [isAdminRole, isCreator]
+    (task) => isAdminRole || isCreator(task) || isCreatorInMyDept(task),
+    [isAdminRole, isCreator, isCreatorInMyDept]
   );
 
   return {

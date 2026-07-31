@@ -38,6 +38,7 @@ export default function TaskRichTextEditor({
   placeholder = "Write here...",
   compact = false,
   minHeight = compact ? 100 : 140,
+  maxHeight = minHeight,
 }) {
   const editor = useEditor({
     immediatelyRender: false,
@@ -56,8 +57,11 @@ export default function TaskRichTextEditor({
         class:
           "px-3 py-2.5 text-sm text-zinc-700 leading-relaxed focus:outline-none " +
           "[&_p]:mb-2 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 " +
-          "[&_blockquote]:border-l-2 [&_blockquote]:border-zinc-200 [&_blockquote]:pl-3 [&_blockquote]:text-zinc-500",
-        style: `min-height: ${minHeight}px`,
+          "[&_blockquote]:border-l-2 [&_blockquote]:border-zinc-200 [&_blockquote]:pl-3 [&_blockquote]:text-zinc-500 " +
+          "[&::-webkit-scrollbar]:hidden",
+        style:
+          `min-height: ${minHeight}px; max-height: ${maxHeight}px; ` +
+          "overflow-y: auto; scrollbar-width: none;",
       },
     },
   });

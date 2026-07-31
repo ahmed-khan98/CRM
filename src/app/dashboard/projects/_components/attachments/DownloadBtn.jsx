@@ -3,7 +3,7 @@
 import { memo, useState } from "react";
 import { Download, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { fetchAttachmentBlob, isPdfFile } from "@/app/_utils/attachmentUrl";
+import { fetchAttachmentBlob, needsProxyDownload } from "@/app/_utils/attachmentUrl";
 
 function DownloadBtn({ url, filename, publicId }) {
   const [loading, setLoading] = useState(false);
@@ -12,9 +12,12 @@ function DownloadBtn({ url, filename, publicId }) {
     if (!url) return;
     setLoading(true);
     try {
-      const blob = isPdfFile(url, filename)
+      const blob = needsProxyDownload(url, filename)
         ? await fetchAttachmentBlob(url, { disposition: "attachment", filename, publicId })
-        : await fetch(url.replace(/^http:\/\//i, "https://")).then((r) => r.blob());
+        : await fetch(url.replace(/^http:\/\//i, "https://")).then((r) => {
+            if (!r.ok) throw new Error("Download failed");
+            return r.blob();
+          });
 
       const objUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
