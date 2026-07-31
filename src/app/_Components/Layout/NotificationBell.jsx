@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
 import moment from "moment-timezone";
 import { Bell } from "lucide-react";
 import {
@@ -12,13 +11,37 @@ import {
   useMarkAllNotificationsReadMutation,
 } from "@/app/_Services/notification/page";
 import { unlockNotificationAudio } from "@/app/_utils/notificationSound";
-import { invalidateTaskBoardTags } from "@/app/_utils/invalidateTaskBoard";
 
-const getId = (value) => value?._id || value || null;
+const OPEN_TASK_KEY = "crm:openTaskFromNotification";
+
+const getId = (value) => {
+  if (!value) return null;
+  if (typeof value === "string" || typeof value === "number") return String(value);
+  const id = value._id ?? value.id;
+  return id ? String(id) : null;
+};
+
+export const readPendingOpenTask = () => {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(OPEN_TASK_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const clearPendingOpenTask = () => {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.removeItem(OPEN_TASK_KEY);
+  } catch {
+    /* ignore */
+  }
+};
 
 const NotificationBell = ({ mobile = false }) => {
   const router = useRouter();
-  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const panelRef = useRef(null);
 
@@ -38,14 +61,14 @@ const NotificationBell = ({ mobile = false }) => {
 
   useEffect(() => {
     if (!open) return;
-    const onClickOutside = (e) => {
+    const onPointerDownOutside = (e) => {
       if (panelRef.current && !panelRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
-    // Use click (not mousedown) so item onClick runs first
-    document.addEventListener("click", onClickOutside);
-    return () => document.removeEventListener("click", onClickOutside);
+    // pointerdown outside — item uses onClick so navigation isn't cancelled
+    document.addEventListener("pointerdown", onPointerDownOutside);
+    return () => document.removeEventListener("pointerdown", onPointerDownOutside);
   }, [open]);
 
   const handleOpen = useCallback(() => {
@@ -70,6 +93,7 @@ const NotificationBell = ({ mobile = false }) => {
       const projectId = getId(n.projectId);
       const taskId = getId(n.taskId);
       const isStatusNotify = n?.type === "TASK_STATUS";
+      const openModal = Boolean(taskId && !isStatusNotify);
 
       if (!n?.isRead) {
         markRead(n._id).catch(() => {});
@@ -77,17 +101,28 @@ const NotificationBell = ({ mobile = false }) => {
 
       if (!projectId) return;
 
-      invalidateTaskBoardTags(dispatch, projectId);
+      // Persist intent so project page can open modal even if ?task= is lost
+      try {
+        sessionStorage.setItem(
+          OPEN_TASK_KEY,
+          JSON.stringify({
+            projectId,
+            taskId: openModal ? taskId : null,
+            openModal,
+            at: Date.now(),
+          })
+        );
+      } catch {
+        /* ignore */
+      }
 
-      // Status change → project board only (no task modal)
-      // Assign / comment → open that task
-      const href =
-        taskId && !isStatusNotify
-          ? `/dashboard/projects/${projectId}?task=${taskId}`
-          : `/dashboard/projects/${projectId}`;
+      const href = openModal
+        ? `/dashboard/projects/${projectId}?task=${taskId}`
+        : `/dashboard/projects/${projectId}`;
+
       router.push(href);
     },
-    [markRead, router, dispatch]
+    [markRead, router]
   );
 
   return (

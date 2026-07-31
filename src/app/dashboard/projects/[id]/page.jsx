@@ -35,6 +35,10 @@ import {
 import { useGetAssigneesQuery } from "@/app/_Services/employee/page";
 import { useAllClientsQuery } from "@/app/_Services/Client/page";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
+import {
+  readPendingOpenTask,
+  clearPendingOpenTask,
+} from "@/app/_Components/Layout/NotificationBell";
 
 export default function ProjectKanbanPage() {
   const { id } = useParams();
@@ -57,7 +61,8 @@ export default function ProjectKanbanPage() {
   const { data: projectData, isLoading: projectLoading } = useGetProjectByIdQuery(id, { skip: !id });
   const project = projectData?.data;
 
-  const { data: tasksData, isLoading: tasksLoading } = useGetTasksByProjectQuery(id, { skip: !id });
+  const { data: tasksData, isLoading: tasksLoading, isFetching: tasksFetching } =
+    useGetTasksByProjectQuery(id, { skip: !id });
   const { data: employeesData } = useGetAssigneesQuery(undefined, { skip: !taskModalOpen });
   const employees = employeesData?.data || [];
   const { data: clientsData } = useAllClientsQuery(undefined, { skip: !editProjectOpen });
@@ -70,7 +75,13 @@ export default function ProjectKanbanPage() {
   const [deleteTask] = useDeleteTaskMutation();
 
   const serverColumns = tasksData?.data?.columns || EMPTY_KANBAN_COLUMNS;
-  const taskList = tasksData?.data?.tasks;
+  const taskList = useMemo(() => {
+    const flat = tasksData?.data?.tasks;
+    if (Array.isArray(flat) && flat.length) return flat;
+    const cols = tasksData?.data?.columns;
+    if (!cols) return flat || [];
+    return Object.values(cols).flat().filter(Boolean);
+  }, [tasksData]);
 
   const onStatusUpdate = useCallback(
     ({ id: taskId, status, order }) =>
@@ -86,19 +97,55 @@ export default function ProjectKanbanPage() {
 
   useSyncedViewingTask(taskList, viewingTask, setViewingTask);
 
-  // Open specific task when landing from a notification (?task=id)
+  // Open specific task when landing from a notification (?task=id or sessionStorage)
   useEffect(() => {
-    if (!taskFromQuery || tasksLoading || !taskList?.length) return;
+    if (!id || tasksLoading) return;
+
+    const pending = readPendingOpenTask();
+    const pendingForThisProject =
+      pending && String(pending.projectId) === String(id) ? pending : null;
+
+    const targetTaskId =
+      taskFromQuery ||
+      (pendingForThisProject?.openModal ? pendingForThisProject.taskId : null);
+
+    if (!targetTaskId) {
+      if (pendingForThisProject && !pendingForThisProject.openModal) {
+        clearPendingOpenTask();
+      }
+      return;
+    }
 
     const match = taskList.find(
-      (t) => String(t._id) === String(taskFromQuery)
+      (t) => String(t._id) === String(targetTaskId)
     );
-    if (!match) return;
 
-    setViewingTask(match);
-    setDetailModalOpen(true);
-    router.replace(`/dashboard/projects/${id}`, { scroll: false });
-  }, [taskFromQuery, taskList, tasksLoading, id, router]);
+    if (match) {
+      setViewingTask(match);
+      setDetailModalOpen(true);
+      clearPendingOpenTask();
+      if (taskFromQuery) {
+        router.replace(`/dashboard/projects/${id}`, { scroll: false });
+      }
+      return;
+    }
+
+    // Still refetching — wait for fresh list before giving up (fixes dashboard cold load)
+    if (tasksFetching || tasksData === undefined) return;
+
+    clearPendingOpenTask();
+    if (taskFromQuery) {
+      router.replace(`/dashboard/projects/${id}`, { scroll: false });
+    }
+  }, [
+    id,
+    taskFromQuery,
+    taskList,
+    tasksLoading,
+    tasksFetching,
+    tasksData,
+    router,
+  ]);
 
   const resolveProjectId = useCallback(() => id, [id]);
   const onTaskDeleted = useCallback(() => setDetailModalOpen(false), []);
