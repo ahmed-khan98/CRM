@@ -1,20 +1,10 @@
 import { useImportTmEmailListMutation } from "@/app/_Services/TmEmailList/page";
-import { motion, AnimatePresence } from "framer-motion";
-import { Info, Upload, X } from "lucide-react";
+import { Info, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
-
-const modalVariants = {
-  hidden: { opacity: 0, scale: 0.92, y: 24 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { type: "spring", damping: 24, stiffness: 260 },
-  },
-  exit: { opacity: 0, scale: 0.92, y: 16, transition: { duration: 0.18 } },
-};
+import ModalShell from "./ModalShell";
+import { fleet } from "../fleet/fleetTheme";
 
 const formatKB = (bytes = 0) => (bytes / 1024).toFixed(2) + " KB";
 
@@ -23,7 +13,7 @@ export default function TmEmailListModal({ ...props }) {
   const [listName, setListName] = useState("");
   const [isImporting, setIsImporting] = useState(false);
   const fileInputRef = useRef(null);
-  const [importEmailList, { isLoading }] = useImportTmEmailListMutation();
+  const [importEmailList] = useImportTmEmailListMutation();
   const percent = useSelector((s) => s.upload.TmImportPercent);
 
   const handleFileSelect = (e) => {
@@ -50,10 +40,9 @@ export default function TmEmailListModal({ ...props }) {
         setIsImporting(false);
         props.refetch?.();
       } else {
-        toast.error(response.message || "Failed to process lists");
+        toast.error(res?.message || "Failed to process lists");
       }
     } catch (err) {
-      console.log(err, "err");
       setIsImporting(false);
       toast.error(err?.data?.message || "Failed to import file");
     }
@@ -67,150 +56,94 @@ export default function TmEmailListModal({ ...props }) {
   };
 
   return (
-    <AnimatePresence>
-      {props?.isOpen && (
-        <motion.div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={handleClose}
-        >
-          <motion.div
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="bg-white rounded-3xl shadow-2xl w-full max-w-xl max-h-[92vh] flex flex-col overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+    <ModalShell
+      isOpen={props?.isOpen}
+      onClose={handleClose}
+      title="Import Email List (CSV/XLSX)"
+      maxWidthClass="max-w-xl"
+      footer={
+        <>
+          <button
+            type="button"
+            onClick={handleClose}
+            disabled={isImporting}
+            className={fleet.modalCancelBtn}
           >
-            {/* Header */}
-            <div className="bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 px-4 md:px-8 py-3 text-white relative overflow-hidden shrink-0">
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-white/20 rounded-2xl backdrop-blur-sm">
-                    <Upload className="w-5 h-5" />
-                  </div>
-                  <h2 className="text-lg md:text-xl font-bold">
-                    Import Email List (CSV/XLSX)
-                  </h2>
-                </div>
-                <motion.button
-                  whileHover={{ scale: 1.08, rotate: 90 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleClose}
-                  disabled={isImporting}
-                  className="p-2 hover:bg-white/20 rounded-full transition-colors disabled:opacity-50 cursor-pointer"
-                >
-                  <X className="w-6 h-6" />
-                </motion.button>
-              </div>
-            </div>
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={!selectedFile || isImporting}
+            className={`${fleet.modalPrimaryBtn} inline-flex items-center gap-2`}
+          >
+            <Upload className="w-4 h-4" />
+            {isImporting ? "Importing…" : "Import File"}
+          </button>
+        </>
+      }
+    >
+      <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 px-4 py-3 text-blue-200 flex items-start gap-3">
+        <Info className="w-5 h-5 mt-0.5 shrink-0" />
+        <div className="text-sm">
+          <div className="font-semibold">Heads up</div>
+          <p className="opacity-90">
+            Upload a <b>CSV/XLSX</b> with headers exactly like your sample:
+            <i> email</i>.
+          </p>
+        </div>
+      </div>
 
-            {/* Body */}
-            <div className="px-6 md:px-8 py-5 flex-1 min-h-0 overflow-y-auto">
-              {/* Info alert */}
-              <div className="mb-4 rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-blue-800 flex items-start gap-3">
-                <Info className="w-5 h-5 mt-0.5 shrink-0" />
-                <div className="text-sm">
-                  <div className="font-semibold">Heads up</div>
-                  <p className="opacity-90">
-                    Upload a <b>CSV/XLSX</b> with headers exactly like your
-                    sample:
-                    <i> email</i>.
-                  </p>
-                </div>
-              </div>
+      <div>
+        <label className={fleet.modalLabel}>List Name</label>
+        <input
+          type="text"
+          placeholder="enter email list name"
+          className={fleet.modalInput}
+          onChange={(e) => setListName(e.target.value)}
+        />
+      </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-800 mb-1">
-                  List Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="enter email list name"
-                  className={`w-full px-4 py-3 my-2 capitalize text-sm border-1 border-gray-200 focus:border-zinc-800 rounded-xl focus:outline-none transition-colors`}
-                  onChange={(e) => setListName(e.target.value)}
-                />
-              </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
 
-              {/* Hidden file input */}
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
+      <button
+        type="button"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={isImporting}
+        className="w-full px-4 py-2.5 rounded-xl border border-white/[0.1] bg-[#161b22] text-sm font-semibold text-zinc-200 hover:bg-white/5 transition-colors disabled:opacity-60"
+      >
+        {selectedFile ? `Selected: ${selectedFile.name}` : "Choose CSV/XLSX File"}
+      </button>
 
-              {/* Choose file button */}
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isImporting}
-                className=" cursor-pointer w-full mb-3 px-4 py-3 border border-gray-300 rounded-2xl font-semibold hover:bg-gray-50 transition-colors disabled:opacity-60"
-              >
-                {selectedFile
-                  ? `Selected: ${selectedFile.name}`
-                  : "Choose CSV/XLSX File"}
-              </button>
-
-              {/* Selected file alert */}
-              {selectedFile && (
-                <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
-                  <div className="text-sm">
-                    File selected:{" "}
-                    <span className="font-semibold">{selectedFile.name}</span> (
-                    {formatKB(selectedFile.size)})
-                  </div>
-                </div>
-              )}
-
-              {/* Progress */}
-              {isImporting && (
-                <div className="mb-2">
-                  <div className="text-sm text-gray-600 mb-2">
-                    Importing leads… {percent}%
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
-                    <div
-                      className="h-2 bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 transition-all duration-100"
-                      style={{ width: `${percent}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="px-6 md:px-8 py-4 flex gap-3 border-t border-gray-100">
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleClose}
-                disabled={isImporting}
-                className="flex-1 px-6 py-2.5 border border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50 cursor-pointer"
-              >
-                Cancel
-              </motion.button>
-
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleSubmit}
-                disabled={!selectedFile || isImporting}
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-[#8b1ffd] hover:to-[#8b1ffd] disabled:opacity-50 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Upload className="w-4 h-4" />
-                {isImporting ? "Importing…" : "Import File"}
-              </motion.button>
-            </div>
-          </motion.div>
-        </motion.div>
+      {selectedFile && (
+        <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-emerald-300">
+          <div className="text-sm">
+            File selected:{" "}
+            <span className="font-semibold">{selectedFile.name}</span> (
+            {formatKB(selectedFile.size)})
+          </div>
+        </div>
       )}
-    </AnimatePresence>
+
+      {isImporting && (
+        <div>
+          <div className="text-sm text-zinc-400 mb-2">
+            Importing leads… {percent}%
+          </div>
+          <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+            <div
+              className="h-2 bg-zinc-100 transition-all duration-100"
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+        </div>
+      )}
+    </ModalShell>
   );
 }

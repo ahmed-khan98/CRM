@@ -18,16 +18,16 @@ function CommentItem({ comment, currentUserId, isAdminRole, onDelete }) {
       <Avatar user={comment.author} size={7} />
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2 mb-1">
-          <span className="text-xs font-medium text-zinc-800 capitalize">{comment.author?.fullName || "—"}</span>
-          <span className="text-[10px] text-zinc-400">{formatDate(comment.createdAt)}</span>
+          <span className="text-xs font-medium text-zinc-200 capitalize">{comment.author?.fullName || "—"}</span>
+          <span className="text-[10px] text-zinc-500">{formatDate(comment.createdAt)}</span>
         </div>
-        <div className="rounded-lg rounded-tl-sm border border-zinc-100 bg-zinc-50 px-2.5 py-1.5">
+        <div className="rounded-lg rounded-tl-sm border border-white/[0.08] bg-[#161b22] px-2.5 py-1.5 text-zinc-300 [&_p]:text-zinc-300">
           <RichTextContent html={comment.text} />
         </div>
       </div>
       {(isOwn || isAdminRole) && (
         <button type="button" onClick={() => onDelete(comment._id)}
-          className="self-start mt-6 text-zinc-300 opacity-0 group-hover:opacity-100 hover:text-red-500 transition cursor-pointer">
+          className="self-start mt-6 text-zinc-600 opacity-0 group-hover:opacity-100 hover:text-red-400 transition cursor-pointer">
           <Trash2 className="h-3 w-3" />
         </button>
       )}
@@ -68,7 +68,7 @@ function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
 
       <div className="flex flex-col gap-3 mb-3">
         {!task.comments?.length && (
-          <p className="text-[11px] italic text-zinc-400 py-1">No comments yet. Be the first to review.</p>
+          <p className="text-[11px] italic text-zinc-500 py-1">No comments yet. Be the first to review.</p>
         )}
         {task.comments?.map((c) => (
           <CommentItem
@@ -82,19 +82,21 @@ function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <TaskRichTextEditor
-          compact
-          value={commentText}
-          onChange={setCommentText}
-          placeholder="Write a review or comment..."
-          minHeight={90}
-        />
+        <div className="rounded-xl border border-white/[0.1] bg-[#161b22] overflow-hidden [&_.ProseMirror]:text-zinc-200 [&_button]:text-zinc-400 [&_button:hover]:bg-white/10 [&_button:hover]:text-zinc-100 [&_button.bg-zinc-900]:bg-white/15 [&_button.bg-zinc-900]:text-white">
+          <TaskRichTextEditor
+            compact
+            value={commentText}
+            onChange={setCommentText}
+            placeholder="Write a review or comment..."
+            minHeight={90}
+          />
+        </div>
         <div className="flex justify-end">
           <button
             type="button"
             onClick={handleAddComment}
             disabled={!getPlainTextFromHtml(commentText) || submitting}
-            className="inline-flex items-center gap-1.5 rounded-2xl bg-zinc-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-4 py-2 text-xs font-bold text-zinc-950 transition hover:bg-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
           >
             <Send className="h-3.5 w-3.5" />
             {submitting ? "Posting..." : "Post comment"}

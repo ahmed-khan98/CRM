@@ -8,47 +8,56 @@
   --foreground: #171717;
 }
 
-/* Taake user ko hamesha scrollbar nazar aaye */
+/* Taake user ko hamesha scrollbar nazar aaye (forms / modals) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #a1a1aa #f4f4f5;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f4f4f5;
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #a9a9ac; /* Zinc-300 */
+  background: #a1a1aa;
   border-radius: 10px;
+  border: 2px solid #f4f4f5;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa; /* Zinc-400 */
+  background: #71717a;
 }
 
-/* Dark panels (notification dropdown, etc.) */
+/* Dark panels (vendor/vehicle modals, notification dropdown, etc.) */
 .custom-scrollbar-dark {
   scrollbar-width: thin;
-  scrollbar-color: #52525b transparent;
+  scrollbar-color: #71717a #161b22;
 }
 
 .custom-scrollbar-dark::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 .custom-scrollbar-dark::-webkit-scrollbar-track {
-  background: transparent;
+  background: #161b22;
   border-radius: 10px;
 }
 
 .custom-scrollbar-dark::-webkit-scrollbar-thumb {
   background: #52525b;
   border-radius: 10px;
+  border: 2px solid #161b22;
 }
 
 .custom-scrollbar-dark::-webkit-scrollbar-thumb:hover {
-  background: #71717a;
+  background: #a1a1aa;
 }
 
 @theme inline {

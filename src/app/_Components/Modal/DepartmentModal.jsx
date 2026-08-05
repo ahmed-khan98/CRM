@@ -1,15 +1,15 @@
 "use client";
 
 import * as Yup from "yup";
-import { motion, AnimatePresence } from "framer-motion";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { X, Building } from "lucide-react";
+import { Formik, Form } from "formik";
 import { toast } from "react-hot-toast";
 import {
   useCreateDepartmentMutation,
   useUpdateDepartmentMutation,
 } from "@/app/_Services/department/page";
-import ModalHeader from "./ModalHeader/page";
+import ModalShell from "./ModalShell";
+import InputField from "../Form/InputField";
+import { fleet } from "../fleet/fleetTheme";
 
 const departSchema = Yup.object().shape({
   name: Yup.string().required("department name is required"),
@@ -51,126 +51,54 @@ const DepartmentModal = ({ isOpen, closeModal, data, refetch }) => {
     }
   };
 
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 50 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { type: "spring", damping: 25, stiffness: 300 },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: 50,
-      transition: { duration: 0.2 },
-    },
-  };
-
   const initialValues = {
     name: data?.name || "",
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-          onClick={closeModal}
-        >
-          <motion.div
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            // ⬇️ Make the modal a flex column and allow tall content
-            className=" rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header (fixed) */}
-           <ModalHeader
-                       icon={Building}
-                       closeModal={closeModal}
-                       isEdit={isEdit}
-                       name={"Department"}
-                     />
+    <ModalShell
+      isOpen={isOpen}
+      onClose={closeModal}
+      title={isEdit ? "Edit Department" : "Add Department"}
+      maxWidthClass="max-w-2xl"
+    >
+      <Formik
+        initialValues={initialValues}
+        validationSchema={departSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
+        {({ errors, touched, isSubmitting }) => (
+          <Form className="space-y-4">
+            <InputField
+              name="name"
+              label="Department Name"
+              errors={errors.name}
+              touched={touched.name}
+              variant="dark"
+            />
 
-            {/* Body (scrollable) */}
-            {/* ⬇️ flex-1 + min-h-0 is critical for scroll inside flex parent */}
-            <div className="px-6 md:px-8 py-4 flex-1 min-h-0 overflow-y-auto bg-white">
-              <Formik
-                initialValues={initialValues}
-                validationSchema={departSchema}
-                onSubmit={handleSubmit}
-                enableReinitialize
+            <div className="flex justify-end gap-2 pt-3 border-t border-white/[0.06]">
+              <button
+                type="button"
+                onClick={closeModal}
+                className={fleet.modalCancelBtn}
               >
-                {({ errors, touched, isSubmitting, values }) => (
-                  <Form className="space-y-3">
-                    <div className="grid grid-cols-1 gap-4 mb-2">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Department Name
-                        </label>
-                        <Field
-                          type="text"
-                          name="name"
-                          className={`w-full px-4 py-2 ${
-                            // ⬇️ tailwind: 'border' not 'border-1'
-                            errors.name && touched.name
-                              ? "border border-zinc-500 focus:border-zinc-500"
-                              : "border border-gray-200 focus:border-blue-500"
-                          } rounded-xl focus:outline-none transition-colors`}
-                        />
-                        {/* ⬇️ Corrected to match the Field's name */}
-                        <ErrorMessage
-                          name="name"
-                          component="div"
-                          className="text-red-500 text-sm mt-1"
-                        />
-                      </div>
-                    </div>
+                Cancel
+              </button>
 
-                    {/* Footer (sticks below body, outside scroll if you prefer) */}
-                    <div className="flex gap-2 md:gap-4 pt-2">
-                      <motion.button
-                        type="button"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={closeModal}
-                        className="flex-1 px-3 md:px-6 py-2 border cursor-pointer border-gray-300 text-gray-700 rounded-2xl font-semibold hover:bg-gray-50 transition-colors"
-                      >
-                        Cancel
-                      </motion.button>
-
-                      <motion.button
-                        type="submit"
-                        disabled={isSubmitting}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700 border border-zinc-700/50 hover:border-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"
-                      >
-                        {isSubmitting ? (
-                          <div className="flex items-center justify-center gap-2">
-                            {/* ⬇️ border not border-1 */}
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                            Processing...
-                          </div>
-                        ) :  (
-                          "Submit"
-                        )}
-                      </motion.button>
-                    </div>
-                  </Form>
-                )}
-              </Formik>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={fleet.modalPrimaryBtn}
+              >
+                {isSubmitting ? "Processing..." : "Submit"}
+              </button>
             </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </Form>
+        )}
+      </Formik>
+    </ModalShell>
   );
 };
 

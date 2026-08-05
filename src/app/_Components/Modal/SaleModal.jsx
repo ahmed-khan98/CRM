@@ -1,8 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
 import { Formik, Form } from "formik";
-import { TrendingUp } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
   useCreateSaleMutation,
@@ -11,7 +9,6 @@ import {
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import { saleSchema } from "@/app/schema/sale";
 import FormikSelect from "./formikSelect";
-import { modalVariants } from "../Form/DropDownOptions";
 import { useMemo, useState, useEffect } from "react";
 import InputField from "../Form/InputField";
 import {
@@ -19,7 +16,8 @@ import {
   sale_Options,
   merchantTypeOptions,
 } from "@/app/utilities/paymentLink";
-import ModalHeader from "./ModalHeader/page";
+import ModalShell from "./ModalShell";
+import { fleet } from "../fleet/fleetTheme";
 import { useAllClientsQuery } from "@/app/_Services/Client/page";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 import { useGetdepartmentsEmployeeQuery } from "@/app/_Services/employee/page";
@@ -160,241 +158,214 @@ const SaleModal = ({ isOpen, closeModal, data, refetch }) => {
   if (isLoggedLoading) return null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-          onClick={closeModal}
-        >
-          <motion.div
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className=" rounded-3xl shadow-2xl w-full max-w-3xl max-h-[99vh] overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <ModalHeader
-              icon={TrendingUp}
-              closeModal={closeModal}
-              isEdit={isEdit}
-              name={"Sale"}
-            />
+    <ModalShell
+      isOpen={isOpen}
+      onClose={closeModal}
+      title={isEdit ? "Edit Sale" : "Add Sale"}
+      maxWidthClass="max-w-3xl"
+    >
+      <Formik
+        initialValues={initialValues}
+        validationSchema={saleSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
+        {({
+          errors,
+          touched,
+          isSubmitting,
+          values,
+          setFieldValue,
+          setFieldTouched,
+        }) => {
+          return (
+            <Form className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                {/* 🛠️ Admin / SubAdmin Check: Department select filter */}
+                {isAdminOrSubAdmin && (
+                  <FormikSelect
+                    name="departmentId"
+                    label="Select Department"
+                    options={deptOptions}
+                    value={values.departmentId}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                    error={errors.departmentId}
+                    touched={touched.departmentId}
+                    placeholder="Select Department"
+                    variant="dark"
+                    onChangeExtra={(value) => {
+                      setDepartmentId(value);
+                      setFieldValue("departmentId", value);
+                      // Reset dependants lists fields value contexts safely
+                      setFieldValue("brandId", "");
+                      setFieldValue("agent", "");
+                      setFieldValue("seller", "");
+                    }}
+                  />
+                )}
 
-            {/* Form */}
-            <div className="px-6 md:px-8 py-2 max-h-[84vh] overflow-y-auto bg-white">
-              <Formik
-                initialValues={initialValues}
-                validationSchema={saleSchema}
-                onSubmit={handleSubmit}
-                enableReinitialize
-              >
-                {({
-                  errors,
-                  touched,
-                  isSubmitting,
-                  values,
-                  setFieldValue,
-                  setFieldTouched,
-                }) => {
-                  console.log(errors, "errors---->>>>");
+                {/* Brand Dropdown Integration */}
+                <FormikSelect
+                  name="brandId"
+                  label="Select Brand"
+                  options={brandOptions}
+                  value={values.brandId}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.brandId}
+                  touched={touched.brandId}
+                  placeholder="Select associated brand"
+                  variant="dark"
+                  onChangeExtra={(value) =>
+                    setFieldValue("brandId", value)
+                  }
+                />
+                <FormikSelect
+                  name="clientId"
+                  label="Select Client"
+                  options={clientOptions}
+                  value={values.clientId}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.clientId}
+                  touched={touched.clientId}
+                  placeholder="Select client account"
+                  variant="dark"
+                  onChangeExtra={(value) =>
+                    setFieldValue("clientId", value)
+                  }
+                />
 
-                  return (
-                    <Form className="py-1">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2 space-y-1">
-                        {/* 🛠️ Admin / SubAdmin Check: Department select filter */}
-                        {isAdminOrSubAdmin && (
-                          <FormikSelect
-                            name="departmentId"
-                            label="Select Department"
-                            options={deptOptions}
-                            value={values.departmentId}
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            error={errors.departmentId}
-                            touched={touched.departmentId}
-                            placeholder="Select Department"
-                            onChangeExtra={(value) => {
-                              setDepartmentId(value);
-                              setFieldValue("departmentId", value);
-                              // Reset dependants lists fields value contexts safely
-                              setFieldValue("brandId", "");
-                              setFieldValue("agent", "");
-                              setFieldValue("seller", "");
-                            }}
-                          />
-                        )}
+                <FormikSelect
+                  name="type"
+                  label="Select Sale Type"
+                  options={sale_Options}
+                  value={values.type}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.type}
+                  touched={touched.type}
+                  placeholder="select type"
+                  variant="dark"
+                  onChangeExtra={(value) =>
+                    setFieldValue("type", value)
+                  }
+                />
 
-                        {/* Brand Dropdown Integration */}
-                        <FormikSelect
-                          name="brandId"
-                          label="Select Brand"
-                          options={brandOptions}
-                          value={values.brandId}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.brandId}
-                          touched={touched.brandId}
-                          placeholder="Select associated brand"
-                          onChangeExtra={(value) =>
-                            setFieldValue("brandId", value)
-                          }
-                        />
-                        <FormikSelect
-                          name="clientId"
-                          label="Select Client"
-                          options={clientOptions}
-                          value={values.clientId}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.clientId}
-                          touched={touched.clientId}
-                          placeholder="Select client account"
-                          onChangeExtra={(value) =>
-                            setFieldValue("clientId", value)
-                          }
-                        />
+                <FormikSelect
+                  name="seller"
+                  label="Select Seller"
+                  options={empOptions}
+                  value={values.seller}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.seller}
+                  touched={touched.seller}
+                  placeholder="Select seller"
+                  variant="dark"
+                  onChangeExtra={(value) =>
+                    setFieldValue("seller", value)
+                  }
+                />
 
-                        <FormikSelect
-                          name="type"
-                          label="Select Sale Type"
-                          options={sale_Options}
-                          value={values.type}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.type}
-                          touched={touched.type}
-                          placeholder="select type"
-                          onChangeExtra={(value) =>
-                            setFieldValue("type", value)
-                          }
-                        />
+                {values?.type === "FRESH" && (
+                  <FormikSelect
+                    name="agent"
+                    label="Select Sale agent"
+                    options={empOptions}
+                    value={values.agent}
+                    setFieldValue={setFieldValue}
+                    setFieldTouched={setFieldTouched}
+                    error={errors.agent}
+                    touched={touched.agent}
+                    placeholder="Select agent"
+                    variant="dark"
+                    onChangeExtra={(value) =>
+                      setFieldValue("agent", value)
+                    }
+                  />
+                )}
 
-                        <FormikSelect
-                          name="seller"
-                          label="Select Seller"
-                          options={empOptions}
-                          value={values.seller}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.seller}
-                          touched={touched.seller}
-                          placeholder="Select seller"
-                          onChangeExtra={(value) =>
-                            setFieldValue("seller", value)
-                          }
-                        />
+                <InputField
+                  type="number"
+                  name="amount"
+                  label="Amount"
+                  errors={errors.amount}
+                  touched={touched.amount}
+                  variant="dark"
+                />
 
-                        {values?.type === "FRESH" && (
-                          <FormikSelect
-                            name="agent"
-                            label="Select Sale agent"
-                            options={empOptions}
-                            value={values.agent}
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            error={errors.agent}
-                            touched={touched.agent}
-                            placeholder="Select agent"
-                            onChangeExtra={(value) =>
-                              setFieldValue("agent", value)
-                            }
-                          />
-                        )}
+                <FormikSelect
+                  name="currency"
+                  label="Select Currency Type"
+                  options={currencyOptions}
+                  value={values.currency}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.currency}
+                  touched={touched.currency}
+                  placeholder="currency"
+                  variant="dark"
+                  onChangeExtra={(value) =>
+                    setFieldValue("currency", value)
+                  }
+                />
+                <FormikSelect
+                  name="merchantType"
+                  label="Select Merchant Type"
+                  options={merchantTypeOptions}
+                  value={values.merchantType}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.merchantType}
+                  touched={touched.merchantType}
+                  placeholder="select merchantType"
+                  variant="dark"
+                  onChangeExtra={(value) =>
+                    setFieldValue("merchantType", value)
+                  }
+                />
 
-                        <InputField
-                          type="number"
-                          name="amount"
-                          label="Amount"
-                          error={errors.amount}
-                          touched={touched.amount}
-                        />
+                <InputField
+                  type="date"
+                  name="saleDate"
+                  label="Sale Date"
+                  errors={errors.saleDate}
+                  touched={touched.saleDate}
+                  variant="dark"
+                />
+              </div>
+              <InputField
+                name="description"
+                label="Payment Description"
+                as="textarea"
+                errors={errors.description}
+                touched={touched.description}
+                variant="dark"
+              />
 
-                        <FormikSelect
-                          name="currency"
-                          label="Select Currency Type"
-                          options={currencyOptions}
-                          value={values.currency}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.currency}
-                          touched={touched.currency}
-                          placeholder="currency"
-                          onChangeExtra={(value) =>
-                            setFieldValue("currency", value)
-                          }
-                        />
-                        <FormikSelect
-                          name="merchantType"
-                          label="Select Merchant Type"
-                          options={merchantTypeOptions}
-                          value={values.merchantType}
-                          setFieldValue={setFieldValue}
-                          setFieldTouched={setFieldTouched}
-                          error={errors.merchantType}
-                          touched={touched.merchantType}
-                          placeholder="select merchantType"
-                          onChangeExtra={(value) =>
-                            setFieldValue("merchantType", value)
-                          }
-                        />
-
-                        <InputField
-                          type="date"
-                          name="saleDate"
-                          label="Sale Date"
-                          error={errors.saleDate}
-                          touched={touched.saleDate}
-                        />
-                      </div>
-                        <InputField
-                          name="description"
-                          label="Payment Description"
-                          as="textarea"
-                          errors={errors.description}
-                          touched={touched.description}
-                        />
-
-                      <div className="flex gap-2 md:gap-4 pt-2">
-                        <motion.button
-                          type="button"
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={closeModal}
-                          className="flex-1 px-3 md:px-6 py-2 border-1 cursor-pointer border-gray-300 text-gray-800 rounded-2xl font-semibold hover:bg-gray-50 transition-colors"
-                        >
-                          Cancel
-                        </motion.button>
-                        <motion.button
-                          type="submit"
-                          disabled={isSubmitting}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="flex-1 px-3 md:px-6 py-2 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"
-                        >
-                          {isSubmitting ? (
-                            <div className="flex items-center justify-center gap-2">
-                              <div className="w-5 h-5 border-1 border-white/30 border-t-white rounded-full animate-spin"></div>
-                              Processing...
-                            </div>
-                          ) : (
-                            "Continue"
-                          )}
-                        </motion.button>
-                      </div>
-                    </Form>
-                  );
-                }}
-              </Formik>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+              <div className="flex justify-end gap-2 pt-3 border-t border-white/[0.06]">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className={fleet.modalCancelBtn}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={fleet.modalPrimaryBtn}
+                >
+                  {isSubmitting ? "Processing..." : "Continue"}
+                </button>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
+    </ModalShell>
   );
 };
 

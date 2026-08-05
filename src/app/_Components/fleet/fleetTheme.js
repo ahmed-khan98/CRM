@@ -18,7 +18,8 @@ export const fleet = {
     "text-left text-[11px] font-semibold uppercase tracking-wider text-zinc-400 px-4 py-3.5 border-b border-zinc-100",
   tableRow: "border-b border-zinc-100 last:border-0 hover:bg-zinc-50/80 transition-colors",
   tableCell: "px-4 py-4 text-sm text-zinc-800",
-  modalOverlay: "fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm",
+  modalOverlay:
+    "fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm",
   modalPanel:
     "relative w-full max-w-3xl max-h-[92vh] overflow-hidden rounded-2xl bg-[#0f1419] border border-white/[0.08] shadow-2xl flex flex-col",
   modalTitle: "text-lg font-bold text-white",
@@ -27,6 +28,17 @@ export const fleet = {
     "w-full rounded-xl border border-white/[0.1] bg-[#161b22] px-3.5 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-white/10",
   modalSelect:
     "w-full rounded-xl border border-white/[0.1] bg-[#161b22] px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-zinc-400",
+  modalTextarea:
+    "w-full rounded-xl border border-white/[0.1] bg-[#161b22] px-3.5 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-white/10 resize-none",
+  modalCancelBtn:
+    "px-4 py-2.5 rounded-xl text-sm font-semibold text-zinc-400 hover:text-white transition-colors",
+  modalPrimaryBtn:
+    "px-5 py-2.5 rounded-xl text-sm font-bold bg-zinc-100 text-zinc-950 hover:bg-white disabled:opacity-60 transition-colors",
+  modalFooter:
+    "flex justify-end gap-2 px-6 py-4 border-t border-white/[0.06] shrink-0",
+  modalBody: "flex-1 min-h-0 overflow-y-auto px-6 py-5 space-y-4 custom-scrollbar-dark",
+  modalCloseBtn:
+    "p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors",
   statusActive:
     "inline-flex items-center rounded-full bg-green-500/15 text-green-700 border border-green-500/25 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide",
   statusInactive:
@@ -39,6 +51,52 @@ export const fleet = {
     "inline-flex items-center rounded-full bg-orange-500/15 text-orange-700 border border-orange-500/25 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide",
   statusRetired:
     "inline-flex items-center rounded-full bg-red-500/10 text-red-600 border border-red-500/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+};
+
+/** react-select styles matching Add Vehicle modal */
+export const modalSelectStyles = {
+  control: (base, state) => ({
+    ...base,
+    background: "#161b22",
+    borderColor: state.isFocused ? "rgba(161,161,170,0.8)" : "rgba(255,255,255,0.1)",
+    boxShadow: "none",
+    borderRadius: 12,
+    minHeight: 42,
+    cursor: "pointer",
+  }),
+  menu: (base) => ({
+    ...base,
+    background: "#161b22",
+    zIndex: 50,
+    borderRadius: 12,
+    overflow: "hidden",
+    border: "1px solid rgba(255,255,255,0.08)",
+  }),
+  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+  option: (base, state) => ({
+    ...base,
+    background: state.isFocused || state.isSelected ? "#1c2330" : "#161b22",
+    color: "#fff",
+    fontSize: 13,
+    cursor: "pointer",
+  }),
+  singleValue: (base) => ({ ...base, color: "#fff", fontSize: 13 }),
+  multiValue: (base) => ({
+    ...base,
+    background: "#1c2330",
+    borderRadius: 8,
+  }),
+  multiValueLabel: (base) => ({ ...base, color: "#e4e4e7", fontSize: 12 }),
+  multiValueRemove: (base) => ({
+    ...base,
+    color: "#a1a1aa",
+    ":hover": { background: "#27272a", color: "#fff" },
+  }),
+  input: (base) => ({ ...base, color: "#fff" }),
+  placeholder: (base) => ({ ...base, color: "#71717a", fontSize: 13 }),
+  indicatorSeparator: () => ({ display: "none" }),
+  dropdownIndicator: (base) => ({ ...base, color: "#71717a" }),
+  clearIndicator: (base) => ({ ...base, color: "#71717a" }),
 };
 
 export function fleetStatusClass(status) {

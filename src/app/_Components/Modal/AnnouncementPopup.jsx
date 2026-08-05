@@ -69,7 +69,7 @@ const AnnouncementPopup = () => {
           </div>
 
           {/* Body (Custom Scrollbar) */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-8 sm:py-6 custom-scrollbar scroll-smooth">
+          <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-8 sm:py-6 custom-scrollbar-dark scroll-smooth">
             <div className="space-y-4 sm:space-y-10 relative">
               {/* Vertical Line */}
               <div className="hidden sm:block absolute left-[11px] top-2 bottom-2 w-0.5 bg-zinc-800"></div>
