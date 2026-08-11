@@ -14,14 +14,13 @@ const employeeApi = createApiAuction.injectEndpoints({
     }),
     updateEmployee: builder.mutation({
       query: ({ id, body }) => {
-        console.log(body, "updateData");
         return {
           url: `employee/${id}`,
           method: "PATCH",
           body,
         };
       },
-      invalidatesTags: ["allEmployees"],
+      invalidatesTags: ["allEmployees", "Employee"],
     }),
     updateStatus: builder.mutation({
       query: ({ id }) => {

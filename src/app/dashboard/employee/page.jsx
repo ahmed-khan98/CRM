@@ -287,7 +287,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Users, Edit, DeleteIcon } from "lucide-react";
+import { Users, Edit, DeleteIcon, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDate } from "@/app/utilities/date";
 import {
@@ -298,6 +298,7 @@ import {
 import EmployeeModal from "@/app/_Components/Modal/EmployeeModal";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import Image from "next/image";
+import Link from "next/link";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
 import toast from "react-hot-toast";
@@ -307,6 +308,7 @@ import PageHeader from "@/app/_Components/PageHeader/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -637,6 +639,15 @@ export default function AppointmentBooking() {
                           </td>
                           <td className="px-2 py-2.5 whitespace-nowrap">
                             <div className="flex items-center gap-2">
+                              <Tooltip label="View HRMS Profile" side="top">
+                                <Link
+                                  href={`/dashboard/employee/${emp._id}`}
+                                  aria-label="View HRMS Profile"
+                                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-50 border border-sky-200 text-sky-600 hover:bg-sky-100 transition-all"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                </Link>
+                              </Tooltip>
                               <motion.button
                                 whileHover={{ scale: 1.08 }}
                                 whileTap={{ scale: 0.93 }}

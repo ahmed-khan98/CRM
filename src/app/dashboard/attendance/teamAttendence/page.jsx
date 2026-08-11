@@ -715,6 +715,7 @@ import StatsSection from "@/app/_Components/attendence/StatsSection";
 import FiltersBar from "@/app/_Components/attendence/TeamAttendance/FilterBar";
 import TeamAttendanceTableBody from "@/app/_Components/attendence/TeamAttendance/TeamAttendanceTableBody";
 import { useAttendanceData } from "@/app/_Components/attendence/TeamAttendance/useAttendance";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 const TeamAttendence = () => {
   const [viewType, setViewType] = useState("today");
@@ -890,16 +891,18 @@ const TeamAttendence = () => {
           length={finalDisplayData?.length}
           name="Team Attendance"
         />
-        <button
-          onClick={handleExportToExcel}
-          className="cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors"
-          title="Export to Excel"
-        >
-          <Download size={16} className="text-emerald-600" />
-          <span className="text-xs font-black text-emerald-700 uppercase tracking-tight hidden sm:inline">
-            Export Attendance Summary Report
-          </span>
-        </button>
+        <Tooltip label="Export to Excel" side="bottom">
+          <button
+            onClick={handleExportToExcel}
+            aria-label="Export to Excel"
+            className="cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+          >
+            <Download size={16} className="text-emerald-600" />
+            <span className="text-xs font-black text-emerald-700 uppercase tracking-tight hidden sm:inline">
+              Export Attendance Summary Report
+            </span>
+          </button>
+        </Tooltip>
       </div>
       {/* ── Stat Cards ── */}
       <StatsSection

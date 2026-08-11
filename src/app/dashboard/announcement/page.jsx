@@ -13,6 +13,7 @@ import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { formatDate } from "@/app/utilities/date";
 import PageHeader from "@/app/_Components/PageHeader/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 export default function Announcement() {
   const [editingAppointment, setEditingAppointment] = useState(null);
@@ -131,12 +132,11 @@ export default function Announcement() {
 
                       {/* Message */}
                       <td className="px-4 py-3 w-[320px] min-w-[180px]">
-                        <p
-                          title={depart.message}
-                          className="text-[12px] text-zinc-500 leading-snug line-clamp-2"
-                        >
-                          {depart.message}
-                        </p>
+                        <Tooltip label={depart.message} side="top" className="max-w-full" delay>
+                          <p className="text-[12px] text-zinc-500 leading-snug line-clamp-2">
+                            {depart.message}
+                          </p>
+                        </Tooltip>
                       </td>
 
                       {/* Status */}

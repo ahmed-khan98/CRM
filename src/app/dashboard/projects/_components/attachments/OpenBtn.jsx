@@ -10,6 +10,7 @@ import {
   isPdfFile,
   needsProxyDownload,
 } from "@/app/_utils/attachmentUrl";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 function OpenBtn({ url, filename, publicId }) {
   const [loading, setLoading] = useState(false);
@@ -61,16 +62,20 @@ function OpenBtn({ url, filename, publicId }) {
     }
   };
 
+  const tip = isDownloadOnlyFile(url, filename) ? "Download file" : "Open file";
+
   return (
-    <button
-      type="button"
-      onClick={handleOpen}
-      disabled={loading}
-      title={isDownloadOnlyFile(url, filename) ? "Download file" : "Open file"}
-      className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:border-blue-200 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
-    >
-      {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ExternalLink className="h-3 w-3" />}
-    </button>
+    <Tooltip label={tip} side="top">
+      <button
+        type="button"
+        onClick={handleOpen}
+        disabled={loading}
+        aria-label={tip}
+        className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:border-blue-200 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
+      >
+        {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ExternalLink className="h-3 w-3" />}
+      </button>
+    </Tooltip>
   );
 }
 

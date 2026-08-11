@@ -162,45 +162,45 @@ const Navbar = () => {
 
       return (
         <div
-          className={`flex flex-col md:flex-row md:items-center gap-3 rounded-xl px-4 py-1 bg-yellow-500/[0.07] border border-yellow-500/15 ${mobileWidthClass(
+          className={`flex flex-col md:flex-row md:items-center gap-2 rounded-lg px-3 py-1 bg-yellow-500/[0.07] border border-yellow-500/15 ${mobileWidthClass(
             mobile,
           )}`}
         >
-          <div className="flex flex-wrap items-center gap-3 w-full">
+          <div className="flex flex-wrap items-center gap-2 w-full">
             <div className="flex flex-col min-w-[120px]">
-              <span className="text-[9px] text-zinc-500 uppercase">Status</span>
-              <span className="text-xs font-bold text-yellow-400 break-words">
+              <span className="text-[8px] text-zinc-500 uppercase">Status</span>
+              <span className="text-[11px] font-bold text-yellow-400 break-words leading-tight">
                 {`User on ${activeBreak.type.toLowerCase()} break`}
               </span>
             </div>
 
-            <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+            <div className="hidden md:block w-px h-5 bg-white/[0.08]" />
 
-            <div className="flex flex-col min-w-[80px]">
-              <span className="text-[9px] text-zinc-500 uppercase">
+            <div className="flex flex-col min-w-[70px]">
+              <span className="text-[8px] text-zinc-500 uppercase">
                 Break In
               </span>
-              <span className="text-xs text-zinc-200">
+              <span className="text-[11px] text-zinc-200 leading-tight">
                 {formatTime(activeBreak.breakIn)}
               </span>
             </div>
 
-            <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+            <div className="hidden md:block w-px h-5 bg-white/[0.08]" />
 
-            <div className="flex flex-col min-w-[70px]">
-              <span className="text-[9px] text-zinc-500 uppercase">
+            <div className="flex flex-col min-w-[60px]">
+              <span className="text-[8px] text-zinc-500 uppercase">
                 Duration
               </span>
-              <span className="text-xs font-mono text-white">
+              <span className="text-[11px] font-mono text-white leading-tight">
                 {duration} min
               </span>
             </div>
 
-            <div className="hidden md:block w-px h-7 bg-white/[0.08]" />
+            <div className="hidden md:block w-px h-5 bg-white/[0.08]" />
 
-            <div className="flex flex-col flex-1 min-w-[120px]">
-              <span className="text-[9px] text-zinc-500 uppercase">Reason</span>
-              <span className="text-xs text-zinc-300 break-words">
+            <div className="flex flex-col flex-1 min-w-[100px]">
+              <span className="text-[8px] text-zinc-500 uppercase">Reason</span>
+              <span className="text-[11px] text-zinc-300 break-words leading-tight">
                 {activeBreak.reason || "-"}
               </span>
             </div>
@@ -217,32 +217,32 @@ const Navbar = () => {
 
       return (
         <div
-          className={`flex items-center gap-4 rounded-xl px-4 py-2 bg-white/5 border border-white/[0.08] ${mobileWidthClass(mobile)}`}
+          className={`flex items-center gap-3 rounded-lg px-3 py-1 bg-white/5 border border-white/[0.08] ${mobileWidthClass(mobile)}`}
         >
-          <div className="flex flex-col items-center gap-0.5">
-            <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
-              <Clock size={9} /> Time In
+          <div className="flex flex-col items-center gap-0">
+            <span className="flex items-center gap-1 text-[8px] font-bold tracking-[0.12em] uppercase text-zinc-500">
+              <Clock size={8} /> Time In
             </span>
-            <span className="text-xs font-bold text-zinc-200">
+            <span className="text-[11px] font-bold leading-tight text-zinc-200">
               {formatTime(attendence.timeIn)}
             </span>
           </div>
-          <div className="w-px h-7 bg-white/[0.08]" />
-          <div className="flex flex-col items-center gap-0.5">
-            <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
-              <Timer size={9} /> Working
+          <div className="w-px h-5 bg-white/[0.08]" />
+          <div className="flex flex-col items-center gap-0">
+            <span className="flex items-center gap-1 text-[8px] font-bold tracking-[0.12em] uppercase text-zinc-500">
+              <Timer size={8} /> Working
             </span>
-            <span className="text-xs font-mono font-black text-zinc-100">
+            <span className="text-[11px] font-mono font-black leading-tight text-zinc-100">
               {workingTime}
             </span>
           </div>
-          <div className="w-px h-7 bg-white/[0.08]" />
-          <div className="flex flex-col items-center gap-0.5">
-            <span className="flex items-center gap-1 text-[9px] font-bold tracking-[0.12em] uppercase text-zinc-500">
-              <Activity size={9} /> Status
+          <div className="w-px h-5 bg-white/[0.08]" />
+          <div className="flex flex-col items-center gap-0">
+            <span className="flex items-center gap-1 text-[8px] font-bold tracking-[0.12em] uppercase text-zinc-500">
+              <Activity size={8} /> Status
             </span>
             <span
-              className={`text-[9px] font-bold px-2 py-[2px] rounded-full uppercase border ${statusClasses}`}
+              className={`text-[8px] font-bold px-1.5 py-px rounded-full uppercase border leading-tight ${statusClasses}`}
             >
               {attendence.status}
             </span>
@@ -254,14 +254,14 @@ const Navbar = () => {
     if (attendence?.timeIn && attendence?.timeOut) {
       return (
         <div
-          className={`flex items-center gap-2.5 rounded-xl px-4 py-2 bg-green-500/[0.07] border border-green-500/15 ${mobileWidthClass(mobile)}`}
+          className={`flex items-center gap-2 rounded-lg px-3 py-1 bg-green-500/[0.07] border border-green-500/15 ${mobileWidthClass(mobile)}`}
         >
-          <CheckCircle size={15} className="text-green-400 shrink-0" />
+          <CheckCircle size={13} className="text-green-400 shrink-0" />
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-green-400">
+            <p className="text-[9px] font-black uppercase tracking-widest text-green-400 leading-tight">
               Shift Completed
             </p>
-            <p className="text-[11px] text-zinc-500">Great work today!</p>
+            <p className="text-[10px] text-zinc-500 leading-tight">Great work today!</p>
           </div>
         </div>
       );
@@ -269,14 +269,14 @@ const Navbar = () => {
 
     return (
       <div
-        className={`flex items-center gap-2.5 rounded-xl px-4 py-2 animate-pulse bg-red-500/[0.07] border border-red-500/[0.18] ${mobileWidthClass(mobile)}`}
+        className={`flex items-center gap-2 rounded-lg px-3 py-1 animate-pulse bg-red-500/[0.07] border border-red-500/[0.18] ${mobileWidthClass(mobile)}`}
       >
-        <Clock size={15} className="text-red-400 shrink-0" />
+        <Clock size={13} className="text-red-400 shrink-0" />
         <div>
-          <p className="text-[10px] font-black uppercase tracking-widest text-red-400">
+          <p className="text-[9px] font-black uppercase tracking-widest text-red-400 leading-tight">
             Attention Needed!
           </p>
-          <p className="text-[11px] text-zinc-500">
+          <p className="text-[10px] text-zinc-500 leading-tight">
             Please mark your attendance.
           </p>
         </div>
@@ -304,14 +304,14 @@ const Navbar = () => {
       {/* Main Navbar */}
       <div className="fixed top-0 left-0 w-full z-50 bg-[#0f0f11] border-b border-white/[0.07] ">
         <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-white/5" />
-        <nav className="flex items-center justify-between px-3 md:px-6 py-1.5 md:py-1 gap-3">
+        <nav className="flex items-center justify-between px-3 md:px-5 py-1 gap-2">
           <Link href="/dashboard/statistics" className="shrink-0">
-            <Image src={Main} alt="Logo" height={48} width={130} priority />
+            <Image src={Main} alt="Logo" height={36} width={100} priority />
           </Link>
-          <div className="hidden lg:flex flex-1 justify-center px-4">
+          <div className="hidden lg:flex flex-1 justify-center px-3">
             <AttendanceStatus />
           </div>
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-1.5">
             <NotificationBell />
             <ActionButtons
               attendence={attendence}
@@ -327,11 +327,11 @@ const Navbar = () => {
             />
           </div>
           <button
-            className="lg:hidden flex items-center justify-center"
+            className="lg:hidden flex items-center justify-center p-1"
             onClick={() => setIsMenuOpen(true)}
             aria-label="Open Menu"
           >
-            <Menu size={22} color='white'/>
+            <Menu size={20} color='white'/>
           </button>
         </nav>
       </div>
@@ -348,9 +348,12 @@ const Navbar = () => {
 
       {/* Mobile Drawer */}
       <div
-        className={`lg:hidden fixed top-0 left-0 z-[70] h-full flex flex-col transition-transform duration-300 ease-in-out w-[min(330px,88vw)] rounded-r-[28px] bg-[#0d0d0f] border-r border-white/[0.08] shadow-[18px_0_60px_rgba(0,0,0,0.65)] ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        className={`lg:hidden fixed top-0 left-0 z-[70] h-full flex flex-col transition-transform duration-300 ease-in-out w-[min(330px,88vw)] rounded-r-[28px] bg-[#0d0d0f] border-r border-white/[0.08] ${
+          isMenuOpen
+            ? "translate-x-0 shadow-[18px_0_60px_rgba(0,0,0,0.65)]"
+            : "-translate-x-full shadow-none pointer-events-none invisible"
         }`}
+        aria-hidden={!isMenuOpen}
       >
         <div className="h-[1.5px] w-full shrink-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
         <div className="flex items-center justify-between px-4 py-4 shrink-0 border-b border-white/[0.06]">
@@ -365,7 +368,10 @@ const Navbar = () => {
         <div className="px-3 pt-3 shrink-0">
           <AttendanceStatus mobile />
         </div>
-        <div className="px-3 pt-2 pb-2 shrink-0 flex flex-col gap-2">
+        <div className="px-3 pt-3 pb-2 shrink-0 flex flex-col gap-2">
+          <p className="px-1 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+            Quick actions
+          </p>
           <NotificationBell mobile />
           <ActionButtons
             mobile

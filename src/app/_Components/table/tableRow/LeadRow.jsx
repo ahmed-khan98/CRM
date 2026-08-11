@@ -18,6 +18,7 @@ import {
 import { useRouter } from "next/navigation";
 import { BiDetail } from "react-icons/bi";
 import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 export const LeadRow = memo(
   function LeadRow({index, emp, onEdit, setConfirmDelete }) {
@@ -81,12 +82,11 @@ console.log(index,'index')
         >
           <div className="bg-gray-100 shadow p-1.5 rounded-md">
             {emp?.lastComment && (
-              <div
-                title={emp.lastComment}
-                className="text-xs text-gray-700 leading-snug line-clamp-3"
-              >
-                {emp.lastComment}
-              </div>
+              <Tooltip label={emp.lastComment} side="top" className="max-w-full" delay>
+                <div className="text-xs text-gray-700 leading-snug line-clamp-3">
+                  {emp.lastComment}
+                </div>
+              </Tooltip>
             )}
 
             <span

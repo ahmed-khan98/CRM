@@ -7,6 +7,7 @@ import { ArrowLeft, Building2, Pencil, Plus, User2 } from "lucide-react";
 import { PROJECT_STATUS_CONFIG, PROJECT_STATUS_OPTIONS, selectStyles } from "../constants";
 import { getClientDisplayName, getProjectDepartmentName, hasProjectClient } from "../utils";
 import ProgressBar from "../ui/ProgressBar";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 function ProjectKanbanHeader({
   project,
@@ -122,14 +123,16 @@ function ProjectKanbanHeader({
             )}
             <div className="flex items-center gap-2">
               {canManageProject && (
-                <button
-                  type="button"
-                  title="Edit project"
-                  onClick={onEdit}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 transition cursor-pointer"
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                </button>
+                <Tooltip label="Edit project" side="top">
+                  <button
+                    type="button"
+                    aria-label="Edit project"
+                    onClick={onEdit}
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 transition cursor-pointer"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </button>
+                </Tooltip>
               )}
               <motion.button
                 whileTap={{ scale: 0.97 }}

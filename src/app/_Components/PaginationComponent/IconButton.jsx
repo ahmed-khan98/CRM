@@ -1,12 +1,14 @@
-import React from 'react'
+"use client";
+
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 function IconButton({ children, disabled, onClick, title }) {
-  return (
+  const btn = (
     <button
       type="button"
-      title={title}
       onClick={onClick}
       disabled={disabled}
+      aria-label={title}
       className={`h-8 w-8 inline-flex items-center justify-center rounded-md border text-sm cursor-pointer
         ${
           disabled
@@ -17,6 +19,13 @@ function IconButton({ children, disabled, onClick, title }) {
       {children}
     </button>
   );
+
+  if (!title) return btn;
+  return (
+    <Tooltip label={title} side="top">
+      {btn}
+    </Tooltip>
+  );
 }
 
-export default IconButton
+export default IconButton;

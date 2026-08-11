@@ -14,12 +14,13 @@ import {
   Strikethrough,
   Quote,
 } from "lucide-react";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 function ToolbarButton({ active, onClick, children, title }) {
-  return (
+  const btn = (
     <button
       type="button"
-      title={title}
+      aria-label={title}
       onClick={onClick}
       className={`flex h-7 w-7 items-center justify-center rounded-lg transition cursor-pointer ${
         active
@@ -29,6 +30,12 @@ function ToolbarButton({ active, onClick, children, title }) {
     >
       {children}
     </button>
+  );
+  if (!title) return btn;
+  return (
+    <Tooltip label={title} side="bottom">
+      {btn}
+    </Tooltip>
   );
 }
 

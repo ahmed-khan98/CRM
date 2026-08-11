@@ -29,7 +29,9 @@ import {
   FolderKanban,
   ListTodo,
   Truck,
+  MessageCircle,
 } from "lucide-react";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
 import { removeAttendence, resumeWork } from "@/redux/filterSlice";
@@ -98,6 +100,19 @@ const LeftNav = ({ set }) => {
       roles: ["USER", "DEP_ADMIN"],
     },
     {
+      name: "Chat",
+      icon: <MessageCircle className="w-4 h-4" />,
+      path: ["/dashboard/chat"],
+      roles: [
+        "USER",
+        "HR_ADMIN",
+        "FINANCE_ADMIN",
+        "DEP_ADMIN",
+        "ADMIN",
+        "SUBADMIN",
+      ],
+    },
+    {
       name: "Fleet",
       icon: <Truck className="w-4 h-4" />,
       path: ["/dashboard/fleet/vendors", "/dashboard/fleet/vehicles"],
@@ -133,59 +148,59 @@ const LeftNav = ({ set }) => {
       ],
       roles: ["USER", "FINANCE_ADMIN", "DEP_ADMIN"],
     },
-    {
-      name: "Email",
-      icon: <Mail className="w-4 h-4" />,
-      path: [
-        "/dashboard/EmailTemplate",
-        "/dashboard/BrandEmail",
-        "/dashboard/SendEmail",
-        "/dashboard/EmailList",
-        "/dashboard/TmEmailList",
-        "/dashboard/BulkEmail",
-        "/dashboard/SentBulkEmail",
-        "/dashboard/SentTMBulkEmail",
-      ],
-      roles: ["USER", "DEP_ADMIN"],
-      submenu: [
-        {
-          name: "Brand Email",
-          path: "/dashboard/BrandEmail",
-          icon: <AtSign className="w-3.5 h-3.5" />,
-          roles: ["USER", "DEP_ADMIN"],
-        },
-        {
-          name: "Email Template",
-          path: "/dashboard/EmailTemplate",
-          icon: <LayoutPanelTop className="w-3.5 h-3.5" />,
-          roles: ["USER", "DEP_ADMIN"],
-        },
-        {
-          name: "Email List",
-          path: "/dashboard/EmailList",
-          icon: <List className="w-3.5 h-3.5" />,
-          roles: ["USER", "DEP_ADMIN"],
-        },
-        {
-          name: "TM Email List",
-          path: "/dashboard/TmEmailList",
-          icon: <List className="w-3.5 h-3.5" />,
-          roles: ["USER", "DEP_ADMIN"],
-        },
-        {
-          name: "Bulk Email",
-          path: "/dashboard/BulkEmail",
-          icon: <Mails className="w-3.5 h-3.5" />,
-          roles: ["USER", "DEP_ADMIN"],
-        },
-        {
-          name: "TM Bulk Email",
-          path: "/dashboard/TmBulkEmail",
-          icon: <Mails className="w-3.5 h-3.5" />,
-          roles: ["USER", "DEP_ADMIN"],
-        },
-      ],
-    },
+    // {
+    //   name: "Email",
+    //   icon: <Mail className="w-4 h-4" />,
+    //   path: [
+    //     "/dashboard/EmailTemplate",
+    //     "/dashboard/BrandEmail",
+    //     "/dashboard/SendEmail",
+    //     "/dashboard/EmailList",
+    //     "/dashboard/TmEmailList",
+    //     "/dashboard/BulkEmail",
+    //     "/dashboard/SentBulkEmail",
+    //     "/dashboard/SentTMBulkEmail",
+    //   ],
+    //   roles: ["USER", "DEP_ADMIN"],
+    //   submenu: [
+    //     {
+    //       name: "Brand Email",
+    //       path: "/dashboard/BrandEmail",
+    //       icon: <AtSign className="w-3.5 h-3.5" />,
+    //       roles: ["USER", "DEP_ADMIN"],
+    //     },
+    //     {
+    //       name: "Email Template",
+    //       path: "/dashboard/EmailTemplate",
+    //       icon: <LayoutPanelTop className="w-3.5 h-3.5" />,
+    //       roles: ["USER", "DEP_ADMIN"],
+    //     },
+    //     {
+    //       name: "Email List",
+    //       path: "/dashboard/EmailList",
+    //       icon: <List className="w-3.5 h-3.5" />,
+    //       roles: ["USER", "DEP_ADMIN"],
+    //     },
+    //     {
+    //       name: "TM Email List",
+    //       path: "/dashboard/TmEmailList",
+    //       icon: <List className="w-3.5 h-3.5" />,
+    //       roles: ["USER", "DEP_ADMIN"],
+    //     },
+    //     {
+    //       name: "Bulk Email",
+    //       path: "/dashboard/BulkEmail",
+    //       icon: <Mails className="w-3.5 h-3.5" />,
+    //       roles: ["USER", "DEP_ADMIN"],
+    //     },
+    //     {
+    //       name: "TM Bulk Email",
+    //       path: "/dashboard/TmBulkEmail",
+    //       icon: <Mails className="w-3.5 h-3.5" />,
+    //       roles: ["USER", "DEP_ADMIN"],
+    //     },
+    //   ],
+    // },
     {
       name: "All Months",
       icon: <Calendar className="w-4 h-4" />,
@@ -301,7 +316,7 @@ const LeftNav = ({ set }) => {
         ${isMobileDrawer ? "w-full" : isCollapsed ? "w-[74px]" : "w-[230px]"}`}
     >
       <div
-        className={`flex flex-col min-h-0 flex-1 overflow-hidden bg-zinc-950 border-white/[0.07] shadow-2xl ${isMobileDrawer ? "mx-3 mb-3 rounded-3xl border" : "mx-1 rounded-2xl border"}`}
+        className={`flex flex-col min-h-0 min-w-0 flex-1 overflow-hidden bg-zinc-950 border-white/[0.07] shadow-2xl ${isMobileDrawer ? "mx-3 mb-3 rounded-3xl border" : "mx-1 rounded-2xl border"}`}
       >
         {/* Top accent line */}
         <div className="h-[1.5px] w-full flex-shrink-0 bg-gradient-to-r from-transparent via-white/30 to-white/5" />
@@ -312,28 +327,32 @@ const LeftNav = ({ set }) => {
             className={`flex-shrink-0 flex items-center px-2 py-1
           ${isCollapsed ? "justify-center" : "justify-end"}`}
           >
-            <button
-              onClick={() => setIsCollapsed((prev) => !prev)}
-              className="cursor-pointer flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-200 transition-all duration-150"
-              title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            <Tooltip
+              label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              side="bottom"
             >
-              {isCollapsed ? (
-                <ArrowRight className="w-4 h-4" />
-              ) : (
-                <ArrowLeft className="w-4 h-4" />
-              )}
-            </button>
+              <button
+                onClick={() => setIsCollapsed((prev) => !prev)}
+                aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                className="cursor-pointer flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-200 transition-all duration-150"
+              >
+                {isCollapsed ? (
+                  <ArrowRight className="w-4 h-4" />
+                ) : (
+                  <ArrowLeft className="w-4 h-4" />
+                )}
+              </button>
+            </Tooltip>
           </div>
         )}
 
         {/* ── Scrollable nav ── */}
         <nav
-          className={`sidebar-scroll flex-1 overflow-y-auto ${isMobileDrawer ? "p-2" : "p-1"}`}
+          className={`sidebar-scroll flex-1 overflow-y-auto overflow-x-hidden ${isMobileDrawer ? "p-2" : "p-1"}`}
           style={{
             scrollbarWidth: "thin",
             scrollbarColor: "#52525b transparent",
-          }} // className="flex-1 overflow-y-auto py-1 px-2 scrollbar-none"
-          // style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          }}
         >
           {filteredMenuItems.map((item, index) => {
             const isActive = isMenuActive(item.path);
@@ -345,6 +364,11 @@ const LeftNav = ({ set }) => {
             return (
               <div key={index} className="mb-[1px]">
                 {/* ── Main row ── */}
+                <Tooltip
+                  label={isCollapsed ? label : undefined}
+                  side="right"
+                  className="w-full"
+                >
                 <div
                   onClick={() => {
                     if (isCollapsed) {
@@ -358,7 +382,6 @@ const LeftNav = ({ set }) => {
                       if (set) set();
                     }
                   }}
-                  title={isCollapsed ? label : undefined}
                   className={`relative flex items-center cursor-pointer rounded-xl border transition-all duration-150 group
                     ${isCollapsed ? "justify-center py-[2px]" : isMobileDrawer ? "justify-between px-3 py-2.5 my-1.5" : "justify-between px-2 py-1 my-1"}
                     ${
@@ -414,6 +437,7 @@ const LeftNav = ({ set }) => {
                     </span>
                   )}
                 </div>
+                </Tooltip>
 
                 {/* ── Submenu (hidden when collapsed) ── */}
                 {hasSubmenu && isExpanded && !isCollapsed && (
@@ -468,21 +492,22 @@ const LeftNav = ({ set }) => {
         <div
           className={`flex-shrink-0 px-2 ${isMobileDrawer ? "py-2" : "py-1"}`}
         >
-          <div
-            onClick={handleLogout}
-            title={isCollapsed ? "Logout" : undefined}
-            className={`flex items-center cursor-pointer rounded-xl border border-transparent hover:bg-white/5 hover:border-white/[0.08] transition-all duration-150 group
+          <Tooltip label={isCollapsed ? "Logout" : undefined} side="right">
+            <div
+              onClick={handleLogout}
+              className={`flex items-center cursor-pointer rounded-xl border border-transparent hover:bg-white/5 hover:border-white/[0.08] transition-all duration-150 group
               ${isCollapsed ? "justify-center px-0 py-[4px]" : isMobileDrawer ? "gap-3 px-3 py-2.5" : "gap-3 px-3 py-1"}`}
-          >
-            <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-500 group-hover:text-zinc-300 flex-shrink-0">
-              <LogOut className="w-3.5 h-3.5" />
-            </span>
-            {!isCollapsed && (
-              <span className="text-[12px] font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors whitespace-nowrap">
-                Logout
+            >
+              <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-500 group-hover:text-zinc-300 flex-shrink-0">
+                <LogOut className="w-3.5 h-3.5" />
               </span>
-            )}
-          </div>
+              {!isCollapsed && (
+                <span className="text-[12px] font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors whitespace-nowrap">
+                  Logout
+                </span>
+              )}
+            </div>
+          </Tooltip>
         </div>
       </div>
     </div>

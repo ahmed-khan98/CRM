@@ -5,6 +5,7 @@ import { Building2, Calendar, ExternalLink, FolderOpen, MessageSquare, Paperclip
 import Image from "next/image";
 import { STATUS_CONFIG } from "../constants";
 import { formatDue, getClientDisplayName, getPlainTextFromHtml, getProjectDepartmentName } from "../utils";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 function TaskCardBadges({ task, showProject, onProjectClick }) {
   if (!showProject) return null;
@@ -55,16 +56,16 @@ function TaskCardFooter({ task }) {
         {assigneeCount > 0 ? (
           <div className="flex -space-x-1.5">
             {task.assignees.slice(0, 3).map((a) => (
-              <div
-                key={a._id}
-                className="relative h-6 w-6 rounded-full ring-2 ring-white overflow-hidden bg-zinc-200 flex items-center justify-center"
-                title={a.fullName}
-              >
-                {a.image
-                  ? <Image src={a.image} alt={a.fullName} fill className="object-cover" />
-                  : <User2 className="h-3 w-3 text-zinc-500" />
-                }
-              </div>
+              <Tooltip key={a._id} label={a.fullName} side="top">
+                <div
+                  className="relative h-6 w-6 rounded-full ring-2 ring-white overflow-hidden bg-zinc-200 flex items-center justify-center"
+                >
+                  {a.image
+                    ? <Image src={a.image} alt={a.fullName} fill className="object-cover" />
+                    : <User2 className="h-3 w-3 text-zinc-500" />
+                  }
+                </div>
+              </Tooltip>
             ))}
             {assigneeCount > 3 && (
               <div className="h-6 w-6 rounded-full ring-2 ring-white bg-zinc-100 flex items-center justify-center text-[9px] font-semibold text-zinc-500">

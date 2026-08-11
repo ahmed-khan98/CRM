@@ -27,7 +27,9 @@ import AnnouncementMarquee from "../_Components/Layout/AnnouncementMarquee";
 import Ip from "../_Components/ip";
 import Navbar from "../_Components/Layout/Navbar";
 import Footer from "../_Components/Layout/Footer";
-import NotificationSocketListener from "../_Components/Layout/NotificationSocketListener";
+import SocketProvider from "../_Components/Socket/SocketProvider";
+import { CallProvider } from "../_Components/chat/CallContext";
+import CallOverlay from "../_Components/chat/CallOverlay";
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -232,8 +234,10 @@ const DashboardLayout = ({ children }) => {
     );
   }
   return (
-    <div className="app-container ">
-      <NotificationSocketListener />
+    <SocketProvider>
+    <CallProvider>
+    <div className="app-container overflow-x-hidden">
+      <CallOverlay />
       {isOnBreak 
        ? (
         <BreakOverlay startTime={breakInTime} onBreakOut={handleBreakOut} />
@@ -246,9 +250,9 @@ const DashboardLayout = ({ children }) => {
           //   border: "1px solid rgba(255,255,255,0.07)",
           //   // boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
           // }}
-          className="min-h-screen bg-zinc-100 flex flex-col pt-16 md:pt-18"
+          className="min-h-screen bg-zinc-100 flex flex-col pt-14 overflow-x-hidden"
         >
-          <div className="flex flex-1 relative overflow-hidden">
+          <div className="flex flex-1 relative min-w-0 overflow-x-hidden">
             {isMobile && isSidebarOpen && (
               <div
                 className="fixed inset-0 backdrop-blur-sm bg-black/20 z-20"
@@ -263,19 +267,24 @@ const DashboardLayout = ({ children }) => {
                   : "-translate-x-full lg:translate-x-0"
               } ${
                 isMobile
-                  ? "fixed top-0 left-0 h-full z-30 w-78 shadow-xl overflow-y-auto"
-                  : "lg:relative lg:top-0 h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] overflow-y-auto"
+                  ? `fixed top-0 left-0 h-full z-30 w-78 overflow-y-auto ${
+                      isSidebarOpen
+                        ? "shadow-xl"
+                        : "shadow-none pointer-events-none invisible"
+                    }`
+                  : "lg:relative lg:top-0 h-[calc(100vh-3.5rem)] overflow-y-auto shrink-0"
               } transition-transform duration-300 ease-in-out`}
+              aria-hidden={isMobile && !isSidebarOpen ? true : undefined}
             >
               <LeftNav />
             </div>
 
             <main
-              className={`flex-1 min-w-0 overflow-y-auto overflow-x-hidden h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] transition-all duration-300 ease-in-out px-1 
+              className={`flex flex-1 min-w-0 flex-col overflow-y-auto overflow-x-hidden h-[calc(100vh-3.5rem)] transition-all duration-300 ease-in-out px-1 
             ${isMobile ? "w-full" : ""}`}
             >
               <AnnouncementMarquee />
-              <div className="w-full h-auto py-2">{children}</div>
+              <div className="w-full min-h-0 min-w-0 flex-1 pt-1">{children}</div>
             </main>
           </div>
         </div>
@@ -284,6 +293,8 @@ const DashboardLayout = ({ children }) => {
       )}
       <AnnouncementPopup />
     </div>
+    </CallProvider>
+    </SocketProvider>
   );
 };
 

@@ -12,17 +12,9 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import moment from "moment-timezone";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
-export function Tooltip({ text, children }) {
-  return (
-    <div className="relative group/tip inline-flex">
-      {children}
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 text-[10px] font-semibold bg-zinc-800 text-white rounded-lg opacity-0 group-hover/tip:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50 shadow-xl">
-        {text}
-      </div>
-    </div>
-  );
-}
+export { Tooltip };
 
 export const calculateDuration = (inTime, outTime) => {
   if (!inTime || !outTime) return "-";

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import moment from "moment-timezone";
-import { Bell } from "lucide-react";
+import { Bell, ChevronRight } from "lucide-react";
 import {
   useGetMyNotificationsQuery,
   useGetUnreadNotificationCountQuery,
@@ -131,16 +131,36 @@ const NotificationBell = ({ mobile = false }) => {
         type="button"
         onClick={handleOpen}
         aria-label="Notifications"
-        className={`relative flex items-center justify-center rounded-xl transition-all duration-150 bg-white/5 border border-white/[0.08] text-zinc-300 hover:bg-white/[0.09] hover:text-white ${
-          mobile ? "w-full gap-2 px-4 py-2 text-sm font-bold" : "h-9 w-9"
-        }`}
+        className={
+          mobile
+            ? "flex w-full items-center gap-3 rounded-xl border border-white/[0.07] bg-white/[0.04] px-3 py-2.5 text-left transition-all duration-150 hover:bg-white/[0.07] active:scale-[0.98]"
+            : "relative flex h-7 w-7 items-center justify-center rounded-lg bg-white/5 border border-white/[0.08] text-zinc-300 transition-all duration-150 hover:bg-white/[0.09] hover:text-white"
+        }
       >
-        <Bell size={16} />
-        {mobile && <span>Notifications</span>}
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white leading-none">
-            {unreadCount > 99 ? "99+" : unreadCount}
-          </span>
+        {mobile ? (
+          <>
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-zinc-300">
+              <Bell size={15} />
+            </span>
+            <span className="flex-1 text-[13px] font-semibold text-zinc-200">
+              Notifications
+            </span>
+            {unreadCount > 0 && (
+              <span className="min-w-[20px] shrink-0 rounded-full bg-red-500 px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-white">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+            <ChevronRight size={14} className="shrink-0 text-zinc-500" />
+          </>
+        ) : (
+          <>
+            <Bell size={14} />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white leading-none">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </>
         )}
       </button>
 

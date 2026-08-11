@@ -9,7 +9,13 @@ import {
 } from "@/app/_Services/employee/page";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import { useEffect, useRef } from "react";
-import { empSchema } from "@/app/schema/employee";
+import {
+  empSchema,
+  GENDER_OPTIONS,
+  MARITAL_OPTIONS,
+  BLOOD_OPTIONS,
+  EMPLOYMENT_TYPE_OPTIONS,
+} from "@/app/schema/employee";
 import FormikSelect from "./formikSelect";
 import ModalShell from "./ModalShell";
 import { fleet } from "../fleet/fleetTheme";
@@ -28,6 +34,56 @@ const ErrMsg = ({ name }) => (
     className="text-[11px] mt-1 font-medium text-red-400"
   />
 );
+
+const SectionTitle = ({ children }) => (
+  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-zinc-500 pt-2">
+    {children}
+  </p>
+);
+
+const emptyEmergency = () => ({
+  name: "",
+  phone: "",
+  relationship: "",
+  address: "",
+});
+
+const dateOnly = (v) => (v ? String(v).split("T")[0] : "");
+
+const appendHrmsFields = (payload, values) => {
+  if (values.dateOfBirth) payload.append("dateOfBirth", values.dateOfBirth);
+  if (values.gender) payload.append("gender", values.gender);
+  if (values.maritalStatus) payload.append("maritalStatus", values.maritalStatus);
+  if (values.bloodGroup) payload.append("bloodGroup", values.bloodGroup);
+  if (values.employmentType) payload.append("employmentType", values.employmentType);
+  if (values.currentSalary !== "" && values.currentSalary != null) {
+    payload.append("currentSalary", values.currentSalary);
+  }
+  if (values.bankName) payload.append("bankName", values.bankName);
+  if (values.accountTitle) payload.append("accountTitle", values.accountTitle);
+  if (values.accountNumber) payload.append("accountNumber", values.accountNumber);
+  if (values.iban) payload.append("iban", values.iban);
+  if (values.ntn) payload.append("ntn", values.ntn);
+  payload.append("emergencyContact", JSON.stringify(values.emergencyContact || {}));
+};
+
+const hrmsJsonBody = (values) => ({
+  dateOfBirth: values.dateOfBirth || undefined,
+  gender: values.gender || "",
+  maritalStatus: values.maritalStatus || "",
+  bloodGroup: values.bloodGroup || "",
+  employmentType: values.employmentType || "",
+  currentSalary:
+    values.currentSalary === "" || values.currentSalary == null
+      ? undefined
+      : Number(values.currentSalary),
+  bankName: values.bankName || "",
+  accountTitle: values.accountTitle || "",
+  accountNumber: values.accountNumber || "",
+  iban: values.iban || "",
+  ntn: values.ntn || "",
+  emergencyContact: values.emergencyContact || {},
+});
 
 const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
   const [createEmployee] = useCreateEmployeeMutation();
@@ -50,6 +106,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
       payload.append("CNIC", values?.CNIC);
       payload.append("phoneNo", values?.phoneNo);
       payload.append("designation", values?.designation);
+      appendHrmsFields(payload, values);
 
       const response = await (isEdit
         ? updateEmployee(
@@ -65,6 +122,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                     role: values?.role,
                     phoneNo: values?.phoneNo,
                     designation: values?.designation,
+                    ...hrmsJsonBody(values),
                   },
                   id: data?._id,
                 }
@@ -92,8 +150,8 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
   };
 
   const initialValues = {
-    departmentId: data?.departmentId?._id || "",
-    joiningDate: data?.joiningDate?.split("T")[0] || "",
+    departmentId: data?.departmentId?._id || data?.departmentId || "",
+    joiningDate: dateOnly(data?.joiningDate),
     fullName: data?.fullName || "",
     designation: data?.designation || "",
     email: data?.email || "",
@@ -103,7 +161,23 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
     phoneNo: data?.phoneNo || "",
     address: data?.address || "",
     image: data?.image || "",
+    password: "",
     isEdit: !!data,
+    dateOfBirth: dateOnly(data?.dateOfBirth),
+    gender: data?.gender || "",
+    maritalStatus: data?.maritalStatus || "",
+    bloodGroup: data?.bloodGroup || "",
+    employmentType: data?.employmentType || "",
+    currentSalary: data?.currentSalary ?? "",
+    bankName: data?.bankName || "",
+    accountTitle: data?.accountTitle || "",
+    accountNumber: data?.accountNumber || "",
+    iban: data?.iban || "",
+    ntn: data?.ntn || "",
+    emergencyContact: {
+      ...emptyEmergency(),
+      ...(data?.emergencyContact || {}),
+    },
   };
 
   const roleOption = [
@@ -120,7 +194,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
       isOpen={isOpen}
       onClose={closeModal}
       title={isEdit ? "Edit Employee" : "Add Employee"}
-      maxWidthClass="max-w-3xl"
+      maxWidthClass="max-w-4xl"
       zClass="z-50"
     >
       <Formik
@@ -156,8 +230,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
             setFieldValue("image", file);
           };
 
-          const handleDeleteMainImage = () =>
-            setFieldValue("image", "");
+          const handleDeleteMainImage = () => setFieldValue("image", "");
 
           const previewSrc =
             values.image instanceof File
@@ -223,6 +296,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                 </div>
               </div>
 
+              <SectionTitle>Basic Information</SectionTitle>
               <div className="h-px bg-white/[0.06]" />
 
               <div>
@@ -265,7 +339,9 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                       <input
                         {...field}
                         type="date"
-                        className={inputClass(errors.joiningDate && touched.joiningDate)}
+                        className={inputClass(
+                          errors.joiningDate && touched.joiningDate
+                        )}
                       />
                     )}
                   </Field>
@@ -294,7 +370,9 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                         {...field}
                         type="text"
                         placeholder="e.g. Senior Developer"
-                        className={inputClass(errors.designation && touched.designation)}
+                        className={inputClass(
+                          errors.designation && touched.designation
+                        )}
                       />
                     )}
                   </Field>
@@ -339,7 +417,9 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                           {...field}
                           type="text"
                           placeholder="••••••••"
-                          className={inputClass(errors.password && touched.password)}
+                          className={inputClass(
+                            errors.password && touched.password
+                          )}
                         />
                       )}
                     </Field>
@@ -366,7 +446,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                   {({ field }) => (
                     <textarea
                       {...field}
-                      rows={3}
+                      rows={2}
                       placeholder="Full address..."
                       className={`${fleet.modalTextarea} leading-relaxed`}
                     />
@@ -375,13 +455,161 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                 <ErrMsg name="address" />
               </div>
 
+              <SectionTitle>Personal Information</SectionTitle>
               <div className="h-px bg-white/[0.06]" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <FieldLabel>Date of Birth</FieldLabel>
+                  <Field name="dateOfBirth">
+                    {({ field }) => (
+                      <input {...field} type="date" className={inputClass(false)} />
+                    )}
+                  </Field>
+                </div>
+                <FormikSelect
+                  name="gender"
+                  label="Gender"
+                  options={GENDER_OPTIONS}
+                  value={values.gender}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.gender}
+                  touched={touched.gender}
+                  placeholder="Select gender"
+                  variant="dark"
+                />
+                <FormikSelect
+                  name="maritalStatus"
+                  label="Marital Status"
+                  options={MARITAL_OPTIONS}
+                  value={values.maritalStatus}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.maritalStatus}
+                  touched={touched.maritalStatus}
+                  placeholder="Select status"
+                  variant="dark"
+                />
+                <FormikSelect
+                  name="bloodGroup"
+                  label="Blood Group"
+                  options={BLOOD_OPTIONS}
+                  value={values.bloodGroup}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.bloodGroup}
+                  touched={touched.bloodGroup}
+                  placeholder="Select blood group"
+                  variant="dark"
+                />
+              </div>
 
+              <SectionTitle>Emergency Contact</SectionTitle>
+              <div className="h-px bg-white/[0.06]" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <FieldLabel>Contact Name</FieldLabel>
+                  <Field name="emergencyContact.name">
+                    {({ field }) => (
+                      <input {...field} type="text" className={inputClass(false)} placeholder="Name" />
+                    )}
+                  </Field>
+                </div>
+                <div>
+                  <FieldLabel>Contact Number</FieldLabel>
+                  <Field name="emergencyContact.phone">
+                    {({ field }) => (
+                      <input {...field} type="text" className={inputClass(false)} placeholder="0300-1234567" />
+                    )}
+                  </Field>
+                </div>
+                <div>
+                  <FieldLabel>Relationship</FieldLabel>
+                  <Field name="emergencyContact.relationship">
+                    {({ field }) => (
+                      <input {...field} type="text" className={inputClass(false)} placeholder="e.g. Spouse" />
+                    )}
+                  </Field>
+                </div>
+                <div>
+                  <FieldLabel>Address (optional)</FieldLabel>
+                  <Field name="emergencyContact.address">
+                    {({ field }) => (
+                      <input {...field} type="text" className={inputClass(false)} placeholder="Address" />
+                    )}
+                  </Field>
+                </div>
+              </div>
+
+              <SectionTitle>Employment & Starting Salary</SectionTitle>
+              <div className="h-px bg-white/[0.06]" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormikSelect
+                  name="employmentType"
+                  label="Employment Type"
+                  options={EMPLOYMENT_TYPE_OPTIONS}
+                  value={values.employmentType}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  error={errors.employmentType}
+                  touched={touched.employmentType}
+                  placeholder="Permanent / Probation"
+                  variant="dark"
+                />
+                <div>
+                  <FieldLabel>Starting Basic Salary</FieldLabel>
+                  <Field name="currentSalary">
+                    {({ field }) => (
+                      <input
+                        {...field}
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 100000"
+                        className={inputClass(false)}
+                      />
+                    )}
+                  </Field>
+                  <p className="text-[10px] text-zinc-500 mt-1">
+                    Full package (salary + allowances) can also be set from employee profile → Compensation.
+                  </p>
+                </div>
+              </div>
+
+              <SectionTitle>Banking & Tax</SectionTitle>
+              <div className="h-px bg-white/[0.06]" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  ["bankName", "Bank Name"],
+                  ["accountTitle", "Account Title"],
+                  ["accountNumber", "Account Number"],
+                  ["iban", "IBAN (optional)"],
+                  ["ntn", "NTN"],
+                ].map(([name, label]) => (
+                  <div key={name}>
+                    <FieldLabel>{label}</FieldLabel>
+                    <Field name={name}>
+                      {({ field }) => (
+                        <input {...field} type="text" className={inputClass(false)} />
+                      )}
+                    </Field>
+                  </div>
+                ))}
+              </div>
+
+              <div className="h-px bg-white/[0.06]" />
               <div className="flex justify-end gap-2 pt-1">
-                <button type="button" onClick={closeModal} className={fleet.modalCancelBtn}>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className={fleet.modalCancelBtn}
+                >
                   Cancel
                 </button>
-                <button type="submit" disabled={isSubmitting} className={fleet.modalPrimaryBtn}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={fleet.modalPrimaryBtn}
+                >
                   {isSubmitting
                     ? "Processing..."
                     : isEdit

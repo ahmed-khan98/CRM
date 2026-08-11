@@ -23,8 +23,26 @@ export function isPdfFile(url, filename) {
 /** Binary/raw files that must go through backend proxy (not direct Cloudinary) */
 export function needsProxyDownload(url, filename) {
   const name = (filename || url || "").toLowerCase().split("?")[0];
-  return PROXY_EXTENSIONS.some((ext) => name.endsWith(ext));
+  if (PROXY_EXTENSIONS.some((ext) => name.endsWith(ext))) return true;
+  // Cloudinary raw delivery (PDFs/docs often blocked in browser)
+  if (/\/raw\/upload\//i.test(url || "")) return true;
+  return false;
 }
+
+/** Any chat document that should never open via raw Cloudinary link */
+export function isChatDocument(url, filename, mimeType = "") {
+  const name = (filename || url || "").toLowerCase().split("?")[0];
+  const mime = (mimeType || "").toLowerCase();
+  if (needsProxyDownload(url, filename)) return true;
+  if (mime.includes("pdf") || mime.includes("msword") || mime.includes("officedocument"))
+    return true;
+  if (mime.includes("zip") || mime.includes("rar") || mime.includes("octet-stream"))
+    return true;
+  if (/\.(pdf|doc|docx|xls|xlsx|ppt|pptx|zip|rar|7z|txt|csv)$/i.test(name))
+    return true;
+  return false;
+}
+
 
 /** Office / archive / design files cannot open in browser tab — force download */
 export function isDownloadOnlyFile(url, filename) {

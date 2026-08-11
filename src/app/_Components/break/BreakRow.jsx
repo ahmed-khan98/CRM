@@ -7,6 +7,7 @@ import {
 } from "@/app/utilities/date";
 import { getStatusConfig } from "@/app/utilities/attendence";
 import moment from "moment-timezone";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 const TZ = "Asia/Karachi";
 
 const BreakRow = ({ item }) => {
@@ -108,12 +109,11 @@ const BreakRow = ({ item }) => {
       <td className="px-5 py-3.5 max-w-[180px]">
         {item.type?.toUpperCase() === "OFFICIAL" ? (
           item.reason ? (
-            <span
-              className="text-xs text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg font-medium block truncate"
-              title={item.reason}
-            >
-              {item.reason}
-            </span>
+            <Tooltip label={item.reason} side="top" className="max-w-full" delay>
+              <span className="text-xs text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg font-medium block truncate">
+                {item.reason}
+              </span>
+            </Tooltip>
           ) : (
             <span className="text-zinc-300 text-xs font-bold">—</span>
           )

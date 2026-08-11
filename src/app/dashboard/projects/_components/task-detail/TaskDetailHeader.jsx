@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { Edit2, Trash2, X } from "lucide-react";
 import { PRIORITY_CONFIG, STATUS_CONFIG } from "../constants";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 const DARK_PRIORITY = {
   critical: "bg-red-500/15 text-red-300 border-red-500/25",
@@ -48,35 +49,42 @@ function TaskDetailHeader({ task, onClose, onEdit, onDelete, canEdit, canDelete 
 
         <div className="flex items-center gap-1 shrink-0">
           {canEdit && (
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                onEdit?.(task);
-              }}
-              title="Edit task"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-zinc-400 hover:bg-white/5 hover:text-zinc-100 transition cursor-pointer"
-            >
-              <Edit2 className="h-3.5 w-3.5" />
-            </button>
+            <Tooltip label="Edit task" side="bottom">
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onEdit?.(task);
+                }}
+                aria-label="Edit task"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-zinc-400 hover:bg-white/5 hover:text-zinc-100 transition cursor-pointer"
+              >
+                <Edit2 className="h-3.5 w-3.5" />
+              </button>
+            </Tooltip>
           )}
           {canDelete && (
+            <Tooltip label="Delete task" side="bottom">
+              <button
+                type="button"
+                onClick={() => onDelete?.(task)}
+                aria-label="Delete task"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-zinc-400 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition cursor-pointer"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </Tooltip>
+          )}
+          <Tooltip label="Close" side="bottom">
             <button
               type="button"
-              onClick={() => onDelete?.(task)}
-              title="Delete task"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-zinc-400 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 transition cursor-pointer"
+              onClick={onClose}
+              aria-label="Close"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-zinc-400 hover:bg-white/5 hover:text-zinc-100 transition cursor-pointer"
             >
-              <Trash2 className="h-3.5 w-3.5" />
+              <X className="h-4 w-4" />
             </button>
-          )}
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 text-zinc-400 hover:bg-white/5 hover:text-zinc-100 transition cursor-pointer"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          </Tooltip>
         </div>
       </div>
     </div>

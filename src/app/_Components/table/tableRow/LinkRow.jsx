@@ -4,6 +4,7 @@ import { useUpdatePaymentStatusMutation } from "@/app/_Services/paymentLink/page
 import toast from "react-hot-toast";
 import RowMenu from "../../Payment/RowMenu";
 import { currencySymbols } from "@/app/utilities/currencyType";
+import Tooltip from "@/app/_Components/ui/Tooltip";
 
 const STATUS_STYLES = {
   paid: "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -101,12 +102,16 @@ export const LinkRow = memo(
 
         {/* Brand */}
         <td className="px-1 py-2.5 min-w-[120px]">
-          <p
-            className="text-[11px] text-zinc-700 font-medium capitalize truncate max-w-[130px]"
-            title={emp?.brandId?.name}
+          <Tooltip
+            label={emp?.brandId?.name}
+            side="top"
+            className="max-w-full"
+            delay
           >
-            {emp?.brandId?.name || "No Brand"}
-          </p>
+            <p className="text-[11px] text-zinc-700 font-medium capitalize truncate max-w-[130px]">
+              {emp?.brandId?.name || "No Brand"}
+            </p>
+          </Tooltip>
         </td>
 
         {/* Services */}
