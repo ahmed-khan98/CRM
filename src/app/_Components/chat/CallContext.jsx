@@ -77,7 +77,21 @@ export function CallProvider({ children }) {
   const timerRef = useRef(null);
   const speakRafRef = useRef(null);
   const audioCtxRef = useRef(null);
+  const pendingMeshRef = useRef(new Set());
+  /** Offers that arrive from other mesh peers before our own getUserMedia
+   * resolves — call.remoteOffer only has room for one, but in a group call
+   * several already-active members can each send us an offer at once. */
+  const pendingOffersRef = useRef(new Map());
   const myId = getMyId();
+
+  // Full-mesh calling: every participant connects directly to every other
+  // participant (not just the caller). To avoid both sides offering at once
+  // (glare), only the peer with the lexicographically smaller id initiates —
+  // the other side just waits for the incoming offer.
+  const shouldInitiateTo = useCallback(
+    (otherId) => String(myId) < String(otherId),
+    [myId]
+  );
 
   const iceServers = iceData?.data?.iceServers || [
     { urls: "stun:stun.l.google.com:19302" },
@@ -199,6 +213,8 @@ export function CallProvider({ children }) {
     }
     audioCtxRef.current = null;
     setElapsed(0);
+    pendingMeshRef.current.clear();
+    pendingOffersRef.current.clear();
     peersRef.current.forEach(({ pc }) => pc.close());
     peersRef.current.clear();
     localStreamRef.current?.getTracks()?.forEach((t) => t.stop());
@@ -392,6 +408,27 @@ export function CallProvider({ children }) {
     [createAndSendOffer, patchCall, startTimer]
   );
 
+  // If local mic/camera isn't ready yet (still awaiting getUserMedia), queue
+  // the peer and connect once media becomes available instead of silently
+  // creating a track-less offer.
+  const initiateOrQueue = useCallback(
+    (peerUserId) => {
+      if (localStreamRef.current) {
+        connectToPeer(peerUserId);
+      } else {
+        pendingMeshRef.current.add(String(peerUserId));
+      }
+    },
+    [connectToPeer]
+  );
+
+  const flushPendingMesh = useCallback(() => {
+    if (!pendingMeshRef.current.size) return;
+    const targets = [...pendingMeshRef.current];
+    pendingMeshRef.current.clear();
+    targets.forEach((id) => connectToPeer(id));
+  }, [connectToPeer]);
+
   const startOutgoing = useCallback(
     async ({
       conversationId,
@@ -468,6 +505,18 @@ export function CallProvider({ children }) {
       console.error("[call] getMedia failed on accept", err);
     }
     attachLocalTracksToPeers();
+    flushPendingMesh();
+
+    const queuedOffers = [...pendingOffersRef.current.entries()];
+    pendingOffersRef.current.clear();
+    for (const [fromId, sdp] of queuedOffers) {
+      try {
+        await answerRemoteOffer(sdp, fromId);
+      } catch (err) {
+        console.error("[call] queued offer failed", err);
+      }
+    }
+
     upsertParticipant(selfProfile(), localStreamRef.current);
     if (peerUserId) {
       upsertParticipant(normUser(peer, peerUserId), null);
@@ -484,6 +533,7 @@ export function CallProvider({ children }) {
     answerRemoteOffer,
     attachLocalTracksToPeers,
     emit,
+    flushPendingMesh,
     getMedia,
     patchCall,
     upsertParticipant,
@@ -686,7 +736,7 @@ export function CallProvider({ children }) {
         });
       }),
 
-      on("call:accepted", async (payload) => {
+      on("call:accepted", (payload) => {
         const current = callRef.current;
         if (!current) return;
         const accepterId = payload.userId;
@@ -696,30 +746,30 @@ export function CallProvider({ children }) {
           null
         );
         if (
-          current.isCaller &&
-          (current.status === "outgoing" || current.status === "active")
+          ["outgoing", "active", "connecting"].includes(current.status) &&
+          shouldInitiateTo(accepterId)
         ) {
-          await connectToPeer(accepterId);
+          initiateOrQueue(accepterId);
         }
       }),
 
-      on("call:peer-joined", async (payload) => {
+      on("call:peer-joined", (payload) => {
         const current = callRef.current;
         if (!current) return;
         if (!payload.userId) return;
         upsertParticipant(normUser(payload.user, payload.userId), null);
-        // Star topology: only the caller opens a new WebRTC link
+        // Full mesh: every existing participant (caller or not) links up
+        // directly with the new joiner — whoever has the smaller id offers.
         if (
-          current.isCaller &&
-          (current.status === "outgoing" ||
-            current.status === "active" ||
-            current.status === "connecting")
+          ["outgoing", "active", "connecting"].includes(current.status) &&
+          shouldInitiateTo(payload.userId)
         ) {
-          await connectToPeer(payload.userId);
+          initiateOrQueue(payload.userId);
         }
       }),
 
       on("call:roster", (payload) => {
+        const current = callRef.current;
         const list = payload?.participants || [];
         const me = String(myId);
         list.forEach((p) => {
@@ -731,6 +781,16 @@ export function CallProvider({ children }) {
             );
           } else {
             upsertParticipant(normUser(p, id), null);
+            // Full mesh: connect straight to every other member already in
+            // the call, not just the caller — mirrors the peer-joined check
+            // above so exactly one side of each pair sends the offer.
+            if (
+              current &&
+              ["connecting", "active"].includes(current.status) &&
+              shouldInitiateTo(id)
+            ) {
+              initiateOrQueue(id);
+            }
           }
         });
       }),
@@ -782,14 +842,19 @@ export function CallProvider({ children }) {
         if (!current) return;
         const fromId = payload.fromUserId || current.peerUserId;
 
-        if (
-          current.status === "incoming" ||
-          (current.status === "connecting" && !localStreamRef.current)
-        ) {
+        if (current.status === "incoming") {
           patchCall({
             remoteOffer: payload.sdp,
             peerUserId: fromId || current.peerUserId,
           });
+          return;
+        }
+
+        // Already accepted but our own mic/camera isn't ready yet — in a
+        // mesh group call several members can offer to us at once, so queue
+        // each by sender instead of overwriting a single remoteOffer slot.
+        if (current.status === "connecting" && !localStreamRef.current) {
+          if (fromId) pendingOffersRef.current.set(String(fromId), payload.sdp);
           return;
         }
 
@@ -843,6 +908,8 @@ export function CallProvider({ children }) {
     on,
     cleanup,
     connectToPeer,
+    initiateOrQueue,
+    shouldInitiateTo,
     answerRemoteOffer,
     closePeer,
     ensurePeer,

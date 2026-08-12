@@ -13,6 +13,8 @@ import {
   Minimize2,
   X,
   Expand,
+  Volume2,
+  Volume1,
 } from "lucide-react";
 import { useCall } from "./CallContext";
 
@@ -44,7 +46,30 @@ function VideoEl({ stream, muted, mirror, className = "", fit = "cover" }) {
   );
 }
 
-function RemoteAudio({ stream }) {
+// Mobile Chrome/PWA doesn't always route call audio through the earpiece —
+// it can default to the loudspeaker. Best-effort fix: explicitly pick the
+// earpiece/speaker output device via the Audio Output Devices API. Device
+// labels are only populated once mic permission was granted (already true
+// during an active call), and support isn't universal (e.g. iOS Safari has
+// no setSinkId), so this silently no-ops where unsupported.
+async function pickSinkDeviceId(preferSpeaker) {
+  if (!navigator.mediaDevices?.enumerateDevices) return null;
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const outputs = devices.filter((d) => d.kind === "audiooutput");
+    if (!outputs.length) return null;
+    const match = outputs.find((d) =>
+      preferSpeaker
+        ? /speaker/i.test(d.label)
+        : /earpiece|receiver|handset/i.test(d.label)
+    );
+    return match?.deviceId || null;
+  } catch {
+    return null;
+  }
+}
+
+function RemoteAudio({ stream, preferSpeaker = false }) {
   const ref = useRef(null);
   useEffect(() => {
     if (ref.current && stream) {
@@ -52,6 +77,25 @@ function RemoteAudio({ stream }) {
       ref.current.play?.().catch(() => {});
     }
   }, [stream]);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !stream || typeof el.setSinkId !== "function") return;
+    let cancelled = false;
+    (async () => {
+      const deviceId = await pickSinkDeviceId(preferSpeaker);
+      if (cancelled || !deviceId) return;
+      try {
+        await el.setSinkId(deviceId);
+      } catch {
+        /* unsupported/denied — keep default output route */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [stream, preferSpeaker]);
+
   if (!stream) return null;
   return <audio ref={ref} autoPlay playsInline className="hidden" />;
 }
@@ -180,13 +224,18 @@ export default function CallOverlay() {
   const [minimized, setMinimized] = useState(false);
   const [panelExpanded, setPanelExpanded] = useState(false);
   const [screenFullscreen, setScreenFullscreen] = useState(false);
+  // Voice calls default to earpiece (like a phone call); video calls default
+  // to loudspeaker since you're already looking at the screen. User can flip
+  // it manually with the speaker button below.
+  const [preferSpeaker, setPreferSpeaker] = useState(false);
 
   // New call → always show full panel (don't stay minimized from previous)
   useEffect(() => {
     setMinimized(false);
     setPanelExpanded(false);
     setScreenFullscreen(false);
-  }, [call?.callId]);
+    setPreferSpeaker(call?.callType === "video");
+  }, [call?.callId, call?.callType]);
 
   const screenSharer = useMemo(() => {
     if (!participants?.length) return null;
@@ -242,7 +291,7 @@ export default function CallOverlay() {
     const isIncoming = call.status === "incoming";
     return (
       <>
-        <RemoteAudio stream={remoteStream} />
+        <RemoteAudio stream={remoteStream} preferSpeaker={preferSpeaker} />
         <div className="fixed bottom-4 right-4 z-[100] flex max-w-[min(100vw-2rem,320px)] items-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 px-3 py-2 text-white shadow-xl sm:bottom-6 sm:right-6">
           <button
             type="button"
@@ -320,7 +369,7 @@ export default function CallOverlay() {
 
   return (
     <>
-      <RemoteAudio stream={remoteStream} />
+      <RemoteAudio stream={remoteStream} preferSpeaker={preferSpeaker} />
 
       {/* Screen share fullscreen viewer — only shared content */}
       {screenFullscreen && screenStream ? (
@@ -516,7 +565,24 @@ export default function CallOverlay() {
                     <Video className="h-4 w-4" />
                   )}
                 </button>
-              ) : null}
+              ) : (
+                <button
+                  type="button"
+                  aria-label={
+                    preferSpeaker ? "Switch to earpiece" : "Switch to speaker"
+                  }
+                  onClick={() => setPreferSpeaker((v) => !v)}
+                  className={`flex h-10 w-10 items-center justify-center rounded-full text-white ${
+                    preferSpeaker ? "bg-sky-500" : "bg-zinc-800"
+                  }`}
+                >
+                  {preferSpeaker ? (
+                    <Volume2 className="h-4 w-4" />
+                  ) : (
+                    <Volume1 className="h-4 w-4" />
+                  )}
+                </button>
+              )}
               <button
                 type="button"
                 aria-label="Screen share"
