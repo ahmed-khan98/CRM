@@ -68,7 +68,7 @@ function PortalMenu({ btnRef, open, onClose, children }) {
 }
 
 /* ─── RowMenu ─── */
-function RowMenu({ emp, onCopy, isCopied, onDelete, isEnabled, onToggle }) {
+function RowMenu({ emp, paymentUrl, onCopy, isCopied, onDelete, isEnabled, onToggle }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
 
@@ -87,7 +87,10 @@ function RowMenu({ emp, onCopy, isCopied, onDelete, isEnabled, onToggle }) {
           <>
             {/* View */}
             <button
-              onClick={() => { window.open(`/pay/${emp?._id}`, "_blank"); setOpen(false); }}
+              onClick={() => {
+                if (paymentUrl) window.open(paymentUrl, "_blank");
+                setOpen(false);
+              }}
               className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] text-zinc-700 hover:bg-zinc-50"
             >
               <Eye className="h-3.5 w-3.5 text-zinc-400" />

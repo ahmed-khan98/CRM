@@ -13,6 +13,14 @@ const STATUS_STYLES = {
   expired: "bg-zinc-100 text-zinc-500 border-zinc-200",
 };
 
+const paymentPageUrl = (
+  process.env.NEXT_PUBLIC_PAYMENT_PAGE_URL ||
+  "https://customer-payment-link.vercel.app/"
+).replace(/\/?$/, "/");
+
+const getPublicPaymentUrl = (payId) =>
+  payId ? `${paymentPageUrl}${payId}` : "";
+
 
 export const LinkRow = memo(
   function LeadRow({ emp, setConfirmDelete, refetchAll }) {
@@ -32,9 +40,8 @@ export const LinkRow = memo(
     );
 
     const onCopy = (payId) => {
-      if (!payId) return;
-      const baseUrl = "https://customer-payment-link.vercel.app/";
-      const fullUrl = `${baseUrl}${payId}`;
+      const fullUrl = getPublicPaymentUrl(payId);
+      if (!fullUrl) return;
       navigator.clipboard
         .writeText(fullUrl)
         .then(() => {
@@ -204,6 +211,7 @@ export const LinkRow = memo(
         >
           <RowMenu
             emp={emp}
+            paymentUrl={getPublicPaymentUrl(emp?._id)}
             isCopied={isCopied}
             onCopy={onCopy}
             onDelete={(id) => setConfirmDelete(id)}
