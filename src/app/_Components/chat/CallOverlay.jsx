@@ -18,6 +18,81 @@ import {
 } from "lucide-react";
 import { useCall, useCallElapsed } from "./CallContext";
 
+function clampPanelPos(left, top, el) {
+  const w = el?.offsetWidth || 320;
+  const h = el?.offsetHeight || 240;
+  const maxL = Math.max(8, window.innerWidth - w - 8);
+  const maxT = Math.max(8, window.innerHeight - h - 8);
+  return {
+    left: Math.min(Math.max(8, left), maxL),
+    top: Math.min(Math.max(8, top), maxT),
+  };
+}
+
+function useDraggablePosition() {
+  const ref = useRef(null);
+  const [pos, setPos] = useState(null);
+  const drag = useRef(null);
+  const moved = useRef(false);
+
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!drag.current || drag.current.pointerId !== e.pointerId) return;
+      if (
+        Math.abs(e.clientX - drag.current.sx) > 4 ||
+        Math.abs(e.clientY - drag.current.sy) > 4
+      ) {
+        moved.current = true;
+      }
+      setPos(
+        clampPanelPos(
+          e.clientX - drag.current.ox,
+          e.clientY - drag.current.oy,
+          ref.current
+        )
+      );
+    };
+    const onUp = (e) => {
+      if (!drag.current || drag.current.pointerId !== e.pointerId) return;
+      drag.current = null;
+    };
+    const onResize = () => {
+      setPos((prev) =>
+        prev && ref.current ? clampPanelPos(prev.left, prev.top, ref.current) : prev
+      );
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onUp);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
+  const onPointerDown = (e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (e.target.closest?.("[data-no-drag]")) return;
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    moved.current = false;
+    drag.current = {
+      pointerId: e.pointerId,
+      ox: e.clientX - rect.left,
+      oy: e.clientY - rect.top,
+      sx: e.clientX,
+      sy: e.clientY,
+    };
+    setPos(clampPanelPos(rect.left, rect.top, el));
+  };
+
+  return { ref, pos, didDrag: () => moved.current, onPointerDown };
+}
+
 function formatElapsed(sec) {
   const m = Math.floor(sec / 60)
     .toString()
@@ -237,6 +312,8 @@ export default function CallOverlay() {
   // to loudspeaker since you're already looking at the screen. User can flip
   // it manually with the speaker button below.
   const [preferSpeaker, setPreferSpeaker] = useState(false);
+  const panelDrag = useDraggablePosition();
+  const chipDrag = useDraggablePosition();
 
   // New call → always show full panel (don't stay minimized from previous)
   useEffect(() => {
@@ -301,10 +378,24 @@ export default function CallOverlay() {
     return (
       <>
         <RemoteAudio stream={remoteStream} preferSpeaker={preferSpeaker} />
-        <div className="fixed bottom-4 right-4 z-[100] flex max-w-[min(100vw-2rem,320px)] items-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 px-3 py-2 text-white shadow-xl sm:bottom-6 sm:right-6">
+        <div
+          ref={chipDrag.ref}
+          onPointerDown={chipDrag.onPointerDown}
+          style={
+            chipDrag.pos
+              ? { left: chipDrag.pos.left, top: chipDrag.pos.top, right: "auto", bottom: "auto" }
+              : undefined
+          }
+          className={`fixed z-[100] flex max-w-[min(100vw-2rem,320px)] cursor-grab items-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 px-3 py-2 text-white shadow-xl touch-none active:cursor-grabbing ${
+            chipDrag.pos ? "" : "bottom-4 right-4 sm:bottom-6 sm:right-6"
+          }`}
+        >
           <button
             type="button"
-            onClick={() => setMinimized(false)}
+            onClick={() => {
+              if (chipDrag.didDrag()) return;
+              setMinimized(false);
+            }}
             className="flex min-w-0 flex-1 items-center gap-2 text-left"
             aria-label="Expand call"
           >
@@ -332,6 +423,7 @@ export default function CallOverlay() {
             <>
               <button
                 type="button"
+                data-no-drag
                 aria-label="Decline"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -343,6 +435,7 @@ export default function CallOverlay() {
               </button>
               <button
                 type="button"
+                data-no-drag
                 aria-label="Accept"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -357,6 +450,7 @@ export default function CallOverlay() {
           ) : (
             <button
               type="button"
+              data-no-drag
               aria-label="End call"
               onClick={(e) => {
                 e.stopPropagation();
@@ -406,16 +500,39 @@ export default function CallOverlay() {
 
       {/* Right-docked panel (desktop) / bottom sheet (mobile) — CRM stays visible */}
       <div
+        ref={panelDrag.ref}
+        style={
+          panelDrag.pos
+            ? {
+                left: panelDrag.pos.left,
+                top: panelDrag.pos.top,
+                right: "auto",
+                bottom: "auto",
+                width: panelExpanded
+                  ? "min(480px, calc(100vw - 16px))"
+                  : "min(360px, calc(100vw - 16px))",
+                height: "min(78vh, calc(100dvh - 24px))",
+                maxHeight: "min(78vh, calc(100dvh - 24px))",
+              }
+            : undefined
+        }
         className={`fixed z-[100] flex flex-col overflow-hidden border border-zinc-700/80 bg-zinc-950 text-white shadow-2xl
-          inset-x-3 bottom-3 max-h-[min(78vh,640px)] rounded-2xl
+          ${
+            panelDrag.pos
+              ? "rounded-2xl"
+              : `inset-x-3 bottom-3 max-h-[min(78vh,640px)] rounded-2xl
           sm:inset-x-auto sm:bottom-4 sm:right-4 sm:top-20 sm:max-h-none sm:rounded-2xl
           ${panelWidth}
-          w-auto`}
+          w-auto`
+          }`}
         role="dialog"
         aria-label="Call"
       >
-        {/* Header */}
-        <div className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-2.5">
+        {/* Header — press and drag to move anywhere on screen */}
+        <div
+          onPointerDown={panelDrag.onPointerDown}
+          className="flex shrink-0 cursor-grab items-center gap-2 border-b border-white/10 px-3 py-2.5 active:cursor-grabbing select-none touch-none"
+        >
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold">{name}</p>
             <p className="truncate text-[11px] text-zinc-400">{subtitle}</p>
@@ -423,6 +540,7 @@ export default function CallOverlay() {
           {inCallUi ? (
             <button
               type="button"
+              data-no-drag
               aria-label={panelExpanded ? "Compact panel" : "Widen panel"}
               className="hidden rounded-lg p-1.5 text-zinc-300 hover:bg-white/10 sm:inline-flex"
               onClick={() => setPanelExpanded((v) => !v)}
@@ -436,6 +554,7 @@ export default function CallOverlay() {
           ) : null}
           <button
             type="button"
+            data-no-drag
             aria-label="Minimize call"
             className="rounded-lg p-1.5 text-zinc-300 hover:bg-white/10"
             onClick={() => setMinimized(true)}

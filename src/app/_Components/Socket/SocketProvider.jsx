@@ -12,6 +12,7 @@ import {
 import Cookies from "js-cookie";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
+import { X } from "lucide-react";
 import { useDispatch } from "react-redux";
 import {
   playNotificationSound,
@@ -233,8 +234,16 @@ export function SocketProvider({ children }) {
             <div
               className={`${
                 t.visible ? "animate-enter" : "animate-leave"
-              } max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] px-4 py-3 shadow-xl`}
+              } relative max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] py-3 pl-4 pr-10 shadow-xl`}
             >
+              <button
+                type="button"
+                aria-label="Close notification"
+                onClick={() => toast.dismiss(t.id)}
+                className="absolute right-2 top-2 rounded-md p-1 text-zinc-400 transition hover:bg-white/10 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
               <p className="text-sm font-semibold text-white">{notifTitle}</p>
               <p className="mt-1 text-xs leading-relaxed text-zinc-400">
                 {payload?.message || ""}
