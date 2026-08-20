@@ -8,7 +8,27 @@
   --foreground: #171717;
 }
 
-/* Taake user ko hamesha scrollbar nazar aaye (forms / modals) */
+.crm-field {
+  border: 1px solid #e4e4e7 !important;
+  background-color: #fff !important;
+}
+.crm-field:focus {
+  border-color: #a1a1aa !important;
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.06);
+}
+.crm-field[readonly] {
+  background-color: #fafafa !important;
+}
+
+.react-select-container.crm-select .rs__control {
+  border: 1px solid #e4e4e7 !important;
+  min-height: 42px !important;
+  box-shadow: none !important;
+}
+.react-select-container.crm-select .rs__control--is-focused {
+  border-color: #a1a1aa !important;
+  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.06) !important;
+}
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #a1a1aa #f4f4f5;

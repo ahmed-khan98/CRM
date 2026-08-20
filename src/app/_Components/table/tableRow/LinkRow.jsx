@@ -146,6 +146,23 @@ export const LinkRow = memo(
           </p>
         </td>
 
+        {/* Sale Type */}
+        <td className="px-1 py-2.5 min-w-[90px]">
+          {emp?.type ? (
+            <span
+              className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold border whitespace-nowrap ${
+                emp.type === "UP SELL"
+                  ? "bg-violet-50 text-violet-700 border-violet-200"
+                  : "bg-sky-50 text-sky-700 border-sky-200"
+              }`}
+            >
+              {emp.type}
+            </span>
+          ) : (
+            <span className="text-[11px] text-zinc-400">—</span>
+          )}
+        </td>
+
         {/* Status */}
         <td className="px-1 py-2.5 min-w-[80px]">
           <span

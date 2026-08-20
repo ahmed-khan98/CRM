@@ -19,8 +19,8 @@ const InputField = ({
   const isDark = variant === "dark";
 
   const lightClass = hasError
-    ? "border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-2 focus:ring-red-100"
-    : "border-zinc-200 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100";
+    ? "border-[1px] border-solid border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-2 focus:ring-red-100"
+    : "border-[1px] border-solid border-zinc-200 bg-white focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100";
 
   const darkClass = hasError
     ? "border-red-400/60 bg-[#161b22] text-white focus:border-red-400"
@@ -48,9 +48,9 @@ const InputField = ({
         name={name}
         readOnly={readOnly}
         placeholder={placeholder}
-        rows={rows}
-        className={`text-[13px] w-full px-3.5 py-2.5 rounded-xl focus:outline-none transition-colors ${
-          as === "textarea" ? "resize-none" : ""
+        rows={as === "textarea" ? rows || 3 : undefined}
+        className={`${isDark ? "" : "crm-field "}text-[13px] w-full px-3.5 py-2.5 rounded-xl focus:outline-none transition-colors ${
+          as === "textarea" ? "resize-y min-h-[88px]" : "min-h-[42px]"
         } ${isDark ? darkClass : lightClass}`}
       />
 

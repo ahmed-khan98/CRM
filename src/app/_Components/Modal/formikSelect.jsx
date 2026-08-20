@@ -35,13 +35,15 @@ function FormikSelect({
       fontSize: "13px",
       cursor: "pointer",
       backgroundColor: "white",
+      borderWidth: 1,
+      borderStyle: "solid",
       borderColor: state.isFocused
-        ? "#09090b"
+        ? "#a1a1aa"
         : hasError
           ? "#ef4444"
-          : "#e5e7eb",
-      boxShadow: state.isFocused ? "0 0 0 1px #09090b" : "none",
-      ":hover": { borderColor: "#18181b" },
+          : "#e4e4e7",
+      boxShadow: state.isFocused ? "0 0 0 3px rgba(24, 24, 27, 0.06)" : "none",
+      ":hover": { borderColor: "#d4d4d8" },
     }),
     option: (base, state) => ({
       ...base,
@@ -104,7 +106,7 @@ function FormikSelect({
 
       <Select
         inputId={name}
-        className="react-select-container"
+        className={`react-select-container${isDark ? "" : " crm-select"}`}
         classNamePrefix="rs"
         options={options}
         value={selected}
