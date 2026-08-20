@@ -13,13 +13,9 @@ import ProjectModal from "../_components/ProjectModal";
 import ProjectKanbanHeader from "../_components/project/ProjectKanbanHeader";
 import { EMPTY_KANBAN_COLUMNS } from "../_components/constants";
 
-import { useKanbanBoard } from "../_hooks/useKanbanBoard";
 import { useTaskPermissions } from "../_hooks/useTaskPermissions";
 import { useProjectPermissions } from "../_hooks/useProjectPermissions";
-import {
-  useSyncedViewingTask,
-  useTaskDeleteFlow,
-} from "../_hooks/useTaskKanbanPage";
+import { useTaskBoardPage } from "../_hooks/useTaskKanbanPage";
 
 import {
   useGetProjectByIdQuery,
@@ -46,12 +42,7 @@ export default function ProjectKanbanPage() {
   const searchParams = useSearchParams();
   const taskFromQuery = searchParams.get("task");
 
-  const [taskModalOpen, setTaskModalOpen] = useState(false);
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [editProjectOpen, setEditProjectOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState(null);
-  const [viewingTask, setViewingTask] = useState(null);
-  const [defaultStatus, setDefaultStatus] = useState("todo");
 
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
@@ -63,8 +54,6 @@ export default function ProjectKanbanPage() {
 
   const { data: tasksData, isLoading: tasksLoading, isFetching: tasksFetching } =
     useGetTasksByProjectQuery(id, { skip: !id });
-  const { data: employeesData } = useGetAssigneesQuery(undefined, { skip: !taskModalOpen });
-  const employees = employeesData?.data || [];
   const { data: clientsData } = useAllClientsQuery(undefined, { skip: !editProjectOpen });
   const clients = clientsData?.data || [];
 
@@ -89,13 +78,39 @@ export default function ProjectKanbanPage() {
     [updateTaskStatus, id]
   );
 
-  const { columns, handleDragEnd } = useKanbanBoard(serverColumns, {
+  const resolveProjectId = useCallback(() => id, [id]);
+
+  const {
+    columns,
+    handleDragEnd,
+    taskModalOpen,
+    editingTask,
+    viewingTask,
+    defaultStatus,
+    detailOpen: detailModalOpen,
+    setDetailOpen: setDetailModalOpen,
+    setViewingTask,
+    handleOpenTask,
+    handleCloseDetail,
+    handleCloseTaskModal,
+    handleEditTask: handleEditFromDetail,
+    handleAddTask,
+    confirmDelete: confirmDeleteTask,
+    setConfirmDelete: setConfirmDeleteTask,
+    deleting: deletingTask,
+    handleConfirmDelete: handleConfirmDeleteTask,
+  } = useTaskBoardPage({
+    taskList,
+    serverColumns,
     onStatusUpdate,
     canMoveToDone,
     canMoveFromDone,
+    deleteTask,
+    resolveProjectId,
   });
 
-  useSyncedViewingTask(taskList, viewingTask, setViewingTask);
+  const { data: employeesData } = useGetAssigneesQuery(undefined, { skip: !taskModalOpen });
+  const employees = employeesData?.data || [];
 
   // Open specific task when landing from a notification (?task=id or sessionStorage)
   useEffect(() => {
@@ -147,51 +162,11 @@ export default function ProjectKanbanPage() {
     router,
   ]);
 
-  const resolveProjectId = useCallback(() => id, [id]);
-  const onTaskDeleted = useCallback(() => setDetailModalOpen(false), []);
-  const {
-    confirmDelete: confirmDeleteTask,
-    setConfirmDelete: setConfirmDeleteTask,
-    deleting: deletingTask,
-    handleConfirmDelete: handleConfirmDeleteTask,
-  } = useTaskDeleteFlow({
-    deleteTask,
-    resolveProjectId,
-    onDeleted: onTaskDeleted,
-  });
-
   const { totalTasks, doneTasks, progress } = useMemo(() => {
     const total = taskList?.length || 0;
     const done = columns?.done?.length || 0;
     return { totalTasks: total, doneTasks: done, progress: total > 0 ? Math.round((done / total) * 100) : 0 };
   }, [taskList?.length, columns?.done?.length]);
-
-  const handleAddTask = useCallback((statusId) => {
-    setEditingTask(null);
-    setDefaultStatus(statusId);
-    setTaskModalOpen(true);
-  }, []);
-
-  const handleOpenTask = useCallback((task) => {
-    setViewingTask(task);
-    setDetailModalOpen(true);
-  }, []);
-
-  const handleCloseDetail = useCallback(() => {
-    setDetailModalOpen(false);
-    setViewingTask(null);
-  }, []);
-
-  const handleCloseTaskModal = useCallback(() => {
-    setTaskModalOpen(false);
-    setEditingTask(null);
-  }, []);
-
-  const handleEditFromDetail = useCallback((task) => {
-    setEditingTask(task);
-    setDefaultStatus(task.status);
-    setTaskModalOpen(true);
-  }, []);
 
   const handleSaveTask = useCallback(async (form) => {
     try {
@@ -199,14 +174,14 @@ export default function ProjectKanbanPage() {
         await updateTask({
           id: form.id, projectId: id, title: form.title, description: form.description,
           priority: form.priority, status: form.status, assignees: form.assignees,
-          dueDate: form.dueDate || null, attachment: form.attachment,
+          dueDate: form.dueDate || null, attachments: form.attachments,
         }).unwrap();
         toast.success("Task updated");
       } else {
         await createTask({
           projectId: id, title: form.title, description: form.description,
           priority: form.priority, status: form.status, assignees: form.assignees,
-          dueDate: form.dueDate || null, attachment: form.attachment,
+          dueDate: form.dueDate || null, attachments: form.attachments,
         }).unwrap();
         toast.success("Task created");
       }

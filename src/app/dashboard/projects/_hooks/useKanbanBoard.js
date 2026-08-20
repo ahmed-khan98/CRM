@@ -27,9 +27,17 @@ export function useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone, c
   }, [serverColumns]);
 
   const columns = localColumns || serverColumns || EMPTY_KANBAN_COLUMNS;
+  // Mirrors `columns` for handleDragEnd to read without depending on it —
+  // `columns` gets a new reference on essentially every render (server
+  // refetch or local optimistic update), which would otherwise recreate
+  // handleDragEnd (and bust @hello-pangea/dnd's memoized Droppable props)
+  // constantly.
+  const columnsRef = useRef(columns);
+  columnsRef.current = columns;
 
   const handleDragEnd = useCallback(
     async (result) => {
+      const columns = columnsRef.current;
       const { source, destination, draggableId } = result;
       if (!destination) return;
       if (source.droppableId === destination.droppableId && source.index === destination.index) return;
@@ -79,7 +87,7 @@ export function useKanbanBoard(serverColumns, { onStatusUpdate, canMoveToDone, c
         toast.error(err?.data?.message || "Failed to update task status");
       }
     },
-    [columns, onStatusUpdate, canMoveToDone, canMoveFromDone]
+    [onStatusUpdate, canMoveToDone, canMoveFromDone]
   );
 
   return { columns, handleDragEnd };

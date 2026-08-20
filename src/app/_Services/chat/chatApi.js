@@ -220,6 +220,23 @@ export const chatApi = createApiAuction.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    getPushVapidKey: builder.query({
+      query: () => "chat/push/vapid-key",
+    }),
+    subscribePush: builder.mutation({
+      query: (body) => ({
+        url: "chat/push/subscribe",
+        method: "POST",
+        body,
+      }),
+    }),
+    unsubscribePush: builder.mutation({
+      query: (body) => ({
+        url: "chat/push/unsubscribe",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
@@ -259,4 +276,7 @@ export const {
   useAdminDisableChatMutation,
   useAdminEnableChatMutation,
   useAdminDeleteMessageMutation,
+  useLazyGetPushVapidKeyQuery,
+  useSubscribePushMutation,
+  useUnsubscribePushMutation,
 } = chatApi;

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useKanbanBoard } from "./useKanbanBoard";
 
 /**
  * Keeps viewingTask in sync when the server task list refreshes
@@ -58,4 +59,95 @@ export function useDebouncedValue(value, delay = 300) {
   }, [value, delay]);
 
   return debounced;
+}
+
+/**
+ * Shared orchestration for the two task-kanban pages (`tasks/page.jsx` and
+ * `projects/[id]/page.jsx`) — modal open/close state, the currently
+ * viewed/edited task, the kanban drag-and-drop board, and the delete-confirm
+ * flow. Each page still owns its own data fetching and `onStatusUpdate` /
+ * `resolveProjectId` (their shapes differ — project-scoped vs. global task
+ * list), everything else was near-identical copy/paste between the two.
+ */
+export function useTaskBoardPage({
+  taskList,
+  serverColumns,
+  onStatusUpdate,
+  canMoveToDone,
+  canMoveFromDone,
+  deleteTask,
+  resolveProjectId,
+}) {
+  const [taskModalOpen, setTaskModalOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [viewingTask, setViewingTask] = useState(null);
+  const [defaultStatus, setDefaultStatus] = useState("todo");
+
+  useSyncedViewingTask(taskList, viewingTask, setViewingTask);
+
+  const { columns, handleDragEnd } = useKanbanBoard(serverColumns, {
+    onStatusUpdate,
+    canMoveToDone,
+    canMoveFromDone,
+  });
+
+  const onTaskDeleted = useCallback(() => setDetailOpen(false), []);
+  const {
+    confirmDelete,
+    setConfirmDelete,
+    deleting,
+    handleConfirmDelete,
+  } = useTaskDeleteFlow({ deleteTask, resolveProjectId, onDeleted: onTaskDeleted });
+
+  const handleOpenTask = useCallback((task) => {
+    setViewingTask(task);
+    setDetailOpen(true);
+  }, []);
+
+  const handleCloseDetail = useCallback(() => {
+    setDetailOpen(false);
+    setViewingTask(null);
+  }, []);
+
+  const handleCloseTaskModal = useCallback(() => {
+    setTaskModalOpen(false);
+    setEditingTask(null);
+  }, []);
+
+  const handleEditTask = useCallback((task) => {
+    setEditingTask(task);
+    setDefaultStatus(task.status);
+    setTaskModalOpen(true);
+  }, []);
+
+  const handleAddTask = useCallback((statusId) => {
+    setEditingTask(null);
+    setDefaultStatus(statusId || "todo");
+    setTaskModalOpen(true);
+  }, []);
+
+  return {
+    columns,
+    handleDragEnd,
+    taskModalOpen,
+    setTaskModalOpen,
+    detailOpen,
+    setDetailOpen,
+    editingTask,
+    setEditingTask,
+    viewingTask,
+    setViewingTask,
+    defaultStatus,
+    setDefaultStatus,
+    handleOpenTask,
+    handleCloseDetail,
+    handleCloseTaskModal,
+    handleEditTask,
+    handleAddTask,
+    confirmDelete,
+    setConfirmDelete,
+    deleting,
+    handleConfirmDelete,
+  };
 }

@@ -18,9 +18,26 @@ import {
   unlockNotificationAudio,
 } from "@/app/_utils/notificationSound";
 import { invalidateTaskBoardTags } from "@/app/_utils/invalidateTaskBoard";
-import { chatApi } from "@/app/_Services/chat/chatApi";
+import {
+  chatApi,
+  useLazyGetPushVapidKeyQuery,
+  useSubscribePushMutation,
+} from "@/app/_Services/chat/chatApi";
 
 const SocketContext = createContext(null);
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; i++) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
 
 const getSocketBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_SOCKET_URL) {
@@ -56,6 +73,9 @@ export function SocketProvider({ children }) {
   const [connected, setConnected] = useState(false);
   const [presenceMap, setPresenceMap] = useState({});
   const listenersRef = useRef(new Map());
+  const pushSetupRef = useRef(false);
+  const [fetchVapidKey] = useLazyGetPushVapidKeyQuery();
+  const [subscribePush] = useSubscribePushMutation();
 
   const emit = useCallback((event, payload, ack) => {
     const s = socketRef.current;
@@ -96,6 +116,53 @@ export function SocketProvider({ children }) {
     let cancelled = false;
     let retryTimer = null;
 
+    // Registers this device for OS-level push notifications (mainly for
+    // incoming calls — see worker/index.js) so the user is alerted even
+    // when the PWA is backgrounded or another app is in the foreground.
+    // Runs once per browser session; safe to call repeatedly since it's a
+    // no-op once a subscription already exists.
+    const setupPushSubscription = async () => {
+      if (pushSetupRef.current) return;
+      if (cancelled) return;
+      if (
+        typeof window === "undefined" ||
+        !("serviceWorker" in navigator) ||
+        !("PushManager" in window) ||
+        !("Notification" in window)
+      ) {
+        return;
+      }
+      pushSetupRef.current = true;
+      try {
+        if (Notification.permission === "default") {
+          const perm = await Notification.requestPermission();
+          if (perm !== "granted") return;
+        }
+        if (Notification.permission !== "granted") return;
+
+        const registration = await navigator.serviceWorker.ready;
+        let subscription = await registration.pushManager.getSubscription();
+
+        if (!subscription) {
+          const res = await fetchVapidKey().unwrap();
+          const publicKey = res?.data?.publicKey || res?.publicKey;
+          if (!publicKey) return;
+          subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(publicKey),
+          });
+        }
+
+        const json = subscription.toJSON();
+        await subscribePush({
+          endpoint: json.endpoint,
+          keys: json.keys,
+        }).unwrap();
+      } catch {
+        pushSetupRef.current = false;
+      }
+    };
+
     const connect = () => {
       if (cancelled) return;
       const token = Cookies.get("token");
@@ -133,6 +200,7 @@ export function SocketProvider({ children }) {
         });
         // Ask server who is already online (missed events before this socket joined)
         socket.emit("chat:presence:request");
+        setupPushSubscription();
       });
 
       socket.on("disconnect", () => setConnected(false));
@@ -155,6 +223,11 @@ export function SocketProvider({ children }) {
             /* ignore */
           }
         }
+        const notifCount = Number(payload?.count) || 1;
+        const notifTitle =
+          notifCount > 1 && payload?.title
+            ? `${payload.title} · ${notifCount} new`
+            : payload?.title || "New notification";
         toast.custom(
           (t) => (
             <div
@@ -162,9 +235,7 @@ export function SocketProvider({ children }) {
                 t.visible ? "animate-enter" : "animate-leave"
               } max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] px-4 py-3 shadow-xl`}
             >
-              <p className="text-sm font-semibold text-white">
-                {payload?.title || "New notification"}
-              </p>
+              <p className="text-sm font-semibold text-white">{notifTitle}</p>
               <p className="mt-1 text-xs leading-relaxed text-zinc-400">
                 {payload?.message || ""}
               </p>

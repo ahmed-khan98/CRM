@@ -10,8 +10,8 @@ import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import VendorModal from "@/app/_Components/Modal/VendorModal";
 import Pagination from "@/app/_Components/PaginationComponent/Pagination";
-import FleetRowMenu from "@/app/_Components/fleet/FleetRowMenu";
-import { fleet, fleetStatusClass } from "@/app/_Components/fleet/fleetTheme";
+import FleetVendorRow from "@/app/_Components/fleet/FleetVendorRow";
+import { fleet } from "@/app/_Components/fleet/fleetTheme";
 import {
   useGetVendorsQuery,
   useDeleteVendorMutation,
@@ -36,14 +36,39 @@ export default function FleetVendorsPage() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const searchTimer = useMemo(() => ({ current: null }), []);
 
-  const onSearchChange = (val) => {
+  const onSearchChange = useCallback((val) => {
     setSearch(val);
     clearTimeout(searchTimer.current);
     searchTimer.current = setTimeout(() => {
       setDebouncedSearch(val);
       setPage(1);
     }, 350);
-  };
+  }, [searchTimer]);
+
+  const onTabChange = useCallback((v) => {
+    setStatus(v);
+    setPage(1);
+  }, []);
+
+  const openAddModal = useCallback(() => {
+    setEditing(null);
+    setIsModalOpen(true);
+  }, []);
+
+  const closeVendorModal = useCallback(() => {
+    setIsModalOpen(false);
+    setEditing(null);
+  }, []);
+
+  const handleViewVendor = useCallback(
+    (vendorId) => router.push(`/dashboard/fleet/vendors/${vendorId}`),
+    [router]
+  );
+  const handleEditVendor = useCallback((vendor) => {
+    setEditing(vendor);
+    setIsModalOpen(true);
+  }, []);
+  const handleDeleteRequest = useCallback((vendorId) => setConfirmDelete(vendorId), []);
 
   const { data, isLoading, isFetching } = useGetVendorsQuery({
     page,
@@ -80,19 +105,13 @@ export default function FleetVendorsPage() {
           length={meta?.total || 0}
           name="Vendors"
           btnName="Add Vendor"
-          handleEdit={() => {
-            setEditing(null);
-            setIsModalOpen(true);
-          }}
+          handleEdit={openAddModal}
         />
 
         <SearchFilterBar
           tabItems={STATUS_TABS}
           activeTab={status}
-          onTabChange={(v) => {
-            setStatus(v);
-            setPage(1);
-          }}
+          onTabChange={onTabChange}
           searchTerm={search}
           onSearchChange={onSearchChange}
           searchPlaceholder="Search by company, vendor, email or phone..."
@@ -121,28 +140,13 @@ export default function FleetVendorsPage() {
                   </tr>
                 ) : (
                   items.map((v) => (
-                    <tr key={v._id} className={fleet.tableRow}>
-                      <td className={fleet.tableCell}>
-                        <p className="font-semibold text-zinc-900">{v.companyName}</p>
-                        <p className="text-xs text-zinc-500 mt-0.5">{v.vendorName}</p>
-                      </td>
-                      <td className={fleet.tableCell}>{v.email}</td>
-                      <td className={fleet.tableCell}>{v.phone}</td>
-                      <td className={fleet.tableCell}>{v.city || "—"}</td>
-                      <td className={fleet.tableCell}>
-                        <span className={fleetStatusClass(v.status)}>{v.status}</span>
-                      </td>
-                      <td className={fleet.tableCell}>
-                        <FleetRowMenu
-                          onView={() => router.push(`/dashboard/fleet/vendors/${v._id}`)}
-                          onEdit={() => {
-                            setEditing(v);
-                            setIsModalOpen(true);
-                          }}
-                          onDelete={() => setConfirmDelete(v._id)}
-                        />
-                      </td>
-                    </tr>
+                    <FleetVendorRow
+                      key={v._id}
+                      vendor={v}
+                      onView={handleViewVendor}
+                      onEdit={handleEditVendor}
+                      onDelete={handleDeleteRequest}
+                    />
                   ))
                 )}
               </tbody>
@@ -157,10 +161,7 @@ export default function FleetVendorsPage() {
       {isModalOpen && (
         <VendorModal
           isOpen={isModalOpen}
-          closeModal={() => {
-            setIsModalOpen(false);
-            setEditing(null);
-          }}
+          closeModal={closeVendorModal}
           data={editing}
         />
       )}

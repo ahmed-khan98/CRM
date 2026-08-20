@@ -39,6 +39,16 @@ export function conversationPeer(conv, myId) {
   return other?.userId || null;
 }
 
+export function isConversationGroupAdmin(conv, myId) {
+  if (!conv || conv.type !== "group") return false;
+  if (conv.myMeta?.role === "admin") return true;
+  return (conv.participants || []).some(
+    (p) =>
+      (p.userId?._id || p.userId)?.toString() === myId?.toString() &&
+      p.role === "admin"
+  );
+}
+
 export function formatChatTime(date) {
   if (!date) return "";
   const d = new Date(date);
@@ -110,6 +120,34 @@ export function lastMessagePreview(msg) {
 }
 
 export const QUICK_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏", "🔥", "✅"];
+
+/** Mirrors the backend's CLOUDINARY_SIZE_LIMITS (src/utils/cloudinary.js on
+ * the CMS_BACKEND repo) — Cloudinary's free-plan caps per resource type.
+ * Checked client-side so a doomed upload is rejected instantly instead of
+ * uploading the whole file first and failing on the server. Bump these (and
+ * the backend copy) together if the Cloudinary plan is ever upgraded. */
+const MB = 1024 * 1024;
+export function getUploadSizeLimit(file) {
+  const type = file?.type || "";
+  const ext = (file?.name || "").split(".").pop()?.toLowerCase() || "";
+  if (type.startsWith("image/")) return { bytes: 10 * MB, label: "Images" };
+  if (
+    type.startsWith("video/") ||
+    type.startsWith("audio/") ||
+    ["webm", "ogg", "mp3", "m4a", "wav", "aac", "opus"].includes(ext)
+  ) {
+    return { bytes: 100 * MB, label: "Video/audio" };
+  }
+  return { bytes: 10 * MB, label: "Documents/files" };
+}
+
+export function checkUploadSize(file) {
+  const { bytes, label } = getUploadSizeLimit(file);
+  if (file.size <= bytes) return null;
+  const limitMb = Math.round(bytes / MB);
+  const fileMb = (file.size / MB).toFixed(1);
+  return `${label} can be up to ${limitMb} MB on the current plan. This file is ${fileMb} MB.`;
+}
 
 /** WhatsApp-like chat wallpaper (CRM zinc, not WA green) */
 export function chatWallpaper(dark) {

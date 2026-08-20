@@ -120,3 +120,16 @@ export function formatDate(d) {
     return "—";
   }
 }
+
+export function formatShiftTime(v) {
+  if (!v) return "—";
+  const match = String(v).trim().match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return String(v);
+  let hour = Number(match[1]);
+  const minute = match[2];
+  if (hour === 24 && minute === "00") hour = 0;
+  if (hour < 0 || hour > 23 || Number(minute) > 59) return String(v);
+  const period = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${minute} ${period}`;
+}

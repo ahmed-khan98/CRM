@@ -12,6 +12,49 @@ const taskMutationTags = (projectId, { includeAllProjects = true } = {}) => {
   ];
 };
 
+const groupTasksIntoColumns = (tasks) => {
+  const columns = { todo: [], "in-progress": [], "in-review": [], done: [] };
+  (tasks || []).forEach((t) => {
+    if (columns[t.status]) columns[t.status].push(t);
+  });
+  return columns;
+};
+
+/**
+ * Patches a single updated task directly into the already-cached
+ * getAllTasks / getTasksByProject results instead of invalidating those
+ * tags — comment/attachment mutations only ever change one task's fields,
+ * so refetching (and re-rendering) the *entire* board/list for that was
+ * pure waste. Falls back to nothing if a cache entry isn't populated yet
+ * (nothing to patch), letting the next natural fetch pick it up.
+ */
+function patchTaskInCaches(dispatch, projectId, updatedTask) {
+  if (!updatedTask?._id) return;
+  const pid = getProjectId(projectId);
+
+  dispatch(
+    TaskApi.util.updateQueryData("getAllTasks", undefined, (draft) => {
+      if (!Array.isArray(draft?.data)) return;
+      const idx = draft.data.findIndex((t) => t._id === updatedTask._id);
+      if (idx !== -1) draft.data[idx] = updatedTask;
+    })
+  );
+
+  if (pid) {
+    dispatch(
+      TaskApi.util.updateQueryData("getTasksByProject", pid, (draft) => {
+        const list = draft?.data?.tasks;
+        if (!Array.isArray(list)) return;
+        const idx = list.findIndex((t) => t._id === updatedTask._id);
+        if (idx !== -1) {
+          list[idx] = updatedTask;
+          draft.data.columns = groupTasksIntoColumns(list);
+        }
+      })
+    );
+  }
+}
+
 const TaskApi = createApiAuction.injectEndpoints({
   overrideExisting: process.env.NODE_ENV !== "production",
   endpoints: (builder) => ({
@@ -32,11 +75,12 @@ const TaskApi = createApiAuction.injectEndpoints({
       refetchOnMountOrArgChange: true,
     }),
 
-    // ── Create task (supports optional file attachment) ───────────
+    // ── Create task (supports optional file attachments — multiple) ───
     createTask: builder.mutation({
       query: (body) => {
-        const { projectId, title, description, priority, assignees, dueDate, status, attachment } = body;
-        if (attachment) {
+        const { projectId, title, description, priority, assignees, dueDate, status, attachments } = body;
+        const files = (attachments || []).filter(Boolean);
+        if (files.length) {
           const fd = new FormData();
           fd.append("projectId", projectId);
           fd.append("title", title);
@@ -46,7 +90,7 @@ const TaskApi = createApiAuction.injectEndpoints({
           if (dueDate) fd.append("dueDate", dueDate);
           // Send assignees as JSON string — multer can't handle repeated keys reliably
           fd.append("assignees", JSON.stringify(assignees || []));
-          fd.append("attachment", attachment);
+          files.forEach((f) => fd.append("attachment", f));
           return { url: "task/", method: "POST", body: fd };
         }
         return { url: "task/", method: "POST", body: { projectId, title, description, priority, assignees, dueDate, status } };
@@ -54,14 +98,15 @@ const TaskApi = createApiAuction.injectEndpoints({
       invalidatesTags: (result, error, body) => taskMutationTags(body.projectId),
     }),
 
-    // ── Update task (supports optional file — replaces creatorAttachment) ──
+    // ── Update task (supports optional files — appended to creatorAttachment) ──
     updateTask: builder.mutation({
-      query: ({ id, projectId, attachment, assignees, ...rest }) => {
-        if (attachment) {
+      query: ({ id, projectId, attachments, assignees, ...rest }) => {
+        const files = (attachments || []).filter(Boolean);
+        if (files.length) {
           const fd = new FormData();
           Object.entries(rest).forEach(([k, v]) => { if (v !== undefined && v !== null) fd.append(k, v); });
           fd.append("assignees", JSON.stringify(assignees || []));
-          fd.append("attachment", attachment);
+          files.forEach((f) => fd.append("attachment", f));
           return { url: `task/${id}`, method: "PATCH", body: fd };
         }
         return { url: `task/${id}`, method: "PATCH", body: { ...rest, assignees } };
@@ -91,45 +136,85 @@ const TaskApi = createApiAuction.injectEndpoints({
     }),
 
     // ── Comments ──────────────────────────────────────────────────
+    // These four only ever mutate a single task's fields — patch that task
+    // directly into the cached lists (via the mutation's own response,
+    // once confirmed) instead of invalidating the whole project board /
+    // global list and forcing every card to refetch and re-render.
     addComment: builder.mutation({
       query: ({ id, text }) => ({ url: `task/${id}/comment`, method: "POST", body: { text } }),
-      invalidatesTags: (result, error, { projectId }) => [
-        { type: "tasks", id: projectId },
-        "allTasks",
-      ],
+      async onQueryStarted({ projectId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          patchTaskInCaches(dispatch, projectId, data?.data);
+        } catch {}
+      },
     }),
 
     deleteComment: builder.mutation({
       query: ({ taskId, commentId }) => ({ url: `task/${taskId}/comment/${commentId}`, method: "DELETE" }),
-      invalidatesTags: (result, error, { projectId }) => [
-        { type: "tasks", id: projectId },
-        "allTasks",
-      ],
+      async onQueryStarted({ projectId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          patchTaskInCaches(dispatch, projectId, data?.data);
+        } catch {}
+      },
     }),
 
-    // ── Attachments ───────────────────────────────────────────────
+    // ── Attachments (multiple files per upload allowed) ────────────
     uploadCreatorAttachment: builder.mutation({
-      query: ({ id, file }) => {
+      query: ({ id, files }) => {
         const fd = new FormData();
-        fd.append("attachment", file);
+        (Array.isArray(files) ? files : [files]).filter(Boolean).forEach((f) => fd.append("attachment", f));
         return { url: `task/${id}/creator-attachment`, method: "PATCH", body: fd };
       },
-      invalidatesTags: (result, error, { projectId }) => [
-        { type: "tasks", id: projectId },
-        "allTasks",
-      ],
+      async onQueryStarted({ projectId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          patchTaskInCaches(dispatch, projectId, data?.data);
+        } catch {}
+      },
     }),
 
     uploadAssigneeAttachment: builder.mutation({
-      query: ({ id, file }) => {
+      query: ({ id, files }) => {
         const fd = new FormData();
-        fd.append("attachment", file);
+        (Array.isArray(files) ? files : [files]).filter(Boolean).forEach((f) => fd.append("attachment", f));
         return { url: `task/${id}/assignee-attachment`, method: "PATCH", body: fd };
       },
-      invalidatesTags: (result, error, { projectId }) => [
-        { type: "tasks", id: projectId },
-        "allTasks",
-      ],
+      async onQueryStarted({ projectId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          patchTaskInCaches(dispatch, projectId, data?.data);
+        } catch {}
+      },
+    }),
+
+    deleteCreatorAttachment: builder.mutation({
+      query: ({ id, publicId }) => ({
+        url: `task/${id}/creator-attachment`,
+        method: "DELETE",
+        body: { publicId },
+      }),
+      async onQueryStarted({ projectId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          patchTaskInCaches(dispatch, projectId, data?.data);
+        } catch {}
+      },
+    }),
+
+    deleteAssigneeAttachment: builder.mutation({
+      query: ({ id, publicId }) => ({
+        url: `task/${id}/assignee-attachment`,
+        method: "DELETE",
+        body: { publicId },
+      }),
+      async onQueryStarted({ projectId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          patchTaskInCaches(dispatch, projectId, data?.data);
+        } catch {}
+      },
     }),
   }),
 });
@@ -145,4 +230,6 @@ export const {
   useDeleteCommentMutation,
   useUploadCreatorAttachmentMutation,
   useUploadAssigneeAttachmentMutation,
+  useDeleteCreatorAttachmentMutation,
+  useDeleteAssigneeAttachmentMutation,
 } = TaskApi;

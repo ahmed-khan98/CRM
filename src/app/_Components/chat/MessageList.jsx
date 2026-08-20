@@ -27,7 +27,9 @@ function MessageList({
   return (
     <div
       ref={listRef}
-      className="relative min-h-0 flex-1 overflow-y-auto px-2 sm:px-4 py-3 space-y-0.5"
+      className={`relative min-h-0 flex-1 overflow-y-auto px-2 sm:px-4 py-3 space-y-0.5 ${
+        dark ? "custom-scrollbar-dark" : "custom-scrollbar"
+      }`}
       style={chatWallpaper(dark)}
       onScroll={(e) => {
         if (e.currentTarget.scrollTop < 40 && hasMore && !loadingMsgs) {
@@ -42,13 +44,16 @@ function MessageList({
         </div>
       )}
       {hasMore && (
-        <button
-          type="button"
-          className="mx-auto mb-2 block text-xs text-zinc-600 font-medium"
-          onClick={() => loadMessages(activeId, messages[0]?._id)}
-        >
-          Load earlier messages
-        </button>
+        <div className="sticky top-0 z-10 mb-2 flex justify-center">
+          <button
+            type="button"
+            className="rounded-full border border-zinc-200/70 bg-white/90 px-3 py-1 text-xs font-medium text-zinc-600 shadow-sm backdrop-blur transition hover:bg-white disabled:opacity-60"
+            disabled={loadingMsgs}
+            onClick={() => loadMessages(activeId, messages[0]?._id)}
+          >
+            {loadingMsgs ? "Loading…" : "↑ Load earlier messages"}
+          </button>
+        </div>
       )}
       {messages.map((m, idx) => (
         <MessageBubble

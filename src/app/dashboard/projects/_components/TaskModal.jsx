@@ -1,12 +1,13 @@
 "use client";
 
 import { memo, useEffect, useMemo, useRef, useState } from "react";
-import { Calendar, Flag, Users, AlignLeft, Type, Paperclip, FileText, X } from "lucide-react";
+import { Calendar, Flag, Users, AlignLeft, Type, Paperclip, FileText, Upload, X } from "lucide-react";
 import Select from "react-select";
 import TaskRichTextEditor from "./ui/TaskRichTextEditor";
 import { TASK_PRIORITIES, TASK_STATUS_OPTIONS } from "./constants";
 import ModalShell from "@/app/_Components/Modal/ModalShell";
 import { fleet, modalSelectStyles } from "@/app/_Components/fleet/fleetTheme";
+import { extractFilesFromClipboard } from "@/app/_utils/clipboardFiles";
 
 const PRIORITIES = TASK_PRIORITIES;
 const STATUS_OPTIONS = TASK_STATUS_OPTIONS;
@@ -32,7 +33,7 @@ export default memo(function TaskModal({
     assignees: [],
     dueDate: "",
   });
-  const [attachmentFile, setAttachmentFile] = useState(null);
+  const [attachmentFiles, setAttachmentFiles] = useState([]);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -55,12 +56,16 @@ export default memo(function TaskModal({
         dueDate: "",
       });
     }
-    setAttachmentFile(null);
+    setAttachmentFiles([]);
   }, [task, defaultStatus, isOpen]);
 
-  const statusOptions = canMoveToDone
-    ? STATUS_OPTIONS
-    : STATUS_OPTIONS.filter((s) => s.value !== "done");
+  const statusOptions = useMemo(
+    () =>
+      canMoveToDone
+        ? STATUS_OPTIONS
+        : STATUS_OPTIONS.filter((s) => s.value !== "done"),
+    [canMoveToDone]
+  );
 
   const employeeOptions = useMemo(
     () => employees.map((e) => ({ value: e._id, label: e.fullName })),
@@ -79,7 +84,7 @@ export default memo(function TaskModal({
       await onSave({
         ...form,
         ...(isEdit && { id: task._id }),
-        attachment: attachmentFile || undefined,
+        attachments: attachmentFiles,
       });
       onClose();
     } finally {
@@ -189,57 +194,84 @@ export default memo(function TaskModal({
 
           <div>
             <label className={labelClass}>
-              <Paperclip className="h-3 w-3" /> Attachment{" "}
-              <span className="normal-case text-zinc-500">(optional)</span>
+              <Paperclip className="h-3 w-3" /> Attachments{" "}
+              <span className="normal-case text-zinc-500">(optional, multiple allowed)</span>
             </label>
             <input
               ref={fileRef}
               type="file"
+              multiple
               accept=".zip,.rar,.psd,.ai,.eps,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,image/*,video/*"
               className="hidden"
-              onChange={(e) => setAttachmentFile(e.target.files?.[0] || null)}
+              onChange={(e) => {
+                const picked = Array.from(e.target.files || []);
+                if (picked.length) setAttachmentFiles((prev) => [...prev, ...picked]);
+                if (fileRef.current) fileRef.current.value = "";
+              }}
             />
-            {attachmentFile ? (
-              <div className="flex items-center justify-between rounded-xl border border-white/[0.1] bg-[#161b22] px-3 py-2">
-                <div className="flex min-w-0 items-center gap-2">
-                  <FileText className="h-4 w-4 shrink-0 text-zinc-400" />
-                  <span className="truncate text-xs font-semibold text-zinc-200">
-                    {attachmentFile.name}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAttachmentFile(null);
-                    if (fileRef.current) fileRef.current.value = "";
-                  }}
-                  className="ml-2 shrink-0 text-zinc-400 hover:text-red-400 transition cursor-pointer"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
+
+            {attachmentFiles.length > 0 && (
+              <div className="mb-2 flex flex-col gap-1.5">
+                {attachmentFiles.map((f, i) => (
+                  <div
+                    key={`${f.name}-${f.lastModified}-${i}`}
+                    className="flex items-center justify-between rounded-xl border border-white/[0.1] bg-[#161b22] px-3 py-2"
+                  >
+                    <div className="flex min-w-0 items-center gap-2">
+                      <FileText className="h-4 w-4 shrink-0 text-zinc-400" />
+                      <span className="truncate text-xs font-semibold text-zinc-200">{f.name}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setAttachmentFiles((prev) => prev.filter((_, idx) => idx !== i))
+                      }
+                      className="ml-2 shrink-0 text-zinc-400 hover:text-red-400 transition cursor-pointer"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                className="flex w-full items-center gap-2 rounded-xl border border-dashed border-white/15 bg-[#161b22] px-3 py-2.5 text-xs font-semibold text-zinc-400 transition hover:border-white/25 hover:text-zinc-200 cursor-pointer"
-              >
-                <Paperclip className="h-4 w-4" />
-                Attach a file (ZIP, RAR, PSD, AI supported)
-              </button>
             )}
-            {isEdit && task?.creatorAttachment?.url && !attachmentFile && (
-              <p className="mt-1 text-[11px] text-zinc-500">
-                Current:{" "}
-                <a
-                  href={task.creatorAttachment.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-zinc-300 underline cursor-pointer"
-                >
-                  {task.creatorAttachment.originalName || "View file"}
-                </a>
-              </p>
+
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => fileRef.current?.click()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") fileRef.current?.click();
+              }}
+              onPaste={(e) => {
+                const pasted = extractFilesFromClipboard(e);
+                if (pasted.length) {
+                  e.preventDefault();
+                  setAttachmentFiles((prev) => [...prev, ...pasted]);
+                }
+              }}
+              className="flex w-full items-center gap-2 rounded-xl border border-dashed border-white/15 bg-[#161b22] px-3 py-2.5 text-xs font-semibold text-zinc-400 transition hover:border-white/25 hover:text-zinc-200 cursor-pointer outline-none focus:border-white/25 focus:text-zinc-200"
+            >
+              <Upload className="h-4 w-4" />
+              {attachmentFiles.length
+                ? "Add more, or paste a screenshot (Ctrl+V)"
+                : "Attach files, or click here then paste (Ctrl+V)"}
+            </div>
+
+            {isEdit && task?.creatorAttachment?.length > 0 && (
+              <div className="mt-1.5 flex flex-col gap-0.5">
+                <p className="text-[11px] text-zinc-500">Current attachments:</p>
+                {task.creatorAttachment.map((a, i) => (
+                  <a
+                    key={a.publicId || i}
+                    href={a.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="truncate text-[11px] text-zinc-300 underline cursor-pointer"
+                  >
+                    {a.originalName || "View file"}
+                  </a>
+                ))}
+              </div>
             )}
           </div>
         </div>

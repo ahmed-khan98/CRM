@@ -15,12 +15,10 @@ import TaskSearchBar from "@/app/dashboard/projects/_components/task/TaskSearchB
 import EmptyState from "@/app/dashboard/projects/_components/ui/EmptyState";
 import { groupTasksIntoColumns } from "@/app/dashboard/projects/_components/utils";
 
-import { useKanbanBoard } from "@/app/dashboard/projects/_hooks/useKanbanBoard";
 import { useTaskPermissions } from "@/app/dashboard/projects/_hooks/useTaskPermissions";
 import {
   useDebouncedValue,
-  useSyncedViewingTask,
-  useTaskDeleteFlow,
+  useTaskBoardPage,
 } from "@/app/dashboard/projects/_hooks/useTaskKanbanPage";
 
 import {
@@ -38,11 +36,6 @@ export default function AllTasksPage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 300);
-  const [viewingTask, setViewingTask] = useState(null);
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [taskModalOpen, setTaskModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState(null);
-  const [defaultStatus, setDefaultStatus] = useState("todo");
 
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
@@ -54,9 +47,6 @@ export default function AllTasksPage() {
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
-
-  const { data: employeesData } = useGetAssigneesQuery(undefined, { skip: !taskModalOpen });
-  const employees = employeesData?.data || [];
 
   const serverColumns = useMemo(
     () => groupTasksIntoColumns(tasks, debouncedSearch),
@@ -74,50 +64,38 @@ export default function AllTasksPage() {
     [updateTaskStatus]
   );
 
-  const { columns, handleDragEnd } = useKanbanBoard(serverColumns, {
-    onStatusUpdate,
-    canMoveToDone,
-    canMoveFromDone,
-  });
-
-  useSyncedViewingTask(tasks, viewingTask, setViewingTask);
-
-  const onTaskDeleted = useCallback(() => setDetailOpen(false), []);
   const {
+    columns,
+    handleDragEnd,
+    taskModalOpen,
+    editingTask,
+    viewingTask,
+    defaultStatus,
+    detailOpen,
+    handleOpenTask,
+    handleCloseDetail,
+    handleCloseTaskModal,
+    handleEditTask,
     confirmDelete,
     setConfirmDelete,
     deleting,
     handleConfirmDelete,
-  } = useTaskDeleteFlow({
+  } = useTaskBoardPage({
+    taskList: tasks,
+    serverColumns,
+    onStatusUpdate,
+    canMoveToDone,
+    canMoveFromDone,
     deleteTask,
     resolveProjectId: resolveTaskProjectId,
-    onDeleted: onTaskDeleted,
   });
 
-  const handleOpenTask = useCallback((task) => {
-    setViewingTask(task);
-    setDetailOpen(true);
-  }, []);
-
-  const handleCloseDetail = useCallback(() => {
-    setDetailOpen(false);
-    setViewingTask(null);
-  }, []);
-
-  const handleCloseTaskModal = useCallback(() => {
-    setTaskModalOpen(false);
-    setEditingTask(null);
-  }, []);
+  const { data: employeesData } = useGetAssigneesQuery(undefined, { skip: !taskModalOpen });
+  const employees = employeesData?.data || [];
 
   const handleProjectNavigate = useCallback((projectId) => {
     if (projectId) router.push(`/dashboard/projects/${projectId}`);
   }, [router]);
-
-  const handleEditTask = useCallback((task) => {
-    setEditingTask(task);
-    setDefaultStatus(task.status);
-    setTaskModalOpen(true);
-  }, []);
 
   const handleSaveTask = useCallback(async (form) => {
     const projectId = resolveTaskProjectId(editingTask);
@@ -131,7 +109,7 @@ export default function AllTasksPage() {
         status: form.status,
         assignees: form.assignees,
         dueDate: form.dueDate || null,
-        attachment: form.attachment,
+        attachments: form.attachments,
       }).unwrap();
       toast.success("Task updated");
     } catch (err) {

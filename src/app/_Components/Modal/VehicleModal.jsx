@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { memo, useMemo, useRef, useState } from "react";
 import { Formik, Form, ErrorMessage } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 import Select from "react-select";
@@ -12,7 +12,7 @@ import {
 } from "@/app/_Services/vehicle/page";
 import { useGetVendorsQuery } from "@/app/_Services/vendor/page";
 import { vehicleSchema } from "@/app/schema/vehicle";
-import { fleet } from "../fleet/fleetTheme";
+import { fleet, modalSelectStyles } from "../fleet/fleetTheme";
 
 const Field = ({ label, name, required, children, className = "" }) => (
   <div className={className}>
@@ -26,27 +26,6 @@ const Field = ({ label, name, required, children, className = "" }) => (
     )}
   </div>
 );
-
-const selectStyles = {
-  control: (base, state) => ({
-    ...base,
-    background: "#161b22",
-    borderColor: state.isFocused ? "rgba(161,161,170,0.8)" : "rgba(255,255,255,0.1)",
-    boxShadow: "none",
-    borderRadius: 12,
-    minHeight: 42,
-  }),
-  menu: (base) => ({ ...base, background: "#161b22", zIndex: 50 }),
-  option: (base, state) => ({
-    ...base,
-    background: state.isFocused ? "#1c2330" : "#161b22",
-    color: "#fff",
-    fontSize: 13,
-  }),
-  singleValue: (base) => ({ ...base, color: "#fff", fontSize: 13 }),
-  input: (base) => ({ ...base, color: "#fff" }),
-  placeholder: (base) => ({ ...base, color: "#71717a", fontSize: 13 }),
-};
 
 const VehicleModal = ({ isOpen, closeModal, data, defaultVendorId }) => {
   const [createVehicle] = useCreateVehicleMutation();
@@ -224,7 +203,7 @@ const VehicleModal = ({ isOpen, closeModal, data, defaultVendorId }) => {
                     onInputChange={(val) => setVendorSearch(val)}
                     placeholder="Search vendor..."
                     isClearable
-                    styles={selectStyles}
+                    styles={modalSelectStyles}
                   />
                 </Field>
 
@@ -315,4 +294,4 @@ const VehicleModal = ({ isOpen, closeModal, data, defaultVendorId }) => {
   );
 };
 
-export default VehicleModal;
+export default memo(VehicleModal);

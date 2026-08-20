@@ -272,7 +272,7 @@ const DashboardLayout = ({ children }) => {
                         ? "shadow-xl"
                         : "shadow-none pointer-events-none invisible"
                     }`
-                  : "lg:relative lg:top-0 h-[calc(100vh-3.5rem)] overflow-y-auto shrink-0"
+                  : "lg:relative lg:top-0 h-[calc(100dvh-3.5rem)] overflow-y-auto shrink-0"
               } transition-transform duration-300 ease-in-out`}
               aria-hidden={isMobile && !isSidebarOpen ? true : undefined}
             >
@@ -280,7 +280,7 @@ const DashboardLayout = ({ children }) => {
             </div>
 
             <main
-              className={`flex flex-1 min-w-0 flex-col overflow-y-auto overflow-x-hidden h-[calc(100vh-3.5rem)] transition-all duration-300 ease-in-out px-1 
+              className={`flex flex-1 min-w-0 flex-col overflow-y-auto overflow-x-hidden h-[calc(100dvh-3.5rem)] transition-all duration-300 ease-in-out px-1 
             ${isMobile ? "w-full" : ""}`}
             >
               <AnnouncementMarquee />

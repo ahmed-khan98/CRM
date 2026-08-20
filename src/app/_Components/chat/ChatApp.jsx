@@ -35,11 +35,13 @@ import AddMembersModal from "@/app/_Components/chat/AddMembersModal";
 import NewChatModal from "@/app/_Components/chat/NewChatModal";
 import ConversationSidebar from "@/app/_Components/chat/ConversationSidebar";
 import ChatHeader from "@/app/_Components/chat/ChatHeader";
+import ChatOptionsMenu from "@/app/_Components/chat/ChatOptionsMenu";
 import MessageList from "@/app/_Components/chat/MessageList";
 import ChatComposer from "@/app/_Components/chat/ChatComposer";
 import ChatInfoPanel from "@/app/_Components/chat/ChatInfoPanel";
 import MessageContextMenu from "@/app/_Components/chat/MessageContextMenu";
 import ForwardModal from "@/app/_Components/chat/ForwardModal";
+import { extractFilesFromClipboard } from "@/app/_utils/clipboardFiles";
 import {
   getMyId,
   getCurrentUser,
@@ -47,6 +49,7 @@ import {
   conversationPeer,
   getNextConsecutiveVoiceId,
   getChatTheme,
+  checkUploadSize,
 } from "@/app/_Components/chat/chatUtils";
 
 export default function ChatApp() {
@@ -66,6 +69,13 @@ export default function ChatApp() {
   const [filter, setFilter] = useState("");
   const [activeId, setActiveId] = useState(null);
   const [messages, setMessages] = useState([]);
+  // Mirrors `messages` without being a hook dependency itself — lets
+  // handlers like handleVoiceEnded read the latest list without being
+  // recreated (and busting memoized children's props) on every new message.
+  const messagesRef = useRef(messages);
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMsgs, setLoadingMsgs] = useState(false);
   const [text, setText] = useState("");
@@ -85,9 +95,13 @@ export default function ChatApp() {
   const [mobileShowChat, setMobileShowChat] = useState(false);
   const [uploadPct, setUploadPct] = useState(null);
   const [dragOver, setDragOver] = useState(false);
+  // Files picked/pasted/dropped but not sent yet — shown as a WhatsApp-style
+  // preview strip above the composer input until the user hits Send.
+  const [pendingFiles, setPendingFiles] = useState([]);
   const [presenceOverlay, setPresenceOverlay] = useState({});
   const [activeVoiceId, setActiveVoiceId] = useState(null);
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
+  const [listMenuConv, setListMenuConv] = useState(null);
   const [confirmDeleteChat, setConfirmDeleteChat] = useState(null);
   const [isDeletingChat, setIsDeletingChat] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
@@ -282,7 +296,6 @@ export default function ChatApp() {
 
   useEffect(() => {
     setHeaderMenuOpen(false);
-    setShowAddMembers(false);
   }, [activeId]);
 
   useEffect(() => {
@@ -302,6 +315,15 @@ export default function ChatApp() {
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [headerMenuOpen]);
+
+  useEffect(() => {
+    if (!listMenuConv) return;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setListMenuConv(null);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [listMenuConv]);
 
   // Hydrate presence for all chat peers (API + socket snapshot)
   useEffect(() => {
@@ -521,53 +543,88 @@ export default function ChatApp() {
     return () => offs.forEach((o) => o?.());
   }, [activeId, emit, markRead, myId, on, refetchConvs]);
 
-  const sendPayload = (payload) => {
-    const clientId = `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-    const optimistic = {
-      _id: clientId,
-      clientId,
-      conversationId: activeId,
-      senderId: { _id: myId, fullName: "You" },
-      type: payload.type || "text",
-      body: payload.body || "",
-      attachments: payload.attachments || [],
-      replyTo: replyTo,
-      createdAt: new Date().toISOString(),
-      receipts: [],
-      pending: true,
-    };
-    setMessages((prev) => [...prev, optimistic]);
-    setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 20);
-
-    emit(
-      "chat:message:send",
-      {
-        conversationId: activeId,
-        body: payload.body || "",
-        type: payload.type || "text",
-        replyTo: replyTo?._id || null,
-        mentions: payload.mentions || [],
-        attachments: payload.attachments || [],
+  const sendPayload = useCallback(
+    (payload) => {
+      const clientId = `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      const optimistic = {
+        _id: clientId,
         clientId,
-      },
-      (ack) => {
-        if (!ack?.ok) {
-          toast.error(ack?.error || "Failed to send");
-          setMessages((prev) => prev.filter((m) => m.clientId !== clientId));
-          return;
-        }
-        setMessages((prev) =>
-          prev.map((m) => (m.clientId === clientId ? ack.message : m))
-        );
-        refetchConvs();
-      }
-    );
-    setText("");
-    setReplyTo(null);
-    setShowEmoji(false);
-  };
+        conversationId: activeId,
+        senderId: { _id: myId, fullName: "You" },
+        type: payload.type || "text",
+        body: payload.body || "",
+        attachments: payload.attachments || [],
+        replyTo: replyTo,
+        createdAt: new Date().toISOString(),
+        receipts: [],
+        pending: true,
+      };
+      setMessages((prev) => [...prev, optimistic]);
+      setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 20);
 
-  const handleSend = async () => {
+      emit(
+        "chat:message:send",
+        {
+          conversationId: activeId,
+          body: payload.body || "",
+          type: payload.type || "text",
+          replyTo: replyTo?._id || null,
+          mentions: payload.mentions || [],
+          attachments: payload.attachments || [],
+          clientId,
+        },
+        (ack) => {
+          if (!ack?.ok) {
+            toast.error(ack?.error || "Failed to send");
+            setMessages((prev) => prev.filter((m) => m.clientId !== clientId));
+            return;
+          }
+          setMessages((prev) =>
+            prev.map((m) => (m.clientId === clientId ? ack.message : m))
+          );
+          refetchConvs();
+        }
+      );
+      setText("");
+      setReplyTo(null);
+      setShowEmoji(false);
+    },
+    [activeId, myId, replyTo, emit, refetchConvs]
+  );
+
+  const sendPendingAttachments = useCallback(async () => {
+    if (!pendingFiles.length) return;
+    const filesToSend = pendingFiles;
+    setPendingFiles([]);
+    const caption = text.trim();
+    setText("");
+    for (let i = 0; i < filesToSend.length; i++) {
+      const { file, previewUrl } = filesToSend[i];
+      const isLast = i === filesToSend.length - 1;
+      const fd = new FormData();
+      fd.append("file", file);
+      setUploadPct(0);
+      try {
+        // RTK doesn't expose progress easily — simulate steps
+        setUploadPct(40);
+        const res = await uploadFile(fd).unwrap();
+        setUploadPct(100);
+        const { type, attachment } = res.data;
+        sendPayload({
+          type: type === "audio" ? "audio" : type,
+          body: isLast ? caption : "",
+          attachments: [attachment],
+        });
+      } catch (err) {
+        toast.error(err?.data?.message || "Upload failed");
+      } finally {
+        setTimeout(() => setUploadPct(null), 400);
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+      }
+    }
+  }, [pendingFiles, text, uploadFile, sendPayload]);
+
+  const handleSend = useCallback(async () => {
     if (editing) {
       try {
         await editMsg({ messageId: editing._id, body: text }).unwrap();
@@ -576,6 +633,10 @@ export default function ChatApp() {
       } catch (e) {
         toast.error(e?.data?.message || "Edit failed");
       }
+      return;
+    }
+    if (pendingFiles.length > 0) {
+      await sendPendingAttachments();
       return;
     }
     if (!text.trim()) return;
@@ -597,7 +658,7 @@ export default function ChatApp() {
     }
     setMentionOpen(false);
     sendPayload({ body: text.trim(), type: "text", mentions });
-  };
+  }, [editing, editMsg, text, active, sendPayload, pendingFiles, sendPendingAttachments]);
 
   const mentionCandidates = useMemo(() => {
     if (!mentionOpen || active?.type !== "group") return [];
@@ -636,64 +697,104 @@ export default function ChatApp() {
     [mentionStart, text]
   );
 
-  const onType = (val, caret) => {
-    setText(val);
-    if (active?.type === "group") {
-      const pos = caret ?? val.length;
-      const before = val.slice(0, pos);
-      const match = before.match(/(^|[\s\n])@([^\s@]*)$/);
-      if (match) {
-        setMentionOpen(true);
-        setMentionQuery(match[2] || "");
-        setMentionStart(before.length - (match[2]?.length || 0) - 1);
-        setMentionIndex(0);
+  const onType = useCallback(
+    (val, caret) => {
+      setText(val);
+      if (active?.type === "group") {
+        const pos = caret ?? val.length;
+        const before = val.slice(0, pos);
+        const match = before.match(/(^|[\s\n])@([^\s@]*)$/);
+        if (match) {
+          setMentionOpen(true);
+          setMentionQuery(match[2] || "");
+          setMentionStart(before.length - (match[2]?.length || 0) - 1);
+          setMentionIndex(0);
+        } else {
+          setMentionOpen(false);
+          setMentionQuery("");
+          setMentionStart(-1);
+        }
       } else {
         setMentionOpen(false);
-        setMentionQuery("");
-        setMentionStart(-1);
       }
-    } else {
-      setMentionOpen(false);
-    }
-    emit("chat:typing", { conversationId: activeId, isTyping: true });
-    clearTimeout(typingTimer.current);
-    typingTimer.current = setTimeout(() => {
-      emit("chat:typing", { conversationId: activeId, isTyping: false });
-    }, 1200);
-  };
+      emit("chat:typing", { conversationId: activeId, isTyping: true });
+      clearTimeout(typingTimer.current);
+      typingTimer.current = setTimeout(() => {
+        emit("chat:typing", { conversationId: activeId, isTyping: false });
+      }, 1200);
+    },
+    [active, emit, activeId]
+  );
 
-  const uploadAndSend = async (files) => {
+  // Validates + previews files picked via the attach menu, pasted from the
+  // clipboard, or dropped — nothing is uploaded yet, so the user can see a
+  // thumbnail, type a caption, and only actually send on the Send button.
+  const addPendingFiles = useCallback((files) => {
     const list = Array.from(files || []);
     if (!list.length) return;
     setShowAttach(false);
+    const next = [];
     for (const file of list) {
-      const fd = new FormData();
-      fd.append("file", file);
-      setUploadPct(0);
-      try {
-        // RTK doesn't expose progress easily — simulate steps
-        setUploadPct(40);
-        const res = await uploadFile(fd).unwrap();
-        setUploadPct(100);
-        const { type, attachment } = res.data;
-        sendPayload({
-          type: type === "audio" ? "audio" : type,
-          body: "",
-          attachments: [attachment],
-        });
-      } catch {
-        toast.error("Upload failed");
-      } finally {
-        setTimeout(() => setUploadPct(null), 400);
+      const sizeError = checkUploadSize(file);
+      if (sizeError) {
+        toast.error(sizeError);
+        continue;
       }
+      const kind = file.type?.startsWith("image/")
+        ? "image"
+        : file.type?.startsWith("video/")
+          ? "video"
+          : "file";
+      next.push({
+        id: `f_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+        file,
+        kind,
+        previewUrl: kind === "image" || kind === "video" ? URL.createObjectURL(file) : null,
+      });
     }
-  };
+    if (next.length) setPendingFiles((prev) => [...prev, ...next]);
+  }, []);
+
+  const removePendingFile = useCallback((id) => {
+    setPendingFiles((prev) => {
+      const target = prev.find((f) => f.id === id);
+      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((f) => f.id !== id);
+    });
+  }, []);
+
+  // Captures an image pasted from the clipboard (e.g. a Win+Shift+S
+  // screenshot) straight into the composer as a pending attachment, same
+  // preview-before-send flow as picking a file from the attach menu.
+  const onPasteFile = useCallback(
+    (e) => {
+      const files = extractFilesFromClipboard(e);
+      if (files.length) {
+        e.preventDefault();
+        addPendingFiles(files);
+      }
+    },
+    [addPendingFiles]
+  );
 
   const openChat = useCallback((id) => {
     setActiveVoiceId(null);
     setActiveId(id);
     setMobileShowChat(true);
     setShowInfo(false);
+    setListMenuConv(null);
+    setShowAddMembers(false);
+    setPendingFiles((prev) => {
+      prev.forEach((f) => f.previewUrl && URL.revokeObjectURL(f.previewUrl));
+      return [];
+    });
+  }, []);
+
+  const closeListMenu = useCallback(() => setListMenuConv(null), []);
+
+  const onAddMembersFromMenu = useCallback((conv) => {
+    if (conv?._id) setActiveId(conv._id);
+    setShowAddMembers(true);
   }, []);
 
   const onToggleDark = useCallback(() => setDark((d) => !d), []);
@@ -723,8 +824,7 @@ export default function ChatApp() {
       setVoiceMode(false);
       sendPayload(payload);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeId, replyTo]
+    [sendPayload]
   );
 
   const handleVoiceRequestPlay = useCallback((id) => {
@@ -735,15 +835,12 @@ export default function ChatApp() {
     setActiveVoiceId(null);
   }, []);
 
-  const handleVoiceEnded = useCallback(
-    (id) => {
-      setActiveVoiceId((prev) => {
-        if (prev && prev !== String(id)) return prev;
-        return getNextConsecutiveVoiceId(messages, id);
-      });
-    },
-    [messages]
-  );
+  const handleVoiceEnded = useCallback((id) => {
+    setActiveVoiceId((prev) => {
+      if (prev && prev !== String(id)) return prev;
+      return getNextConsecutiveVoiceId(messagesRef.current, id);
+    });
+  }, []);
 
   const typingLabel = useMemo(
     () =>
@@ -793,6 +890,7 @@ export default function ChatApp() {
         onToggleDark={onToggleDark}
         onNewChat={onNewChat}
         onSearchMessages={onSearchMessages}
+        onOpenListMenu={setListMenuConv}
       />
 
       {/* Main */}
@@ -808,7 +906,7 @@ export default function ChatApp() {
         onDrop={(e) => {
           e.preventDefault();
           setDragOver(false);
-          if (activeId) uploadAndSend(e.dataTransfer.files);
+          if (activeId) addPendingFiles(e.dataTransfer.files);
         }}
       >
         {!active ? (
@@ -840,8 +938,7 @@ export default function ChatApp() {
               startOutgoing={startOutgoing}
               updateConv={updateConv}
               meRole={meRole}
-              iAmGroupAdmin={iAmGroupAdmin}
-              setShowAddMembers={setShowAddMembers}
+              onAddMembers={onAddMembersFromMenu}
               setConfirmAction={setConfirmAction}
               setConfirmDeleteChat={setConfirmDeleteChat}
               adminDisable={adminDisable}
@@ -895,8 +992,11 @@ export default function ChatApp() {
               insertMention={insertMention}
               onType={onType}
               onSend={handleSend}
-              onUploadFiles={uploadAndSend}
+              onUploadFiles={addPendingFiles}
               onVoiceSend={onVoiceSend}
+              pendingFiles={pendingFiles}
+              onRemovePendingFile={removePendingFile}
+              onPasteFile={onPasteFile}
             />
           </>
         )}
@@ -946,6 +1046,37 @@ export default function ChatApp() {
           onClose={() => setForwardMsg(null)}
           onForward={fwdMsg}
         />
+      )}
+
+      {listMenuConv && (
+        <div className="md:hidden">
+          <button
+            type="button"
+            aria-label="Close chat options"
+            className="fixed inset-0 z-40 bg-black/40"
+            onClick={closeListMenu}
+          />
+          <div className="fixed inset-x-0 bottom-0 z-50 overflow-hidden rounded-t-2xl border-t border-zinc-200 bg-white pb-[env(safe-area-inset-bottom)] text-sm text-zinc-800 shadow-2xl">
+            <div className="flex justify-center pt-2 pb-1">
+              <span className="h-1 w-10 rounded-full bg-zinc-300" />
+            </div>
+            <p className="truncate px-4 pb-2 text-xs font-semibold text-zinc-500">
+              {conversationTitle(listMenuConv, myId)}
+            </p>
+            <ChatOptionsMenu
+              conv={listMenuConv}
+              myId={myId}
+              meRole={meRole}
+              onClose={closeListMenu}
+              updateConv={updateConv}
+              setConfirmDeleteChat={setConfirmDeleteChat}
+              setConfirmAction={setConfirmAction}
+              onAddMembers={onAddMembersFromMenu}
+              adminDisable={adminDisable}
+              adminEnable={adminEnable}
+            />
+          </div>
+        </div>
       )}
 
       {showNew && (

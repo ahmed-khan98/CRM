@@ -55,6 +55,8 @@ export const empSchema = Yup.object().shape({
   accountNumber: Yup.string().notRequired(),
   iban: Yup.string().notRequired(),
   ntn: Yup.string().notRequired(),
+  shiftStart: Yup.string().notRequired(),
+  shiftEnd: Yup.string().notRequired(),
   emergencyContact: Yup.object({
     name: Yup.string().notRequired(),
     phone: Yup.string().notRequired(),

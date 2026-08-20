@@ -1,11 +1,11 @@
 "use client";
 
 import { memo } from "react";
-import { FileText } from "lucide-react";
+import { FileText, Loader2, X } from "lucide-react";
 import OpenBtn from "./OpenBtn";
 import DownloadBtn from "./DownloadBtn";
 
-function AttachmentRow({ label, attachment }) {
+function AttachmentRow({ label, attachment, onDelete, deleting }) {
   if (!attachment?.url) return null;
 
   return (
@@ -20,6 +20,17 @@ function AttachmentRow({ label, attachment }) {
       <div className="flex items-center gap-1 shrink-0">
         <OpenBtn url={attachment.url} filename={attachment.originalName} publicId={attachment.publicId} />
         <DownloadBtn url={attachment.url} filename={attachment.originalName} publicId={attachment.publicId} />
+        {onDelete && (
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={deleting}
+            aria-label="Remove attachment"
+            className="rounded-lg p-1.5 text-zinc-400 hover:bg-red-50 hover:text-red-500 transition cursor-pointer disabled:opacity-50"
+          >
+            {deleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}
+          </button>
+        )}
       </div>
     </div>
   );

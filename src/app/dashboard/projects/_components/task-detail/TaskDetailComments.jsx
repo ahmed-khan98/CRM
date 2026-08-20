@@ -1,39 +1,13 @@
 "use client";
 
-import { memo, useState } from "react";
-import { MessageSquare, Send, Trash2 } from "lucide-react";
+import { memo, useCallback, useState } from "react";
+import { MessageSquare, Send } from "lucide-react";
 import toast from "react-hot-toast";
 import TaskRichTextEditor from "../ui/TaskRichTextEditor";
 import SectionLabel from "../ui/SectionLabel";
-import Avatar from "../ui/Avatar";
-import RichTextContent from "../ui/RichTextContent";
-import { formatDate, getPlainTextFromHtml } from "../utils";
+import { getPlainTextFromHtml } from "../utils";
 import { useAddCommentMutation, useDeleteCommentMutation } from "@/app/_Services/task/page";
-
-function CommentItem({ comment, currentUserId, isAdminRole, onDelete }) {
-  const isOwn = comment.author?._id?.toString() === currentUserId?.toString();
-
-  return (
-    <div className="group flex gap-2.5">
-      <Avatar user={comment.author} size={7} />
-      <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-2 mb-1">
-          <span className="text-xs font-medium text-zinc-200 capitalize">{comment.author?.fullName || "—"}</span>
-          <span className="text-[10px] text-zinc-500">{formatDate(comment.createdAt)}</span>
-        </div>
-        <div className="rounded-lg rounded-tl-sm border border-white/[0.08] bg-[#161b22] px-2.5 py-1.5 text-zinc-300 [&_p]:text-zinc-300">
-          <RichTextContent html={comment.text} />
-        </div>
-      </div>
-      {(isOwn || isAdminRole) && (
-        <button type="button" onClick={() => onDelete(comment._id)}
-          className="self-start mt-6 text-zinc-600 opacity-0 group-hover:opacity-100 hover:text-red-400 transition cursor-pointer">
-          <Trash2 className="h-3 w-3" />
-        </button>
-      )}
-    </div>
-  );
-}
+import CommentItem from "./CommentItem";
 
 function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
   const [commentText, setCommentText] = useState("");
@@ -41,7 +15,7 @@ function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
   const [addComment] = useAddCommentMutation();
   const [deleteComment] = useDeleteCommentMutation();
 
-  const handleAddComment = async () => {
+  const handleAddComment = useCallback(async () => {
     if (!getPlainTextFromHtml(commentText)) return;
     setSubmitting(true);
     try {
@@ -52,15 +26,18 @@ function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
     } finally {
       setSubmitting(false);
     }
-  };
+  }, [commentText, addComment, task._id, projectId]);
 
-  const handleDeleteComment = async (commentId) => {
-    try {
-      await deleteComment({ taskId: task._id, commentId, projectId }).unwrap();
-    } catch {
-      toast.error("Failed to delete comment");
-    }
-  };
+  const handleDeleteComment = useCallback(
+    async (commentId) => {
+      try {
+        await deleteComment({ taskId: task._id, commentId, projectId }).unwrap();
+      } catch {
+        toast.error("Failed to delete comment");
+      }
+    },
+    [deleteComment, task._id, projectId]
+  );
 
   return (
     <div>

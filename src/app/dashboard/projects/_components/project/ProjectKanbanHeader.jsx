@@ -9,6 +9,23 @@ import { getClientDisplayName, getProjectDepartmentName, hasProjectClient } from
 import ProgressBar from "../ui/ProgressBar";
 import Tooltip from "@/app/_Components/ui/Tooltip";
 
+// Hoisted to module scope — this doesn't depend on any props, so building a
+// fresh object every render just to hand it to react-select was pointless
+// re-render churn for that Select instance.
+const projectStatusPillSelectStyles = {
+  ...selectStyles,
+  control: (base, state) => ({
+    ...selectStyles.control(base, state),
+    minHeight: "1.75rem",
+    borderRadius: "9999px",
+    fontSize: "10px",
+    fontWeight: 600,
+  }),
+  valueContainer: (base) => ({ ...base, padding: "0 8px" }),
+  indicatorsContainer: (base) => ({ ...base, height: "1.75rem" }),
+  dropdownIndicator: (base) => ({ ...base, padding: "0 6px" }),
+};
+
 function ProjectKanbanHeader({
   project,
   progress,
@@ -46,19 +63,7 @@ function ProjectKanbanHeader({
                     options={PROJECT_STATUS_OPTIONS}
                     value={PROJECT_STATUS_OPTIONS.find((s) => s.value === (project?.status || "active"))}
                     onChange={(opt) => opt?.value && onStatusChange(opt.value)}
-                    styles={{
-                      ...selectStyles,
-                      control: (base, state) => ({
-                        ...selectStyles.control(base, state),
-                        minHeight: "1.75rem",
-                        borderRadius: "9999px",
-                        fontSize: "10px",
-                        fontWeight: 600,
-                      }),
-                      valueContainer: (base) => ({ ...base, padding: "0 8px" }),
-                      indicatorsContainer: (base) => ({ ...base, height: "1.75rem" }),
-                      dropdownIndicator: (base) => ({ ...base, padding: "0 6px" }),
-                    }}
+                    styles={projectStatusPillSelectStyles}
                     isSearchable={false}
                     classNamePrefix="project-status"
                   />

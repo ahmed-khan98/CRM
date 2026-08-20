@@ -50,6 +50,19 @@ const emptyEmergency = () => ({
 
 const dateOnly = (v) => (v ? String(v).split("T")[0] : "");
 
+/** HTML time inputs only accept 00:00–23:59. Midnight stored as 24:00 must be mapped. */
+const toTimeInputValue = (v) => {
+  if (!v) return "";
+  const s = String(v).trim();
+  const match = s.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return "";
+  let hour = Number(match[1]);
+  const minute = match[2];
+  if (hour === 24 && minute === "00") return "00:00";
+  if (hour > 23 || Number(minute) > 59) return "";
+  return `${String(hour).padStart(2, "0")}:${minute}`;
+};
+
 const appendHrmsFields = (payload, values) => {
   if (values.dateOfBirth) payload.append("dateOfBirth", values.dateOfBirth);
   if (values.gender) payload.append("gender", values.gender);
@@ -64,6 +77,8 @@ const appendHrmsFields = (payload, values) => {
   if (values.accountNumber) payload.append("accountNumber", values.accountNumber);
   if (values.iban) payload.append("iban", values.iban);
   if (values.ntn) payload.append("ntn", values.ntn);
+  if (values.shiftStart) payload.append("shiftStart", values.shiftStart);
+  if (values.shiftEnd) payload.append("shiftEnd", values.shiftEnd);
   payload.append("emergencyContact", JSON.stringify(values.emergencyContact || {}));
 };
 
@@ -82,6 +97,8 @@ const hrmsJsonBody = (values) => ({
   accountNumber: values.accountNumber || "",
   iban: values.iban || "",
   ntn: values.ntn || "",
+  shiftStart: values.shiftStart || "",
+  shiftEnd: values.shiftEnd || "",
   emergencyContact: values.emergencyContact || {},
 });
 
@@ -174,6 +191,8 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
     accountNumber: data?.accountNumber || "",
     iban: data?.iban || "",
     ntn: data?.ntn || "",
+    shiftStart: toTimeInputValue(data?.shiftStart),
+    shiftEnd: toTimeInputValue(data?.shiftEnd),
     emergencyContact: {
       ...emptyEmergency(),
       ...(data?.emergencyContact || {}),
@@ -571,6 +590,28 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                   </Field>
                   <p className="text-[10px] text-zinc-500 mt-1">
                     Full package (salary + allowances) can also be set from employee profile → Compensation.
+                  </p>
+                </div>
+                <div>
+                  <FieldLabel>Shift Start</FieldLabel>
+                  <Field name="shiftStart">
+                    {({ field }) => (
+                      <input {...field} type="time" className={inputClass(false)} />
+                    )}
+                  </Field>
+                  <p className="text-[10px] text-zinc-500 mt-1">
+                    Used to calculate late arrival on attendance.
+                  </p>
+                </div>
+                <div>
+                  <FieldLabel>Shift End</FieldLabel>
+                  <Field name="shiftEnd">
+                    {({ field }) => (
+                      <input {...field} type="time" className={inputClass(false)} />
+                    )}
+                  </Field>
+                  <p className="text-[10px] text-zinc-500 mt-1">
+                    Use 12:00 AM for midnight (24:00).
                   </p>
                 </div>
               </div>

@@ -122,6 +122,15 @@ export default function NotificationSocketListener() {
         unlockNotificationAudio();
         playNotificationSound();
 
+        // Chat notifications get collapsed server-side (one row per
+        // conversation instead of one per message) — reflect that count
+        // here instead of implying this is a single, brand-new message.
+        const count = Number(payload?.count) || 1;
+        const title =
+          count > 1 && payload?.title
+            ? `${payload.title} · ${count} new`
+            : payload?.title || "New notification";
+
         toast.custom(
           (t) => (
             <div
@@ -129,9 +138,7 @@ export default function NotificationSocketListener() {
                 t.visible ? "animate-enter" : "animate-leave"
               } max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] px-4 py-3 shadow-xl`}
             >
-              <p className="text-sm font-semibold text-white">
-                {payload?.title || "New notification"}
-              </p>
+              <p className="text-sm font-semibold text-white">{title}</p>
               <p className="mt-1 text-xs leading-relaxed text-zinc-400">
                 {payload?.message || ""}
               </p>

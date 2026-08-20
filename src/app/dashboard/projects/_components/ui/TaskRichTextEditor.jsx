@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { memo, useCallback, useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Tooltip from "@/app/_Components/ui/Tooltip";
 
-function ToolbarButton({ active, onClick, children, title }) {
+const ToolbarButton = memo(function ToolbarButton({ active, onClick, children, title }) {
   const btn = (
     <button
       type="button"
@@ -37,9 +37,9 @@ function ToolbarButton({ active, onClick, children, title }) {
       {btn}
     </Tooltip>
   );
-}
+});
 
-export default function TaskRichTextEditor({
+function TaskRichTextEditor({
   value = "",
   onChange,
   placeholder = "Write here...",
@@ -84,65 +84,45 @@ export default function TaskRichTextEditor({
     }
   }, [editor, value]);
 
+  const toggleBold = useCallback(() => editor?.chain().focus().toggleBold().run(), [editor]);
+  const toggleItalic = useCallback(() => editor?.chain().focus().toggleItalic().run(), [editor]);
+  const toggleUnderline = useCallback(() => editor?.chain().focus().toggleUnderline().run(), [editor]);
+  const toggleStrike = useCallback(() => editor?.chain().focus().toggleStrike().run(), [editor]);
+  const toggleBulletList = useCallback(() => editor?.chain().focus().toggleBulletList().run(), [editor]);
+  const toggleOrderedList = useCallback(() => editor?.chain().focus().toggleOrderedList().run(), [editor]);
+  const toggleBlockquote = useCallback(() => editor?.chain().focus().toggleBlockquote().run(), [editor]);
+
   if (!editor) return null;
 
   return (
     <div className="overflow-hidden rounded-xl border border-white/[0.1] bg-[#161b22] transition focus-within:border-white/20 focus-within:ring-1 focus-within:ring-white/10">
       <div className="flex flex-wrap items-center gap-0.5 border-b border-white/[0.08] bg-[#12171d] px-2 py-1.5">
-        <ToolbarButton
-          title="Bold"
-          active={editor.isActive("bold")}
-          onClick={() => editor.chain().focus().toggleBold().run()}
-        >
+        <ToolbarButton title="Bold" active={editor.isActive("bold")} onClick={toggleBold}>
           <Bold className="h-3.5 w-3.5" />
         </ToolbarButton>
-        <ToolbarButton
-          title="Italic"
-          active={editor.isActive("italic")}
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-        >
+        <ToolbarButton title="Italic" active={editor.isActive("italic")} onClick={toggleItalic}>
           <Italic className="h-3.5 w-3.5" />
         </ToolbarButton>
-        <ToolbarButton
-          title="Underline"
-          active={editor.isActive("underline")}
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-        >
+        <ToolbarButton title="Underline" active={editor.isActive("underline")} onClick={toggleUnderline}>
           <UnderlineIcon className="h-3.5 w-3.5" />
         </ToolbarButton>
         {!compact && (
-          <ToolbarButton
-            title="Strikethrough"
-            active={editor.isActive("strike")}
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-          >
+          <ToolbarButton title="Strikethrough" active={editor.isActive("strike")} onClick={toggleStrike}>
             <Strikethrough className="h-3.5 w-3.5" />
           </ToolbarButton>
         )}
 
         <span className="mx-1 h-4 w-px bg-white/10" />
 
-        <ToolbarButton
-          title="Bullet list"
-          active={editor.isActive("bulletList")}
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-        >
+        <ToolbarButton title="Bullet list" active={editor.isActive("bulletList")} onClick={toggleBulletList}>
           <List className="h-3.5 w-3.5" />
         </ToolbarButton>
-        <ToolbarButton
-          title="Numbered list"
-          active={editor.isActive("orderedList")}
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        >
+        <ToolbarButton title="Numbered list" active={editor.isActive("orderedList")} onClick={toggleOrderedList}>
           <ListOrdered className="h-3.5 w-3.5" />
         </ToolbarButton>
 
         {!compact && (
-          <ToolbarButton
-            title="Quote"
-            active={editor.isActive("blockquote")}
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          >
+          <ToolbarButton title="Quote" active={editor.isActive("blockquote")} onClick={toggleBlockquote}>
             <Quote className="h-3.5 w-3.5" />
           </ToolbarButton>
         )}
@@ -152,3 +132,5 @@ export default function TaskRichTextEditor({
     </div>
   );
 }
+
+export default memo(TaskRichTextEditor);

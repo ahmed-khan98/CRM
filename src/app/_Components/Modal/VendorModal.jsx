@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { memo, useMemo, useRef } from "react";
 import { Formik, Form, ErrorMessage } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Upload, X } from "lucide-react";
@@ -232,4 +232,4 @@ const VendorModal = ({ isOpen, closeModal, data }) => {
   );
 };
 
-export default VendorModal;
+export default memo(VendorModal);

@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -13,6 +14,12 @@ import { useGetIceServersQuery } from "@/app/_Services/chat/chatApi";
 import { getCurrentUser, getMyId } from "./chatUtils";
 
 const CallContext = createContext(null);
+// Split out from CallContext on purpose: `elapsed` ticks every second while
+// a call is active, and most consumers (ChatApp, CallContext's other
+// fields) don't care about the live timer. Isolating it means only
+// components that actually render the ticking clock (CallOverlay) re-render
+// once a second — everyone else keeps using the stable main context value.
+const CallTimerContext = createContext(0);
 
 function toSdp(desc) {
   if (!desc) return null;
@@ -238,7 +245,7 @@ export function CallProvider({ children }) {
       if (entry) return entry.pc;
 
       const pc = new RTCPeerConnection({ iceServers });
-      entry = { pc, pendingIce: [], stream: null };
+      entry = { pc, pendingIce: [], stream: null, iceRestartAttempted: false };
       peersRef.current.set(key, entry);
 
       pc.onicecandidate = (e) => {
@@ -254,17 +261,59 @@ export function CallProvider({ children }) {
         rebuildRemoteStream();
       };
 
-      pc.onconnectionstatechange = () => {
-        if (["failed", "closed"].includes(pc.connectionState)) {
-          closePeer(key);
-          if (
-            callRef.current?.status === "active" &&
-            peersRef.current.size === 0 &&
-            !callRef.current?.groupCall
-          ) {
-            cleanup();
-          }
+      // Flaky mobile networks / NAT timeouts often show up as a transient
+      // "failed" state that recovers with a fresh ICE negotiation — give it
+      // one restart attempt (only from the deterministic initiator side, to
+      // avoid both ends renegotiating at once) before tearing the call down.
+      let recoveryTimer = null;
+      const scheduleFailureCheck = () => {
+        if (recoveryTimer) return;
+        if (!entry.iceRestartAttempted && shouldInitiateTo(key)) {
+          entry.iceRestartAttempted = true;
+          (async () => {
+            try {
+              pc.restartIce();
+              const offer = await pc.createOffer({ iceRestart: true });
+              await pc.setLocalDescription(offer);
+              emit("call:offer", {
+                toUserId: key,
+                sdp: toSdp(pc.localDescription),
+                callId: callRef.current?.callId || callId,
+              });
+            } catch {
+              /* handled by the grace-period check below */
+            }
+          })();
         }
+        recoveryTimer = setTimeout(() => {
+          recoveryTimer = null;
+          if (["failed", "disconnected", "closed"].includes(pc.connectionState)) {
+            closePeer(key);
+            if (
+              callRef.current?.status === "active" &&
+              peersRef.current.size === 0 &&
+              !callRef.current?.groupCall
+            ) {
+              cleanup();
+            }
+          }
+        }, 8000);
+      };
+
+      pc.oniceconnectionstatechange = () => {
+        if (pc.iceConnectionState === "failed") scheduleFailureCheck();
+      };
+
+      pc.onconnectionstatechange = () => {
+        if (pc.connectionState === "connected") {
+          entry.iceRestartAttempted = false;
+          return;
+        }
+        if (pc.connectionState === "closed") {
+          closePeer(key);
+          return;
+        }
+        if (pc.connectionState === "failed") scheduleFailureCheck();
       };
 
       const media = localStreamRef.current;
@@ -278,7 +327,7 @@ export function CallProvider({ children }) {
 
       return pc;
     },
-    [cleanup, closePeer, emit, iceServers, rebuildRemoteStream]
+    [cleanup, closePeer, emit, iceServers, rebuildRemoteStream, shouldInitiateTo]
   );
 
   const flushIce = useCallback(async (peerUserId) => {
@@ -307,10 +356,19 @@ export function CallProvider({ children }) {
     });
   }, []);
 
+  // Explicit audio processing constraints (rather than just `audio: true`)
+  // signal a "communication" style session to the OS on Android, which
+  // helps it treat this as a real call rather than generic media playback.
+  const AUDIO_CONSTRAINTS = {
+    echoCancellation: true,
+    noiseSuppression: true,
+    autoGainControl: true,
+  };
+
   const getMedia = useCallback(async (video) => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
+        audio: AUDIO_CONSTRAINTS,
         video: video ? { facingMode: "user" } : false,
       });
       localStreamRef.current = stream;
@@ -320,7 +378,7 @@ export function CallProvider({ children }) {
     } catch (err) {
       if (video) {
         const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
+          audio: AUDIO_CONSTRAINTS,
           video: false,
         });
         localStreamRef.current = stream;
@@ -921,29 +979,51 @@ export function CallProvider({ children }) {
     removeParticipant,
   ]);
 
+  // `elapsed` deliberately excluded — see CallTimerContext above.
+  const value = useMemo(
+    () => ({
+      call,
+      localStream,
+      remoteStream,
+      participants,
+      speakingId,
+      muted,
+      cameraOff,
+      sharing,
+      remoteScreenShare,
+      startOutgoing,
+      acceptIncoming,
+      rejectIncoming,
+      endCall,
+      toggleMute,
+      toggleCamera,
+      toggleScreenShare,
+    }),
+    [
+      call,
+      localStream,
+      remoteStream,
+      participants,
+      speakingId,
+      muted,
+      cameraOff,
+      sharing,
+      remoteScreenShare,
+      startOutgoing,
+      acceptIncoming,
+      rejectIncoming,
+      endCall,
+      toggleMute,
+      toggleCamera,
+      toggleScreenShare,
+    ]
+  );
+
   return (
-    <CallContext.Provider
-      value={{
-        call,
-        localStream,
-        remoteStream,
-        participants,
-        speakingId,
-        muted,
-        cameraOff,
-        sharing,
-        remoteScreenShare,
-        elapsed,
-        startOutgoing,
-        acceptIncoming,
-        rejectIncoming,
-        endCall,
-        toggleMute,
-        toggleCamera,
-        toggleScreenShare,
-      }}
-    >
-      {children}
+    <CallContext.Provider value={value}>
+      <CallTimerContext.Provider value={elapsed}>
+        {children}
+      </CallTimerContext.Provider>
     </CallContext.Provider>
   );
 }
@@ -968,8 +1048,14 @@ export function useCall() {
       cameraOff: false,
       sharing: false,
       remoteScreenShare: null,
-      elapsed: 0,
     };
   }
   return ctx;
+}
+
+/** Isolated from useCall() on purpose — subscribe to this only in
+ * components that render the live call-duration timer (e.g. CallOverlay),
+ * so the ticking clock doesn't re-render everything else using useCall(). */
+export function useCallElapsed() {
+  return useContext(CallTimerContext);
 }

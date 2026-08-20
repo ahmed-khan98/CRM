@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MoreVertical, Pencil, Trash2, Eye } from "lucide-react";
 
-export default function FleetRowMenu({ onView, onEdit, onDelete }) {
+function FleetRowMenu({ onView, onEdit, onDelete }) {
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
   const btnRef = useRef(null);
@@ -122,3 +122,5 @@ export default function FleetRowMenu({ onView, onEdit, onDelete }) {
     </div>
   );
 }
+
+export default memo(FleetRowMenu);

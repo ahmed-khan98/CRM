@@ -212,6 +212,11 @@ const NotificationBell = ({ mobile = false }) => {
                     <div className={!n.isRead ? "" : "pl-3.5"}>
                       <p className="text-xs font-semibold text-zinc-100">
                         {n.title}
+                        {n.count > 1 && (
+                          <span className="ml-1.5 text-[10px] font-medium text-zinc-500">
+                            · {n.count} new
+                          </span>
+                        )}
                       </p>
                       <p className="mt-0.5 text-[11px] leading-relaxed text-zinc-400">
                         {n.message}

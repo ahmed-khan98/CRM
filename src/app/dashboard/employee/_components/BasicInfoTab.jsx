@@ -6,6 +6,7 @@ import {
   InfoItem,
   formatDate,
   formatMoney,
+  formatShiftTime,
 } from "./hrmsUi";
 
 export default function BasicInfoTab({ employee }) {
@@ -62,6 +63,8 @@ export function EmploymentTab({ employee }) {
             label="Basic Salary"
             value={formatMoney(employee.currentSalary)}
           />
+          <InfoItem label="Shift Start" value={formatShiftTime(employee.shiftStart)} />
+          <InfoItem label="Shift End" value={formatShiftTime(employee.shiftEnd)} />
         </div>
       </SectionCard>
 

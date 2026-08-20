@@ -11,8 +11,8 @@ import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import VehicleModal from "@/app/_Components/Modal/VehicleModal";
 import Pagination from "@/app/_Components/PaginationComponent/Pagination";
-import FleetRowMenu from "@/app/_Components/fleet/FleetRowMenu";
-import { fleet, fleetStatusClass } from "@/app/_Components/fleet/fleetTheme";
+import FleetVehicleRow from "@/app/_Components/fleet/FleetVehicleRow";
+import { fleet } from "@/app/_Components/fleet/fleetTheme";
 import {
   useGetVehiclesQuery,
   useDeleteVehicleMutation,
@@ -41,14 +41,44 @@ export default function FleetVehiclesPage() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const searchTimer = useMemo(() => ({ current: null }), []);
 
-  const onSearchChange = (val) => {
+  const onSearchChange = useCallback((val) => {
     setSearch(val);
     clearTimeout(searchTimer.current);
     searchTimer.current = setTimeout(() => {
       setDebouncedSearch(val);
       setPage(1);
     }, 350);
-  };
+  }, [searchTimer]);
+
+  const onTabChange = useCallback((v) => {
+    setStatus(v);
+    setPage(1);
+  }, []);
+
+  const onVendorFilterChange = useCallback((opt) => {
+    setVendorId(opt?.value || null);
+    setPage(1);
+  }, []);
+
+  const openAddModal = useCallback(() => {
+    setEditing(null);
+    setIsModalOpen(true);
+  }, []);
+
+  const closeVehicleModal = useCallback(() => {
+    setIsModalOpen(false);
+    setEditing(null);
+  }, []);
+
+  const handleViewVehicle = useCallback(
+    (vehicleId) => router.push(`/dashboard/fleet/vehicles/${vehicleId}`),
+    [router]
+  );
+  const handleEditVehicle = useCallback((vehicle) => {
+    setEditing(vehicle);
+    setIsModalOpen(true);
+  }, []);
+  const handleDeleteRequest = useCallback((vehicleId) => setConfirmDelete(vehicleId), []);
 
   const { data: vendorsData } = useGetVendorsQuery({ page: 1, limit: 100 });
   const vendorOptions = useMemo(
@@ -94,19 +124,13 @@ export default function FleetVehiclesPage() {
           length={meta?.total || 0}
           name="Vehicles"
           btnName="Add Vehicle"
-          handleEdit={() => {
-            setEditing(null);
-            setIsModalOpen(true);
-          }}
+          handleEdit={openAddModal}
         >
           <div className="w-full max-w-xs">
             <Select
               options={vendorOptions}
               value={vendorOptions.find((o) => o.value === vendorId) || null}
-              onChange={(opt) => {
-                setVendorId(opt?.value || null);
-                setPage(1);
-              }}
+              onChange={onVendorFilterChange}
               isClearable
               placeholder="All Vendors"
               classNamePrefix="fleet-select"
@@ -117,10 +141,7 @@ export default function FleetVehiclesPage() {
         <SearchFilterBar
           tabItems={STATUS_TABS}
           activeTab={status}
-          onTabChange={(v) => {
-            setStatus(v);
-            setPage(1);
-          }}
+          onTabChange={onTabChange}
           searchTerm={search}
           onSearchChange={onSearchChange}
           searchPlaceholder="Search by name, make, model or registration..."
@@ -151,53 +172,13 @@ export default function FleetVehiclesPage() {
                   </tr>
                 ) : (
                   items.map((v) => (
-                    <tr key={v._id} className={fleet.tableRow}>
-                      <td className={fleet.tableCell}>
-                        <div className="flex items-center gap-3 min-w-[180px]">
-                          <div className="h-11 w-14 rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 shrink-0 flex items-center justify-center">
-                            {v.images?.[0]?.url ? (
-                              <img
-                                src={v.images[0].url}
-                                alt={v.vehicleName}
-                                className="h-full w-full object-cover"
-                              />
-                            ) : (
-                              <Truck className="w-4 h-4 text-zinc-400" />
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <p className="font-semibold text-zinc-900 truncate">
-                              {v.vehicleName}
-                            </p>
-                            <p className="text-xs text-zinc-500 mt-0.5 truncate">
-                              {[v.make, v.model].filter(Boolean).join(" ") || "—"}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className={fleet.tableCell}>{v.vendor?.companyName || "—"}</td>
-                      <td className={fleet.tableCell}>{v.registrationNumber}</td>
-                      <td className={fleet.tableCell}>{v.year || "—"}</td>
-                      <td className={`${fleet.tableCell} capitalize`}>{v.fuelType || "—"}</td>
-                      <td className={fleet.tableCell}>
-                        {v.rentAmount != null && v.rentAmount !== ""
-                          ? `Rs ${Number(v.rentAmount).toLocaleString()}`
-                          : "—"}
-                      </td>
-                      <td className={fleet.tableCell}>
-                        <span className={fleetStatusClass(v.status)}>{v.status}</span>
-                      </td>
-                      <td className={fleet.tableCell}>
-                        <FleetRowMenu
-                          onView={() => router.push(`/dashboard/fleet/vehicles/${v._id}`)}
-                          onEdit={() => {
-                            setEditing(v);
-                            setIsModalOpen(true);
-                          }}
-                          onDelete={() => setConfirmDelete(v._id)}
-                        />
-                      </td>
-                    </tr>
+                    <FleetVehicleRow
+                      key={v._id}
+                      vehicle={v}
+                      onView={handleViewVehicle}
+                      onEdit={handleEditVehicle}
+                      onDelete={handleDeleteRequest}
+                    />
                   ))
                 )}
               </tbody>
@@ -212,10 +193,7 @@ export default function FleetVehiclesPage() {
       {isModalOpen && (
         <VehicleModal
           isOpen={isModalOpen}
-          closeModal={() => {
-            setIsModalOpen(false);
-            setEditing(null);
-          }}
+          closeModal={closeVehicleModal}
           data={editing}
         />
       )}

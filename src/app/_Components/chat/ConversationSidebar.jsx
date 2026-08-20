@@ -23,12 +23,13 @@ function ConversationSidebar({
   onToggleDark,
   onNewChat,
   onSearchMessages,
+  onOpenListMenu,
 }) {
   return (
     <aside
       className={`${
         mobileShowChat ? "hidden md:flex" : "flex"
-      } w-full md:w-[320px] lg:w-[360px] flex-col border-r ${theme.side}`}
+      } w-full md:w-[320px] lg:w-[360px] min-h-0 flex-col border-r ${theme.side}`}
     >
       <div className={`flex items-center justify-between px-3 py-2 border-b ${theme.header}`}>
         <div>
@@ -105,7 +106,11 @@ function ConversationSidebar({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div
+        className={`min-h-0 flex-1 overflow-y-auto ${
+          dark ? "custom-scrollbar-dark" : "custom-scrollbar"
+        }`}
+      >
         {filteredConvs.length === 0 && (
           <p className="px-4 py-8 text-center text-sm text-zinc-500">
             {listFilter === "groups"
@@ -128,6 +133,7 @@ function ConversationSidebar({
               theme={theme}
               online={listOnline}
               onOpen={openChat}
+              onOpenMenu={onOpenListMenu}
             />
           );
         })}

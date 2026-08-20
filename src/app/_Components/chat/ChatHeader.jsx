@@ -1,23 +1,16 @@
 "use client";
 
 import { memo } from "react";
-import toast from "react-hot-toast";
 import {
   MoreVertical,
   PhoneCall,
   Video,
   Info,
-  Check,
-  Pin,
-  Archive,
-  Trash2,
   ArrowLeft,
-  Ban,
-  LogOut,
-  UserPlus,
 } from "lucide-react";
 import Avatar from "@/app/_Components/chat/ChatAvatar";
 import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
+import ChatOptionsMenu from "@/app/_Components/chat/ChatOptionsMenu";
 import { conversationAvatar, conversationTitle, formatChatTime } from "@/app/_Components/chat/chatUtils";
 
 function ChatHeader({
@@ -39,8 +32,7 @@ function ChatHeader({
   startOutgoing,
   updateConv,
   meRole,
-  iAmGroupAdmin,
-  setShowAddMembers,
+  onAddMembers,
   setConfirmAction,
   setConfirmDeleteChat,
   adminDisable,
@@ -164,123 +156,18 @@ function ChatHeader({
           </button>
           {headerMenuOpen && (
             <div className="absolute right-0 z-20 mt-1 w-52 overflow-hidden rounded-lg border border-zinc-200 bg-white py-1 text-sm shadow-lg text-zinc-800">
-              <button
-                type="button"
-                className="flex w-full items-center gap-2 px-3 py-2 hover:bg-zinc-50"
-                onClick={() => {
-                  updateConv({
-                    id: activeId,
-                    pinned: !active.myMeta?.pinned,
-                  });
-                  closeHeaderMenu();
-                }}
-              >
-                <Pin className="h-4 w-4" />
-                {active.myMeta?.pinned ? "Unpin chat" : "Pin chat"}
-              </button>
-              <button
-                type="button"
-                className="flex w-full items-center gap-2 px-3 py-2 hover:bg-zinc-50"
-                onClick={() => {
-                  updateConv({
-                    id: activeId,
-                    archived: !active.myMeta?.archived,
-                  });
-                  closeHeaderMenu();
-                }}
-              >
-                <Archive className="h-4 w-4" />
-                {active.myMeta?.archived ? "Unarchive" : "Archive"}
-              </button>
-              <button
-                type="button"
-                className="flex w-full items-center gap-2 px-3 py-2 text-red-600 hover:bg-zinc-50"
-                onClick={() => {
-                  closeHeaderMenu();
-                  setConfirmDeleteChat(activeId);
-                }}
-              >
-                <Trash2 className="h-4 w-4" /> Delete chat
-              </button>
-              {peer && (meRole === "ADMIN" || meRole === "SUBADMIN") && (
-                <>
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-2 px-3 py-2 text-red-600 hover:bg-zinc-50"
-                    onClick={async () => {
-                      closeHeaderMenu();
-                      try {
-                        await adminDisable({
-                          userId: peer._id,
-                          reason: "Disabled from chat UI",
-                        }).unwrap();
-                        toast.success("Chat disabled for user");
-                      } catch (e) {
-                        toast.error(e?.data?.message || "Could not disable chat");
-                      }
-                    }}
-                  >
-                    <Ban className="h-4 w-4" /> Disable chat (Admin)
-                  </button>
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-2 px-3 py-2 text-emerald-700 hover:bg-zinc-50"
-                    onClick={async () => {
-                      closeHeaderMenu();
-                      try {
-                        await adminEnable(peer._id).unwrap();
-                        toast.success("Chat enabled for user");
-                      } catch (e) {
-                        toast.error(e?.data?.message || "Could not enable chat");
-                      }
-                    }}
-                  >
-                    <Check className="h-4 w-4" /> Enable chat (Admin)
-                  </button>
-                </>
-              )}
-              {active.type === "group" && iAmGroupAdmin && (
-                <button
-                  type="button"
-                  className="flex w-full items-center gap-2 px-3 py-2 hover:bg-zinc-50"
-                  onClick={() => {
-                    closeHeaderMenu();
-                    setShowAddMembers(true);
-                  }}
-                >
-                  <UserPlus className="h-4 w-4" /> Add members
-                </button>
-              )}
-              {active.type === "group" && (
-                <button
-                  type="button"
-                  className="flex w-full items-center gap-2 px-3 py-2 text-red-600 hover:bg-zinc-50"
-                  onClick={() => {
-                    closeHeaderMenu();
-                    setConfirmAction({
-                      type: "leaveGroup",
-                      conversationId: activeId,
-                    });
-                  }}
-                >
-                  <LogOut className="h-4 w-4" /> Leave group
-                </button>
-              )}
-              {active.type === "group" && iAmGroupAdmin && (
-                <button
-                  type="button"
-                  className="flex w-full items-center gap-2 px-3 py-2 text-red-600 hover:bg-zinc-50"
-                  onClick={() => {
-                    closeHeaderMenu();
-                    setConfirmAction({
-                      type: "deleteGroup",
-                      conversationId: activeId,
-                    });
-                  }}
-                >
-                  <Trash2 className="h-4 w-4" /> Delete group
-                </button>
-              )}
+              <ChatOptionsMenu
+                conv={active}
+                myId={myId}
+                meRole={meRole}
+                onClose={closeHeaderMenu}
+                updateConv={updateConv}
+                setConfirmDeleteChat={setConfirmDeleteChat}
+                setConfirmAction={setConfirmAction}
+                onAddMembers={onAddMembers}
+                adminDisable={adminDisable}
+                adminEnable={adminEnable}
+              />
             </div>
           )}
         </div>

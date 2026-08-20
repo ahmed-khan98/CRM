@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import moment from "moment-timezone";
 import {
   ArrowLeft,
@@ -17,33 +16,12 @@ import {
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import VendorModal from "@/app/_Components/Modal/VendorModal";
 import VehicleModal from "@/app/_Components/Modal/VehicleModal";
+import VehicleCard from "@/app/_Components/fleet/VehicleCard";
+import InfoItem from "@/app/_Components/fleet/InfoItem";
+import SectionCard from "@/app/_Components/fleet/SectionCard";
 import { fleet, fleetStatusClass } from "@/app/_Components/fleet/fleetTheme";
 import { useGetVendorByIdQuery } from "@/app/_Services/vendor/page";
 import { useGetVehiclesQuery } from "@/app/_Services/vehicle/page";
-
-function InfoItem({ label, value }) {
-  return (
-    <div>
-      <p className="text-[11px] text-zinc-500 mb-0.5">{label}</p>
-      <p className="text-sm font-semibold text-zinc-900 break-words">{value || "—"}</p>
-    </div>
-  );
-}
-
-function SectionCard({ icon: Icon, title, children, action }) {
-  return (
-    <div className={`${fleet.card} p-5`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          {Icon && <Icon className="w-4 h-4 text-zinc-700" />}
-          <h3 className="text-sm font-bold text-zinc-900">{title}</h3>
-        </div>
-        {action}
-      </div>
-      {children}
-    </div>
-  );
-}
 
 export default function VendorDetailPage() {
   const { id } = useParams();
@@ -60,6 +38,12 @@ export default function VendorDetailPage() {
   );
   const vehicles = vehiclesData?.data?.items || [];
 
+  const handleBack = useCallback(() => router.push("/dashboard/fleet/vendors"), [router]);
+  const openEdit = useCallback(() => setEditOpen(true), []);
+  const closeEdit = useCallback(() => setEditOpen(false), []);
+  const openAddVehicle = useCallback(() => setAddVehicleOpen(true), []);
+  const closeAddVehicle = useCallback(() => setAddVehicleOpen(false), []);
+
   if (isLoading || !vendor) {
     return <PageLoader title="Loading vendor" subtitle="Fetching details..." />;
   }
@@ -70,7 +54,7 @@ export default function VendorDetailPage() {
         <div className="flex items-start gap-3">
           <button
             type="button"
-            onClick={() => router.push("/dashboard/fleet/vendors")}
+            onClick={handleBack}
             className="mt-1 p-2 rounded-xl border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -82,7 +66,7 @@ export default function VendorDetailPage() {
         </div>
         <div className="flex items-center gap-2 sm:pr-1">
           <span className={fleetStatusClass(vendor.status)}>{vendor.status}</span>
-          <button type="button" onClick={() => setEditOpen(true)} className={fleet.primaryBtn}>
+          <button type="button" onClick={openEdit} className={fleet.primaryBtn}>
             <Pencil className="w-3.5 h-3.5" /> Edit
           </button>
         </div>
@@ -149,7 +133,7 @@ export default function VendorDetailPage() {
               Vehicles ({vehicles.length || vendor.vehicleCount || 0})
             </h3>
           </div>
-          <button type="button" onClick={() => setAddVehicleOpen(true)} className={fleet.primaryBtn}>
+          <button type="button" onClick={openAddVehicle} className={fleet.primaryBtn}>
             <Car className="w-3.5 h-3.5" /> Add Vehicle
           </button>
         </div>
@@ -159,36 +143,19 @@ export default function VendorDetailPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {vehicles.map((v) => (
-              <Link
-                key={v._id}
-                href={`/dashboard/fleet/vehicles/${v._id}`}
-                className="rounded-xl border border-zinc-200 bg-zinc-50/50 p-4 hover:border-zinc-300 hover:bg-zinc-50 transition-colors"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="font-semibold text-zinc-900">{v.vehicleName}</p>
-                    <p className="text-xs text-zinc-500 mt-0.5">
-                      {[v.make, v.model, v.year].filter(Boolean).join(" · ") || "—"}
-                    </p>
-                    <p className="text-xs text-zinc-600 mt-2 font-medium">
-                      {v.registrationNumber}
-                    </p>
-                  </div>
-                  <span className={fleetStatusClass(v.status)}>{v.status}</span>
-                </div>
-              </Link>
+              <VehicleCard key={v._id} vehicle={v} />
             ))}
           </div>
         )}
       </div>
 
       {editOpen && (
-        <VendorModal isOpen={editOpen} closeModal={() => setEditOpen(false)} data={vendor} />
+        <VendorModal isOpen={editOpen} closeModal={closeEdit} data={vendor} />
       )}
       {addVehicleOpen && (
         <VehicleModal
           isOpen={addVehicleOpen}
-          closeModal={() => setAddVehicleOpen(false)}
+          closeModal={closeAddVehicle}
           defaultVendorId={id}
         />
       )}

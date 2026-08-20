@@ -16,7 +16,7 @@ import {
   Volume2,
   Volume1,
 } from "lucide-react";
-import { useCall } from "./CallContext";
+import { useCall, useCallElapsed } from "./CallContext";
 
 function formatElapsed(sec) {
   const m = Math.floor(sec / 60)
@@ -46,12 +46,21 @@ function VideoEl({ stream, muted, mirror, className = "", fit = "cover" }) {
   );
 }
 
-// Mobile Chrome/PWA doesn't always route call audio through the earpiece —
-// it can default to the loudspeaker. Best-effort fix: explicitly pick the
-// earpiece/speaker output device via the Audio Output Devices API. Device
-// labels are only populated once mic permission was granted (already true
-// during an active call), and support isn't universal (e.g. iOS Safari has
-// no setSinkId), so this silently no-ops where unsupported.
+// Best-effort earpiece/speaker output selection via the Audio Output Devices
+// API. IMPORTANT platform caveat (2026): setSinkId() is NOT supported on
+// Android Chrome — WebRTC audio there plays through the loudspeaker
+// regardless of what we try, unless the user has a Bluetooth/wired headset
+// connected. It IS supported on desktop Chrome/Edge. iOS has no setSinkId
+// either, but WebKit's own audio-session handling already defaults calls to
+// the earpiece correctly, so no web-side fix is needed there. We still run
+// this (it's a harmless no-op where unsupported) for the platforms it does
+// help, and gate the manual toggle button in the UI on actual support so we
+// don't show users a control that can't do anything on their device.
+const supportsSinkId =
+  typeof window !== "undefined" &&
+  typeof HTMLMediaElement !== "undefined" &&
+  typeof HTMLMediaElement.prototype.setSinkId === "function";
+
 async function pickSinkDeviceId(preferSpeaker) {
   if (!navigator.mediaDevices?.enumerateDevices) return null;
   try {
@@ -212,7 +221,6 @@ export default function CallOverlay() {
     cameraOff,
     sharing,
     remoteScreenShare,
-    elapsed,
     acceptIncoming,
     rejectIncoming,
     endCall,
@@ -220,6 +228,7 @@ export default function CallOverlay() {
     toggleCamera,
     toggleScreenShare,
   } = useCall();
+  const elapsed = useCallElapsed();
 
   const [minimized, setMinimized] = useState(false);
   const [panelExpanded, setPanelExpanded] = useState(false);
@@ -513,6 +522,12 @@ export default function CallOverlay() {
           )}
         </div>
 
+        {!isVideo && !supportsSinkId && inCallUi ? (
+          <p className="shrink-0 px-3 pb-1 text-center text-[10px] text-zinc-500">
+            Audio playing on loudspeaker · connect a headset for earpiece/privacy
+          </p>
+        ) : null}
+
         {/* Controls */}
         <div className="flex shrink-0 items-center justify-center gap-3 border-t border-white/10 px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           {call.status === "incoming" ? (
@@ -565,7 +580,7 @@ export default function CallOverlay() {
                     <Video className="h-4 w-4" />
                   )}
                 </button>
-              ) : (
+              ) : supportsSinkId ? (
                 <button
                   type="button"
                   aria-label={
@@ -582,7 +597,7 @@ export default function CallOverlay() {
                     <Volume1 className="h-4 w-4" />
                   )}
                 </button>
-              )}
+              ) : null}
               <button
                 type="button"
                 aria-label="Screen share"
