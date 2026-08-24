@@ -20,7 +20,11 @@ function AttachmentSection({
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
 
-  const list = attachments || [];
+  const list = Array.isArray(attachments)
+    ? attachments
+    : attachments
+      ? [attachments]
+      : [];
 
   const handleUpload = useCallback(async () => {
     if (!files.length) return;
