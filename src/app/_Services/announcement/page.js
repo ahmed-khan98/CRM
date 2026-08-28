@@ -4,7 +4,7 @@ const announcementApi = createApiAuction.injectEndpoints({
   endpoints: (builder) => ({
     createAnnouncement: builder.mutation({
       query: (formData) => ({
-        url: "announcement/add",
+        url: "announcement/",
         method: "POST",
         body: formData,
       }),
