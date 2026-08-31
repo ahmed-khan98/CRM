@@ -9,12 +9,12 @@ function AttachmentRow({ label, attachment, onDelete, deleting }) {
   if (!attachment?.url) return null;
 
   return (
-    <div className="flex items-center gap-2.5 rounded-2xl border border-zinc-100 bg-zinc-50 px-3 py-2.5">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-zinc-200 bg-white">
+    <div className="flex items-center gap-2.5 rounded-2xl border border-white/[0.08] bg-[#161b22] px-3 py-2.5">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/[0.1] bg-[#12171d]">
         <FileText className="h-3.5 w-3.5 text-zinc-400" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-xs font-medium text-zinc-800">{attachment.originalName || "Attachment"}</p>
+        <p className="truncate text-xs font-medium text-zinc-100">{attachment.originalName || "Attachment"}</p>
         <p className="text-[10px] text-zinc-500">{label}</p>
       </div>
       <div className="flex items-center gap-1 shrink-0">
@@ -26,7 +26,7 @@ function AttachmentRow({ label, attachment, onDelete, deleting }) {
             onClick={onDelete}
             disabled={deleting}
             aria-label="Remove attachment"
-            className="rounded-lg p-1.5 text-zinc-400 hover:bg-red-50 hover:text-red-500 transition cursor-pointer disabled:opacity-50"
+            className="rounded-lg p-1.5 text-zinc-400 hover:bg-red-500/10 hover:text-red-400 transition cursor-pointer disabled:opacity-50"
           >
             {deleting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <X className="h-3.5 w-3.5" />}
           </button>

@@ -103,6 +103,30 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+/* Clickable controls use a pointer. Utilities like cursor-not-allowed still win. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  a[href],
+  label[for],
+  summary,
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="file"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  input[type="reset"]:not(:disabled),
+  input[type="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [disabled],
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;

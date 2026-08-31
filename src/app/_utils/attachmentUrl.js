@@ -50,6 +50,7 @@ export function isDownloadOnlyFile(url, filename) {
   return [
     ".zip",
     ".rar",
+    ".7z",
     ".psd",
     ".ai",
     ".eps",

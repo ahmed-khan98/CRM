@@ -8,6 +8,8 @@ import { TASK_PRIORITIES, TASK_STATUS_OPTIONS } from "./constants";
 import ModalShell from "@/app/_Components/Modal/ModalShell";
 import { fleet, modalSelectStyles } from "@/app/_Components/fleet/fleetTheme";
 import { extractFilesFromClipboard } from "@/app/_utils/clipboardFiles";
+import { checkUploadSize } from "@/app/_Components/chat/chatUtils";
+import toast from "react-hot-toast";
 
 const PRIORITIES = TASK_PRIORITIES;
 const STATUS_OPTIONS = TASK_STATUS_OPTIONS;
@@ -195,7 +197,9 @@ export default memo(function TaskModal({
           <div>
             <label className={labelClass}>
               <Paperclip className="h-3 w-3" /> Attachments{" "}
-              <span className="normal-case text-zinc-500">(optional, multiple allowed)</span>
+              <span className="normal-case text-zinc-500">
+                (optional · ZIP up to 50 MB)
+              </span>
             </label>
             <input
               ref={fileRef}
@@ -204,7 +208,12 @@ export default memo(function TaskModal({
               accept=".zip,.rar,.psd,.ai,.eps,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,image/*,video/*"
               className="hidden"
               onChange={(e) => {
-                const picked = Array.from(e.target.files || []);
+                const picked = [];
+                for (const file of Array.from(e.target.files || [])) {
+                  const sizeError = checkUploadSize(file);
+                  if (sizeError) toast.error(sizeError);
+                  else picked.push(file);
+                }
                 if (picked.length) setAttachmentFiles((prev) => [...prev, ...picked]);
                 if (fileRef.current) fileRef.current.value = "";
               }}
@@ -244,17 +253,22 @@ export default memo(function TaskModal({
               }}
               onPaste={(e) => {
                 const pasted = extractFilesFromClipboard(e);
-                if (pasted.length) {
-                  e.preventDefault();
-                  setAttachmentFiles((prev) => [...prev, ...pasted]);
+                if (!pasted.length) return;
+                e.preventDefault();
+                const picked = [];
+                for (const file of pasted) {
+                  const sizeError = checkUploadSize(file);
+                  if (sizeError) toast.error(sizeError);
+                  else picked.push(file);
                 }
+                if (picked.length) setAttachmentFiles((prev) => [...prev, ...picked]);
               }}
               className="flex w-full items-center gap-2 rounded-xl border border-dashed border-white/15 bg-[#161b22] px-3 py-2.5 text-xs font-semibold text-zinc-400 transition hover:border-white/25 hover:text-zinc-200 cursor-pointer outline-none focus:border-white/25 focus:text-zinc-200"
             >
               <Upload className="h-4 w-4" />
               {attachmentFiles.length
                 ? "Add more, or paste a screenshot (Ctrl+V)"
-                : "Attach files, or click here then paste (Ctrl+V)"}
+                : "Attach files (ZIP up to 50 MB), or paste (Ctrl+V)"}
             </div>
 
             {isEdit && task?.creatorAttachment?.length > 0 && (

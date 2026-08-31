@@ -1,29 +1,28 @@
 "use client";
 
 import { memo } from "react";
-import toast from "react-hot-toast";
-import { Forward, Download, Star } from "lucide-react";
-import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
-import Ticks from "@/app/_Components/chat/ChatTicks";
+import { Forward } from "lucide-react";
 import { renderMentionBody } from "@/app/_Components/chat/MentionText";
 import CallMessageBubble from "@/app/_Components/chat/CallMessageBubble";
 import ChatImage from "@/app/_Components/chat/ChatImage";
 import ChatFileCard from "@/app/_Components/chat/ChatFileCard";
 import VoicePlayer from "@/app/_Components/chat/VoicePlayer";
+import DaySeparator from "@/app/_Components/chat/bubble/DaySeparator";
+import SystemMessageChip from "@/app/_Components/chat/bubble/SystemMessageChip";
+import ReplyQuote from "@/app/_Components/chat/bubble/ReplyQuote";
+import VideoBubble from "@/app/_Components/chat/bubble/VideoBubble";
+import MessageReactions from "@/app/_Components/chat/bubble/MessageReactions";
+import MessageMeta from "@/app/_Components/chat/bubble/MessageMeta";
+import QuickReactBar from "@/app/_Components/chat/bubble/QuickReactBar";
 import {
   getCurrentUser,
-  formatDaySeparator,
   formatMessageClock,
   sameDay,
   receiptStatus,
-  QUICK_EMOJIS,
   isVoiceMessage,
   messageKey,
 } from "@/app/_Components/chat/chatUtils";
-import {
-  isChatDocument,
-  fetchAttachmentBlob,
-} from "@/app/_utils/attachmentUrl";
+import { isChatDocument } from "@/app/_utils/attachmentUrl";
 
 function MessageBubble({
   message: m,
@@ -49,7 +48,6 @@ function MessageBubble({
       m.type !== "image" &&
       m.type !== "video" &&
       m.attachments?.[0]?.mimeType?.startsWith("audio/"));
-  // Only real call messages — empty callMeta {} exists on every Mongo doc
   const isCall = m.type === "call";
   const isImage =
     !isCall &&
@@ -63,19 +61,9 @@ function MessageBubble({
 
   return (
     <div>
-      {showDay && (
-        <div className="my-3 flex justify-center sticky top-1 z-[1]">
-          <span className={`rounded-lg px-3 py-1 text-[11px] font-medium ${theme.dayChip}`}>
-            {formatDaySeparator(m.createdAt)}
-          </span>
-        </div>
-      )}
+      {showDay && <DaySeparator theme={theme} date={m.createdAt} />}
       {m.type === "system" || m.deletedForEveryone ? (
-        <div className="my-2 flex justify-center">
-          <span className={`rounded-lg px-3 py-1 text-[11px] ${theme.dayChip}`}>
-            {m.deletedForEveryone ? m.body || "This message was deleted" : m.body}
-          </span>
-        </div>
+        <SystemMessageChip theme={theme} message={m} />
       ) : (
         <div
           className={`group flex mb-1 ${mine ? "justify-end" : "justify-start"}`}
@@ -96,22 +84,7 @@ function MessageBubble({
                 {m.senderId?.fullName}
               </p>
             )}
-            {m.replyTo && (
-              <div
-                className={`mb-1 rounded-md border-l-4 px-2 py-1 text-xs ${
-                  mine
-                    ? "border-zinc-400 bg-black/20"
-                    : "border-zinc-500 bg-black/[0.04]"
-                }`}
-              >
-                <p className="font-semibold opacity-80 truncate">
-                  {(m.replyTo.senderId?.fullName || "Reply").split(" ")[0]}
-                </p>
-                <p className="opacity-70 truncate">
-                  {(m.replyTo.body || m.replyTo.type || "").slice(0, 80)}
-                </p>
-              </div>
-            )}
+            <ReplyQuote mine={mine} replyTo={m.replyTo} />
             {m.forwardedFrom && (
               <p className="mb-1 flex items-center gap-1 text-[10px] italic opacity-70 px-0.5">
                 <Forward className="h-3 w-3" /> Forwarded
@@ -121,39 +94,7 @@ function MessageBubble({
               <ChatImage attachment={m.attachments[0]} />
             )}
             {isVideo && m.attachments?.[0]?.url && (
-              <div className="relative mb-1 -mx-0.5">
-                <video
-                  src={m.attachments[0].url}
-                  controls
-                  className="max-h-64 rounded-lg"
-                />
-                <ChatTooltip label="Download video" side="top">
-                  <button
-                    type="button"
-                    className="absolute bottom-2 right-2 rounded-full bg-black/70 p-1.5 text-white hover:bg-black/90"
-                    onClick={async () => {
-                      try {
-                        const att = m.attachments[0];
-                        const blob = await fetchAttachmentBlob(att.url, {
-                          disposition: "attachment",
-                          filename: att.fileName || "video.mp4",
-                          publicId: att.publicId,
-                        });
-                        const href = URL.createObjectURL(blob);
-                        const a = document.createElement("a");
-                        a.href = href;
-                        a.download = att.fileName || "video.mp4";
-                        a.click();
-                        URL.revokeObjectURL(href);
-                      } catch {
-                        toast.error("Video download failed");
-                      }
-                    }}
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                  </button>
-                </ChatTooltip>
-              </div>
+              <VideoBubble attachment={m.attachments[0]} />
             )}
             {isVoice && m.attachments?.[0]?.url && (
               <VoicePlayer
@@ -205,46 +146,11 @@ function MessageBubble({
                   : m.body}
               </p>
             )}
-            {!!m.reactions?.length && (
-              <div className="mt-0.5 flex flex-wrap gap-1">
-                {m.reactions.map((r, i) => (
-                  <span
-                    key={`${r.emoji}-${i}`}
-                    className={`rounded-full px-1.5 text-xs shadow-sm ${
-                      mine ? "bg-black/25" : "bg-zinc-100"
-                    }`}
-                  >
-                    {r.emoji}
-                  </span>
-                ))}
-              </div>
-            )}
+            <MessageReactions reactions={m.reactions} mine={mine} />
             {!isCall && !isVoice && (
-              <div
-                className={`mt-0.5 flex items-center justify-end gap-1 text-[11px] leading-none select-none ${
-                  mine ? "text-zinc-300" : "text-zinc-500"
-                }`}
-              >
-                {m.editedAt && <span className="italic">edited</span>}
-                {m.starredBy?.some(
-                  (id) => id === myId || id?.toString() === myId
-                ) && <Star className="h-3 w-3 fill-amber-400 text-amber-400" />}
-                <span>{formatMessageClock(m.createdAt)}</span>
-                {mine && <Ticks status={status} soft />}
-              </div>
+              <MessageMeta message={m} myId={myId} mine={mine} status={status} />
             )}
-            <div className="absolute -top-3 right-2 hidden gap-0.5 rounded-full border border-zinc-200 bg-white px-1 py-0.5 shadow group-hover:flex">
-              {QUICK_EMOJIS.slice(0, 5).map((em) => (
-                <button
-                  key={em}
-                  type="button"
-                  className="text-sm hover:scale-110"
-                  onClick={() => onReact(m._id, em)}
-                >
-                  {em}
-                </button>
-              ))}
-            </div>
+            <QuickReactBar messageId={m._id} onReact={onReact} />
           </div>
         </div>
       )}

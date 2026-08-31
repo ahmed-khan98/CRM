@@ -130,7 +130,7 @@ function ChatFileCard({ attachment, mine = false }) {
 
   return (
     <div
-      className="mb-1 flex min-w-[220px] max-w-[280px] items-center gap-2.5 rounded-lg px-2 py-2"
+      className="mb-1 flex min-w-[220px] max-w-[280px] items-center gap-2.5 rounded-lg px-2 py-2 cursor-pointer"
       style={{ background: stripBg, color: titleColor }}
     >
       <div
@@ -148,7 +148,7 @@ function ChatFileCard({ attachment, mine = false }) {
       <ChatTooltip label={name} side="top">
         <button
           type="button"
-          className="min-w-0 flex-1 text-left"
+          className="min-w-0 flex-1 text-left cursor-pointer disabled:cursor-not-allowed"
           onClick={downloadOnly ? download : openViaProxy}
           disabled={busy}
         >
@@ -169,7 +169,7 @@ function ChatFileCard({ attachment, mine = false }) {
           type="button"
           onClick={download}
           disabled={busy}
-          className="shrink-0 rounded-full p-2 hover:bg-black/10 disabled:opacity-50"
+          className="shrink-0 rounded-full p-2 hover:bg-black/10 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           style={{ color: iconBtn }}
         >
           <Download className="h-4 w-4" stroke={iconBtn} />

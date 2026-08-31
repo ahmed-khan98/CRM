@@ -1,8 +1,6 @@
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import { Users } from "lucide-react";
 import {
   useGetConversationsQuery,
   useLazyGetMessagesQuery,
@@ -30,26 +28,25 @@ import {
 } from "@/app/_Services/chat/chatApi";
 import { useSocket } from "@/app/_Components/Socket/SocketProvider";
 import { useCall } from "@/app/_Components/chat/CallContext";
-import WarningModal from "@/app/_Components/Modal/WarningModal";
-import AddMembersModal from "@/app/_Components/chat/AddMembersModal";
-import NewChatModal from "@/app/_Components/chat/NewChatModal";
 import ConversationSidebar from "@/app/_Components/chat/ConversationSidebar";
 import ChatHeader from "@/app/_Components/chat/ChatHeader";
-import ChatOptionsMenu from "@/app/_Components/chat/ChatOptionsMenu";
 import MessageList from "@/app/_Components/chat/MessageList";
 import ChatComposer from "@/app/_Components/chat/ChatComposer";
 import ChatInfoPanel from "@/app/_Components/chat/ChatInfoPanel";
-import MessageContextMenu from "@/app/_Components/chat/MessageContextMenu";
-import ForwardModal from "@/app/_Components/chat/ForwardModal";
-import { extractFilesFromClipboard } from "@/app/_utils/clipboardFiles";
+import ChatEmptyState from "@/app/_Components/chat/ChatEmptyState";
+import ChatOverlays from "@/app/_Components/chat/ChatOverlays";
+import useClickAway from "@/app/_Components/chat/hooks/useClickAway";
+import useChatPresence from "@/app/_Components/chat/hooks/useChatPresence";
+import useChatMessages from "@/app/_Components/chat/hooks/useChatMessages";
+import useChatConfirm from "@/app/_Components/chat/hooks/useChatConfirm";
 import {
   getMyId,
   getCurrentUser,
-  conversationTitle,
   conversationPeer,
   getNextConsecutiveVoiceId,
   getChatTheme,
-  checkUploadSize,
+  activityNames,
+  isConversationGroupAdmin,
 } from "@/app/_Components/chat/chatUtils";
 
 export default function ChatApp() {
@@ -65,69 +62,35 @@ export default function ChatApp() {
   const { emit, on, connected, isUserOnline, getPresence } = useSocket();
   const { startOutgoing } = useCall();
 
-  const [listFilter, setListFilter] = useState("all"); // all | groups | archived
-  const [filter, setFilter] = useState("");
+  const [listFilter, setListFilter] = useState("all");
   const [activeId, setActiveId] = useState(null);
-  const [messages, setMessages] = useState([]);
-  // Mirrors `messages` without being a hook dependency itself — lets
-  // handlers like handleVoiceEnded read the latest list without being
-  // recreated (and busting memoized children's props) on every new message.
-  const messagesRef = useRef(messages);
-  useEffect(() => {
-    messagesRef.current = messages;
-  }, [messages]);
-  const [hasMore, setHasMore] = useState(false);
-  const [loadingMsgs, setLoadingMsgs] = useState(false);
-  const [text, setText] = useState("");
   const [replyTo, setReplyTo] = useState(null);
   const [editing, setEditing] = useState(null);
-  const [showEmoji, setShowEmoji] = useState(false);
-  const [showAttach, setShowAttach] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showNew, setShowNew] = useState(false);
-  const [newMode, setNewMode] = useState("direct"); // direct | group
-  const [typingUsers, setTypingUsers] = useState({});
-  const [recordingUsers, setRecordingUsers] = useState({});
-  const [voiceMode, setVoiceMode] = useState(false);
+  const [newMode, setNewMode] = useState("direct");
   const [menuMsg, setMenuMsg] = useState(null);
   const [forwardMsg, setForwardMsg] = useState(null);
   const [dark, setDark] = useState(false);
   const [mobileShowChat, setMobileShowChat] = useState(false);
-  const [uploadPct, setUploadPct] = useState(null);
   const [dragOver, setDragOver] = useState(false);
-  // Files picked/pasted/dropped but not sent yet — shown as a WhatsApp-style
-  // preview strip above the composer input until the user hits Send.
-  const [pendingFiles, setPendingFiles] = useState([]);
-  const [presenceOverlay, setPresenceOverlay] = useState({});
   const [activeVoiceId, setActiveVoiceId] = useState(null);
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [listMenuConv, setListMenuConv] = useState(null);
-  const [confirmDeleteChat, setConfirmDeleteChat] = useState(null);
-  const [isDeletingChat, setIsDeletingChat] = useState(false);
-  const [confirmAction, setConfirmAction] = useState(null);
-  const [confirmBusy, setConfirmBusy] = useState(false);
   const [showAddMembers, setShowAddMembers] = useState(false);
-  const [mediaTab, setMediaTab] = useState("media"); // media | docs | links
-  const [mentionOpen, setMentionOpen] = useState(false);
-  const [mentionQuery, setMentionQuery] = useState("");
-  const [mentionStart, setMentionStart] = useState(-1);
-  const [mentionIndex, setMentionIndex] = useState(0);
+  const [mediaTab, setMediaTab] = useState("media");
 
-  const bottomRef = useRef(null);
-  const listRef = useRef(null);
-  const fileRef = useRef(null);
-  const typingTimer = useRef(null);
   const headerMenuRef = useRef(null);
-  const textAreaRef = useRef(null);
+  const composerRef = useRef(null);
 
   const { data: convData, refetch: refetchConvs } = useGetConversationsQuery({
     archived: listFilter === "archived",
   });
-  const conversations = convData?.data || [];
+  const conversations = useMemo(() => convData?.data || [], [convData]);
 
   const [fetchMessages] = useLazyGetMessagesQuery();
   const [searchUsers, { data: userSearch }] = useLazySearchChatUsersQuery();
-  const [searchMsgs, { data: msgSearch }] = useLazySearchMessagesQuery();
+  const [searchMsgs] = useLazySearchMessagesQuery();
   const [createDirect] = useCreateDirectChatMutation();
   const [createGroup] = useCreateGroupChatMutation();
   const [updateConv] = useUpdateConversationMutation();
@@ -145,14 +108,16 @@ export default function ChatApp() {
   const [adminDisable] = useAdminDisableChatMutation();
   const [adminEnable] = useAdminEnableChatMutation();
   const [fetchPresence] = useLazyGetChatPresenceQuery();
-  const meRole = getCurrentUser()?.role;
-  // Group create: open to every chat user (USER / SUBADMIN / DEP_ADMIN / HR / Finance / ADMIN)
-  const canCreateGroup = Boolean(meRole);
 
+  const meRole = getCurrentUser()?.role;
+  const canCreateGroup = Boolean(meRole);
   const active = useMemo(
     () => conversations.find((c) => c._id === activeId) || null,
     [conversations, activeId]
   );
+  const peer = conversationPeer(active, myId);
+  const peerId = peer?._id ? String(peer._id) : null;
+  const iAmGroupAdmin = isConversationGroupAdmin(active, myId);
 
   const { data: mediaData } = useGetSharedMediaQuery(
     { conversationId: activeId, kind: mediaTab },
@@ -160,161 +125,68 @@ export default function ChatApp() {
   );
   const { data: callsData } = useGetCallLogsQuery({}, { skip: !showInfo });
 
-  const peer = conversationPeer(active, myId);
-  const peerId = peer?._id ? String(peer._id) : null;
-  const iAmGroupAdmin =
-    active?.type === "group" &&
-    (active?.myMeta?.role === "admin" ||
-      active?.participants?.some(
-        (p) =>
-          (p.userId?._id || p.userId)?.toString() === myId?.toString() &&
-          p.role === "admin"
-      ));
+  const closeChatView = useCallback(() => {
+    setActiveId(null);
+    setMobileShowChat(false);
+    setShowInfo(false);
+  }, []);
 
-  const onlineOf = useCallback(
-    (userId) => {
-      if (!userId) return false;
-      const id = String(userId);
-      if (isUserOnline(id)) return true;
-      const o = presenceOverlay[id];
-      return Boolean(o?.isOnline || o?.status === "online");
-    },
-    [isUserOnline, presenceOverlay]
-  );
+  const leaveActiveConversation = useCallback(() => {
+    setActiveId(null);
+    setShowInfo(false);
+  }, []);
 
-  const presenceOf = useCallback(
-    (userId) => {
-      if (!userId) return null;
-      const id = String(userId);
-      return getPresence(id) || presenceOverlay[id] || null;
-    },
-    [getPresence, presenceOverlay]
-  );
+  const {
+    messages,
+    messagesRef,
+    hasMore,
+    loadingMsgs,
+    loadMessages,
+    sendPayload,
+    bottomRef,
+    listRef,
+    typingUsers,
+    recordingUsers,
+  } = useChatMessages({
+    activeId,
+    myId,
+    replyTo,
+    emit,
+    on,
+    markRead,
+    fetchMessages,
+    refetchConvs,
+    onConversationRemoved: closeChatView,
+  });
 
-  const peerOnline = peerId ? onlineOf(peerId) : false;
-  const peerPresence = peerId ? presenceOf(peerId) : null;
+  const { onlineOf, presenceOf, peerOnline, peerPresence } = useChatPresence({
+    conversations,
+    peerId,
+    myId,
+    connected,
+    emit,
+    fetchPresence,
+    isUserOnline,
+    getPresence,
+  });
 
-  const closeHeaderMenu = useCallback(() => setHeaderMenuOpen(false), []);
-
-  const handleDeleteChat = useCallback(async () => {
-    if (!confirmDeleteChat) return;
-    setIsDeletingChat(true);
-    try {
-      await deleteChatForMe(confirmDeleteChat).unwrap();
-      setConfirmDeleteChat(null);
-      setActiveId(null);
-      setMessages([]);
-      setMobileShowChat(false);
-      setShowInfo(false);
-      toast.success("Chat deleted");
-      refetchConvs();
-    } catch (e) {
-      toast.error(e?.data?.message || "Could not delete chat");
-    } finally {
-      setIsDeletingChat(false);
-    }
-  }, [confirmDeleteChat, deleteChatForMe, refetchConvs]);
-
-  const handleConfirmAction = useCallback(async () => {
-    if (!confirmAction) return;
-    setConfirmBusy(true);
-    try {
-      if (confirmAction.type === "leaveGroup") {
-        await removeMember({
-          id: confirmAction.conversationId || activeId,
-          userId: myId,
-        }).unwrap();
-        setActiveId(null);
-        setMessages([]);
-        setShowInfo(false);
-        toast.success("Left group");
-        refetchConvs();
-      } else if (confirmAction.type === "deleteGroup") {
-        const id = confirmAction.conversationId || activeId;
-        await deleteGroup(id).unwrap();
-        setActiveId(null);
-        setMessages([]);
-        setShowInfo(false);
-        toast.success("Group deleted");
-        refetchConvs();
-      } else if (confirmAction.type === "removeMember") {
-        await removeMember({
-          id: confirmAction.conversationId || activeId,
-          userId: confirmAction.userId,
-        }).unwrap();
-        toast.success("Member removed");
-        refetchConvs();
-      }
-      setConfirmAction(null);
-    } catch (e) {
-      toast.error(e?.data?.message || "Action failed");
-    } finally {
-      setConfirmBusy(false);
-    }
-  }, [
-    confirmAction,
+  const confirm = useChatConfirm({
     activeId,
     myId,
     removeMember,
     deleteGroup,
+    deleteChatForMe,
     refetchConvs,
-  ]);
+    onChatClosed: closeChatView,
+    onLeftGroup: leaveActiveConversation,
+  });
 
-  const confirmModalProps = useMemo(() => {
-    if (!confirmAction) return null;
-    if (confirmAction.type === "leaveGroup") {
-      return {
-        title: "Leave Group",
-        description:
-          "Do you really want to leave this group? You will stop receiving messages until someone adds you again.",
-        confirmLabel: "Yes, Leave",
-        icon: "leave",
-      };
-    }
-    if (confirmAction.type === "deleteGroup") {
-      return {
-        title: "Delete Group",
-        description:
-          "This action cannot be undone. Do you really want to delete this group for everyone?",
-        confirmLabel: "Yes, Delete",
-        icon: "delete",
-        message: "group",
-      };
-    }
-    if (confirmAction.type === "removeMember") {
-      return {
-        title: "Remove Member",
-        description: `Do you really want to remove ${
-          confirmAction.name || "this member"
-        } from the group?`,
-        confirmLabel: "Yes, Remove",
-        icon: "remove",
-      };
-    }
-    return null;
-  }, [confirmAction]);
+  const closeHeaderMenu = useCallback(() => setHeaderMenuOpen(false), []);
+  useClickAway(headerMenuRef, closeHeaderMenu, headerMenuOpen);
 
   useEffect(() => {
     setHeaderMenuOpen(false);
   }, [activeId]);
-
-  useEffect(() => {
-    if (!headerMenuOpen) return;
-    const onPointerDown = (e) => {
-      if (!headerMenuRef.current?.contains(e.target)) {
-        setHeaderMenuOpen(false);
-      }
-    };
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") setHeaderMenuOpen(false);
-    };
-    document.addEventListener("mousedown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [headerMenuOpen]);
 
   useEffect(() => {
     if (!listMenuConv) return;
@@ -325,458 +197,6 @@ export default function ChatApp() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [listMenuConv]);
 
-  // Hydrate presence for all chat peers (API + socket snapshot)
-  useEffect(() => {
-    if (!connected) return;
-    emit("chat:presence:request");
-  }, [connected, emit]);
-
-  useEffect(() => {
-    const ids = new Set();
-    conversations.forEach((c) => {
-      (c.participants || []).forEach((p) => {
-        const id = p.userId?._id || p.userId;
-        if (id && String(id) !== String(myId)) ids.add(String(id));
-      });
-    });
-    if (peerId) ids.add(peerId);
-    if (!ids.size) return;
-
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetchPresence([...ids]).unwrap();
-        const list = res?.data || [];
-        if (!cancelled) {
-          setPresenceOverlay((prev) => {
-            const next = { ...prev };
-            list.forEach((u) => {
-              const id = String(u.userId);
-              next[id] = {
-                userId: id,
-                status: u.status,
-                lastSeen: u.lastSeen,
-                isOnline: Boolean(u.isOnline),
-              };
-            });
-            return next;
-          });
-        }
-      } catch {
-        /* ignore */
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [conversations, peerId, myId, fetchPresence]);
-
-  const filteredConvs = useMemo(() => {
-    const q = filter.trim().toLowerCase();
-    let list = conversations;
-    if (listFilter === "groups") {
-      list = list.filter((c) => c.type === "group");
-    }
-    if (!q) return list;
-    return list.filter((c) =>
-      conversationTitle(c, myId).toLowerCase().includes(q)
-    );
-  }, [conversations, filter, listFilter, myId]);
-
-  const loadMessages = useCallback(
-    async (conversationId, before) => {
-      if (!conversationId) return;
-      setLoadingMsgs(true);
-      try {
-        const res = await fetchMessages({
-          conversationId,
-          before,
-          limit: 40,
-        }).unwrap();
-        // Support both { data: { items } } and nested shapes
-        const payload = res?.data?.items ? res.data : res?.data?.data || res?.data || res;
-        const items = payload?.items || (Array.isArray(payload) ? payload : []);
-        setHasMore(Boolean(payload?.hasMore));
-        if (before) {
-          setMessages((prev) => {
-            const ids = new Set(prev.map((m) => m._id));
-            const unique = items.filter((m) => !ids.has(m._id));
-            return [...unique, ...prev];
-          });
-        } else {
-          setMessages(items);
-          setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "auto" }), 50);
-        }
-      } catch (err) {
-        console.error("[chat] loadMessages failed", err);
-        toast.error(err?.data?.message || err?.error || "Failed to load messages");
-      } finally {
-        setLoadingMsgs(false);
-      }
-    },
-    [fetchMessages]
-  );
-
-  useEffect(() => {
-    if (!activeId) return;
-    setMessages([]);
-    loadMessages(activeId);
-    emit("chat:join", { conversationId: activeId });
-    markRead(activeId);
-    emit("chat:seen", { conversationId: activeId });
-    return () => emit("chat:leave", { conversationId: activeId });
-  }, [activeId, emit, loadMessages, markRead]);
-
-  useEffect(() => {
-    const offs = [
-      on("chat:message:new", (msg) => {
-        const msgConvId =
-          msg?.conversationId?._id || msg?.conversationId?.toString?.() || msg?.conversationId;
-        if (String(msgConvId) !== String(activeId)) return;
-        setMessages((prev) => {
-          if (prev.some((m) => m._id === msg._id)) return prev;
-          if (msg.clientId && prev.some((m) => m.clientId === msg.clientId)) {
-            return prev.map((m) => (m.clientId === msg.clientId ? msg : m));
-          }
-          return [...prev, msg];
-        });
-        setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 30);
-        const senderId = msg.senderId?._id || msg.senderId;
-        if (String(senderId) !== String(myId)) {
-          emit("chat:delivered", {
-            conversationId: activeId,
-            messageIds: [msg._id],
-          });
-          markRead(activeId);
-          emit("chat:seen", { conversationId: activeId });
-        }
-      }),
-      on("chat:message:updated", (msg) => {
-        if (!msg?._id) return;
-        setMessages((prev) => prev.map((m) => (m._id === msg._id ? msg : m)));
-      }),
-      on("chat:message:deleted", (payload) => {
-        if (payload?.forEveryone) {
-          const label =
-            payload?.message?.body ||
-            payload?.deletedByName ||
-            "This message was deleted";
-          setMessages((prev) =>
-            prev.map((m) =>
-              m._id === payload.messageId
-                ? {
-                    ...m,
-                    deletedForEveryone: true,
-                    body: label,
-                    attachments: [],
-                    type: "system",
-                  }
-                : m
-            )
-          );
-        } else {
-          setMessages((prev) => prev.filter((m) => m._id !== payload.messageId));
-        }
-      }),
-      on("chat:message:seen", (payload) => {
-        if (payload?.conversationId !== activeId) return;
-        setMessages((prev) =>
-          prev.map((m) => {
-            if (m.senderId?._id !== myId && m.senderId !== myId) return m;
-            return {
-              ...m,
-              receipts: (m.receipts || []).map((r) =>
-                r.userId === payload.userId ||
-                r.userId?.toString() === payload.userId
-                  ? { ...r, seenAt: payload.seenAt, deliveredAt: payload.seenAt }
-                  : r
-              ),
-            };
-          })
-        );
-      }),
-      on("chat:message:delivered", (payload) => {
-        if (payload?.conversationId !== activeId) return;
-        setMessages((prev) =>
-          prev.map((m) => {
-            if (!(payload.messageIds || []).includes(m._id)) return m;
-            return {
-              ...m,
-              receipts: (m.receipts || []).map((r) =>
-                r.userId === payload.userId ||
-                r.userId?.toString() === payload.userId
-                  ? { ...r, deliveredAt: payload.deliveredAt }
-                  : r
-              ),
-            };
-          })
-        );
-      }),
-      on("chat:typing", (payload) => {
-        if (payload.conversationId !== activeId) return;
-        setTypingUsers((prev) => ({
-          ...prev,
-          [payload.userId]: payload.isTyping,
-        }));
-      }),
-      on("chat:recording", (payload) => {
-        if (payload.conversationId !== activeId) return;
-        setRecordingUsers((prev) => ({
-          ...prev,
-          [payload.userId]: payload.isRecording,
-        }));
-      }),
-      on("chat:conversation:removed", (payload) => {
-        const cid = payload?.conversationId?.toString?.() || payload?.conversationId;
-        if (cid && activeId && String(activeId) === String(cid)) {
-          setActiveId(null);
-          setMessages([]);
-          setMobileShowChat(false);
-          setShowInfo(false);
-        }
-        refetchConvs();
-      }),
-      on("chat:conversation:updated", () => {
-        refetchConvs();
-      }),
-    ];
-    return () => offs.forEach((o) => o?.());
-  }, [activeId, emit, markRead, myId, on, refetchConvs]);
-
-  const sendPayload = useCallback(
-    (payload) => {
-      const clientId = `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-      const optimistic = {
-        _id: clientId,
-        clientId,
-        conversationId: activeId,
-        senderId: { _id: myId, fullName: "You" },
-        type: payload.type || "text",
-        body: payload.body || "",
-        attachments: payload.attachments || [],
-        replyTo: replyTo,
-        createdAt: new Date().toISOString(),
-        receipts: [],
-        pending: true,
-      };
-      setMessages((prev) => [...prev, optimistic]);
-      setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 20);
-
-      emit(
-        "chat:message:send",
-        {
-          conversationId: activeId,
-          body: payload.body || "",
-          type: payload.type || "text",
-          replyTo: replyTo?._id || null,
-          mentions: payload.mentions || [],
-          attachments: payload.attachments || [],
-          clientId,
-        },
-        (ack) => {
-          if (!ack?.ok) {
-            toast.error(ack?.error || "Failed to send");
-            setMessages((prev) => prev.filter((m) => m.clientId !== clientId));
-            return;
-          }
-          setMessages((prev) =>
-            prev.map((m) => (m.clientId === clientId ? ack.message : m))
-          );
-          refetchConvs();
-        }
-      );
-      setText("");
-      setReplyTo(null);
-      setShowEmoji(false);
-    },
-    [activeId, myId, replyTo, emit, refetchConvs]
-  );
-
-  const sendPendingAttachments = useCallback(async () => {
-    if (!pendingFiles.length) return;
-    const filesToSend = pendingFiles;
-    setPendingFiles([]);
-    const caption = text.trim();
-    setText("");
-    for (let i = 0; i < filesToSend.length; i++) {
-      const { file, previewUrl } = filesToSend[i];
-      const isLast = i === filesToSend.length - 1;
-      const fd = new FormData();
-      fd.append("file", file);
-      setUploadPct(0);
-      try {
-        // RTK doesn't expose progress easily — simulate steps
-        setUploadPct(40);
-        const res = await uploadFile(fd).unwrap();
-        setUploadPct(100);
-        const { type, attachment } = res.data;
-        sendPayload({
-          type: type === "audio" ? "audio" : type,
-          body: isLast ? caption : "",
-          attachments: [attachment],
-        });
-      } catch (err) {
-        toast.error(err?.data?.message || "Upload failed");
-      } finally {
-        setTimeout(() => setUploadPct(null), 400);
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
-      }
-    }
-  }, [pendingFiles, text, uploadFile, sendPayload]);
-
-  const handleSend = useCallback(async () => {
-    if (editing) {
-      try {
-        await editMsg({ messageId: editing._id, body: text }).unwrap();
-        setEditing(null);
-        setText("");
-      } catch (e) {
-        toast.error(e?.data?.message || "Edit failed");
-      }
-      return;
-    }
-    if (pendingFiles.length > 0) {
-      await sendPendingAttachments();
-      return;
-    }
-    if (!text.trim()) return;
-    const mentions = [];
-    if (active?.type === "group") {
-      (active.participants || []).forEach((p) => {
-        const u = p.userId;
-        const id = u?._id || u;
-        const full = u?.fullName;
-        if (!id || !full) return;
-        const first = full.split(" ")[0];
-        if (
-          text.includes(`@${full}`) ||
-          text.includes(`@${first}`)
-        ) {
-          mentions.push(id);
-        }
-      });
-    }
-    setMentionOpen(false);
-    sendPayload({ body: text.trim(), type: "text", mentions });
-  }, [editing, editMsg, text, active, sendPayload, pendingFiles, sendPendingAttachments]);
-
-  const mentionCandidates = useMemo(() => {
-    if (!mentionOpen || active?.type !== "group") return [];
-    const q = mentionQuery.trim().toLowerCase();
-    return (active.participants || [])
-      .map((p) => p.userId)
-      .filter(Boolean)
-      .filter((u) => String(u._id || u) !== String(myId))
-      .filter((u) => {
-        if (!q) return true;
-        const name = (u.fullName || "").toLowerCase();
-        const des = (u.designation || "").toLowerCase();
-        return name.includes(q) || des.includes(q);
-      })
-      .slice(0, 8);
-  }, [mentionOpen, mentionQuery, active, myId]);
-
-  const insertMention = useCallback(
-    (user) => {
-      const name = user?.fullName || "Someone";
-      const el = textAreaRef.current;
-      const caret = el?.selectionStart ?? text.length;
-      const start = mentionStart >= 0 ? mentionStart : caret;
-      const next = `${text.slice(0, start)}@${name} ${text.slice(caret)}`;
-      setText(next);
-      setMentionOpen(false);
-      setMentionQuery("");
-      setMentionStart(-1);
-      requestAnimationFrame(() => {
-        if (!textAreaRef.current) return;
-        const pos = start + name.length + 2; // @Name + space
-        textAreaRef.current.focus();
-        textAreaRef.current.setSelectionRange(pos, pos);
-      });
-    },
-    [mentionStart, text]
-  );
-
-  const onType = useCallback(
-    (val, caret) => {
-      setText(val);
-      if (active?.type === "group") {
-        const pos = caret ?? val.length;
-        const before = val.slice(0, pos);
-        const match = before.match(/(^|[\s\n])@([^\s@]*)$/);
-        if (match) {
-          setMentionOpen(true);
-          setMentionQuery(match[2] || "");
-          setMentionStart(before.length - (match[2]?.length || 0) - 1);
-          setMentionIndex(0);
-        } else {
-          setMentionOpen(false);
-          setMentionQuery("");
-          setMentionStart(-1);
-        }
-      } else {
-        setMentionOpen(false);
-      }
-      emit("chat:typing", { conversationId: activeId, isTyping: true });
-      clearTimeout(typingTimer.current);
-      typingTimer.current = setTimeout(() => {
-        emit("chat:typing", { conversationId: activeId, isTyping: false });
-      }, 1200);
-    },
-    [active, emit, activeId]
-  );
-
-  // Validates + previews files picked via the attach menu, pasted from the
-  // clipboard, or dropped — nothing is uploaded yet, so the user can see a
-  // thumbnail, type a caption, and only actually send on the Send button.
-  const addPendingFiles = useCallback((files) => {
-    const list = Array.from(files || []);
-    if (!list.length) return;
-    setShowAttach(false);
-    const next = [];
-    for (const file of list) {
-      const sizeError = checkUploadSize(file);
-      if (sizeError) {
-        toast.error(sizeError);
-        continue;
-      }
-      const kind = file.type?.startsWith("image/")
-        ? "image"
-        : file.type?.startsWith("video/")
-          ? "video"
-          : "file";
-      next.push({
-        id: `f_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
-        file,
-        kind,
-        previewUrl: kind === "image" || kind === "video" ? URL.createObjectURL(file) : null,
-      });
-    }
-    if (next.length) setPendingFiles((prev) => [...prev, ...next]);
-  }, []);
-
-  const removePendingFile = useCallback((id) => {
-    setPendingFiles((prev) => {
-      const target = prev.find((f) => f.id === id);
-      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
-      return prev.filter((f) => f.id !== id);
-    });
-  }, []);
-
-  // Captures an image pasted from the clipboard (e.g. a Win+Shift+S
-  // screenshot) straight into the composer as a pending attachment, same
-  // preview-before-send flow as picking a file from the attach menu.
-  const onPasteFile = useCallback(
-    (e) => {
-      const files = extractFilesFromClipboard(e);
-      if (files.length) {
-        e.preventDefault();
-        addPendingFiles(files);
-      }
-    },
-    [addPendingFiles]
-  );
-
   const openChat = useCallback((id) => {
     setActiveVoiceId(null);
     setActiveId(id);
@@ -784,89 +204,49 @@ export default function ChatApp() {
     setShowInfo(false);
     setListMenuConv(null);
     setShowAddMembers(false);
-    setPendingFiles((prev) => {
-      prev.forEach((f) => f.previewUrl && URL.revokeObjectURL(f.previewUrl));
-      return [];
-    });
   }, []);
 
   const closeListMenu = useCallback(() => setListMenuConv(null), []);
-
   const onAddMembersFromMenu = useCallback((conv) => {
     if (conv?._id) setActiveId(conv._id);
     setShowAddMembers(true);
   }, []);
-
   const onToggleDark = useCallback(() => setDark((d) => !d), []);
-
   const onNewChat = useCallback(() => {
     setShowNew(true);
     setNewMode("direct");
     searchUsers({ q: "" });
   }, [searchUsers]);
-
   const onSearchMessages = useCallback(
     (q) => {
       searchMsgs({ q, limit: 10 });
     },
     [searchMsgs]
   );
-
   const onReact = useCallback(
     (messageId, emoji) => {
       reactMsg({ messageId, emoji });
     },
     [reactMsg]
   );
-
-  const onVoiceSend = useCallback(
-    (payload) => {
-      setVoiceMode(false);
-      sendPayload(payload);
-    },
-    [sendPayload]
-  );
-
-  const handleVoiceRequestPlay = useCallback((id) => {
-    setActiveVoiceId(id);
-  }, []);
-
-  const handleVoiceStopChain = useCallback(() => {
-    setActiveVoiceId(null);
-  }, []);
-
+  const handleVoiceRequestPlay = useCallback((id) => setActiveVoiceId(id), []);
+  const handleVoiceStopChain = useCallback(() => setActiveVoiceId(null), []);
   const handleVoiceEnded = useCallback((id) => {
     setActiveVoiceId((prev) => {
       if (prev && prev !== String(id)) return prev;
       return getNextConsecutiveVoiceId(messagesRef.current, id);
     });
-  }, []);
+  }, [messagesRef]);
+  const onClearEditing = useCallback(() => setEditing(null), []);
 
   const typingLabel = useMemo(
-    () =>
-      Object.entries(typingUsers)
-        .filter(([uid, v]) => v && uid !== myId)
-        .map(([uid]) => {
-          const p = active?.participants?.find(
-            (x) => (x.userId?._id || x.userId)?.toString() === uid
-          );
-          return p?.userId?.fullName?.split(" ")[0] || "Someone";
-        }),
+    () => activityNames(typingUsers, active?.participants, myId),
     [typingUsers, active, myId]
   );
   const recordingLabel = useMemo(
-    () =>
-      Object.entries(recordingUsers)
-        .filter(([uid, v]) => v && uid !== myId)
-        .map(([uid]) => {
-          const p = active?.participants?.find(
-            (x) => (x.userId?._id || x.userId)?.toString() === uid
-          );
-          return p?.userId?.fullName?.split(" ")[0] || "Someone";
-        }),
+    () => activityNames(recordingUsers, active?.participants, myId),
     [recordingUsers, active, myId]
   );
-
   const theme = useMemo(() => getChatTheme(dark), [dark]);
 
   return (
@@ -878,11 +258,9 @@ export default function ChatApp() {
         dark={dark}
         connected={connected}
         mobileShowChat={mobileShowChat}
-        filter={filter}
-        setFilter={setFilter}
         listFilter={listFilter}
         setListFilter={setListFilter}
-        filteredConvs={filteredConvs}
+        conversations={conversations}
         activeId={activeId}
         myId={myId}
         onlineOf={onlineOf}
@@ -893,7 +271,6 @@ export default function ChatApp() {
         onOpenListMenu={setListMenuConv}
       />
 
-      {/* Main */}
       <section
         className={`${
           mobileShowChat ? "flex" : "hidden md:flex"
@@ -906,17 +283,11 @@ export default function ChatApp() {
         onDrop={(e) => {
           e.preventDefault();
           setDragOver(false);
-          if (activeId) addPendingFiles(e.dataTransfer.files);
+          if (activeId) composerRef.current?.addFiles(e.dataTransfer.files);
         }}
       >
         {!active ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-3 text-zinc-500 px-6 text-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-zinc-200/80">
-              <Users className="h-10 w-10 opacity-50" />
-            </div>
-            <p className="text-xl font-light text-zinc-700">CRM Chat</p>
-            <p className="text-sm">Select a conversation to start messaging</p>
-          </div>
+          <ChatEmptyState />
         ) : (
           <>
             <ChatHeader
@@ -939,8 +310,8 @@ export default function ChatApp() {
               updateConv={updateConv}
               meRole={meRole}
               onAddMembers={onAddMembersFromMenu}
-              setConfirmAction={setConfirmAction}
-              setConfirmDeleteChat={setConfirmDeleteChat}
+              setConfirmAction={confirm.setConfirmAction}
+              setConfirmDeleteChat={confirm.setConfirmDeleteChat}
               adminDisable={adminDisable}
               adminEnable={adminEnable}
             />
@@ -967,36 +338,19 @@ export default function ChatApp() {
             />
 
             <ChatComposer
+              ref={composerRef}
               theme={theme}
               activeId={activeId}
               active={active}
+              myId={myId}
               editing={editing}
-              text={text}
-              setText={setText}
-              textAreaRef={textAreaRef}
-              fileRef={fileRef}
-              voiceMode={voiceMode}
-              setVoiceMode={setVoiceMode}
-              showEmoji={showEmoji}
-              setShowEmoji={setShowEmoji}
-              showAttach={showAttach}
-              setShowAttach={setShowAttach}
+              onClearEditing={onClearEditing}
               replyTo={replyTo}
               setReplyTo={setReplyTo}
-              uploadPct={uploadPct}
-              mentionOpen={mentionOpen}
-              setMentionOpen={setMentionOpen}
-              mentionCandidates={mentionCandidates}
-              mentionIndex={mentionIndex}
-              setMentionIndex={setMentionIndex}
-              insertMention={insertMention}
-              onType={onType}
-              onSend={handleSend}
-              onUploadFiles={addPendingFiles}
-              onVoiceSend={onVoiceSend}
-              pendingFiles={pendingFiles}
-              onRemovePendingFile={removePendingFile}
-              onPasteFile={onPasteFile}
+              emit={emit}
+              sendPayload={sendPayload}
+              uploadFile={uploadFile}
+              editMsg={editMsg}
             />
           </>
         )}
@@ -1016,143 +370,56 @@ export default function ChatApp() {
           callsData={callsData}
           setShowInfo={setShowInfo}
           setShowAddMembers={setShowAddMembers}
-          setConfirmAction={setConfirmAction}
-          setConfirmDeleteChat={setConfirmDeleteChat}
+          setConfirmAction={confirm.setConfirmAction}
+          setConfirmDeleteChat={confirm.setConfirmDeleteChat}
         />
       )}
 
-      {menuMsg && (
-        <MessageContextMenu
-          message={menuMsg}
-          myId={myId}
-          onClose={() => setMenuMsg(null)}
-          onReply={setReplyTo}
-          onStar={starMsg}
-          onForward={setForwardMsg}
-          onEdit={(msg) => {
-            setEditing(msg);
-            setText(msg.body || "");
-          }}
-          onDelete={delMsg}
-        />
-      )}
-
-      {forwardMsg && (
-        <ForwardModal
-          message={forwardMsg}
-          conversations={conversations}
-          activeId={activeId}
-          myId={myId}
-          onClose={() => setForwardMsg(null)}
-          onForward={fwdMsg}
-        />
-      )}
-
-      {listMenuConv && (
-        <div className="md:hidden">
-          <button
-            type="button"
-            aria-label="Close chat options"
-            className="fixed inset-0 z-40 bg-black/40"
-            onClick={closeListMenu}
-          />
-          <div className="fixed inset-x-0 bottom-0 z-50 overflow-hidden rounded-t-2xl border-t border-zinc-200 bg-white pb-[env(safe-area-inset-bottom)] text-sm text-zinc-800 shadow-2xl">
-            <div className="flex justify-center pt-2 pb-1">
-              <span className="h-1 w-10 rounded-full bg-zinc-300" />
-            </div>
-            <p className="truncate px-4 pb-2 text-xs font-semibold text-zinc-500">
-              {conversationTitle(listMenuConv, myId)}
-            </p>
-            <ChatOptionsMenu
-              conv={listMenuConv}
-              myId={myId}
-              meRole={meRole}
-              onClose={closeListMenu}
-              updateConv={updateConv}
-              setConfirmDeleteChat={setConfirmDeleteChat}
-              setConfirmAction={setConfirmAction}
-              onAddMembers={onAddMembersFromMenu}
-              adminDisable={adminDisable}
-              adminEnable={adminEnable}
-            />
-          </div>
-        </div>
-      )}
-
-      {showNew && (
-        <NewChatModal
-          mode={newMode}
-          setMode={setNewMode}
-          onClose={() => setShowNew(false)}
-          searchUsers={searchUsers}
-          users={userSearch?.data || []}
-          canCreateGroup={canCreateGroup}
-          onPickDirect={async (userId) => {
-            const res = await createDirect({ userId }).unwrap();
-            setShowNew(false);
-            openChat(res.data._id);
-          }}
-          onCreateGroup={async ({ name, memberIds }) => {
-            try {
-              const res = await createGroup({ name, memberIds }).unwrap();
-              setShowNew(false);
-              openChat(res.data._id);
-              toast.success("Group created");
-            } catch (err) {
-              toast.error(
-                err?.data?.message || err?.message || "Could not create group"
-              );
-            }
-          }}
-        />
-      )}
-
-      {showAddMembers && active?.type === "group" && (
-        <AddMembersModal
-          existingIds={(active.participants || []).map((p) =>
-            String(p.userId?._id || p.userId)
-          )}
-          searchUsers={searchUsers}
-          users={userSearch?.data || []}
-          onClose={() => setShowAddMembers(false)}
-          onAdd={async (memberIds) => {
-            try {
-              await addMembers({ id: activeId, memberIds }).unwrap();
-              toast.success(
-                memberIds.length === 1
-                  ? "Member added"
-                  : `${memberIds.length} members added`
-              );
-              setShowAddMembers(false);
-              refetchConvs();
-            } catch (e) {
-              toast.error(e?.data?.message || "Could not add members");
-            }
-          }}
-        />
-      )}
-
-      {confirmDeleteChat && (
-        <WarningModal
-          message="chat"
-          setConfirmDelete={setConfirmDeleteChat}
-          isDeleting={isDeletingChat}
-          handleDelete={handleDeleteChat}
-        />
-      )}
-
-      {confirmAction && confirmModalProps && (
-        <WarningModal
-          title={confirmModalProps.title}
-          description={confirmModalProps.description}
-          confirmLabel={confirmModalProps.confirmLabel}
-          icon={confirmModalProps.icon}
-          message={confirmModalProps.message}
-          setConfirmDelete={setConfirmAction}
-          isDeleting={confirmBusy}
-          handleDelete={handleConfirmAction}
-        />
-      )}
+      <ChatOverlays
+        myId={myId}
+        meRole={meRole}
+        active={active}
+        activeId={activeId}
+        conversations={conversations}
+        menuMsg={menuMsg}
+        setMenuMsg={setMenuMsg}
+        setReplyTo={setReplyTo}
+        setEditing={setEditing}
+        starMsg={starMsg}
+        setForwardMsg={setForwardMsg}
+        delMsg={delMsg}
+        forwardMsg={forwardMsg}
+        fwdMsg={fwdMsg}
+        listMenuConv={listMenuConv}
+        closeListMenu={closeListMenu}
+        updateConv={updateConv}
+        setConfirmDeleteChat={confirm.setConfirmDeleteChat}
+        setConfirmAction={confirm.setConfirmAction}
+        onAddMembersFromMenu={onAddMembersFromMenu}
+        adminDisable={adminDisable}
+        adminEnable={adminEnable}
+        showNew={showNew}
+        setShowNew={setShowNew}
+        newMode={newMode}
+        setNewMode={setNewMode}
+        searchUsers={searchUsers}
+        userSearch={userSearch}
+        canCreateGroup={canCreateGroup}
+        createDirect={createDirect}
+        createGroup={createGroup}
+        openChat={openChat}
+        showAddMembers={showAddMembers}
+        setShowAddMembers={setShowAddMembers}
+        addMembers={addMembers}
+        refetchConvs={refetchConvs}
+        confirmDeleteChat={confirm.confirmDeleteChat}
+        isDeletingChat={confirm.isDeletingChat}
+        handleDeleteChat={confirm.handleDeleteChat}
+        confirmAction={confirm.confirmAction}
+        confirmModalProps={confirm.confirmModalProps}
+        confirmBusy={confirm.confirmBusy}
+        handleConfirmAction={confirm.handleConfirmAction}
+      />
     </div>
   );
 }

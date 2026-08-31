@@ -42,7 +42,7 @@ function DownloadBtn({ url, filename, publicId }) {
         onClick={handleDownload}
         disabled={loading}
         aria-label="Download"
-        className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 hover:border-emerald-200 hover:text-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
+        className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/[0.1] bg-[#12171d] text-zinc-400 hover:border-white/20 hover:text-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
       >
         {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Download className="h-3 w-3" />}
       </button>

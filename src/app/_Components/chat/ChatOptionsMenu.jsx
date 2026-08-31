@@ -29,7 +29,7 @@ function ChatOptionsMenu({
 
   const peer = conversationPeer(conv, myId);
   const iAmGroupAdmin = isConversationGroupAdmin(conv, myId);
-  const item = "flex w-full items-center gap-2 px-4 py-2.5 text-left hover:bg-zinc-50";
+  const item = "flex w-full items-center gap-2 px-4 py-2.5 text-left hover:bg-zinc-50 cursor-pointer";
 
   return (
     <>

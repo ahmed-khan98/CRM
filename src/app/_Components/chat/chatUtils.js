@@ -13,6 +13,11 @@ export function getMyId() {
   return getCurrentUser()?._id || getCurrentUser()?.id || null;
 }
 
+export function sameId(a, b) {
+  if (a == null || b == null) return false;
+  return String(a._id ?? a) === String(b._id ?? b);
+}
+
 export function conversationTitle(conv, myId) {
   if (!conv) return "Chat";
   if (conv.type === "group") return conv.name || "Group";
@@ -92,7 +97,7 @@ export function sameDay(a, b) {
 }
 
 export function receiptStatus(msg, myId) {
-  if (!msg || msg.senderId?._id?.toString() !== myId?.toString()) return null;
+  if (!msg || !sameId(msg.senderId, myId)) return null;
   const receipts = msg.receipts || [];
   if (!receipts.length) return "sent";
   if (receipts.every((r) => r.seenAt)) return "seen";
@@ -101,35 +106,93 @@ export function receiptStatus(msg, myId) {
   return "sent";
 }
 
-export function lastMessagePreview(msg) {
-  if (!msg) return "No messages yet";
-  if (msg.deletedForEveryone) return "This message was deleted";
+/** Sidebar ticks: lastMessage snapshot has no receipts, use peer lastReadAt. */
+export function lastMessageTickStatus(conv, myId) {
+  const last = conv?.lastMessage;
+  if (!last?.createdAt || !sameId(last.senderId, myId)) return null;
+  const sentAt = new Date(last.createdAt).getTime();
+  const others = (conv.participants || []).filter((p) => !sameId(p.userId, myId));
+  if (!others.length) return "sent";
+  const read = (p) => p.lastReadAt && new Date(p.lastReadAt).getTime() >= sentAt;
+  const delivered = (p) =>
+    p.lastDeliveredAt && new Date(p.lastDeliveredAt).getTime() >= sentAt;
+  if (others.every(read)) return "seen";
+  if (others.some(delivered) || others.some(read)) return "delivered";
+  return "sent";
+}
+
+function stripPreviewEmoji(text) {
+  return String(text || "")
+    .replace(/^(?:[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\uFE0F\u200D]|\s)+/u, "")
+    .trim();
+}
+
+function filePreviewName(msg) {
+  const fromAtt =
+    msg.attachments?.[0]?.fileName || msg.attachments?.[0]?.originalName;
+  if (fromAtt) return stripPreviewEmoji(fromAtt);
+  const body = stripPreviewEmoji(msg.body);
+  if (body && !/^(document|file)$/i.test(body)) return body;
+  return "";
+}
+
+export function lastMessagePreviewMeta(msg) {
+  if (!msg) return { kind: "text", text: "No messages yet" };
+  if (msg.deletedForEveryone) {
+    return { kind: "text", text: "This message was deleted" };
+  }
   const t = msg.type;
-  if (t === "voice" || t === "audio") return "🎤 Voice message";
-  if (t === "image") return "📷 Photo";
-  if (t === "video") return "🎬 Video";
-  if (t === "file" || t === "document") return `📄 ${msg.attachments?.[0]?.fileName || "Document"}`;
+  const cleanedBody = stripPreviewEmoji(msg.body);
+  if (t === "voice" || t === "audio") {
+    return { kind: "audio", text: "Voice message" };
+  }
+  if (t === "image" || /^photo$/i.test(cleanedBody)) {
+    return { kind: "image", text: "Photo" };
+  }
+  if (t === "video") return { kind: "video", text: "Video" };
+  if (
+    t === "file" ||
+    t === "document" ||
+    /\.(zip|rar|7z|pdf|docx?|xlsx?|pptx?)$/i.test(cleanedBody)
+  ) {
+    return { kind: "file", text: filePreviewName(msg) || cleanedBody || "Document" };
+  }
   if (t === "call") {
     const status = (msg.callMeta?.status || "").toLowerCase();
     const video = msg.callMeta?.callType === "video";
-    if (status === "missed" || status === "no_answer")
-      return video ? "Missed video call" : "Missed voice call";
-    return video ? "Video call" : "Voice call";
+    if (status === "missed" || status === "no_answer") {
+      return {
+        kind: "call",
+        text: video ? "Missed video call" : "Missed voice call",
+      };
+    }
+    return { kind: "call", text: video ? "Video call" : "Voice call" };
   }
-  return msg.body || "Message";
+  return { kind: "text", text: msg.body || "Message" };
+}
+
+export function lastMessagePreview(msg) {
+  return lastMessagePreviewMeta(msg).text;
 }
 
 export const QUICK_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏", "🔥", "✅"];
 
-/** Mirrors the backend's CLOUDINARY_SIZE_LIMITS (src/utils/cloudinary.js on
- * the CMS_BACKEND repo) — Cloudinary's free-plan caps per resource type.
- * Checked client-side so a doomed upload is rejected instantly instead of
- * uploading the whole file first and failing on the server. Bump these (and
- * the backend copy) together if the Cloudinary plan is ever upgraded. */
+/** Client-side caps — zip/rar go to VPS (50 MB); images stay on Cloudinary (10 MB);
+ * video/audio stay on Cloudinary (100 MB). Other docs are allowed to 50 MB here
+ * so a zip with a generic mime type is not blocked as a 10 MB document. */
 const MB = 1024 * 1024;
+const ARCHIVE_EXTS = ["zip", "rar", "7z", "tar", "gz"];
+
 export function getUploadSizeLimit(file) {
   const type = file?.type || "";
   const ext = (file?.name || "").split(".").pop()?.toLowerCase() || "";
+  const name = (file?.name || "").toLowerCase();
+  const isArchive =
+    ARCHIVE_EXTS.includes(ext) ||
+    /zip|x-rar|x-7z|x-tar|gzip/i.test(type) ||
+    ARCHIVE_EXTS.some((e) => name.endsWith(`.${e}`));
+
+  if (isArchive) return { bytes: 50 * MB, label: "ZIP/archives" };
   if (type.startsWith("image/")) return { bytes: 10 * MB, label: "Images" };
   if (
     type.startsWith("video/") ||
@@ -138,7 +201,7 @@ export function getUploadSizeLimit(file) {
   ) {
     return { bytes: 100 * MB, label: "Video/audio" };
   }
-  return { bytes: 10 * MB, label: "Documents/files" };
+  return { bytes: 50 * MB, label: "Documents/files" };
 }
 
 export function checkUploadSize(file) {
@@ -149,17 +212,46 @@ export function checkUploadSize(file) {
   return `${label} can be up to ${limitMb} MB on the current plan. This file is ${fileMb} MB.`;
 }
 
-/** WhatsApp-like chat wallpaper (CRM zinc, not WA green) */
+/** Tight repeating doodle wallpaper — small tile so motifs sit close together. */
 export function chatWallpaper(dark) {
-  const color = dark ? "%233f3f46" : "%23a1a1aa";
-  const bg = dark ? "#0b0b0d" : "#e8e8ea";
-  const svg = encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'><g fill='none' stroke='${color}' stroke-width='1' opacity='0.18'><path d='M0 30h60M30 0v60'/><circle cx='30' cy='30' r='8'/></g></svg>`
-  );
+  const ink = dark ? "#3f3f46" : "#8a8580";
+  const bg = dark ? "#0b0b0d" : "#efeae2";
+  const svg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140">
+  <g fill="none" stroke="${ink}" stroke-width="1.05" stroke-linecap="round" stroke-linejoin="round" opacity="0.32">
+    <path d="M10 12h22a6 6 0 0 1 6 6v10a6 6 0 0 1-6 6H22l-7 5v-5h-5a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6z"/>
+    <path d="M118 14h-20a5 5 0 0 0-5 5v9a5 5 0 0 0 5 5h10l6 5v-5h4a5 5 0 0 0 5-5V19a5 5 0 0 0-5-5z"/>
+    <circle cx="52" cy="16" r="1.6" fill="${ink}" stroke="none"/>
+    <circle cx="58" cy="20" r="1.2" fill="${ink}" stroke="none"/>
+    <circle cx="64" cy="15" r="1.4" fill="${ink}" stroke="none"/>
+    <path d="M78 18l10-3 3 10-10 3z"/>
+    <path d="M18 58c6-1 9 3 8 8-4 1-9-3-8-8z"/>
+    <path d="M86 54a8 8 0 1 1-11 7"/>
+    <path d="M42 78h16v12H42z"/>
+    <path d="M50 78v-4a5 5 0 0 1 10 0v4"/>
+    <path d="M108 72l12-5 2 13-9 2z"/>
+    <path d="M14 108c6 0 9 5 9 9s-4 7-9 7-8-2-8-7 2-9 8-9z"/>
+    <path d="M10 116h8"/>
+    <path d="M124 104a9 7 0 1 1-12 0"/>
+    <path d="M118 104v6l3 2 3-2v-6"/>
+    <path d="M70 108l7 5 7-5"/>
+    <path d="M73 113v8h8v-8"/>
+    <circle cx="98" cy="36" r="1.3" fill="${ink}" stroke="none"/>
+    <circle cx="34" cy="48" r="1.5" fill="${ink}" stroke="none"/>
+    <circle cx="128" cy="56" r="1.2" fill="${ink}" stroke="none"/>
+    <circle cx="76" cy="68" r="1.6" fill="${ink}" stroke="none"/>
+    <circle cx="58" cy="98" r="1.3" fill="${ink}" stroke="none"/>
+    <circle cx="96" cy="92" r="1.2" fill="${ink}" stroke="none"/>
+    <path d="M130 38c4 2 4 7 0 8"/>
+    <path d="M8 80l5 2-5 2"/>
+    <path d="M28 88l6-2"/>
+    <path d="M112 88l-5 4"/>
+  </g>
+</svg>`);
   return {
     backgroundColor: bg,
     backgroundImage: `url("data:image/svg+xml,${svg}")`,
-    backgroundSize: "60px 60px",
+    backgroundRepeat: "repeat",
+    backgroundSize: "140px 140px",
   };
 }
 
@@ -184,6 +276,65 @@ export function getNextConsecutiveVoiceId(messages, currentId) {
   const next = messages[idx + 1];
   if (!isVoiceMessage(next) || !next.attachments?.[0]?.url) return null;
   return messageKey(next);
+}
+
+export function collectMentions(text, participants) {
+  const mentions = [];
+  (participants || []).forEach((p) => {
+    const u = p.userId;
+    const id = u?._id || u;
+    const full = u?.fullName;
+    if (!id || !full) return;
+    const first = full.split(" ")[0];
+    if (text.includes(`@${full}`) || text.includes(`@${first}`)) {
+      mentions.push(id);
+    }
+  });
+  return mentions;
+}
+
+export function filterMentionCandidates(participants, query, myId, limit = 8) {
+  const q = (query || "").trim().toLowerCase();
+  return (participants || [])
+    .map((p) => p.userId)
+    .filter(Boolean)
+    .filter((u) => String(u._id || u) !== String(myId))
+    .filter((u) => {
+      if (!q) return true;
+      const name = (u.fullName || "").toLowerCase();
+      const des = (u.designation || "").toLowerCase();
+      return name.includes(q) || des.includes(q);
+    })
+    .slice(0, limit);
+}
+
+export function activityNames(map, participants, myId) {
+  return Object.entries(map || {})
+    .filter(([uid, v]) => v && uid !== myId)
+    .map(([uid]) => {
+      const p = participants?.find(
+        (x) => (x.userId?._id || x.userId)?.toString() === uid
+      );
+      return p?.userId?.fullName?.split(" ")[0] || "Someone";
+    });
+}
+
+export function createPendingFile(file) {
+  const kind = file.type?.startsWith("image/")
+    ? "image"
+    : file.type?.startsWith("video/")
+      ? "video"
+      : "file";
+  return {
+    id: `f_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+    file,
+    kind,
+    previewUrl: kind === "image" || kind === "video" ? URL.createObjectURL(file) : null,
+  };
+}
+
+export function revokePendingFiles(files) {
+  (files || []).forEach((f) => f.previewUrl && URL.revokeObjectURL(f.previewUrl));
 }
 
 export function formatDuration(sec) {

@@ -1,14 +1,32 @@
 "use client";
 
 import { memo, useRef } from "react";
-import { Pin, MoreVertical } from "lucide-react";
+import {
+  Pin,
+  MoreVertical,
+  Image as ImageIcon,
+  FileText,
+  Video,
+  Mic,
+  Phone,
+} from "lucide-react";
 import Avatar from "@/app/_Components/chat/ChatAvatar";
+import Ticks from "@/app/_Components/chat/ChatTicks";
 import {
   conversationTitle,
   conversationAvatar,
   formatChatTime,
-  lastMessagePreview,
+  lastMessagePreviewMeta,
+  lastMessageTickStatus,
 } from "@/app/_Components/chat/chatUtils";
+
+const PREVIEW_ICONS = {
+  image: ImageIcon,
+  file: FileText,
+  video: Video,
+  audio: Mic,
+  call: Phone,
+};
 
 function ConversationRow({
   conv,
@@ -22,6 +40,9 @@ function ConversationRow({
 }) {
   const title = conversationTitle(conv, myId);
   const avatar = conversationAvatar(conv, myId);
+  const preview = lastMessagePreviewMeta(conv.lastMessage);
+  const PreviewIcon = PREVIEW_ICONS[preview.kind];
+  const tickStatus = lastMessageTickStatus(conv, myId);
   const longPressTimer = useRef(null);
   const didLongPress = useRef(false);
 
@@ -43,7 +64,7 @@ function ConversationRow({
 
   return (
     <div
-      className={`flex w-full items-center border-b text-left transition select-none md:select-auto ${
+      className={`flex w-full cursor-pointer items-center border-b text-left transition select-none md:select-auto ${
         dark ? "border-white/[0.06]" : "border-zinc-100"
       } ${
         selected
@@ -67,7 +88,7 @@ function ConversationRow({
           }
           onOpen(conv._id);
         }}
-        className="flex min-w-0 flex-1 items-center gap-3 px-3 py-3 text-left"
+        className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-3 py-3 text-left"
       >
         <Avatar src={avatar} name={title} online={online} />
         <div className="min-w-0 flex-1">
@@ -78,11 +99,15 @@ function ConversationRow({
             </span>
           </div>
           <div className="flex items-center justify-between gap-2 mt-0.5">
-            <p className="truncate text-xs text-zinc-500">
+            <p className="flex min-w-0 items-center gap-1 text-xs text-zinc-500">
               {conv.myMeta?.pinned && (
-                <Pin className="mr-1 inline h-3 w-3 text-zinc-400" />
+                <Pin className="h-3 w-3 shrink-0 text-zinc-400" />
               )}
-              {lastMessagePreview(conv.lastMessage)}
+              {tickStatus && <Ticks status={tickStatus} />}
+              {PreviewIcon && (
+                <PreviewIcon className="h-3.5 w-3.5 shrink-0 text-zinc-400" strokeWidth={2} />
+              )}
+              <span className="truncate">{preview.text}</span>
             </p>
             {conv.unreadCount > 0 && (
               <span
@@ -98,7 +123,7 @@ function ConversationRow({
         <button
           type="button"
           aria-label="Chat options"
-          className="md:hidden shrink-0 rounded-full p-2 mr-1 text-zinc-500 hover:bg-black/5"
+          className="md:hidden shrink-0 rounded-full p-2 mr-1 text-zinc-500 hover:bg-black/5 cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             onOpenMenu(conv);

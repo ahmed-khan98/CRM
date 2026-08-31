@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import AttachmentRow from "../attachments/AttachmentRow";
 import FileUploadZone from "../attachments/FileUploadZone";
 import { extractFilesFromClipboard } from "@/app/_utils/clipboardFiles";
+import { checkUploadSize } from "@/app/_Components/chat/chatUtils";
 
 function AttachmentSection({
   label,
@@ -33,25 +34,35 @@ function AttachmentSection({
       await onUpload(files);
       setFiles([]);
       if (fileRef.current) fileRef.current.value = "";
-    } catch {
-      toast.error("Upload failed");
+    } catch (err) {
+      toast.error(err?.data?.message || "Upload failed");
     } finally {
       setUploading(false);
     }
   }, [files, onUpload]);
 
   const handleFileChange = useCallback((e) => {
-    const picked = Array.from(e.target.files || []);
+    const picked = [];
+    for (const file of Array.from(e.target.files || [])) {
+      const sizeError = checkUploadSize(file);
+      if (sizeError) toast.error(sizeError);
+      else picked.push(file);
+    }
     if (picked.length) setFiles((prev) => [...prev, ...picked]);
     if (fileRef.current) fileRef.current.value = "";
   }, []);
 
   const handlePaste = useCallback((e) => {
     const pasted = extractFilesFromClipboard(e);
-    if (pasted.length) {
-      e.preventDefault();
-      setFiles((prev) => [...prev, ...pasted]);
+    if (!pasted.length) return;
+    e.preventDefault();
+    const picked = [];
+    for (const file of pasted) {
+      const sizeError = checkUploadSize(file);
+      if (sizeError) toast.error(sizeError);
+      else picked.push(file);
     }
+    if (picked.length) setFiles((prev) => [...prev, ...picked]);
   }, []);
 
   const handleRemoveFile = useCallback((index) => {

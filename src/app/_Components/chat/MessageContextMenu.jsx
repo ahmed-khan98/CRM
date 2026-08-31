@@ -104,7 +104,7 @@ function MessageContextMenu({
           <button
             key={item.label}
             type="button"
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-zinc-50"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-zinc-50 cursor-pointer"
             onClick={item.fn}
           >
             <item.icon className="h-4 w-4" />

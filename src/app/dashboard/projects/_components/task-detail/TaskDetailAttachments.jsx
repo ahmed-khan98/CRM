@@ -59,7 +59,7 @@ function TaskDetailAttachments({ task, projectId, canReplaceCreatorFile, canUplo
         canUpload={canReplaceCreatorFile}
         onUpload={handleCreatorUpload}
         onDelete={handleDeleteCreator}
-        emptyLabel="Upload your attachment(s)"
+        emptyLabel="Upload files (ZIP up to 50 MB)"
         replaceLabel="Add another attachment"
       />
       <AttachmentSection
@@ -68,7 +68,7 @@ function TaskDetailAttachments({ task, projectId, canReplaceCreatorFile, canUplo
         canUpload={canUploadAssigneeFile}
         onUpload={handleAssigneeUpload}
         onDelete={handleDeleteAssignee}
-        emptyLabel="Upload your work file(s)"
+        emptyLabel="Upload work files (ZIP up to 50 MB)"
         replaceLabel="Add another attachment"
       />
     </div>
