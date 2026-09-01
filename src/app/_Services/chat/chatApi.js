@@ -137,6 +137,20 @@ export const chatApi = createApiAuction.injectEndpoints({
         method: "DELETE",
         body: { forEveryone },
       }),
+      async onQueryStarted(
+        { messageId, forEveryone, conversationId },
+        { dispatch, queryFulfilled }
+      ) {
+        try {
+          const { data } = await queryFulfilled;
+          patchConversationsOnMessageDeleted(dispatch, {
+            conversationId,
+            messageId,
+            forEveryone,
+            message: data?.data,
+          });
+        } catch (_) {}
+      },
       invalidatesTags: ["ChatConversations"],
     }),
     reactMessage: builder.mutation({
@@ -240,6 +254,42 @@ export const chatApi = createApiAuction.injectEndpoints({
     }),
   }),
 });
+
+export function patchConversationsOnMessageDeleted(dispatch, payload) {
+  if (!payload?.forEveryone || !payload?.conversationId) return;
+  const messageId = payload.messageId;
+  const createdAt = payload.message?.createdAt;
+  const label =
+    (payload.message?.body && String(payload.message.body).trim()) ||
+    "This message was deleted";
+  const apply = (draft) => {
+    const list = draft?.data;
+    if (!Array.isArray(list)) return;
+    const conv = list.find(
+      (c) => String(c._id) === String(payload.conversationId)
+    );
+    if (!conv?.lastMessage) return;
+    const lastId =
+      conv.lastMessage.messageId?._id || conv.lastMessage.messageId;
+    const idMatch = lastId && String(lastId) === String(messageId);
+    const timeMatch =
+      createdAt &&
+      conv.lastMessage.createdAt &&
+      new Date(conv.lastMessage.createdAt).getTime() ===
+        new Date(createdAt).getTime();
+    if (!idMatch && !timeMatch && lastId) return;
+    conv.lastMessage.body = label;
+    conv.lastMessage.type = "system";
+    conv.lastMessage.deletedForEveryone = true;
+  };
+  dispatch(
+    chatApi.util.updateQueryData("getConversations", { archived: false }, apply)
+  );
+  dispatch(
+    chatApi.util.updateQueryData("getConversations", { archived: true }, apply)
+  );
+  dispatch(chatApi.util.updateQueryData("getConversations", {}, apply));
+}
 
 export const {
   useSearchChatUsersQuery,

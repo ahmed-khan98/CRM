@@ -21,6 +21,7 @@ import {
 import { invalidateTaskBoardTags } from "@/app/_utils/invalidateTaskBoard";
 import {
   chatApi,
+  patchConversationsOnMessageDeleted,
   useLazyGetPushVapidKeyQuery,
   useSubscribePushMutation,
 } from "@/app/_Services/chat/chatApi";
@@ -317,7 +318,8 @@ export function SocketProvider({ children }) {
         dispatch(chatApi.util.invalidateTags(["ChatConversations"]));
       });
 
-      socket.on("chat:message:deleted", () => {
+      socket.on("chat:message:deleted", (payload) => {
+        patchConversationsOnMessageDeleted(dispatch, payload);
         dispatch(chatApi.util.invalidateTags(["ChatConversations"]));
       });
 

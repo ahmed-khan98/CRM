@@ -77,7 +77,11 @@ function MessageContextMenu({
       icon: Trash2,
       label: "Delete for me",
       fn: async () => {
-        await onDelete({ messageId: message._id, forEveryone: false });
+        await onDelete({
+          messageId: message._id,
+          conversationId: message.conversationId,
+          forEveryone: false,
+        });
         onClose();
       },
     },
@@ -85,7 +89,11 @@ function MessageContextMenu({
       icon: Trash2,
       label: "Delete for everyone",
       fn: async () => {
-        await onDelete({ messageId: message._id, forEveryone: true });
+        await onDelete({
+          messageId: message._id,
+          conversationId: message.conversationId,
+          forEveryone: true,
+        });
         onClose();
       },
     },
