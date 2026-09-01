@@ -9,6 +9,7 @@ import ChatFileCard from "@/app/_Components/chat/ChatFileCard";
 import VoicePlayer from "@/app/_Components/chat/VoicePlayer";
 import DaySeparator from "@/app/_Components/chat/bubble/DaySeparator";
 import SystemMessageChip from "@/app/_Components/chat/bubble/SystemMessageChip";
+import DeletedMessageBubble from "@/app/_Components/chat/bubble/DeletedMessageBubble";
 import ReplyQuote from "@/app/_Components/chat/bubble/ReplyQuote";
 import VideoBubble from "@/app/_Components/chat/bubble/VideoBubble";
 import MessageReactions from "@/app/_Components/chat/bubble/MessageReactions";
@@ -62,7 +63,17 @@ function MessageBubble({
   return (
     <div>
       {showDay && <DaySeparator theme={theme} date={m.createdAt} />}
-      {m.type === "system" || m.deletedForEveryone ? (
+      {m.deletedForEveryone || m.deletedForMe ? (
+        <DeletedMessageBubble
+          message={m}
+          mine={mine}
+          myId={myId}
+          theme={theme}
+          showSenderName={!mine && active.type === "group"}
+          senderName={m.senderId?.fullName}
+          status={status}
+        />
+      ) : m.type === "system" ? (
         <SystemMessageChip theme={theme} message={m} />
       ) : (
         <div

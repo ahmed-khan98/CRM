@@ -147,6 +147,7 @@ export function lastMessagePreviewMeta(msg) {
   if (!msg) return { kind: "text", text: "No messages yet" };
   const deletedLabel = String(msg.body || "");
   if (
+    msg.deletedForMe ||
     msg.deletedForEveryone ||
     msg.type === "system" ||
     /deleted this message/i.test(deletedLabel)

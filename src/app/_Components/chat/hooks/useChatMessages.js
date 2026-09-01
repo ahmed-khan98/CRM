@@ -118,15 +118,26 @@ export default function useChatMessages({
                 ? {
                     ...m,
                     deletedForEveryone: true,
+                    deletedBy: payload?.message?.deletedBy || m.deletedBy,
                     body: label,
                     attachments: [],
-                    type: "system",
                   }
                 : m
             )
           );
         } else {
-          setMessages((prev) => prev.filter((m) => m._id !== payload.messageId));
+          setMessages((prev) =>
+            prev.map((m) =>
+              m._id === payload.messageId
+                ? {
+                    ...m,
+                    deletedForMe: true,
+                    body: "You deleted this message",
+                    attachments: [],
+                  }
+                : m
+            )
+          );
         }
         refetchConvs();
       }),

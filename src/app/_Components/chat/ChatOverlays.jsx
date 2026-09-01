@@ -60,6 +60,7 @@ function ChatOverlays({
         <MessageContextMenu
           message={menuMsg}
           myId={myId}
+          meRole={meRole}
           onClose={() => setMenuMsg(null)}
           onReply={setReplyTo}
           onStar={starMsg}

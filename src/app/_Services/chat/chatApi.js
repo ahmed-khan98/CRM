@@ -256,12 +256,13 @@ export const chatApi = createApiAuction.injectEndpoints({
 });
 
 export function patchConversationsOnMessageDeleted(dispatch, payload) {
-  if (!payload?.forEveryone || !payload?.conversationId) return;
+  if (!payload?.conversationId) return;
   const messageId = payload.messageId;
   const createdAt = payload.message?.createdAt;
-  const label =
-    (payload.message?.body && String(payload.message.body).trim()) ||
-    "This message was deleted";
+  const label = payload.forEveryone
+    ? (payload.message?.body && String(payload.message.body).trim()) ||
+      "This message was deleted"
+    : "You deleted this message";
   const apply = (draft) => {
     const list = draft?.data;
     if (!Array.isArray(list)) return;
@@ -280,7 +281,8 @@ export function patchConversationsOnMessageDeleted(dispatch, payload) {
     if (!idMatch && !timeMatch && lastId) return;
     conv.lastMessage.body = label;
     conv.lastMessage.type = "system";
-    conv.lastMessage.deletedForEveryone = true;
+    conv.lastMessage.deletedForEveryone = Boolean(payload.forEveryone);
+    conv.lastMessage.deletedForMe = !payload.forEveryone;
   };
   dispatch(
     chatApi.util.updateQueryData("getConversations", { archived: false }, apply)

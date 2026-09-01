@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 function MessageContextMenu({
   message,
   myId,
+  meRole,
   onClose,
   onReply,
   onStar,
@@ -26,6 +27,8 @@ function MessageContextMenu({
   const isMine =
     (message.senderId?._id || message.senderId)?.toString() ===
     myId?.toString();
+  const isCrmAdmin = meRole === "ADMIN" || meRole === "SUBADMIN";
+  const canDeleteForEveryone = isMine || isCrmAdmin;
 
   const items = [
     {
@@ -85,18 +88,22 @@ function MessageContextMenu({
         onClose();
       },
     },
-    {
-      icon: Trash2,
-      label: "Delete for everyone",
-      fn: async () => {
-        await onDelete({
-          messageId: message._id,
-          conversationId: message.conversationId,
-          forEveryone: true,
-        });
-        onClose();
-      },
-    },
+    ...(canDeleteForEveryone
+      ? [
+          {
+            icon: Trash2,
+            label: "Delete for everyone",
+            fn: async () => {
+              await onDelete({
+                messageId: message._id,
+                conversationId: message.conversationId,
+                forEveryone: true,
+              });
+              onClose();
+            },
+          },
+        ]
+      : []),
   ];
 
   return (

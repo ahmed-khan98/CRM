@@ -4,6 +4,12 @@ import { memo } from "react";
 import { UserPlus, LogOut, UserMinus, Trash2 } from "lucide-react";
 import Avatar from "@/app/_Components/chat/ChatAvatar";
 import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
+import { sameId } from "@/app/_Components/chat/chatUtils";
+
+function isGroupAdminMember(p, active) {
+  if (p?.role === "admin") return true;
+  return sameId(active?.createdBy, p?.userId);
+}
 
 function GroupMembersSection({
   active,
@@ -45,6 +51,11 @@ function GroupMembersSection({
                 {p.userId?.designation ? (
                   <p className="truncate text-[10px] text-zinc-400">{p.userId.designation}</p>
                 ) : null}
+                {isGroupAdminMember(p, active) && (
+                  <span className="mt-0.5 inline-block rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
+                    Group admin
+                  </span>
+                )}
               </div>
             </div>
             {canRemove && (
