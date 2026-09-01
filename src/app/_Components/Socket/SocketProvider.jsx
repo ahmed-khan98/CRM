@@ -317,6 +317,10 @@ export function SocketProvider({ children }) {
         dispatch(chatApi.util.invalidateTags(["ChatConversations"]));
       });
 
+      socket.on("chat:message:deleted", () => {
+        dispatch(chatApi.util.invalidateTags(["ChatConversations"]));
+      });
+
       socket.on("chat:conversation:removed", () => {
         dispatch(chatApi.util.invalidateTags(["ChatConversations"]));
       });

@@ -128,6 +128,7 @@ export default function useChatMessages({
         } else {
           setMessages((prev) => prev.filter((m) => m._id !== payload.messageId));
         }
+        refetchConvs();
       }),
       on("chat:message:seen", (payload) => {
         refetchConvs();

@@ -110,6 +110,13 @@ export function receiptStatus(msg, myId) {
 export function lastMessageTickStatus(conv, myId) {
   const last = conv?.lastMessage;
   if (!last?.createdAt || !sameId(last.senderId, myId)) return null;
+  if (
+    last.deletedForEveryone ||
+    last.type === "system" ||
+    /deleted this message/i.test(String(last.body || ""))
+  ) {
+    return null;
+  }
   const sentAt = new Date(last.createdAt).getTime();
   const others = (conv.participants || []).filter((p) => !sameId(p.userId, myId));
   if (!others.length) return "sent";
@@ -138,8 +145,16 @@ function filePreviewName(msg) {
 
 export function lastMessagePreviewMeta(msg) {
   if (!msg) return { kind: "text", text: "No messages yet" };
-  if (msg.deletedForEveryone) {
-    return { kind: "text", text: "This message was deleted" };
+  const deletedLabel = String(msg.body || "");
+  if (
+    msg.deletedForEveryone ||
+    msg.type === "system" ||
+    /deleted this message/i.test(deletedLabel)
+  ) {
+    return {
+      kind: "text",
+      text: deletedLabel.trim() || "This message was deleted",
+    };
   }
   const t = msg.type;
   const cleanedBody = stripPreviewEmoji(msg.body);

@@ -137,6 +137,7 @@ export const chatApi = createApiAuction.injectEndpoints({
         method: "DELETE",
         body: { forEveryone },
       }),
+      invalidatesTags: ["ChatConversations"],
     }),
     reactMessage: builder.mutation({
       query: ({ messageId, emoji }) => ({
