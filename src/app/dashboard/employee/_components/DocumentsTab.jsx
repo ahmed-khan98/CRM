@@ -17,6 +17,7 @@ import {
   btnCancel,
   formatDate,
 } from "./hrmsUi";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
 
 export default function DocumentsTab({ employeeId }) {
   const { data, isLoading, refetch } = useGetEmployeeDocumentsQuery({
@@ -67,17 +68,11 @@ export default function DocumentsTab({ employeeId }) {
         <form onSubmit={onUpload} className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <label className={labelClass}>Document Type</label>
-            <select
+            <CrmSelect
+              options={DOCUMENT_TYPE_OPTIONS}
               value={documentType}
-              onChange={(e) => setDocumentType(e.target.value)}
-              className={inputClass}
-            >
-              {DOCUMENT_TYPE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+              onChange={setDocumentType}
+            />
           </div>
           <div>
             <label className={labelClass}>File</label>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Users } from "lucide-react";
+import { Users, Download } from "lucide-react";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 import { motion } from "framer-motion";
 import {
@@ -16,6 +16,8 @@ import PageHeader from "@/app/_Components/PageHeader/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import ClientTable from "./_components/ClientTable";
 import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
+import { exportRowsToExcel } from "@/app/utilities/exportListToExcel";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -86,6 +88,31 @@ export default function Client() {
     ? filterData.map((name) => ({ label: name, value: name }))
     : [];
 
+  const handleExport = () => {
+    try {
+      if (!filteredClients.length) {
+        toast.error("No clients to export");
+        return;
+      }
+      exportRowsToExcel({
+        sheetName: "Clients",
+        fileName: `clients-${new Date().toISOString().slice(0, 10)}.xlsx`,
+        rows: filteredClients.map((c) => ({
+          Name: c.name,
+          Email: c.email,
+          Phone: c.phoneNo,
+          Company: c.companyName,
+          Brand: c.brandId?.name,
+          Department: c.departmentId?.name,
+          "Handled By": c.handleBy?.fullName,
+        })),
+      });
+      toast.success("Clients exported");
+    } catch (err) {
+      toast.error(err.message || "Export failed");
+    }
+  };
+
   if (isLoading) {
     return (
       <PageLoader
@@ -101,10 +128,19 @@ export default function Client() {
         <PageHeader
           icon={Users}
           length={data?.data?.length}
-          name=" All Clients"
+          name="All Clients"
           btnName="Create Client"
           handleEdit={handleEdit}
-        />
+        >
+          <button
+            type="button"
+            onClick={handleExport}
+            className="inline-flex h-10 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </button>
+        </PageHeader>
 
         <SearchFilterBar
           tabItems={deptTabItems}
@@ -117,19 +153,17 @@ export default function Client() {
 
         <motion.div variants={itemVariants}>
           {filteredClients.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Users className="h-16 w-16 text-gray-300" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                No Client Found
-              </h3>
-              <p className="text-gray-500 mt-2">
-                {search
+            <EmptyState
+              icon={Users}
+              title="No clients found"
+              description={
+                search
                   ? `No results for "${search}"`
                   : activeFilter === "all"
-                    ? "You don't have any Client yet."
-                    : `You don't have any ${activeFilter} Client.`}
-              </p>
-            </div>
+                    ? "Add a client to start tracking accounts and payment links."
+                    : `No clients in ${activeFilter} yet.`
+              }
+            />
           ) : (
             <ClientTable
               clients={filteredClients}

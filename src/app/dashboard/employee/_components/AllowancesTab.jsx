@@ -19,6 +19,7 @@ import {
   formatDate,
   formatMoney,
 } from "./hrmsUi";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
 
 const emptyForm = () => ({
   allowanceType: "Car Allowance",
@@ -94,24 +95,18 @@ export default function AllowancesTab({ employeeId }) {
         <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
             <label className={labelClass}>Type</label>
-            <select
-              className={inputClass}
+            <CrmSelect
+              options={ALLOWANCE_TYPE_OPTIONS}
               value={form.allowanceType}
-              onChange={(e) =>
+              onChange={(v) =>
                 setForm({
                   ...form,
-                  allowanceType: e.target.value,
-                  benefitMode: e.target.value === "Car Allowance" ? form.benefitMode : "cash",
+                  allowanceType: v,
+                  benefitMode: v === "Car Allowance" ? form.benefitMode : "cash",
                   vehicleId: "",
                 })
               }
-            >
-              {ALLOWANCE_TYPE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           {isCarType(form.allowanceType) && (
@@ -167,25 +162,28 @@ export default function AllowancesTab({ employeeId }) {
           {isCarType(form.allowanceType) && form.benefitMode === "company_car" && (
             <div className="md:col-span-2">
               <label className={labelClass}>Available company cars</label>
-              <select
-                className={inputClass}
+              <CrmSelect
+                isSearchable
+                options={[
+                  {
+                    value: "",
+                    label: loadingCars
+                      ? "Loading cars..."
+                      : "Select available car",
+                  },
+                  ...availableCars.map((v) => ({
+                    value: v._id,
+                    label: `${v.vehicleName}${
+                      v.make || v.model
+                        ? ` (${[v.make, v.model].filter(Boolean).join(" ")})`
+                        : ""
+                    } — ${v.registrationNumber}`,
+                  })),
+                ]}
                 value={form.vehicleId}
-                onChange={(e) => setForm({ ...form, vehicleId: e.target.value })}
-                required
-              >
-                <option value="">
-                  {loadingCars ? "Loading cars..." : "Select available car"}
-                </option>
-                {availableCars.map((v) => (
-                  <option key={v._id} value={v._id}>
-                    {v.vehicleName}
-                    {v.make || v.model
-                      ? ` (${[v.make, v.model].filter(Boolean).join(" ")})`
-                      : ""}{" "}
-                    — {v.registrationNumber}
-                  </option>
-                ))}
-              </select>
+                onChange={(v) => setForm({ ...form, vehicleId: v })}
+                placeholder="Select available car"
+              />
               {!loadingCars && availableCars.length === 0 && (
                 <p className="text-[11px] text-amber-400 mt-1.5">
                   No unassigned cars available. Add or free a vehicle in Fleet

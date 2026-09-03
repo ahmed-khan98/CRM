@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import moment from "moment-timezone";
 import {
   ArrowLeft,
@@ -74,9 +75,15 @@ export default function VendorDetailPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className={`${fleet.card} p-6 flex flex-col items-center text-center`}>
-          <div className="h-24 w-24 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center overflow-hidden mb-4">
+          <div className="relative h-24 w-24 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center overflow-hidden mb-4">
             {vendor.profilePicture?.url ? (
-              <img src={vendor.profilePicture.url} alt="" className="h-full w-full object-cover" />
+              <Image
+                src={vendor.profilePicture.url}
+                alt={vendor.vendorName || "Vendor"}
+                fill
+                className="object-cover"
+                sizes="96px"
+              />
             ) : (
               <Building2 className="w-10 h-10 text-zinc-500" />
             )}

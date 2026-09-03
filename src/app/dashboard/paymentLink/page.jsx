@@ -18,6 +18,8 @@ import PageHeader from "@/app/_Components/PageHeader/page";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
+import { tableWrap, thClass, theadRow } from "@/app/_Components/ui/saas/DataTable";
 
 const paymentPageUrl = process.env.NEXT_PUBLIC_PAYMENT_PAGE_URL;
 
@@ -186,7 +188,7 @@ export default function Paymentlink() {
         <PageHeader
           icon={Link}
           length={meta?.total || 0}
-          name=" All Payment Links"
+          name="All Payment Links"
           btnName="Create Payment Link"
           handleEdit={() =>
             router.push("/dashboard/paymentLink/createPaymentLink")
@@ -208,17 +210,13 @@ export default function Paymentlink() {
           className=" md:mx-0 rounded-2xl shadow-xl "
         >
           {items?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <ChartBar className="h-16 w-16 text-gray-300" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                No Payment links
-              </h3>
-              <p className="text-gray-500 mt-2">
-                No payment links matched your filters.
-              </p>
-            </div>
+            <EmptyState
+              icon={ChartBar}
+              title="No payment links"
+              description="No payment links matched your filters. Create one to send a checkout to a client."
+            />
           ) : (
-            <div className="-mx-1 overflow-hidden rounded-2xl bg-white shadow-sm md:mx-0 md:border md:border-zinc-200">
+            <div className={`-mx-1 md:mx-0 ${tableWrap}`}>
               <div
                 style={{
                   overflowX: "auto",
@@ -230,12 +228,12 @@ export default function Paymentlink() {
                   className="text-left border-collapse"
                   style={{ minWidth: "1100px", width: "100%" }}
                 >
-                  <thead className="sticky top-0 z-20">
+                  <thead className={`sticky top-0 z-20 ${theadRow}`}>
                     <tr>
                       {PAYMENTLINKHEADERS?.map((h) => (
                         <th
                           key={h}
-                          className="sticky top-0 p-3 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-900"
+                          className={`sticky top-0 ${thClass}`}
                         >
                           {h}
                         </th>

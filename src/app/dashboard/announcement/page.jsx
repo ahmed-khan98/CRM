@@ -14,6 +14,8 @@ import { formatDate } from "@/app/utilities/date";
 import PageHeader from "@/app/_Components/PageHeader/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import Tooltip from "@/app/_Components/ui/Tooltip";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
+import { tableWrap, thClass, theadRow, trHover } from "@/app/_Components/ui/saas/DataTable";
 
 export default function Announcement() {
   const [editingAppointment, setEditingAppointment] = useState(null);
@@ -69,33 +71,23 @@ export default function Announcement() {
         <PageHeader
           icon={MegaphoneIcon}
           length={"Management"}
-          name=" All Announcements"
+          name="All Announcements"
           btnName="Create Announcement"
           handleEdit={handleEdit}
         />
 
         {data?.data?.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-[20px] bg-zinc-900 border border-white/[0.06] p-16 text-center shadow-xl shadow-zinc-400/10">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white/[0.07] border border-white/10 mb-4">
-              <Megaphone className="h-6 w-6 text-zinc-500" />
-            </div>
-            <h3 className="text-base font-black text-zinc-200 mb-1">
-              No Announcements Yet
-            </h3>
-            <p className="text-zinc-500 text-sm">
-              Create your first announcement to get started.
-            </p>
-          </div>
+          <EmptyState
+            icon={Megaphone}
+            title="No announcements yet"
+            description="Create your first announcement to share updates with the team."
+          />
         ) : (
-          <div className="-mx-1 overflow-hidden rounded-[20px] shadow-xl shadow-zinc-400/15 md:mx-0 md:border md:border-zinc-200">
-            {/* Dark top accent */}
-            <div className="h-[2px] w-full bg-gradient-to-r from-zinc-900 via-zinc-700 to-zinc-900" />
-
+          <div className={`-mx-1 md:mx-0 ${tableWrap}`}>
             <div className="overflow-x-auto">
               <table className="min-w-full">
-                {/* Dark Header */}
                 <thead>
-                  <tr className="bg-zinc-900 border-b border-white/[0.07]">
+                  <tr className={theadRow}>
                     {[
                       "Title",
                       "Message",
@@ -103,25 +95,21 @@ export default function Announcement() {
                       "Created At",
                       "Actions",
                     ].map((h) => (
-                      <th
-                        key={h}
-                        className="p-3 text-left text-[10px] font-bold tracking-[0.14em] uppercase text-zinc-300"
-                      >
+                      <th key={h} className={thClass}>
                         {h}
                       </th>
                     ))}
                   </tr>
                 </thead>
 
-                {/* Light Rows */}
-                <tbody className="bg-white divide-y divide-zinc-100">
+                <tbody className="divide-y divide-zinc-100 bg-white">
                   {data?.data.map((depart, index) => (
                     <motion.tr
                       key={depart?._id}
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05, ease: "easeOut" }}
-                      className="hover:bg-zinc-50 transition-colors group"
+                      className={`${trHover} group`}
                     >
                       {/* Title */}
                       <td className="px-4 py-3 whitespace-nowrap">

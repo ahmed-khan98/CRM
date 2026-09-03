@@ -124,9 +124,12 @@ function NewChatModal({
           <div className="space-y-1">
             {(users || []).map((u) => {
               const checked = selectedIds.has(String(u._id));
+              const isMe = Boolean(u.isMe);
+              // Don't add yourself as a group member from this list
+              if (mode === "group" && isMe) return null;
               return (
                 <button
-                  key={u._id}
+                  key={isMe ? `me-${u._id}` : u._id}
                   type="button"
                   className={`flex w-full items-center gap-3 rounded-lg px-2 py-2 hover:bg-zinc-50 ${
                     checked ? "bg-zinc-50" : ""
@@ -143,8 +146,17 @@ function NewChatModal({
                     online={u.isOnline}
                   />
                   <div className="min-w-0 flex-1 text-left">
-                    <p className="truncate text-sm font-medium">{u.fullName}</p>
-                    <p className="truncate text-xs text-zinc-500">{u.email}</p>
+                    <p className="truncate text-sm font-medium">
+                      {isMe ? "Me" : u.fullName}
+                      {isMe && (
+                        <span className="ml-1.5 rounded-full bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-500">
+                          You
+                        </span>
+                      )}
+                    </p>
+                    <p className="truncate text-xs text-zinc-500">
+                      {isMe ? "Message yourself" : u.email}
+                    </p>
                   </div>
                   {mode === "group" && (
                     <span

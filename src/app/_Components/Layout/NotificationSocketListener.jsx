@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
@@ -25,7 +26,6 @@ const getSocketBaseUrl = () => {
 
   if (!api) return "";
 
-  // Absolute API URL → strip /api/v1/user (with or without trailing slash)
   try {
     if (/^https?:\/\//i.test(api)) {
       const u = new URL(api);
@@ -40,8 +40,14 @@ const getSocketBaseUrl = () => {
     /* fall through */
   }
 
-  // Relative /api/... → same origin (only works if Next proxies socket — usually not)
   return "";
+};
+
+const getId = (value) => {
+  if (!value) return null;
+  if (typeof value === "string" || typeof value === "number") return String(value);
+  const id = value._id ?? value.id;
+  return id ? String(id) : null;
 };
 
 /**
@@ -50,9 +56,11 @@ const getSocketBaseUrl = () => {
  */
 export default function NotificationSocketListener() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const socketRef = useRef(null);
+  const routerRef = useRef(router);
+  routerRef.current = router;
 
-  // Unlock audio on first user gesture (required by browsers)
   useEffect(() => {
     const unlock = () => unlockNotificationAudio();
     const events = ["pointerdown", "click", "keydown", "touchstart"];
@@ -94,7 +102,6 @@ export default function NotificationSocketListener() {
 
       const socket = io(baseUrl, {
         path: "/socket.io",
-        // Prefer polling first — more reliable behind Railway / proxies
         transports: ["polling", "websocket"],
         upgrade: true,
         auth: { token },
@@ -122,27 +129,63 @@ export default function NotificationSocketListener() {
         unlockNotificationAudio();
         playNotificationSound();
 
-        // Chat notifications get collapsed server-side (one row per
-        // conversation instead of one per message) — reflect that count
-        // here instead of implying this is a single, brand-new message.
         const count = Number(payload?.count) || 1;
         const title =
           count > 1 && payload?.title
             ? `${payload.title} · ${count} new`
             : payload?.title || "New notification";
 
+        const leadId = getId(payload?.leadId);
+        const conversationId = getId(payload?.conversationId);
+        const isLeadSchedule =
+          payload?.type === "LEAD_SCHEDULE" ||
+          String(payload?.title || "")
+            .toLowerCase()
+            .includes("lead follow-up");
+        const isChatNotify = [
+          "CHAT_MESSAGE",
+          "CHAT_MENTION",
+          "CHAT_GROUP",
+          "MISSED_CALL",
+          "INCOMING_CALL",
+        ].includes(payload?.type);
+        const canOpen =
+          (isLeadSchedule && leadId) || (isChatNotify && conversationId);
+
         toast.custom(
           (t) => (
-            <div
+            <button
+              type="button"
+              onClick={() => {
+                toast.dismiss(t.id);
+                if (isLeadSchedule && leadId) {
+                  routerRef.current.push(`/dashboard/lead/detail/${leadId}`);
+                  return;
+                }
+                if (isChatNotify && conversationId) {
+                  routerRef.current.push(
+                    `/dashboard/chat?conversation=${conversationId}`,
+                  );
+                }
+              }}
               className={`${
                 t.visible ? "animate-enter" : "animate-leave"
-              } max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] px-4 py-3 shadow-xl`}
+              } max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] px-4 py-3 shadow-xl text-left ${
+                canOpen
+                  ? "cursor-pointer hover:border-white/20"
+                  : "cursor-default"
+              }`}
             >
               <p className="text-sm font-semibold text-white">{title}</p>
               <p className="mt-1 text-xs leading-relaxed text-zinc-400">
                 {payload?.message || ""}
               </p>
-            </div>
+              {canOpen && (
+                <p className="mt-1.5 text-[10px] font-medium text-blue-400">
+                  {isChatNotify ? "Click to open chat" : "Click to open lead"}
+                </p>
+              )}
+            </button>
           ),
           { duration: 4500, position: "bottom-center" }
         );

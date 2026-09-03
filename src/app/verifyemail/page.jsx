@@ -1,5 +1,8 @@
-import React from 'react'
-import VerifyForm from '../_Components/Verify/verify'
+import VerifyForm from "../_Components/Verify/verify";
+
+export const metadata = {
+  title: "Verify email",
+};
 
 const Page = () => {
   return (

@@ -1,10 +1,8 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Filter, RotateCcw } from "lucide-react";
-
-const selectClass =
-  "h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950 px-3 text-xs font-semibold text-zinc-200 outline-none transition focus:border-indigo-500 disabled:cursor-not-allowed disabled:opacity-60";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
 
 function FilterField({ label, children }) {
   return (
@@ -29,6 +27,67 @@ function SaleFilters({
   onFilterChange,
   onReset,
 }) {
+  const monthOptions = useMemo(
+    () => [
+      { value: "all", label: "All Months" },
+      ...months.map((month) => ({
+        value: month?._id,
+        label: `${month?.monthCode || month?.name}${
+          month?.status === "OPEN" ? " (Open)" : ""
+        }`,
+      })),
+    ],
+    [months]
+  );
+
+  const departmentOptions = useMemo(
+    () => [
+      {
+        value: "",
+        label: canFilterDepartment ? "All Departments" : "Your Department",
+      },
+      ...departments.map((department) => ({
+        value: department?._id,
+        label: department?.name,
+      })),
+    ],
+    [departments, canFilterDepartment]
+  );
+
+  const employeeOptions = useMemo(
+    () => [
+      {
+        value: "",
+        label: isEmployeeLoading
+          ? "Loading employees..."
+          : "All Sellers / Agents",
+      },
+      ...employees.map((employee) => ({
+        value: employee?._id,
+        label: employee?.fullName,
+      })),
+    ],
+    [employees, isEmployeeLoading]
+  );
+
+  const statusOptions = useMemo(
+    () => [
+      { value: "", label: "All Status" },
+      { value: "paid", label: "Paid" },
+      { value: "charge back", label: "Charge Back" },
+    ],
+    []
+  );
+
+  const typeOptions = useMemo(
+    () => [
+      { value: "", label: "All Sale Types" },
+      { value: "FRESH", label: "Fresh" },
+      { value: "UP SELL", label: "Up Sell" },
+    ],
+    []
+  );
+
   return (
     <div className="rounded-3xl border border-zinc-800/70 bg-gradient-to-br from-zinc-900 to-zinc-950 p-3 shadow-2xl sm:p-4">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -59,85 +118,53 @@ function SaleFilters({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-6">
         <FilterField label="Month">
-          <select
+          <CrmSelect
+            variant="dark"
+            options={monthOptions}
             value={filters.monthId}
-            onChange={(event) => onFilterChange("monthId", event.target.value)}
-            className={selectClass}
-          >
-            <option value="all">All Months</option>
-            {months.map((month) => (
-              <option key={month?._id} value={month?._id}>
-                {month?.monthCode || month?.name}
-                {month?.status === "OPEN" ? " (Open)" : ""}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => onFilterChange("monthId", v)}
+            isSearchable
+          />
         </FilterField>
 
         <FilterField label="Department">
-          <select
+          <CrmSelect
+            variant="dark"
+            options={departmentOptions}
             value={filters.departmentId}
-            disabled={!canFilterDepartment}
-            onChange={(event) =>
-              onFilterChange("departmentId", event.target.value)
-            }
-            className={selectClass}
-          >
-            <option value="">
-              {canFilterDepartment ? "All Departments" : "Your Department"}
-            </option>
-            {departments.map((department) => (
-              <option key={department?._id} value={department?._id}>
-                {department?.name}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => onFilterChange("departmentId", v)}
+            isDisabled={!canFilterDepartment}
+            isSearchable
+          />
         </FilterField>
 
         <FilterField label="Seller / Agent">
-          <select
+          <CrmSelect
+            variant="dark"
+            options={employeeOptions}
             value={filters.employeeId}
-            disabled={!canFilterEmployee}
-            onChange={(event) =>
-              onFilterChange("employeeId", event.target.value)
-            }
-            className={selectClass}
-          >
-            <option value="">
-              {isEmployeeLoading
-                ? "Loading employees..."
-                : "All Sellers / Agents"}
-            </option>
-            {employees.map((employee) => (
-              <option key={employee?._id} value={employee?._id}>
-                {employee?.fullName}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => onFilterChange("employeeId", v)}
+            isDisabled={!canFilterEmployee}
+            isSearchable
+          />
         </FilterField>
 
         <FilterField label="Status">
-          <select
+          <CrmSelect
+            variant="dark"
+            options={statusOptions}
             value={filters.status}
-            onChange={(event) => onFilterChange("status", event.target.value)}
-            className={selectClass}
-          >
-            <option value="">All Status</option>
-            <option value="paid">Paid</option>
-            <option value="charge back">Charge Back</option>
-          </select>
+            onChange={(v) => onFilterChange("status", v)}
+          />
         </FilterField>
 
         <FilterField label="Sale Type">
-          <select
+          <CrmSelect
+            variant="dark"
+            options={typeOptions}
             value={filters.type}
-            onChange={(event) => onFilterChange("type", event.target.value)}
-            className={selectClass}
-          >
-            <option value="">All Sale Types</option>
-            <option value="FRESH">Fresh</option>
-            <option value="UP SELL">Up Sell</option>
-          </select>
+            onChange={(v) => onFilterChange("type", v)}
+          />
         </FilterField>
 
         <button

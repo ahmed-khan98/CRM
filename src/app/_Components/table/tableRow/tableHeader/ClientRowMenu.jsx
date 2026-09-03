@@ -1,5 +1,5 @@
 import { memo, useState, useRef, useEffect } from "react";
-import { Trash2, Edit, EllipsisVertical, Link } from "lucide-react";
+import { Trash2, Edit, EllipsisVertical, Link, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 
@@ -76,6 +76,19 @@ function ClientRowMenu({ emp, handleEdit, onDelete, isEnabled, onToggle }) {
       </button>
 
       <PortalMenu btnRef={btnRef} open={open} onClose={() => setOpen(false)}>
+        <button
+          onClick={() => {
+            router.push(`/dashboard/client/${emp?._id}`);
+            setOpen(false);
+          }}
+          className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] text-slate-700 hover:bg-slate-50"
+        >
+          <Eye className="h-3.5 w-3.5" />
+          View Details
+        </button>
+
+        <div className="border-t border-zinc-100 my-1" />
+
         {/* 1. Create Payment Link */}
         <button
           onClick={() => {

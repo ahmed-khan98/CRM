@@ -80,7 +80,7 @@ export async function generateMetadata({ params, searchParams }) {
   try {
     if (brandParam) {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}brand/${id}`, {
-        cache: "no-store",
+        next: { revalidate: 300 },
       });
       const json = await res.json();
 
@@ -90,7 +90,7 @@ export async function generateMetadata({ params, searchParams }) {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}paymentlink/${id}`,
         {
-          cache: "no-store",
+          next: { revalidate: 60 },
         },
       );
       const json = await res.json();

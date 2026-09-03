@@ -2,6 +2,12 @@
 
 import { Search } from "lucide-react";
 import { fleet } from "./fleetTheme";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
+
+const SORT_OPTIONS = [
+  { value: "desc", label: "Newest First" },
+  { value: "asc", label: "Oldest First" },
+];
 
 export default function FleetFilterBar({
   search,
@@ -26,27 +32,24 @@ export default function FleetFilterBar({
         />
       </div>
       {statusOptions && (
-        <select
+        <CrmSelect
+          className="w-full lg:w-44 shrink-0"
+          variant="pill"
+          options={statusOptions}
           value={status}
-          onChange={(e) => onStatusChange(e.target.value)}
-          className={`${fleet.select} w-full lg:w-40 shrink-0`}
-        >
-          {statusOptions.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
+          onChange={onStatusChange}
+          placeholder="Status"
+        />
       )}
       {onSortChange && (
-        <select
+        <CrmSelect
+          className="w-full lg:w-44 shrink-0"
+          variant="pill"
+          options={SORT_OPTIONS}
           value={sortOrder}
-          onChange={(e) => onSortChange(e.target.value)}
-          className={`${fleet.select} w-full lg:w-40 shrink-0`}
-        >
-          <option value="desc">Newest First</option>
-          <option value="asc">Oldest First</option>
-        </select>
+          onChange={onSortChange}
+          placeholder="Sort"
+        />
       )}
       {extra}
     </div>

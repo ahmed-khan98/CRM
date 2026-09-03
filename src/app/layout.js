@@ -1,25 +1,37 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import LayoutWrapper from "./_Components/LayoutWrapper";
+import { Roboto } from "next/font/google";
 import ReduxProvider from "./_Services/reduxprovider/reduxprovider";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const roboto = Roboto({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-roboto",
+  display: "swap",
 });
 
 export const metadata = {
-  title: "CRM ZYTRON WORLD",
-  description: "Develop by ZYTRON WORLD",
-  manifest: "/manifest.webmanifest", // ✅ yeh add karo
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.zytronworld.online"
+  ),
+  title: {
+    default: "CRM Zytron World",
+    template: "%s | CRM Zytron World",
+  },
+  description: "Zytron World CRM — employees, sales, chat, and operations.",
+  manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.512.png", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/favicon.192.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "CRM Zytron World",
+    statusBarStyle: "default",
   },
 };
 
@@ -30,18 +42,8 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <link rel="manifest" href="/manifest.webmanifest" />
-      <meta name="theme-color" content="#27272a" />
-      <meta name="mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <link rel="apple-touch-icon" href="/favicon.ico" />
-
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${roboto.variable} ${roboto.className} antialiased`}>
         <ReduxProvider>
-          {/* <LayoutWrapper> */}
-          {/* <SocketProvider> */}
           <Toaster
             position="top-center"
             toastOptions={{
@@ -53,8 +55,6 @@ export default function RootLayout({ children }) {
             }}
           />
           {children}
-          {/* </SocketProvider> */}
-          {/* </LayoutWrapper> */}
         </ReduxProvider>
       </body>
     </html>

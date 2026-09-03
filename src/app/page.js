@@ -1,7 +1,9 @@
+import LoginForm from "./_Components/Login/Login";
 
-import LoginForm from './_Components/Login/Login'
-// import "react-quill/dist/quill.snow.css";
-
+export const metadata = {
+  title: "Login",
+  description: "Sign in to Zytron World CRM.",
+};
 
 export default function Home() {
   return (

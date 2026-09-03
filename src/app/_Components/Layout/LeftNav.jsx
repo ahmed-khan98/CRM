@@ -31,7 +31,9 @@ import {
   Truck,
   MessageCircle,
 } from "lucide-react";
+import Image from "next/image";
 import Tooltip from "@/app/_Components/ui/Tooltip";
+import Main from "../../../app/Assets/zytronlogo.png";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
 import { removeAttendence, resumeWork } from "@/redux/filterSlice";
@@ -56,48 +58,56 @@ const LeftNav = ({ set }) => {
       icon: <LayoutDashboard className="w-4 h-4" />,
       path: ["/dashboard/statictics"],
       roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+      section: "Overview",
     },
     {
       name: "Department",
       icon: <Building className="w-4 h-4" />,
       path: ["/dashboard/department"],
       roles: ["HR_ADMIN"],
+      section: "Organization",
     },
     {
       name: "Brand",
       icon: <Home className="w-4 h-4" />,
       path: ["/dashboard/brand"],
       roles: ["HR_ADMIN", "DEP_ADMIN"],
+      section: "Organization",
     },
     {
       name: "Announcement",
       icon: <MegaphoneIcon className="w-4 h-4" />,
       path: ["/dashboard/announcement"],
       roles: ["HR_ADMIN", "DEP_ADMIN", "FINANCE_ADMIN"],
+      section: "Organization",
     },
     {
       name: "Employee",
       icon: <Users className="w-4 h-4" />,
       path: ["/dashboard/employee"],
       roles: ["HR_ADMIN", "DEP_ADMIN"],
+      section: "Organization",
     },
     {
       name: "Client",
       icon: <User className="w-4 h-4" />,
       path: ["/dashboard/client"],
       roles: ["USER", "DEP_ADMIN"],
+      section: "CRM",
     },
     {
       name: "Projects",
       icon: <FolderKanban className="w-4 h-4" />,
       path: ["/dashboard/projects"],
       roles: ["USER", "DEP_ADMIN"],
+      section: "CRM",
     },
     {
       name: "All Tasks",
       icon: <ListTodo className="w-4 h-4" />,
       path: ["/dashboard/tasks"],
       roles: ["USER", "DEP_ADMIN"],
+      section: "CRM",
     },
     {
       name: "Chat",
@@ -111,12 +121,14 @@ const LeftNav = ({ set }) => {
         "ADMIN",
         "SUBADMIN",
       ],
+      section: "CRM",
     },
     {
       name: "Fleet",
       icon: <Truck className="w-4 h-4" />,
       path: ["/dashboard/fleet/vendors", "/dashboard/fleet/vehicles"],
       roles: ["ADMIN", "SUBADMIN"],
+      section: "Operations",
       submenu: [
         {
           name: "Vendors",
@@ -133,10 +145,11 @@ const LeftNav = ({ set }) => {
       ],
     },
     {
-      name: "leads",
+      name: "Leads",
       icon: <ChartBar className="w-4 h-4" />,
       path: ["/dashboard/lead"],
       roles: ["USER", "DEP_ADMIN"],
+      section: "CRM",
     },
     {
       name: "Payment Link",
@@ -147,6 +160,7 @@ const LeftNav = ({ set }) => {
         "/dashboard/createPaymentLink",
       ],
       roles: ["USER", "FINANCE_ADMIN", "DEP_ADMIN"],
+      section: "CRM",
     },
     // {
     //   name: "Email",
@@ -206,24 +220,28 @@ const LeftNav = ({ set }) => {
       icon: <Calendar className="w-4 h-4" />,
       path: ["/dashboard/month"],
       roles: ["DEP_ADMIN", "HR_ADMIN", "FINANCE_ADMIN"],
+      section: "CRM",
     },
     {
       name: "Sales",
       icon: <BadgeDollarSign className="w-4 h-4" />,
       path: ["/dashboard/sale"],
       roles: ["DEP_ADMIN", "FINANCE_ADMIN", "USER", "HR_ADMIN"],
+      section: "CRM",
     },
     {
       name: "My Account",
       icon: <User className="w-4 h-4" />,
       path: ["/dashboard/profile", "/dashboard/changepassword"],
       roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+      section: "Account",
     },
     {
       name: "Attendance",
       icon: <CalendarDays className="w-4 h-4" />,
       path: ["/dashboard/attendance", "/dashboard/attendance"],
       roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+      section: "Operations",
       submenu: [
         {
           name: "My Attendance",
@@ -324,9 +342,19 @@ const LeftNav = ({ set }) => {
         {/* ── Header: logo / toggle button ── */}
         {!isMobileDrawer && (
           <div
-            className={`flex-shrink-0 flex items-center px-2 py-1
-          ${isCollapsed ? "justify-center" : "justify-end"}`}
+            className={`flex-shrink-0 flex items-center px-2 py-2
+          ${isCollapsed ? "justify-center" : "justify-between"}`}
           >
+            {!isCollapsed && (
+              <Image
+                src={Main}
+                alt="Zytron"
+                height={28}
+                width={86}
+                className="ml-1 brightness-0 invert opacity-90"
+                priority
+              />
+            )}
             <Tooltip
               label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               side="bottom"

@@ -13,6 +13,14 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'res.cloudinary.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'api.pentaprime-innovations.com',
+            },
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+            },
         ],
     },
 };

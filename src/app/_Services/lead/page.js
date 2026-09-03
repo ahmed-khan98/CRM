@@ -68,6 +68,15 @@ const LeadApi = createApiAuction.injectEndpoints({
       invalidatesTags: ["allLeads"],
     }),
 
+    patchLead: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `lead/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["allLeads", "brandLead", "singleLead"],
+    }),
+
     updateLead: builder.mutation({
       query: (formData) => ({
         url: `lead/${formData?.id}/updateActionLead`,
@@ -108,14 +117,31 @@ const LeadApi = createApiAuction.injectEndpoints({
     }),
 
     brandLead: builder.query({
-      query: ({ page = 1, limit = 50 ,id} = {}) =>
-        `lead/${id}/brandLead?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 50, id, search = "", lastAction = "", paidStatus = "" } = {}) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+        if (search) params.set("search", search);
+        if (lastAction && lastAction !== "all") params.set("lastAction", lastAction);
+        if (paidStatus && paidStatus !== "all") params.set("paidStatus", paidStatus);
+        return `lead/${id}/brandLead?${params.toString()}`;
+      },
       providesTags: ["brandLead"],
     }),
 
     allLeads: builder.query({
-      query: ({ page = 1, limit = 50 } = {}) =>
-        `lead?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 50, search = "", lastAction = "", paidStatus = "", brandId = "" } = {}) => {
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: String(limit),
+        });
+        if (search) params.set("search", search);
+        if (lastAction && lastAction !== "all") params.set("lastAction", lastAction);
+        if (paidStatus && paidStatus !== "all") params.set("paidStatus", paidStatus);
+        if (brandId && brandId !== "all") params.set("brandId", brandId);
+        return `lead?${params.toString()}`;
+      },
       providesTags: ["allLeads"],
       keepUnusedDataFor: 180,
       refetchOnMountOrArgChange: false,
@@ -126,6 +152,7 @@ const LeadApi = createApiAuction.injectEndpoints({
 export const {
   useAllLeadsQuery,
   useCreateLeadMutation,
+  usePatchLeadMutation,
   useUpdateLeadMutation,
   useDeleteLeadMutation,
   useDepartmentsLeadQuery,

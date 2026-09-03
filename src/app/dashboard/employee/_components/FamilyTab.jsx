@@ -14,6 +14,14 @@ import {
   btnPrimary,
   btnCancel,
 } from "./hrmsUi";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
+
+const GENDER_OPTIONS = [
+  { value: "", label: "Gender" },
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "Other", label: "Other" },
+];
 
 export default function FamilyTab({ employeeId }) {
   const { data, isLoading, refetch } = useGetEmployeeFamilyQuery(employeeId);
@@ -163,20 +171,16 @@ export default function FamilyTab({ employeeId }) {
                     setForm({ ...form, children: next });
                   }}
                 />
-                <select
-                  className={inputClass}
+                <CrmSelect
+                  options={GENDER_OPTIONS}
                   value={child.gender}
-                  onChange={(e) => {
+                  onChange={(v) => {
                     const next = [...form.children];
-                    next[idx] = { ...next[idx], gender: e.target.value };
+                    next[idx] = { ...next[idx], gender: v };
                     setForm({ ...form, children: next });
                   }}
-                >
-                  <option value="">Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
+                  placeholder="Gender"
+                />
                 <button
                   type="button"
                   className={btnCancel}

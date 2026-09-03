@@ -103,9 +103,15 @@ function ChatOverlays({
           users={userSearch?.data || []}
           canCreateGroup={canCreateGroup}
           onPickDirect={async (userId) => {
-            const res = await createDirect({ userId }).unwrap();
-            setShowNew(false);
-            openChat(res.data._id);
+            try {
+              const res = await createDirect({ userId }).unwrap();
+              setShowNew(false);
+              openChat(res.data._id);
+            } catch (err) {
+              toast.error(
+                err?.data?.message || err?.message || "Could not start chat"
+              );
+            }
           }}
           onCreateGroup={async ({ name, memberIds }) => {
             try {

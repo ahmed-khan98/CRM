@@ -2,7 +2,7 @@
 
 import { Formik, Form } from "formik";
 import { toast } from "react-hot-toast";
-import { useCreateLeadMutation } from "@/app/_Services/lead/page";
+import { useCreateLeadMutation, usePatchLeadMutation } from "@/app/_Services/lead/page";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import { leadSchema } from "@/app/schema/Lead";
 import { useGetdepartmentsEmployeeQuery } from "@/app/_Services/employee/page";
@@ -12,8 +12,10 @@ import InputField from "../Form/InputField";
 import ModalShell from "./ModalShell";
 import { fleet } from "../fleet/fleetTheme";
 
-const LeadModal = ({ isOpen, closeModal, refetch }) => {
+const LeadModal = ({ isOpen, closeModal, refetch, data = null }) => {
+  const isEdit = Boolean(data?._id);
   const [createLead] = useCreateLeadMutation();
+  const [patchLead] = usePatchLeadMutation();
 
   const {
     data: departments,
@@ -23,45 +25,39 @@ const LeadModal = ({ isOpen, closeModal, refetch }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      const response = await createLead({ ...values }).unwrap();
-      console.log(response, "response");
+      const response = isEdit
+        ? await patchLead({ id: data._id, ...values }).unwrap()
+        : await createLead({ ...values }).unwrap();
       if (response.success) {
-        toast.success("Client created successfully!");
+        toast.success(isEdit ? "Lead updated successfully!" : "Lead created successfully!");
       } else {
-        toast.error(response.message || "Failed to process Client");
+        toast.error(response.message || "Failed to save lead");
       }
       resetForm();
       closeModal();
       refetch();
     } catch (error) {
-      console.log(error, "error");
-      toast.error(error.data?.message || "Failed to create Client");
+      toast.error(error.data?.message || "Failed to save lead");
     } finally {
       setSubmitting(false);
     }
   };
 
   const initialValues = {
-    departmentId: "",
-    brandId: "",
-    brandMark: "",
-    name: "",
-    email: "",
-    phoneNo: "",
-    serialNo: "",
-  };
-
-  const handleDepartmentChange = (newDeptId) => {
-    setFieldValue("departmentId", newDeptId);
-    setFieldValue("brandId", "");
-    setFieldValue("agent", "");
+    departmentId: data?.departmentId?._id || data?.departmentId || "",
+    brandId: data?.brandId?._id || data?.brandId || "",
+    brandMark: data?.brandMark || "",
+    name: data?.name || "",
+    email: data?.email || "",
+    phoneNo: data?.phoneNo || "",
+    serialNo: data?.serialNo || "",
   };
 
   return (
     <ModalShell
       isOpen={isOpen}
       onClose={closeModal}
-      title="Add Lead"
+      title={isEdit ? "Edit Lead" : "Add Lead"}
       maxWidthClass="max-w-4xl"
     >
       <Formik
@@ -78,6 +74,11 @@ const LeadModal = ({ isOpen, closeModal, refetch }) => {
           setFieldValue,
           setFieldTouched,
         }) => {
+          const handleDepartmentChange = (newDeptId) => {
+            setFieldValue("departmentId", newDeptId);
+            setFieldValue("brandId", "");
+          };
+
           const {
             data: departEmployee,
             error: isEmployeeError,
@@ -195,7 +196,7 @@ const LeadModal = ({ isOpen, closeModal, refetch }) => {
                   disabled={isSubmitting}
                   className={fleet.modalPrimaryBtn}
                 >
-                  {isSubmitting ? "Processing..." : "Submit"}
+                  {isSubmitting ? "Processing..." : isEdit ? "Save changes" : "Submit"}
                 </button>
               </div>
             </Form>

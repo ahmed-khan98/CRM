@@ -1,12 +1,12 @@
-import React from 'react'
-import ResetPasswordForm from '../_Components/Reset/ResetPasswordForm'
+import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "Reset password",
+};
+
+/** Temporarily disabled — redirect to login */
 const Page = () => {
-  return (
-    <>
-    <ResetPasswordForm/>
-    </>
-  )
-}
+  redirect("/login");
+};
 
-export default Page
+export default Page;

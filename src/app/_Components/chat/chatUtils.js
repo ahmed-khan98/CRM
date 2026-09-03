@@ -18,11 +18,20 @@ export function sameId(a, b) {
   return String(a._id ?? a) === String(b._id ?? b);
 }
 
+/** Direct chat with only yourself (WhatsApp "Message yourself"). */
+export function isSelfChat(conv, myId) {
+  if (!conv || conv.type !== "direct" || !myId) return false;
+  const parts = conv.participants || [];
+  if (!parts.length) return false;
+  return parts.every((p) => sameId(p.userId, myId));
+}
+
 export function conversationTitle(conv, myId) {
   if (!conv) return "Chat";
   if (conv.type === "group") return conv.name || "Group";
+  if (isSelfChat(conv, myId)) return "You";
   const other = (conv.participants || []).find(
-    (p) => (p.userId?._id || p.userId)?.toString() !== myId?.toString()
+    (p) => !sameId(p.userId, myId)
   );
   return other?.userId?.fullName || "Chat";
 }
@@ -30,16 +39,24 @@ export function conversationTitle(conv, myId) {
 export function conversationAvatar(conv, myId) {
   if (!conv) return "";
   if (conv.type === "group") return conv.image || "";
+  if (isSelfChat(conv, myId)) {
+    const me = (conv.participants || []).find((p) => sameId(p.userId, myId));
+    return me?.userId?.image || getCurrentUser()?.image || "";
+  }
   const other = (conv.participants || []).find(
-    (p) => (p.userId?._id || p.userId)?.toString() !== myId?.toString()
+    (p) => !sameId(p.userId, myId)
   );
   return other?.userId?.image || "";
 }
 
 export function conversationPeer(conv, myId) {
   if (!conv || conv.type !== "direct") return null;
+  if (isSelfChat(conv, myId)) {
+    const me = (conv.participants || []).find((p) => sameId(p.userId, myId));
+    return me?.userId || getCurrentUser() || null;
+  }
   const other = (conv.participants || []).find(
-    (p) => (p.userId?._id || p.userId)?.toString() !== myId?.toString()
+    (p) => !sameId(p.userId, myId)
   );
   return other?.userId || null;
 }

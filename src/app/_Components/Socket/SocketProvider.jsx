@@ -14,10 +14,16 @@ import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 import { X } from "lucide-react";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 import {
   playNotificationSound,
   unlockNotificationAudio,
 } from "@/app/_utils/notificationSound";
+import {
+  ensureNotificationPermission,
+  pathFromNotificationPayload,
+  showBrowserNotification,
+} from "@/app/_utils/browserNotification";
 import { invalidateTaskBoardTags } from "@/app/_utils/invalidateTaskBoard";
 import {
   chatApi,
@@ -71,6 +77,9 @@ const getSocketBaseUrl = () => {
 
 export function SocketProvider({ children }) {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const routerRef = useRef(router);
+  routerRef.current = router;
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
   const [presenceMap, setPresenceMap] = useState({});
@@ -78,6 +87,11 @@ export function SocketProvider({ children }) {
   const pushSetupRef = useRef(false);
   const [fetchVapidKey] = useLazyGetPushVapidKeyQuery();
   const [subscribePush] = useSubscribePushMutation();
+
+  const navigateFromPayload = useCallback((payload) => {
+    const path = pathFromNotificationPayload(payload);
+    if (path) routerRef.current.push(path);
+  }, []);
 
   const emit = useCallback((event, payload, ack) => {
     const s = socketRef.current;
@@ -104,12 +118,27 @@ export function SocketProvider({ children }) {
     events.forEach((evt) =>
       window.addEventListener(evt, unlock, { capture: true })
     );
+
+    // Ask once for browser notification permission (Allow / Block dialog)
+    ensureNotificationPermission().catch(() => {});
+
+    const onSwMessage = (event) => {
+      if (event?.data?.type !== "PUSH_NOTIFICATION_CLICK") return;
+      navigateFromPayload(event.data.data || {});
+    };
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.addEventListener("message", onSwMessage);
+    }
+
     return () => {
       events.forEach((evt) =>
         window.removeEventListener(evt, unlock, { capture: true })
       );
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.removeEventListener("message", onSwMessage);
+      }
     };
-  }, []);
+  }, [navigateFromPayload]);
 
   useEffect(() => {
     const baseUrl = getSocketBaseUrl();
@@ -126,22 +155,32 @@ export function SocketProvider({ children }) {
     const setupPushSubscription = async () => {
       if (pushSetupRef.current) return;
       if (cancelled) return;
-      if (
-        typeof window === "undefined" ||
-        !("serviceWorker" in navigator) ||
-        !("PushManager" in window) ||
-        !("Notification" in window)
-      ) {
+      if (typeof window === "undefined" || !("Notification" in window)) {
         return;
       }
-      pushSetupRef.current = true;
+
+      // Permission pehle alag — Incognito mein SW/Push often fail, lekin
+      // basic Notification API session ke liye kaam kar sakti hai.
       try {
         if (Notification.permission === "default") {
           const perm = await Notification.requestPermission();
           if (perm !== "granted") return;
         }
         if (Notification.permission !== "granted") return;
+      } catch {
+        return;
+      }
 
+      // Push + Service Worker (normal window / PWA). Incognito usually skips this.
+      if (
+        !("serviceWorker" in navigator) ||
+        !("PushManager" in window)
+      ) {
+        return;
+      }
+
+      pushSetupRef.current = true;
+      try {
         const registration = await navigator.serviceWorker.ready;
         let subscription = await registration.pushManager.getSubscription();
 
@@ -161,6 +200,7 @@ export function SocketProvider({ children }) {
           keys: json.keys,
         }).unwrap();
       } catch {
+        // Incognito / private: SW & push often unsupported — ignore
         pushSetupRef.current = false;
       }
     };
@@ -210,37 +250,52 @@ export function SocketProvider({ children }) {
       socket.on("notification:new", (payload) => {
         unlockNotificationAudio();
         playNotificationSound();
-        if (
-          typeof window !== "undefined" &&
-          "Notification" in window &&
-          Notification.permission === "granted" &&
-          document.hidden
-        ) {
-          try {
-            new Notification(payload?.title || "Notification", {
-              body: payload?.message || "",
-              icon: "/favicon.ico",
-            });
-          } catch {
-            /* ignore */
-          }
+
+        // OS toast only when this tab is in the background.
+        // Foreground → in-app toast only (avoids Chrome+Edge+PWA duplicates).
+        if (typeof document !== "undefined" && document.hidden) {
+          showBrowserNotification(payload, {
+            onClick: () => navigateFromPayload(payload),
+          });
         }
+
         const notifCount = Number(payload?.count) || 1;
         const notifTitle =
           notifCount > 1 && payload?.title
             ? `${payload.title} · ${notifCount} new`
             : payload?.title || "New notification";
+        const openPath = pathFromNotificationPayload(payload);
+
         toast.custom(
           (t) => (
             <div
+              role={openPath ? "button" : undefined}
+              tabIndex={openPath ? 0 : undefined}
+              onClick={() => {
+                if (!openPath) return;
+                toast.dismiss(t.id);
+                navigateFromPayload(payload);
+              }}
+              onKeyDown={(e) => {
+                if (!openPath) return;
+                if (e.key === "Enter" || e.key === " ") {
+                  toast.dismiss(t.id);
+                  navigateFromPayload(payload);
+                }
+              }}
               className={`${
                 t.visible ? "animate-enter" : "animate-leave"
-              } relative max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] py-3 pl-4 pr-10 shadow-xl`}
+              } relative max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] py-3 pl-4 pr-10 shadow-xl ${
+                openPath ? "cursor-pointer hover:border-white/20" : ""
+              }`}
             >
               <button
                 type="button"
                 aria-label="Close notification"
-                onClick={() => toast.dismiss(t.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toast.dismiss(t.id);
+                }}
                 className="absolute right-2 top-2 rounded-md p-1 text-zinc-400 transition hover:bg-white/10 hover:text-white"
               >
                 <X className="h-4 w-4" />
@@ -249,6 +304,11 @@ export function SocketProvider({ children }) {
               <p className="mt-1 text-xs leading-relaxed text-zinc-400">
                 {payload?.message || ""}
               </p>
+              {openPath && (
+                <p className="mt-1.5 text-[10px] font-medium text-blue-400">
+                  Click to open
+                </p>
+              )}
             </div>
           ),
           { duration: 4500, position: "bottom-center" }

@@ -2,7 +2,12 @@
 
 import { memo } from "react";
 import Avatar from "@/app/_Components/chat/ChatAvatar";
-import { conversationAvatar, conversationTitle, formatChatTime } from "@/app/_Components/chat/chatUtils";
+import {
+  conversationAvatar,
+  conversationTitle,
+  formatChatTime,
+  isSelfChat,
+} from "@/app/_Components/chat/chatUtils";
 
 function HeaderIdentity({
   active,
@@ -14,6 +19,7 @@ function HeaderIdentity({
   recordingLabel,
   onOpenInfo,
 }) {
+  const selfChat = isSelfChat(active, myId);
   return (
     <button
       type="button"
@@ -23,7 +29,7 @@ function HeaderIdentity({
       <Avatar
         src={conversationAvatar(active, myId)}
         name={conversationTitle(active, myId)}
-        online={peerOnline}
+        online={selfChat ? false : peerOnline}
         size="sm"
       />
       <div className="min-w-0 flex-1 overflow-hidden">
@@ -35,13 +41,15 @@ function HeaderIdentity({
             ? `${recordingLabel.join(", ")} recording…`
             : typingLabel.length
               ? `${typingLabel.join(", ")} typing…`
-              : peer
-                ? peerOnline
-                  ? "\u00A0"
-                  : peerPresence?.lastSeen
-                    ? `last seen ${formatChatTime(peerPresence.lastSeen)}`
-                    : ""
-                : `${active.participants?.length || 0} members`}
+              : selfChat
+                ? "Message yourself"
+                : peer
+                  ? peerOnline
+                    ? "\u00A0"
+                    : peerPresence?.lastSeen
+                      ? `last seen ${formatChatTime(peerPresence.lastSeen)}`
+                      : ""
+                  : `${active.participants?.length || 0} members`}
         </p>
       </div>
     </button>

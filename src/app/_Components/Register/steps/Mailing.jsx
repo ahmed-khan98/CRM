@@ -9,7 +9,12 @@ import { ArrowRight } from "lucide-react"
 import Main from "../../../../app/Assets/Main.png";
 import Image from "next/image";
 import { US_STATES } from "@/app/utilities/state"
+import CrmSelect from "@/app/_Components/ui/CrmSelect"
 
+const US_STATE_OPTIONS = [
+  { value: "", label: "Select a state" },
+  ...US_STATES.map((state) => ({ value: state, label: state })),
+]
 
 export default function Mailing({ onSubmit, isLoading, }) {
   const [focused, setFocused] = useState(false)
@@ -104,24 +109,14 @@ export default function Mailing({ onSubmit, isLoading, }) {
 
           <div className="space-y-1">
             <div className="relative">
-              <select
+              <CrmSelect
                 name="state"
+                options={US_STATE_OPTIONS}
                 value={formik.values.state}
-                onChange={formik.handleChange}
-                onBlur={(e) => {
-                  formik.handleBlur(e)
-                  setFocused(false)
-                }}
-                onFocus={() => setFocused(true)}
-                className={`w-full px-4 py-3   focus:outline-none text-gray-700  border bg-white   border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
-              >
-                <option value="">Select a state</option>
-                {US_STATES.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
-              </select>
+                onChange={(v) => formik.setFieldValue("state", v)}
+                isSearchable
+                placeholder="Select a state"
+              />
             </div>
           </div>
         </div>

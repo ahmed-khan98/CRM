@@ -12,6 +12,7 @@ import { X, Menu, Clock, Timer, Activity, CheckCircle } from "lucide-react";
 import LeftNav from "./LeftNav";
 import ActionButtons from "./NavbarActions";
 import NotificationBell from "./NotificationBell";
+import NavBreadcrumb from "./NavBreadcrumb";
 import {
   useGetLoggedUserQuery,
   useLogoutMutation,
@@ -305,9 +306,12 @@ const Navbar = () => {
       <div className="fixed top-0 left-0 w-full z-50 bg-[#0f0f11] border-b border-white/[0.07] ">
         <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-white/5" />
         <nav className="flex items-center justify-between px-3 md:px-5 py-1 gap-2">
-          <Link href="/dashboard/statistics" className="shrink-0">
-            <Image src={Main} alt="Logo" height={36} width={100} priority />
-          </Link>
+          <div className="flex min-w-0 items-center gap-4">
+            <Link href="/dashboard/statictics" className="shrink-0">
+              <Image src={Main} alt="Logo" height={36} width={100} priority />
+            </Link>
+            <NavBreadcrumb />
+          </div>
           <div className="hidden lg:flex flex-1 justify-center px-3">
             <AttendanceStatus />
           </div>

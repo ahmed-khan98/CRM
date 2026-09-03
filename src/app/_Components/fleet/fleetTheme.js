@@ -7,7 +7,7 @@ export const fleet = {
     "inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950 hover:bg-zinc-800 text-white px-4 py-2.5 text-sm font-bold shadow-lg shadow-zinc-900/15 transition-all",
   secondaryBtn:
     "inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50",
-  card: "rounded-2xl border border-zinc-200/80 bg-white shadow-sm",
+  card: "overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-sm",
   filterBar:
     "flex flex-col lg:flex-row gap-2 lg:items-center rounded-2xl border border-zinc-200 bg-white p-2.5 shadow-sm",
   input:
@@ -15,7 +15,7 @@ export const fleet = {
   select:
     "rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2.5 text-sm text-zinc-700 focus:outline-none focus:border-zinc-400",
   tableHead:
-    "text-left text-[11px] font-semibold uppercase tracking-wider text-zinc-400 px-4 py-3.5 border-b border-zinc-100",
+    "text-left text-[10px] font-black uppercase tracking-[0.14em] text-zinc-300 px-4 py-3 bg-zinc-900 whitespace-nowrap",
   tableRow: "border-b border-zinc-100 last:border-0 hover:bg-zinc-50/80 transition-colors",
   tableCell: "px-4 py-4 text-sm text-zinc-800",
   modalOverlay:

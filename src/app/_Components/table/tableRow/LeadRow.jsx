@@ -21,7 +21,7 @@ import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
 import Tooltip from "@/app/_Components/ui/Tooltip";
 
 export const LeadRow = memo(
-  function LeadRow({index, emp, onEdit, setConfirmDelete }) {
+  function LeadRow({ index, emp, onEdit, onEditLead, setConfirmDelete }) {
     const router = useRouter();
 console.log(index,'index')
 
@@ -167,6 +167,20 @@ console.log(index,'index')
                         >
                           <BiDetail className="h-4 w-4" />
                           Details
+                        </button>
+                      )}
+                    </MenuItem>
+
+                    <MenuItem>
+                      {({ active }) => (
+                        <button
+                          onClick={() => onEditLead?.(emp)}
+                          className={`${
+                            active ? "bg-gray-100" : ""
+                          } flex w-full items-center gap-2 p-1.5 cursor-pointer text-[12px] text-slate-800`}
+                        >
+                          <Pencil className="h-4 w-4" />
+                          Edit Lead
                         </button>
                       )}
                     </MenuItem>

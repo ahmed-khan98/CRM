@@ -30,16 +30,16 @@ const WarningModal = ({
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-zinc-900 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden"
+        className="w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 shadow-2xl"
       >
         <div className="p-6 text-center">
-          <div className="h-16 w-16 rounded-2xl mx-auto mb-4 flex items-center justify-center border border-red-500 bg-red-200 text-red-500">
-            <Icon size={32} />
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-red-400/40 bg-red-500/15 text-red-400">
+            <Icon size={26} />
           </div>
-          <h3 className="text-lg font-bold text-zinc-400 mb-2">{heading}</h3>
+          <h3 className="mb-2 text-lg font-bold text-white">{heading}</h3>
 
-          <p className="text-gray-500 mb-6 text-sm leading-relaxed px-4">{body}</p>
-          <div className="flex justify-center space-x-6">
+          <p className="mb-6 px-2 text-sm leading-relaxed text-zinc-400">{body}</p>
+          <div className="flex justify-center gap-3">
             <button
               onClick={() => setConfirmDelete(null)}
               className="cursor-pointer w-full py-2.5 text-xs font-semibold rounded-xl transition-all duration-150"
@@ -57,7 +57,7 @@ const WarningModal = ({
                 e.currentTarget.style.color = "#52525b";
               }}
             >
-              cancel
+              Cancel
             </button>
             <motion.button
               whileHover={{ scale: 1.02 }}

@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Car, Cog, ImageIcon, StickyNote } from "lucide-react";
 import { fleet } from "./fleetTheme";
 import InfoItem from "./InfoItem";
@@ -12,12 +13,15 @@ function VehicleInfoSection({ vehicle }) {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className={`${fleet.card} overflow-hidden`}>
-          <div className="h-44 bg-zinc-100 flex items-center justify-center">
+          <div className="relative h-44 bg-zinc-100 flex items-center justify-center">
             {vehicle.images?.[0]?.url ? (
-              <img
+              <Image
                 src={vehicle.images[0].url}
-                alt=""
-                className="h-full w-full object-cover"
+                alt={vehicle.vehicleName || "Vehicle"}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                priority
               />
             ) : (
               <Car className="w-16 h-16 text-zinc-300" />
@@ -107,10 +111,12 @@ function VehicleInfoSection({ vehicle }) {
                       rel="noreferrer"
                       className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100"
                     >
-                      <img
+                      <Image
                         src={img.url}
                         alt={img.originalName || `Vehicle image ${i + 1}`}
-                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                        fill
+                        className="object-cover transition-transform group-hover:scale-105"
+                        sizes="(max-width: 768px) 50vw, 25vw"
                       />
                     </a>
                   ))}

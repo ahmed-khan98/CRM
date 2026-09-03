@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   useGetConversationsQuery,
   useLazyGetMessagesQuery,
@@ -58,6 +59,8 @@ export default function ChatApp() {
     }
   }, []);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const myId = getMyId();
   const { emit, on, connected, isUserOnline, getPresence } = useSocket();
   const { startOutgoing } = useCall();
@@ -82,6 +85,7 @@ export default function ChatApp() {
 
   const headerMenuRef = useRef(null);
   const composerRef = useRef(null);
+  const openedFromUrlRef = useRef(null);
 
   const { data: convData, refetch: refetchConvs } = useGetConversationsQuery({
     archived: listFilter === "archived",
@@ -205,6 +209,29 @@ export default function ChatApp() {
     setListMenuConv(null);
     setShowAddMembers(false);
   }, []);
+
+  // Deep-link from notification: /dashboard/chat?conversation=<id>
+  useEffect(() => {
+    const fromUrl =
+      searchParams.get("conversation") ||
+      searchParams.get("c") ||
+      searchParams.get("chat");
+    if (!fromUrl) return;
+    if (openedFromUrlRef.current === fromUrl && activeId === fromUrl) return;
+
+    const exists = conversations.some((c) => String(c._id) === String(fromUrl));
+    if (!exists && conversations.length === 0) return;
+
+    openedFromUrlRef.current = fromUrl;
+    openChat(fromUrl);
+
+    // Clean query so refresh doesn't keep forcing the same chat
+    try {
+      router.replace("/dashboard/chat", { scroll: false });
+    } catch {
+      /* ignore */
+    }
+  }, [searchParams, conversations, activeId, openChat, router]);
 
   const closeListMenu = useCallback(() => setListMenuConv(null), []);
   const onAddMembersFromMenu = useCallback((conv) => {

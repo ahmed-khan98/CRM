@@ -49,6 +49,14 @@ const InputField = ({
         readOnly={readOnly}
         placeholder={placeholder}
         rows={as === "textarea" ? rows || 3 : undefined}
+        onWheel={
+          type === "number"
+            ? (e) => {
+                // Prevent mouse-wheel from changing amount while scrolling the page
+                e.currentTarget.blur();
+              }
+            : undefined
+        }
         className={`${isDark ? "" : "crm-field "}text-[13px] w-full px-3.5 py-2.5 rounded-xl focus:outline-none transition-colors ${
           as === "textarea" ? "resize-y min-h-[88px]" : "min-h-[42px]"
         } ${isDark ? darkClass : lightClass}`}

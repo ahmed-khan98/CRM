@@ -11,6 +11,7 @@ import {
 } from "@/app/_Services/domain/page";
 import toast from "react-hot-toast";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -85,15 +86,11 @@ export default function Client() {
 
         <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
           {data?.data?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <AtSign className="h-16 w-16 text-gray-300 mbg-zinc-800" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                No Brand Email
-              </h3>
-              <p className="text-gray-500 mt-2">
-                You don't have any brand email yet.
-              </p>
-            </div>
+            <EmptyState
+              icon={AtSign}
+              title="No brand emails yet"
+              description="Add a sending address for each brand."
+            />
           ) : (
             <div className="overflow-hidden rounded-xl">
               <div className="overflow-x-auto">

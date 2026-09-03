@@ -885,7 +885,7 @@ const TeamAttendence = () => {
 
   return (
     <div className="h-screen flex flex-col gap-3 overflow-hidden p-1">
-      <div className="flex items-center justify-between gap-2">
+      <div className="relative flex items-center justify-between gap-2 overflow-hidden rounded-3xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm shadow-slate-200/60 sm:px-5">
         <AttendenceHeader
           icon={Users}
           length={finalDisplayData?.length}
@@ -895,10 +895,10 @@ const TeamAttendence = () => {
           <button
             onClick={handleExportToExcel}
             aria-label="Export to Excel"
-            className="cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition-colors"
+            className="flex cursor-pointer items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 transition-colors hover:bg-emerald-100"
           >
             <Download size={16} className="text-emerald-600" />
-            <span className="text-xs font-black text-emerald-700 uppercase tracking-tight hidden sm:inline">
+            <span className="hidden text-xs font-black uppercase tracking-tight text-emerald-700 sm:inline">
               Export Attendance Summary Report
             </span>
           </button>

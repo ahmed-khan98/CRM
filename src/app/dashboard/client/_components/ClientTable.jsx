@@ -1,18 +1,20 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import SignupTypeBadge from "@/app/_Components/table/SignupTypeBadge";
 import ClientRowMenu from "@/app/_Components/table/tableRow/tableHeader/ClientRowMenu";
+import { tableWrap, thClass, theadRow, trHover } from "@/app/_Components/ui/saas/DataTable";
 
 export default function ClientTable({ clients, handleEdit, onDelete }) {
   return (
     <>
       {/* ── Desktop Table (md+) ── */}
-      <div className="hidden md:block overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+      <div className={`hidden md:block ${tableWrap}`}>
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse">
-            <thead className="bg-zinc-900">
-              <tr>
+            <thead>
+              <tr className={theadRow}>
                 {[
                   "Client Info",
                   "Business / Brand",
@@ -22,20 +24,17 @@ export default function ClientTable({ clients, handleEdit, onDelete }) {
                   "Handled By",
                   "",
                 ].map((h) => (
-                  <th
-                    key={h}
-                    className="p-3 text-left text-[10px] font-bold text-zinc-300 whitespace-nowrap"
-                  >
+                  <th key={h} className={thClass}>
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-zinc-100">
+            <tbody className="divide-y divide-zinc-100 bg-white">
               {clients.map((emp, index) => (
                 <tr
                   key={emp?._id || index}
-                  className="group transition-colors hover:bg-zinc-50"
+                  className={`group ${trHover}`}
                 >
                   <td className="px-4 py-2.5">
                     <div className="flex items-center gap-3">
@@ -48,9 +47,12 @@ export default function ClientTable({ clients, handleEdit, onDelete }) {
                         />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[12px] font-bold text-gray-800 leading-none capitalize">
+                        <Link
+                          href={`/dashboard/client/${emp?._id}`}
+                          className="text-[12px] font-bold text-gray-800 leading-none capitalize hover:text-indigo-600"
+                        >
                           {emp?.name || "Unknown"}
-                        </span>
+                        </Link>
                         <span className="text-[11px] text-gray-500 mt-1">
                           {emp?.email || "-"}
                         </span>
@@ -120,9 +122,12 @@ export default function ClientTable({ clients, handleEdit, onDelete }) {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[13px] font-bold text-gray-800 leading-none capitalize">
+                  <Link
+                    href={`/dashboard/client/${emp?._id}`}
+                    className="text-[13px] font-bold text-gray-800 leading-none capitalize hover:text-indigo-600"
+                  >
                     {emp?.name || "Unknown"}
-                  </span>
+                  </Link>
                   <span className="text-[11px] text-gray-400 mt-0.5">
                     {emp?.email || "-"}
                   </span>

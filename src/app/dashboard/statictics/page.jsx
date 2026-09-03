@@ -15,7 +15,8 @@ import { useRouter } from "next/navigation";
 import { useGetDashboardCountQuery } from "@/app/_Services/about/page";
 import { useEffect, useMemo, useState } from "react";
 import Cookies from "js-cookie";
-import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import Card from "@/app/_Components/ui/saas/Card";
+import Skeleton from "@/app/_Components/ui/saas/Skeleton";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 18 },
@@ -41,7 +42,7 @@ function StatCard({ icon: Icon, title, value, hint, accent, link }) {
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => router.push(link)}
-      className="group relative overflow-hidden rounded-3xl border border-zinc-200 bg-white p-4 text-left shadow-sm shadow-zinc-200/70 transition hover:border-zinc-300 hover:shadow-xl hover:shadow-zinc-200/80 sm:p-5"
+      className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm shadow-slate-200/70 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg sm:p-5"
     >
       <div
         className={`pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full ${accent.bgSoft}`}
@@ -58,13 +59,13 @@ function StatCard({ icon: Icon, title, value, hint, accent, link }) {
       </div>
 
       <div className="relative mt-5">
-        <p className="text-[11px] font-black uppercase tracking-[0.16em] text-zinc-400">
+        <p className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
           {title}
         </p>
-        <h3 className="mt-1 truncate text-2xl font-black tracking-tight text-zinc-950 sm:text-3xl">
+        <h3 className="mt-1 truncate text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
           {value}
         </h3>
-        <p className="mt-2 text-xs font-semibold text-zinc-500">{hint}</p>
+        <p className="mt-2 text-xs text-slate-500">{hint}</p>
       </div>
     </motion.button>
   );
@@ -72,19 +73,17 @@ function StatCard({ icon: Icon, title, value, hint, accent, link }) {
 
 function InsightCard({ title, description, icon: Icon }) {
   return (
-    <div className="rounded-3xl border border-zinc-200 bg-white p-4 shadow-sm shadow-zinc-200/60">
+    <Card>
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-zinc-950 text-white">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-950 text-white">
           <Icon className="h-5 w-5" />
         </div>
         <div>
-          <h3 className="text-sm font-black text-zinc-900">{title}</h3>
-          <p className="mt-1 text-xs font-semibold leading-5 text-zinc-500">
-            {description}
-          </p>
+          <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
+          <p className="mt-1 text-sm leading-5 text-slate-500">{description}</p>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -192,16 +191,21 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <PageLoader
-        title="Loading dashboard"
-        subtitle="Getting your CRM snapshot ready..."
-      />
+      <div className="grid gap-3 p-1">
+        <Skeleton className="h-36 w-full" />
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+        </div>
+      </div>
     );
   }
 
   return (
     <div className="min-h-screen px-1 pb-4">
-      <section className="relative overflow-hidden rounded-[32px] border border-zinc-800 bg-zinc-950 p-4 text-white shadow-2xl shadow-zinc-300/40 sm:p-7">
+      <section className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 p-4 text-white sm:p-7">
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-indigo-500/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-6 h-56 w-56 rounded-full bg-emerald-500/10 blur-3xl" />
 
@@ -222,13 +226,13 @@ export default function DashboardPage() {
                   exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
                   transition={{ duration: 0.6, ease: "easeInOut" }}
                 >
-                  <p className="max-w-3xl sm:text-sm md:text-2xl sm:font-medium md:font-semibold tracking-tight ">
+                  <p className="max-w-3xl text-lg font-medium tracking-tight md:text-2xl">
                     &ldquo;{quote.text}&rdquo;
                   </p>
-                  <p className="mt-2 text-[11px] font-bold text-indigo-300">
+                  <p className="mt-2 text-xs text-slate-400">
                     — {quote.author}
                   </p>
-                </motion.div>s
+                </motion.div>
               </AnimatePresence>
             </div>
 

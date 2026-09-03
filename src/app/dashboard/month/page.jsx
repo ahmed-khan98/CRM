@@ -12,6 +12,7 @@ import MonthCard from "@/app/_Components/Month/MonthCard";
 import MonthModal from "@/app/_Components/Modal/MonthModal";
 import PageHeader from "@/app/_Components/PageHeader/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 
 export default function Announcement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,15 +70,11 @@ export default function Announcement() {
         />
         {/* Empty State */}
         {data?.data?.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
-              <Calendar size={24} className="text-zinc-600" />
-            </div>
-            <p className="text-zinc-800 font-semibold mb-1">No months yet</p>
-            <p className="text-zinc-800 text-sm">
-              Create your first month cycle to get started
-            </p>
-          </div>
+          <EmptyState
+            icon={Calendar}
+            title="No months yet"
+            description="Create your first month cycle to start tracking sales periods."
+          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
             {data?.data?.map((month, index) => (

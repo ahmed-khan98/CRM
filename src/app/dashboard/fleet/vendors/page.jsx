@@ -12,6 +12,7 @@ import VendorModal from "@/app/_Components/Modal/VendorModal";
 import Pagination from "@/app/_Components/PaginationComponent/Pagination";
 import FleetVendorRow from "@/app/_Components/fleet/FleetVendorRow";
 import { fleet } from "@/app/_Components/fleet/fleetTheme";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 import {
   useGetVendorsQuery,
   useDeleteVendorMutation,
@@ -118,28 +119,35 @@ export default function FleetVendorsPage() {
           debouncedSearchTerm={debouncedSearch}
         />
 
-        <div className={`${fleet.card} overflow-hidden`}>
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr>
-                  <th className={fleet.tableHead}>Company / Vendor</th>
-                  <th className={fleet.tableHead}>Email</th>
-                  <th className={fleet.tableHead}>Phone</th>
-                  <th className={fleet.tableHead}>City</th>
-                  <th className={fleet.tableHead}>Status</th>
-                  <th className={`${fleet.tableHead} text-right`}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.length === 0 ? (
+        {items.length === 0 ? (
+          <>
+            <EmptyState
+              icon={Building2}
+              title="No vendors found"
+              description={
+                isFetching
+                  ? "Loading fleet vendors..."
+                  : "Add a vendor or adjust search and status filters."
+              }
+            />
+            <MemoPagination meta={meta} onPageChange={setPage} />
+          </>
+        ) : (
+          <div className={fleet.card}>
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead>
                   <tr>
-                    <td colSpan={6} className="px-4 py-12 text-center text-sm text-zinc-500">
-                      {isFetching ? "Loading..." : "No vendors found"}
-                    </td>
+                    <th className={fleet.tableHead}>Company / Vendor</th>
+                    <th className={fleet.tableHead}>Email</th>
+                    <th className={fleet.tableHead}>Phone</th>
+                    <th className={fleet.tableHead}>City</th>
+                    <th className={fleet.tableHead}>Status</th>
+                    <th className={`${fleet.tableHead} text-right`}>Actions</th>
                   </tr>
-                ) : (
-                  items.map((v) => (
+                </thead>
+                <tbody>
+                  {items.map((v) => (
                     <FleetVendorRow
                       key={v._id}
                       vendor={v}
@@ -147,15 +155,15 @@ export default function FleetVendorsPage() {
                       onEdit={handleEditVendor}
                       onDelete={handleDeleteRequest}
                     />
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="border-t border-zinc-100 px-2">
+              <MemoPagination meta={meta} onPageChange={setPage} />
+            </div>
           </div>
-          <div className="px-2 border-t border-zinc-100">
-            <MemoPagination meta={meta} onPageChange={setPage} />
-          </div>
-        </div>
+        )}
       </div>
 
       {isModalOpen && (

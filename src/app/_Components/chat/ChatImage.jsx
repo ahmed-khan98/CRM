@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState } from "react";
+import Image from "next/image";
 import toast from "react-hot-toast";
 import { Download, ExternalLink } from "lucide-react";
 import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
@@ -44,10 +45,11 @@ function ChatImage({ attachment }) {
 
   return (
     <div className="group/img relative mb-1 overflow-hidden rounded-lg">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={attachment.url}
         alt={name}
+        width={640}
+        height={400}
         className="max-h-64 max-w-full rounded-lg object-cover"
       />
       <div className="absolute inset-x-0 bottom-0 flex justify-end gap-1 bg-gradient-to-t from-black/55 to-transparent p-2 opacity-100 sm:opacity-0 sm:transition group-hover/img:opacity-100">

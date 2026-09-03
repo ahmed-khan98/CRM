@@ -309,6 +309,8 @@ import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 import Tooltip from "@/app/_Components/ui/Tooltip";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
+import { tableWrap, thClass, theadRow, trHover } from "@/app/_Components/ui/saas/DataTable";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -438,7 +440,7 @@ export default function AppointmentBooking() {
         <PageHeader
           icon={Users}
           length={filteredEmployees.length}
-          name=" All Employees"
+          name="All Employees"
           btnName="Add Employee"
           handleEdit={handleEdit}
         />
@@ -489,19 +491,19 @@ export default function AppointmentBooking() {
         </div>
         <motion.div variants={itemVariants} className="">
           {filteredEmployees.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Users className="h-16 w-16 text-gray-300 mbg-zinc-800" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                No Employee
-              </h3>
-              <p className="text-gray-500 mt-2">
-                {activeFilter === "all"
+            <EmptyState
+              icon={Users}
+              title="No employees found"
+              description={
+                searchTerm
                   ? "No employee matched your search."
-                  : `You don't have any ${activeFilter} Employee.`}
-              </p>
-            </div>
+                  : activeFilter === "all"
+                    ? "Add an employee to build your team directory."
+                    : `No ${activeFilter} employees yet.`
+              }
+            />
           ) : (
-            <div className="-mx-1 overflow-hidden rounded-2xl md:mx-0 md:border md:border-gray-200">
+            <div className={`-mx-1 md:mx-0 ${tableWrap}`}>
               <div
                 className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-220px)] "
                 style={{
@@ -510,28 +512,28 @@ export default function AppointmentBooking() {
                 }}
               >
                 <table className="min-w-full">
-                  <thead className="bg-zinc-900 py-0 sticky top-0 z-10 ">
+                  <thead className={`sticky top-0 z-10 ${theadRow}`}>
                     <tr>
                       {EMPLOYEE_HEADERS.map((col, index) => (
                         <th
                           key={index}
-                          className={`text-center text-[10px] font-medium text-zinc-300 capitalize tracking-wider           ${col === "Sr" ? "px-2 py-2.5" : ""}           ${col === "Status" ? "px-5 py-3" : ""}           ${col !== "Sr" && col !== "Status" ? "p-3" : ""}  `}
+                          className={`${thClass} text-center ${col === "Sr" ? "px-2 py-2.5" : ""} ${col === "Status" ? "px-5 py-3" : ""}`}
                         >
                           {col}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="divide-y divide-zinc-100 bg-white">
                     {filteredEmployees.map((emp, index) => {
                       const cfg = getStatusConfig(emp?.status);
                       return (
                         <motion.tr
                           key={index}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="hover:bg-zinc-50 transition-colors"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: Math.min(index * 0.03, 0.3) }}
+                          className={trHover}
                         >
                           <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600 capitalize ">
                             {index + 1}

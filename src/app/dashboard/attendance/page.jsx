@@ -464,9 +464,9 @@ const statCards = useMemo(() => {
   }, []);
   
   return (
-    <div className="min-h-screen text-zinc-800 p-1 flex flex-col gap-3">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="flex min-h-screen flex-col gap-3 p-1 text-zinc-800">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm shadow-slate-200/60 sm:px-5">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <AttendenceHeader
           icon={CalendarSearch}
           length={allData?.length}
@@ -480,6 +480,7 @@ const statCards = useMemo(() => {
           setCustomRange={setCustomRange}
           clearFilters={clearFilters}
         />
+      </div>
       </div>
 
       {/* Stat Cards */}

@@ -3,9 +3,11 @@
 import { memo } from "react";
 import { PhoneCall, Video } from "lucide-react";
 import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
-import { conversationAvatar, conversationTitle } from "@/app/_Components/chat/chatUtils";
+import { conversationAvatar, conversationTitle, isSelfChat } from "@/app/_Components/chat/chatUtils";
 
 function HeaderCallButtons({ active, activeId, myId, peer, startOutgoing }) {
+  // No calls on "Message yourself" notes chat
+  if (isSelfChat(active, myId)) return null;
   if (!(peer || active.type === "group")) return null;
 
   const start = (callType) =>

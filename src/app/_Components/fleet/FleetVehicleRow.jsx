@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import Image from "next/image";
 import { Truck } from "lucide-react";
 import FleetRowMenu from "./FleetRowMenu";
 import { fleet, fleetStatusClass } from "./fleetTheme";
@@ -31,9 +32,11 @@ function FleetVehicleRow({ vehicle: v, onView, onEdit, onDelete }) {
         <div className="flex items-center gap-3 min-w-[180px]">
           <div className="h-11 w-14 rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 shrink-0 flex items-center justify-center">
             {v.images?.[0]?.url ? (
-              <img
+              <Image
                 src={v.images[0].url}
-                alt={v.vehicleName}
+                alt={v.vehicleName || "Vehicle"}
+                width={56}
+                height={44}
                 className="h-full w-full object-cover"
               />
             ) : (

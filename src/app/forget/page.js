@@ -1,12 +1,12 @@
-import React from 'react'
-import ForgetForm from '../_Components/Forget/ForgetForm'
+import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "Forgot password",
+};
+
+/** Temporarily disabled — redirect to login */
 const Page = () => {
-  return (
-    <>
-    <ForgetForm/>
-    </>
-  )
-}
+  redirect("/login");
+};
 
-export default Page
+export default Page;

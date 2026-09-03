@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   useAllSalesQuery,
@@ -22,6 +22,7 @@ import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 import SaleFilters from "./_components/SaleFilters";
 import SaleSummary from "./_components/SaleSummary";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import { exportRowsToExcel } from "@/app/utilities/exportListToExcel";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -200,6 +201,32 @@ export default function Client() {
     });
   }, [canFilterDepartment, openMonth, userDepartmentId]);
 
+  const handleExportSales = useCallback(() => {
+    try {
+      if (!rows.length) {
+        toast.error("No sales to export");
+        return;
+      }
+      exportRowsToExcel({
+        sheetName: "Sales",
+        fileName: `sales-${new Date().toISOString().slice(0, 10)}.xlsx`,
+        rows: rows.map((s) => ({
+          Client: s.clientId?.name,
+          Department: s.departmentId?.name,
+          Brand: s.brandId?.name,
+          Type: s.type,
+          Amount: s.amount,
+          Status: s.status,
+          Month: s.monthId?.monthCode,
+          "Sale Date": s.saleDate,
+        })),
+      });
+      toast.success("Sales exported");
+    } catch (err) {
+      toast.error(err.message || "Export failed");
+    }
+  }, [rows]);
+
   const isPageLoading =
     isLoading || isUserLoading || isMonthsLoading || isDepartmentsLoading;
 
@@ -218,7 +245,16 @@ export default function Client() {
           name="Sales"
           btnName="Create Sale"
           handleEdit={handleEdit}
-        />
+        >
+          <button
+            type="button"
+            onClick={handleExportSales}
+            className="inline-flex h-10 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </button>
+        </PageHeader>
 
         <motion.div variants={itemVariants} initial="hidden" animate="visible">
           <SaleSummary totals={totals} />

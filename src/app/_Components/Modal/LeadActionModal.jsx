@@ -180,9 +180,9 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
               />
               {values?.lastAction === "schedule" && (
                 <InputField
-                  type="date"
+                  type="datetime-local"
                   name="scheduleDate"
-                  label="Schedule Date"
+                  label="Schedule Date & Time"
                   icon={Calendar}
                   errors={errors.scheduleDate}
                   touched={touched.scheduleDate}

@@ -27,7 +27,7 @@ export default function SearchFilterBar({
   onTabChange,
 }) {
   return (
-    <div className="flex flex-col gap-2 rounded-2xl border border-zinc-100 bg-white p-2 shadow-sm">
+    <div className="flex flex-col gap-2 rounded-3xl border border-zinc-100 bg-white p-2 shadow-sm">
       {/* ── Row: Tabs + Search ── */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         {/* Scrollable Department Tabs */}

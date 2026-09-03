@@ -50,6 +50,16 @@ const paymentApi = createApiAuction.injectEndpoints({
       providesTags: ["singlePaymentlink"],
     }),
 
+    leadPaymentLinks: builder.query({
+      query: (leadId) => `paymentlink/lead/${leadId}/payments`,
+      providesTags: ["leadPaymentLinks"],
+    }),
+
+    clientActivity: builder.query({
+      query: (clientId) => `paymentlink/client/${clientId}/activity`,
+      providesTags: ["clientActivity"],
+    }),
+
     brandPaymentLink: builder.query({
       query: ({ page = 1, limit = 50, id } = {}) =>
         `paymentlink/${id}/brandPaymentLink?page=${page}&limit=${limit}`,
@@ -119,6 +129,8 @@ export const {
   useCreatePaymentLinkMutation,
   useDeletePaymentLinkMutation,
   useGetPaymentLinkByIdQuery,
+  useLeadPaymentLinksQuery,
+  useClientActivityQuery,
   useUpdatePaymentLinkMutation,
   useUpdatePaymentStatusMutation,
 } = paymentApi;

@@ -11,7 +11,7 @@ import {
   LogOut,
   UserPlus,
 } from "lucide-react";
-import { conversationPeer, isConversationGroupAdmin } from "@/app/_Components/chat/chatUtils";
+import { conversationPeer, isConversationGroupAdmin, isSelfChat } from "@/app/_Components/chat/chatUtils";
 
 function ChatOptionsMenu({
   conv,
@@ -28,6 +28,7 @@ function ChatOptionsMenu({
   if (!conv) return null;
 
   const peer = conversationPeer(conv, myId);
+  const selfChat = isSelfChat(conv, myId);
   const iAmGroupAdmin = isConversationGroupAdmin(conv, myId);
   const item = "flex w-full items-center gap-2 px-4 py-2.5 text-left hover:bg-zinc-50 cursor-pointer";
 
@@ -65,7 +66,7 @@ function ChatOptionsMenu({
       >
         <Trash2 className="h-4 w-4" /> Delete chat
       </button>
-      {peer && (meRole === "ADMIN" || meRole === "SUBADMIN") && (
+      {peer && !selfChat && (meRole === "ADMIN" || meRole === "SUBADMIN") && (
         <>
           <button
             type="button"

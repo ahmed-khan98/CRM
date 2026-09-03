@@ -9,6 +9,7 @@ import BulkEmailSendModal from "@/app/_Components/Modal/BulkEmailDetailsModal";
 import { useRouter } from "next/navigation";
 import Pagination from "@/app/_Components/PaginationComponent/Pagination";
 import EmailCard from "./EmailCard";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 
 const MemoPagination = memo(Pagination);
 
@@ -107,16 +108,11 @@ const BulkEmailsPage = () => {
             ))}
           </div>
         ) : bulkEmails.length === 0 ? (
-          <div className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-md p-12 text-center">
-            <Mails className="h-16 w-16 text-gray-300 mb-6" />
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">
-              No Campaigns Found
-            </h3>
-            <p className="text-gray-500 max-w-sm">
-              You haven't sent any bulk email campaigns yet. Get started by
-              clicking the button above!
-            </p>
-          </div>
+          <EmptyState
+            icon={Mails}
+            title="No campaigns found"
+            description="You haven't sent any bulk email campaigns yet. Start one from the button above."
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <AnimatePresence>

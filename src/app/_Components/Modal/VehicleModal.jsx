@@ -13,6 +13,29 @@ import {
 import { useGetVendorsQuery } from "@/app/_Services/vendor/page";
 import { vehicleSchema } from "@/app/schema/vehicle";
 import { fleet, modalSelectStyles } from "../fleet/fleetTheme";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
+
+const FUEL_TYPE_OPTIONS = [
+  { value: "petrol", label: "Petrol" },
+  { value: "diesel", label: "Diesel" },
+  { value: "hybrid", label: "Hybrid" },
+  { value: "electric", label: "Electric" },
+  { value: "cng", label: "CNG" },
+  { value: "other", label: "Other" },
+];
+
+const TRANSMISSION_OPTIONS = [
+  { value: "automatic", label: "Automatic" },
+  { value: "manual", label: "Manual" },
+  { value: "other", label: "Other" },
+];
+
+const VEHICLE_STATUS_OPTIONS = [
+  { value: "available", label: "Available" },
+  { value: "rented", label: "Rented" },
+  { value: "maintenance", label: "Maintenance" },
+  { value: "inactive", label: "Inactive" },
+];
 
 const Field = ({ label, name, required, children, className = "" }) => (
   <div className={className}>
@@ -233,23 +256,24 @@ const VehicleModal = ({ isOpen, closeModal, data, defaultVendorId }) => {
                     <input name="engineNumber" value={values.engineNumber} onChange={handleChange} onBlur={handleBlur} placeholder="Engine no." className={fleet.modalInput} />
                   </Field>
                   <Field label="Fuel Type" name="fuelType">
-                    <select name="fuelType" value={values.fuelType} onChange={handleChange} className={fleet.modalSelect}>
-                      <option value="">Select</option>
-                      <option value="petrol">Petrol</option>
-                      <option value="diesel">Diesel</option>
-                      <option value="hybrid">Hybrid</option>
-                      <option value="electric">Electric</option>
-                      <option value="cng">CNG</option>
-                      <option value="other">Other</option>
-                    </select>
+                    <CrmSelect
+                      variant="dark"
+                      name="fuelType"
+                      options={FUEL_TYPE_OPTIONS}
+                      value={values.fuelType}
+                      onChange={(v) => setFieldValue("fuelType", v)}
+                      placeholder="Select"
+                    />
                   </Field>
                   <Field label="Transmission" name="transmission">
-                    <select name="transmission" value={values.transmission} onChange={handleChange} className={fleet.modalSelect}>
-                      <option value="">Select</option>
-                      <option value="automatic">Automatic</option>
-                      <option value="manual">Manual</option>
-                      <option value="other">Other</option>
-                    </select>
+                    <CrmSelect
+                      variant="dark"
+                      name="transmission"
+                      options={TRANSMISSION_OPTIONS}
+                      value={values.transmission}
+                      onChange={(v) => setFieldValue("transmission", v)}
+                      placeholder="Select"
+                    />
                   </Field>
                   <Field label="Seating Capacity" name="seatingCapacity">
                     <input name="seatingCapacity" type="number" value={values.seatingCapacity} onChange={handleChange} onBlur={handleBlur} placeholder="5" className={fleet.modalInput} />
@@ -263,12 +287,13 @@ const VehicleModal = ({ isOpen, closeModal, data, defaultVendorId }) => {
                     </Field>
                   )}
                   <Field label="Status" name="status" required>
-                    <select name="status" value={values.status} onChange={handleChange} className={fleet.modalSelect}>
-                      <option value="available">Available</option>
-                      <option value="rented">Rented</option>
-                      <option value="maintenance">Maintenance</option>
-                      <option value="inactive">Inactive</option>
-                    </select>
+                    <CrmSelect
+                      variant="dark"
+                      name="status"
+                      options={VEHICLE_STATUS_OPTIONS}
+                      value={values.status}
+                      onChange={(v) => setFieldValue("status", v)}
+                    />
                   </Field>
                   <div className="md:col-span-2">
                     <Field label="Notes" name="notes">

@@ -11,6 +11,12 @@ import {
 } from "@/app/_Services/vendor/page";
 import { vendorSchema } from "@/app/schema/vendor";
 import { fleet } from "../fleet/fleetTheme";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
+
+const VENDOR_STATUS_OPTIONS = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+];
 
 const Field = ({ label, name, required, children }) => (
   <div>
@@ -172,10 +178,13 @@ const VendorModal = ({ isOpen, closeModal, data }) => {
                     <input name="emergencyPhone" value={values.emergencyPhone} onChange={handleChange} onBlur={handleBlur} placeholder="+92 300 7654321" className={fleet.modalInput} />
                   </Field>
                   <Field label="Status" name="status" required>
-                    <select name="status" value={values.status} onChange={handleChange} className={fleet.modalSelect}>
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                    </select>
+                    <CrmSelect
+                      variant="dark"
+                      name="status"
+                      options={VENDOR_STATUS_OPTIONS}
+                      value={values.status}
+                      onChange={(v) => setFieldValue("status", v)}
+                    />
                   </Field>
                   <div className="md:col-span-2">
                     <Field label="Address" name="address" required>

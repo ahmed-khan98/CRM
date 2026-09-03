@@ -11,6 +11,7 @@ import {
 import EmailListModal from "@/app/_Components/Modal/EmaillistModal";
 import toast from "react-hot-toast";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -77,15 +78,11 @@ export default function page() {
 
         <motion.div variants={itemVariants} className="rounded-2xl shadow-lg">
           {data?.data?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <List className="h-16 w-16 text-gray-300 mbg-zinc-800" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                No Email List
-              </h3>
-              <p className="text-gray-500 mt-2">
-                You don't have any email list yet.
-              </p>
-            </div>
+            <EmptyState
+              icon={List}
+              title="No email lists yet"
+              description="Import a list to start sending campaigns."
+            />
           ) : (
             <div className="overflow-hidden rounded-2xl">
               <div className="overflow-x-auto">

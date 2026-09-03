@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import PageHeader from "@/app/_Components/PageHeader/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
+import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 import ProjectModal from "./_components/ProjectModal";
 import ProjectSection from "./_components/project/ProjectSection";
 import ProjectCard from "./_components/project/ProjectCard";
@@ -19,28 +21,94 @@ import {
   useDeleteProjectMutation,
 } from "@/app/_Services/project/page";
 import { useAllClientsQuery } from "@/app/_Services/Client/page";
+import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
 import { useProjectPermissions } from "./_hooks/useProjectPermissions";
+import { getProjectDepartmentName } from "./_components/utils";
+
+function matchesProjectSearch(project, q) {
+  if (!q) return true;
+  const client = project?.clientId;
+  return (
+    project?.name?.toLowerCase().includes(q) ||
+    client?.name?.toLowerCase().includes(q) ||
+    client?.email?.toLowerCase().includes(q) ||
+    client?.companyName?.toLowerCase().includes(q) ||
+    getProjectDepartmentName(project)?.toLowerCase().includes(q)
+  );
+}
+
+function matchesProjectDepartment(project, deptFilter) {
+  if (!deptFilter || deptFilter === "all") return true;
+  return getProjectDepartmentName(project) === deptFilter;
+}
 
 export default function ProjectsPage() {
   const router = useRouter();
   const [projectModalOpen, setProjectModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [search, setSearch] = useState("");
+  const [activeDept, setActiveDept] = useState("all");
 
   const { data: projectsData, isLoading } = useGetAllProjectsQuery();
   const { data: loggedUserData } = useGetLoggedUserQuery();
   const currentUser = loggedUserData?.data;
   const { canManageProject } = useProjectPermissions(currentUser);
 
+  const userRole = currentUser?.role?.toUpperCase();
+  const canFilterDept = userRole === "ADMIN" || userRole === "SUBADMIN";
+
+  const { data: departments } = useAllDepartmentsQuery(undefined, {
+    skip: !canFilterDept,
+  });
+
   const isGrouped = projectsData?.data?.grouped === true;
-  const departmentProjects = isGrouped ? projectsData.data.departmentProjects || [] : [];
-  const assignedProjects = isGrouped ? projectsData.data.assignedProjects || [] : [];
+  const departmentProjects = isGrouped
+    ? projectsData.data.departmentProjects || []
+    : [];
+  const assignedProjects = isGrouped
+    ? projectsData.data.assignedProjects || []
+    : [];
   const projects = isGrouped ? [] : projectsData?.data || [];
 
   const deptName =
     currentUser?.departmentId?.name ||
-    (typeof currentUser?.departmentId === "object" ? currentUser?.departmentId?.name : null) ||
+    (typeof currentUser?.departmentId === "object"
+      ? currentUser?.departmentId?.name
+      : null) ||
     "Department";
+
+  const q = search.trim().toLowerCase();
+
+  const filteredFlatProjects = useMemo(
+    () =>
+      projects.filter(
+        (p) =>
+          matchesProjectSearch(p, q) &&
+          matchesProjectDepartment(p, canFilterDept ? activeDept : "all"),
+      ),
+    [projects, q, activeDept, canFilterDept],
+  );
+
+  const filteredDepartmentProjects = useMemo(
+    () =>
+      departmentProjects.filter(
+        (p) =>
+          matchesProjectSearch(p, q) &&
+          matchesProjectDepartment(p, canFilterDept ? activeDept : "all"),
+      ),
+    [departmentProjects, q, activeDept, canFilterDept],
+  );
+
+  const filteredAssignedProjects = useMemo(
+    () =>
+      assignedProjects.filter(
+        (p) =>
+          matchesProjectSearch(p, q) &&
+          matchesProjectDepartment(p, canFilterDept ? activeDept : "all"),
+      ),
+    [assignedProjects, q, activeDept, canFilterDept],
+  );
 
   const totalCount = useMemo(
     () =>
@@ -50,7 +118,22 @@ export default function ProjectsPage() {
     [isGrouped, departmentProjects.length, assignedProjects.length, projects.length],
   );
 
-  const { data: clientsData } = useAllClientsQuery(undefined, { skip: !projectModalOpen });
+  const visibleCount = useMemo(
+    () =>
+      isGrouped
+        ? filteredDepartmentProjects.length + filteredAssignedProjects.length
+        : filteredFlatProjects.length,
+    [
+      isGrouped,
+      filteredDepartmentProjects.length,
+      filteredAssignedProjects.length,
+      filteredFlatProjects.length,
+    ],
+  );
+
+  const { data: clientsData } = useAllClientsQuery(undefined, {
+    skip: !projectModalOpen,
+  });
   const clients = clientsData?.data || [];
 
   const [createProject] = useCreateProjectMutation();
@@ -93,11 +176,22 @@ export default function ProjectsPage() {
     [router],
   );
 
+  const deptTabItems = useMemo(() => {
+    if (!canFilterDept) return [];
+    const names = [
+      "all",
+      ...(departments?.data?.map((d) => d?.name).filter(Boolean) || []),
+    ];
+    return names.map((name) => ({ label: name, value: name }));
+  }, [canFilterDept, departments]);
+
   if (isLoading) return <PageLoader />;
 
   const hasProjects = isGrouped
     ? departmentProjects.length > 0 || assignedProjects.length > 0
     : projects.length > 0;
+
+  const hasVisibleProjects = visibleCount > 0;
 
   return (
     <div className="flex flex-col gap-5 p-2">
@@ -109,38 +203,56 @@ export default function ProjectsPage() {
         handleEdit={() => setProjectModalOpen(true)}
       />
 
+      {hasProjects && (
+        <SearchFilterBar
+          searchTerm={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search by project, client name, or email..."
+          tabItems={deptTabItems}
+          activeTab={activeDept}
+          onTabChange={setActiveDept}
+        />
+      )}
+
       {hasProjects ? (
-        isGrouped ? (
-          <div className="flex flex-col gap-8">
-            <ProjectSection
-              title={`${deptName} Projects`}
-              description="Projects created by your department team. You can create tasks on these."
-              projects={departmentProjects}
-              onDelete={setConfirmDelete}
-              onClick={handleNavigate}
-              canDeleteProject={canManageProject}
-            />
-            <ProjectSection
-              title="Other Department Projects"
-              description="Projects from other departments where you have assigned tasks."
-              projects={assignedProjects}
-              onDelete={setConfirmDelete}
-              onClick={handleNavigate}
-              canDeleteProject={canManageProject}
-            />
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project._id}
-                project={project}
+        hasVisibleProjects ? (
+          isGrouped ? (
+            <div className="flex flex-col gap-8">
+              <ProjectSection
+                title={`${deptName} Projects`}
+                description="Projects created by your department team. You can create tasks on these."
+                projects={filteredDepartmentProjects}
                 onDelete={setConfirmDelete}
                 onClick={handleNavigate}
-                canDelete={canManageProject(project)}
+                canDeleteProject={canManageProject}
               />
-            ))}
-          </div>
+              <ProjectSection
+                title="Other Department Projects"
+                description="Projects from other departments where you have assigned tasks."
+                projects={filteredAssignedProjects}
+                onDelete={setConfirmDelete}
+                onClick={handleNavigate}
+                canDeleteProject={canManageProject}
+              />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredFlatProjects.map((project) => (
+                <ProjectCard
+                  key={project._id}
+                  project={project}
+                  onDelete={setConfirmDelete}
+                  onClick={handleNavigate}
+                  canDelete={canManageProject(project)}
+                />
+              ))}
+            </div>
+          )
+        ) : (
+          <EmptyState
+            title="No matching projects"
+            description="Try a different search or department filter."
+          />
         )
       ) : (
         <ProjectsEmptyState onCreate={() => setProjectModalOpen(true)} />

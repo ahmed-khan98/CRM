@@ -35,6 +35,7 @@ const resolveTaskProjectId = (task) => task?.projectId?._id || task?.projectId;
 export default function AllTasksPage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState("desc"); // newest first
   const debouncedSearch = useDebouncedValue(search, 300);
 
   const { data: loggedUserData } = useGetLoggedUserQuery();
@@ -48,9 +49,19 @@ export default function AllTasksPage() {
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
+  const sortedTasks = useMemo(() => {
+    const list = [...tasks];
+    list.sort((a, b) => {
+      const aTime = new Date(a.createdAt || 0).getTime();
+      const bTime = new Date(b.createdAt || 0).getTime();
+      return sortOrder === "asc" ? aTime - bTime : bTime - aTime;
+    });
+    return list;
+  }, [tasks, sortOrder]);
+
   const serverColumns = useMemo(
-    () => groupTasksIntoColumns(tasks, debouncedSearch),
-    [tasks, debouncedSearch]
+    () => groupTasksIntoColumns(sortedTasks, debouncedSearch),
+    [sortedTasks, debouncedSearch]
   );
 
   const onStatusUpdate = useCallback(
@@ -81,7 +92,7 @@ export default function AllTasksPage() {
     deleting,
     handleConfirmDelete,
   } = useTaskBoardPage({
-    taskList: tasks,
+    taskList: sortedTasks,
     serverColumns,
     onStatusUpdate,
     canMoveToDone,
@@ -137,6 +148,8 @@ export default function AllTasksPage() {
           onSearchChange={setSearch}
           visibleCount={visibleTasks}
           totalCount={totalTasks}
+          sortOrder={sortOrder}
+          onSortChange={setSortOrder}
         />
       </PageHeader>
 

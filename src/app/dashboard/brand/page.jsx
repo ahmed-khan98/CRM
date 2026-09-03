@@ -13,6 +13,8 @@ import Image from "next/image";
 import { formatDate, formatOnlyDate } from "@/app/utilities/date";
 import PageHeader from "@/app/_Components/PageHeader/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
+import { tableWrap, thClass, theadRow, trHover } from "@/app/_Components/ui/saas/DataTable";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -65,26 +67,24 @@ export default function AppointmentBooking() {
         <PageHeader
           icon={Home}
           length={data?.data?.length}
-          name=" All Brands"
+          name="All Brands"
           btnName="Create Brand"
           handleEdit={handleEdit}
         />
 
-        <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
+        <motion.div variants={itemVariants} className="rounded-2xl">
           {data?.data?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <Home className="h-16 w-16 text-gray-300 mbg-zinc-800" />
-              <h3 className="text-xl font-semibold text-gray-700">No Brand</h3>
-              <p className="text-gray-500 mt-2">
-                You don't have any Brand yet.
-              </p>
-            </div>
+            <EmptyState
+              icon={Home}
+              title="No brands yet"
+              description="Create a brand to attach leads, clients, and payment links."
+            />
           ) : (
-            <div className="-mx-1 overflow-hidden rounded-2xl md:mx-0">
+            <div className={`-mx-1 md:mx-0 ${tableWrap}`}>
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
-                    <tr className="bg-zinc-900 border-b border-white/[0.07]">
+                    <tr className={theadRow}>
                       {[
                         "Logo",
                         "Name",
@@ -92,24 +92,21 @@ export default function AppointmentBooking() {
                         "createdAt",
                         "Actions",
                       ].map((h) => (
-                        <th
-                          key={h}
-                          className="px-4 py-3 text-left text-[10px] font-black tracking-[0.14em] uppercase text-zinc-300"
-                        >
+                        <th key={h} className={thClass}>
                           {h}
                         </th>
                       ))}
                     </tr>
                   </thead>
 
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="divide-y divide-zinc-100 bg-white">
                     {data?.data.map((br, index) => (
                       <motion.tr
                         key={br?._id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="hover:bg-zinc-50 transition-colors group"
+                        className={`${trHover} group`}
                       >
                         <td className="px-2 py-2.5 whitespace-nowrap text-sm text-gray-600">
                           <Image

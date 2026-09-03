@@ -26,6 +26,7 @@ import {
   formatDate,
   formatMoney,
 } from "./hrmsUi";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
 
 /**
  * Real HRMS pattern (greytHR / Zoho / Workday):
@@ -382,26 +383,20 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                     return (
                       <tr key={row.key}>
                         <td className="px-4 py-3 align-top">
-                          <select
-                            className={inputClass}
+                          <CrmSelect
+                            options={ALLOWANCE_TYPE_OPTIONS}
                             value={row.allowanceType}
-                            onChange={(e) =>
+                            onChange={(v) =>
                               updateRow(row.key, {
-                                allowanceType: e.target.value,
+                                allowanceType: v,
                                 benefitMode:
-                                  e.target.value === "Car Allowance"
+                                  v === "Car Allowance"
                                     ? row.benefitMode
                                     : "cash",
                                 vehicleId: "",
                               })
                             }
-                          >
-                            {ALLOWANCE_TYPE_OPTIONS.map((o) => (
-                              <option key={o.value} value={o.value}>
-                                {o.label}
-                              </option>
-                            ))}
-                          </select>
+                          />
                         </td>
                         <td className="px-4 py-3 align-top">
                           {isCar ? (
@@ -440,26 +435,26 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                                 </button>
                               </div>
                               {row.benefitMode === "company_car" && (
-                                <select
-                                  className={inputClass}
+                                <CrmSelect
+                                  isSearchable
+                                  options={[
+                                    {
+                                      value: "",
+                                      label: loadingCars
+                                        ? "Loading cars..."
+                                        : "Select available car",
+                                    },
+                                    ...availableCars.map((v) => ({
+                                      value: v._id,
+                                      label: `${v.vehicleName} — ${v.registrationNumber}`,
+                                    })),
+                                  ]}
                                   value={row.vehicleId}
-                                  onChange={(e) =>
-                                    updateRow(row.key, {
-                                      vehicleId: e.target.value,
-                                    })
+                                  onChange={(v) =>
+                                    updateRow(row.key, { vehicleId: v })
                                   }
-                                >
-                                  <option value="">
-                                    {loadingCars
-                                      ? "Loading cars..."
-                                      : "Select available car"}
-                                  </option>
-                                  {availableCars.map((v) => (
-                                    <option key={v._id} value={v._id}>
-                                      {v.vehicleName} — {v.registrationNumber}
-                                    </option>
-                                  ))}
-                                </select>
+                                  placeholder="Select available car"
+                                />
                               )}
                             </div>
                           ) : (

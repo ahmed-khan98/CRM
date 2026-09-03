@@ -93,30 +93,29 @@ export default function GenZLoginForm() {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-zinc-900">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
       <Toaster position="top-center" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md mx-4"
+        className="w-full max-w-md"
       >
-        <div className="overflow-hidden bg-zinc-800/40 rounded-3xl shadow-xl">
-          <div className="p-6">
-            <div className="mb-6 text-center ">
+        <div className="overflow-hidden rounded-3xl border border-white/10 bg-zinc-900/80 shadow-2xl shadow-black/40">
+          <div className="p-7">
+            <div className="mb-7 text-center">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-78 h-18 mx-auto mb-2 rounded-full  flex items-center justify-center"
+                className="mx-auto mb-3 flex items-center justify-center"
               >
                 <Link href="/login" className="mx-auto">
                   <Image src={Main} alt="Logo" width={270} height={60} />
                 </Link>
               </motion.div>
-              {/* <h2 className="text-2xl font-bold mb-1 text-gray-800">Welcome To CMS </h2> */}
-              <p className="text-zinc-400 font-normal">
-                Sign in to ZYTRON WORLD CRM
+              <p className="text-sm font-medium text-zinc-400">
+                Sign in to Zytron World CRM
               </p>
             </div>
 
@@ -138,7 +137,7 @@ export default function GenZLoginForm() {
                     type="email"
                     name="email"
                     placeholder="Email address"
-                    className="w-full pl-9 pr-2 py-3 rounded-xl shadow focus:outline-none text-zinc-400 text-sm"
+                    className="w-full rounded-xl bg-zinc-950/60 py-3 pl-9 pr-2 text-sm text-zinc-100 placeholder:text-zinc-500 shadow-inner outline-none focus:ring-2 focus:ring-white/10"
                     value={formik.values.email}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
@@ -176,7 +175,7 @@ export default function GenZLoginForm() {
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
-                    className="w-full pl-10 shadow pr-10 py-3 rounded-xl focus:outline-none text-zinc-400"
+                    className="w-full rounded-xl bg-zinc-950/60 py-3 pl-10 pr-10 text-sm text-zinc-100 placeholder:text-zinc-500 shadow-inner outline-none focus:ring-2 focus:ring-white/10"
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={(e) => {
@@ -208,28 +207,19 @@ export default function GenZLoginForm() {
                 )}
               </div>
 
-              <div className="text-right">
-                <Link
-                  href="/forget"
-                  className="text-sm text-zinc-400 hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-zinc-800 shadow-lime-700 hover:bg-zinc-900 text-zinc-400 py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all cursor-pointer"
+                className="flex w-full cursor-pointer items-center justify-center rounded-2xl bg-white py-3.5 text-sm font-semibold text-zinc-950 shadow-lg transition hover:bg-zinc-100 disabled:opacity-70"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
-                    <div className="h-5 w-5 border-1  border-zinc-800 border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent"></div>
                     Signing in...
                   </div>
                 ) : (
-                  "LOG IN"
+                  "Log in"
                 )}
               </motion.button>
 

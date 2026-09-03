@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import ConversationRow from "@/app/_Components/chat/ConversationRow";
-import { conversationPeer } from "@/app/_Components/chat/chatUtils";
+import { conversationPeer, isSelfChat } from "@/app/_Components/chat/chatUtils";
 
 function ConversationList({
   dark,
@@ -32,7 +32,8 @@ function ConversationList({
       )}
       {filteredConvs.map((c) => {
         const listPeer = conversationPeer(c, myId);
-        const listOnline = listPeer?._id ? onlineOf(listPeer._id) : false;
+        const listOnline =
+          !isSelfChat(c, myId) && listPeer?._id ? onlineOf(listPeer._id) : false;
         return (
           <ConversationRow
             key={c._id}

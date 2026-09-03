@@ -3,7 +3,7 @@ const merchant = [
     id: "Kinatech Business Solutions LLC",
     name: "Kinatech Business Solutions LLC",
   },
-  { id: "Augmentus", name: "Augmentus" },
+  // { id: "Augmentus", name: "Augmentus" },
 ];
 
 
@@ -30,7 +30,7 @@ const services = [
 
 const merchantType = [
   "Kinatech Business Solutions LLC",
-        "Augmentus",
+        // "Augmentus",
         "Zelle",
         "Bank Transfer",
         "Stripe",

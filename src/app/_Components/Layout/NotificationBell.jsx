@@ -92,11 +92,35 @@ const NotificationBell = ({ mobile = false }) => {
 
       const projectId = getId(n.projectId);
       const taskId = getId(n.taskId);
+      const leadId = getId(n.leadId);
+      const conversationId = getId(n.conversationId);
       const isStatusNotify = n?.type === "TASK_STATUS";
+      const isLeadSchedule =
+        n?.type === "LEAD_SCHEDULE" ||
+        String(n?.title || "")
+          .toLowerCase()
+          .includes("lead follow-up");
+      const isChatNotify = [
+        "CHAT_MESSAGE",
+        "CHAT_MENTION",
+        "CHAT_GROUP",
+        "MISSED_CALL",
+        "INCOMING_CALL",
+      ].includes(n?.type);
       const openModal = Boolean(taskId && !isStatusNotify);
 
       if (!n?.isRead) {
         markRead(n._id).catch(() => {});
+      }
+
+      if (isLeadSchedule && leadId) {
+        router.push(`/dashboard/lead/detail/${leadId}`);
+        return;
+      }
+
+      if (isChatNotify && conversationId) {
+        router.push(`/dashboard/chat?conversation=${conversationId}`);
+        return;
       }
 
       if (!projectId) return;

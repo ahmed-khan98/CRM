@@ -8,6 +8,12 @@ import { motion, AnimatePresence } from "framer-motion"
 import Tab from "@/app/_Components/Tab/page"
 import { myAccountTabs } from "@/app/utilities/tabs/page"
 import { US_STATES } from "@/app/utilities/state"
+import CrmSelect from "@/app/_Components/ui/CrmSelect"
+
+const US_STATE_OPTIONS = [
+  { value: "", label: "Select a state" },
+  ...US_STATES.map((state) => ({ value: state, label: state })),
+]
 
 const page = () => {
     const [showSuccess, setShowSuccess] = useState(false)
@@ -170,20 +176,14 @@ const page = () => {
                                     State
                                 </label>
                                 <div className="relative">
-                                    <select
+                                    <CrmSelect
                                         name="address.state"
-                                        value={formData?.address?.state}
-                                        disabled
-                                        className={`w-full p-4  border bg-gray-50  
-                                             border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
-                                    >
-                                        <option value="">Select a state</option>
-                                        {US_STATES.map((state) => (
-                                            <option key={state} value={state}>
-                                                {state}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        options={US_STATE_OPTIONS}
+                                        value={formData?.address?.state || ""}
+                                        onChange={() => {}}
+                                        isDisabled
+                                        placeholder="Select a state"
+                                    />
                                 </div>
                             </div>
                             <div className="space-y-1">

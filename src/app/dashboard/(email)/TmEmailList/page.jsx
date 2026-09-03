@@ -11,6 +11,7 @@ import {
   useDeleteTmEmailListMutation,
 } from "@/app/_Services/TmEmailList/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -87,15 +88,11 @@ export default function page() {
           className="bg-white rounded-3xl mx-1 md:mx-0 p-4 shadow-xl border border-purple-100"
         >
           {data?.data?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center bg-white rounded-xl shadow-sm p-10 text-center">
-              <List className="h-16 w-16 text-gray-300 mbg-zinc-800" />
-              <h3 className="text-xl font-semibold text-gray-700">
-                No Email List
-              </h3>
-              <p className="text-gray-500 mt-2">
-                You don't have any email list yet.
-              </p>
-            </div>
+            <EmptyState
+              icon={List}
+              title="No email lists yet"
+              description="Import a list to start sending campaigns."
+            />
           ) : (
             <div className="overflow-hidden rounded-xl md:border md:border-gray-200">
               <div className="overflow-x-auto">

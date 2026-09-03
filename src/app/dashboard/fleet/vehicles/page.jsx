@@ -13,6 +13,7 @@ import VehicleModal from "@/app/_Components/Modal/VehicleModal";
 import Pagination from "@/app/_Components/PaginationComponent/Pagination";
 import FleetVehicleRow from "@/app/_Components/fleet/FleetVehicleRow";
 import { fleet } from "@/app/_Components/fleet/fleetTheme";
+import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 import {
   useGetVehiclesQuery,
   useDeleteVehicleMutation,
@@ -134,6 +135,11 @@ export default function FleetVehiclesPage() {
               isClearable
               placeholder="All Vendors"
               classNamePrefix="fleet-select"
+              menuPortalTarget={typeof document !== "undefined" ? document.body : null}
+              menuPosition="fixed"
+              styles={{
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              }}
             />
           </div>
         </PageHeader>
@@ -148,30 +154,37 @@ export default function FleetVehiclesPage() {
           debouncedSearchTerm={debouncedSearch}
         />
 
-        <div className={`${fleet.card} overflow-hidden`}>
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr>
-                  <th className={fleet.tableHead}>Vehicle</th>
-                  <th className={fleet.tableHead}>Vendor</th>
-                  <th className={fleet.tableHead}>Registration</th>
-                  <th className={fleet.tableHead}>Year</th>
-                  <th className={fleet.tableHead}>Fuel</th>
-                  <th className={fleet.tableHead}>Rent</th>
-                  <th className={fleet.tableHead}>Status</th>
-                  <th className={`${fleet.tableHead} text-right`}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.length === 0 ? (
+        {items.length === 0 ? (
+          <>
+            <EmptyState
+              icon={Truck}
+              title="No vehicles found"
+              description={
+                isFetching
+                  ? "Loading fleet vehicles..."
+                  : "Add a vehicle or adjust search and status filters."
+              }
+            />
+            <MemoPagination meta={meta} onPageChange={setPage} />
+          </>
+        ) : (
+          <div className={fleet.card}>
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead>
                   <tr>
-                    <td colSpan={8} className="px-4 py-12 text-center text-sm text-zinc-500">
-                      {isFetching ? "Loading..." : "No vehicles found"}
-                    </td>
+                    <th className={fleet.tableHead}>Vehicle</th>
+                    <th className={fleet.tableHead}>Vendor</th>
+                    <th className={fleet.tableHead}>Registration</th>
+                    <th className={fleet.tableHead}>Year</th>
+                    <th className={fleet.tableHead}>Fuel</th>
+                    <th className={fleet.tableHead}>Rent</th>
+                    <th className={fleet.tableHead}>Status</th>
+                    <th className={`${fleet.tableHead} text-right`}>Actions</th>
                   </tr>
-                ) : (
-                  items.map((v) => (
+                </thead>
+                <tbody>
+                  {items.map((v) => (
                     <FleetVehicleRow
                       key={v._id}
                       vehicle={v}
@@ -179,15 +192,15 @@ export default function FleetVehiclesPage() {
                       onEdit={handleEditVehicle}
                       onDelete={handleDeleteRequest}
                     />
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="border-t border-zinc-100 px-2">
+              <MemoPagination meta={meta} onPageChange={setPage} />
+            </div>
           </div>
-          <div className="px-2 border-t border-zinc-100">
-            <MemoPagination meta={meta} onPageChange={setPage} />
-          </div>
-        </div>
+        )}
       </div>
 
       {isModalOpen && (

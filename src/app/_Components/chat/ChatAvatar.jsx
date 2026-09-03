@@ -1,8 +1,19 @@
 "use client";
 
 import { memo } from "react";
+import Image from "next/image";
+
+const SIZE_PX = { xs: 20, sm: 36, lg: 56, md: 44 };
+
+function canOptimizeSrc(src) {
+  return (
+    typeof src === "string" &&
+    (src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://"))
+  );
+}
 
 function ChatAvatar({ src, name, online, size = "md" }) {
+  const px = SIZE_PX[size] || SIZE_PX.md;
   const sz =
     size === "xs"
       ? "h-5 w-5 text-[9px]"
@@ -17,7 +28,15 @@ function ChatAvatar({ src, name, online, size = "md" }) {
       : "h-3 w-3 border-2";
   return (
     <div className="relative shrink-0">
-      {src ? (
+      {src && canOptimizeSrc(src) ? (
+        <Image
+          src={src}
+          alt={name || ""}
+          width={px}
+          height={px}
+          className={`${sz} rounded-full object-cover`}
+        />
+      ) : src ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={src} alt="" className={`${sz} rounded-full object-cover`} />
       ) : (

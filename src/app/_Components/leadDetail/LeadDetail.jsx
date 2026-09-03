@@ -1,7 +1,7 @@
 "use client";
 
 import { useGetLeadByIdQuery } from "@/app/_Services/lead/page";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -20,46 +20,18 @@ import {
 import { formatDate } from "../../utilities/date";
 import { getActionStatusColor, getStatusColor } from "../../utilities/color";
 import LeadSentEmail from "../LeadSentEmail/LeadSentEmail";
-import Comment from "./Comment";
+import LeadActivityTimeline from "./LeadActivityTimeline";
 import InfoItem from "./InfoItem";
 import AssignmentItem from "./AssignmentItem";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
-
-const getAgentName = (userId) => {
-  switch (userId) {
-    case "68bf1147113f9f0ce3cb0de3":
-      return "Junaid Khan (Agent)";
-    default:
-      return "System/Unknown";
-  }
-};
 
 const LeadDetail = ({ id }) => {
   const { data, error, isLoading } = useGetLeadByIdQuery({ id });
   const [showAllComments, setShowAllComments] = useState(false);
 
-  const commentsToShow = useMemo(() => {
-    const leadComments = data?.data?.leadComment || [];
-    return showAllComments ? leadComments : leadComments.slice(0, 3);
-  }, [showAllComments, data?.data?.leadComment]);
-
-  const totalComments = data?.data?.leadComment?.length || 0;
-  const lastCommentArray = data?.data?.leadComment;
-  const hasComments =
-    Array.isArray(lastCommentArray) && lastCommentArray.length > 0;
-
-  let displayLastAction, displayActionDate, displayScheduleDate;
-
-  if (hasComments) {
-    const lastComment = lastCommentArray[0];
-    displayLastAction = lastComment.lastAction;
-    displayActionDate = lastComment.createdAt;
-    displayScheduleDate = lastComment.scheduleDate || "";
-  } else {
-    displayLastAction = data?.data?.lastAction;
-    displayActionDate = data?.data?.lastActionDate;
-    displayScheduleDate = data?.data?.scheduleDate || "";
-  }
+  const allComments = data?.data?.leadComment || [];
+  const commentsToShow = showAllComments ? allComments : allComments.slice(0, 10);
+  const totalComments = allComments.length;
 
   if (isLoading)
     return (
@@ -313,31 +285,22 @@ const LeadDetail = ({ id }) => {
                   className="relative border-l-2 ml-1 space-y-3"
                   style={{ borderColor: "rgba(99,102,241,0.2)" }}
                 >
-                  {commentsToShow?.map((comment) => (
-                    <Comment
-                      key={comment?._id}
-                      id={comment?._id}
-                      lastComment={comment?.lastComment}
-                      lastAction={comment?.lastAction}
-                      username={comment?.userId?.fullName}
-                      createdAt={
-                        comment?.createdAt || comment?.createdAtAt || ""
-                      }
-                    />
-                  ))}
+                  <LeadActivityTimeline
+                    leadId={data?.data?._id}
+                    comments={commentsToShow}
+                  />
 
-                  {totalComments > 3 && (
+                  {totalComments > 10 && (
                     <div className="pt-2 pl-6">
                       <button
+                        type="button"
                         onClick={() => setShowAllComments(!showAllComments)}
                         className="cursor-pointer text-xs font-bold transition-all duration-200"
                         style={{ color: "#a78bfa" }}
-                        onMouseEnter={(e) => (e.target.style.color = "#c4b5fd")}
-                        onMouseLeave={(e) => (e.target.style.color = "#a78bfa")}
                       >
                         {showAllComments
                           ? "↑ See Less"
-                          : `↓ See More (${totalComments - 3} hidden)`}
+                          : `↓ See More (${totalComments - 10} hidden)`}
                       </button>
                     </div>
                   )}
