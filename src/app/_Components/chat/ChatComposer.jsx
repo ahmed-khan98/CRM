@@ -58,6 +58,11 @@ const ChatComposer = forwardRef(function ChatComposer(
   }, [draft.setShowEmoji, draft.setShowAttach]);
 
   const hasPendingFiles = draft.pendingFiles.length > 0;
+  const showSend =
+    Boolean(draft.text.trim()) ||
+    hasPendingFiles ||
+    draft.sendingAttachments ||
+    draft.uploadPct != null;
 
   return (
     <>
@@ -125,7 +130,7 @@ const ChatComposer = forwardRef(function ChatComposer(
                   type="file"
                   multiple
                   className="hidden"
-                  onChange={(e) => draft.addPendingFiles(e.target.files)}
+                  onChange={draft.onFileInputChange}
                 />
               </ClickAway>
 
@@ -146,7 +151,7 @@ const ChatComposer = forwardRef(function ChatComposer(
                 placeholder={
                   editing
                     ? "Edit message"
-                    : hasPendingFiles
+                    : hasPendingFiles || draft.sendingAttachments
                       ? "Add a caption..."
                       : active?.type === "group"
                         ? "Type a message · @ to mention"
@@ -154,18 +159,19 @@ const ChatComposer = forwardRef(function ChatComposer(
                 }
               />
 
-              {draft.text.trim() || hasPendingFiles ? (
+              {showSend ? (
                 <IconButton
                   label="Send"
                   onClick={draft.handleSend}
-                  className={`inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full shadow-sm ${theme.accent}`}
+                  disabled={draft.sendingAttachments}
+                  className={`inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full shadow-sm ${theme.accent} disabled:opacity-60`}
                 >
                   <Send className="h-5 w-5" />
                 </IconButton>
               ) : (
                 <IconButton
                   label="Voice message"
-                  onClick={() => draft.setVoiceMode(true)}
+                  onClick={draft.startVoiceMode}
                   className={`inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full shadow-sm ${theme.accent}`}
                 >
                   <Mic className="h-5 w-5" />

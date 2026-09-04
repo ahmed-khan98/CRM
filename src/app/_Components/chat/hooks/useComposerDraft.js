@@ -38,17 +38,35 @@ export default function useComposerDraft({
   const fileRef = useRef(null);
   const textAreaRef = useRef(null);
   const typingTimer = useRef(null);
+  const pickingFileRef = useRef(false);
+  const sendingAttachmentsRef = useRef(false);
+  const [sendingAttachments, setSendingAttachments] = useState(false);
 
   useEffect(() => {
     setPendingFiles((prev) => {
       revokePendingFiles(prev);
       return [];
     });
+    setVoiceMode(false);
+    setSendingAttachments(false);
+    sendingAttachmentsRef.current = false;
   }, [activeId]);
 
   useEffect(() => {
     if (editing) setText(editing.body || "");
   }, [editing]);
+
+  // File dialog close often fires a "ghost click" on the Mic button underneath.
+  // Ignore mic activation briefly after the picker opens / files are chosen.
+  useEffect(() => {
+    const clearPick = () => {
+      window.setTimeout(() => {
+        pickingFileRef.current = false;
+      }, 600);
+    };
+    window.addEventListener("focus", clearPick);
+    return () => window.removeEventListener("focus", clearPick);
+  }, []);
 
   const mentionCandidates = useMemo(
     () =>
@@ -62,6 +80,8 @@ export default function useComposerDraft({
     const list = Array.from(files || []);
     if (!list.length) return;
     setShowAttach(false);
+    setVoiceMode(false);
+    pickingFileRef.current = false;
     const next = [];
     for (const file of list) {
       const sizeError = checkUploadSize(file);
@@ -143,15 +163,16 @@ export default function useComposerDraft({
   );
 
   const sendPendingAttachments = useCallback(async () => {
-    if (!pendingFiles.length) return;
-    const filesToSend = pendingFiles;
-    setPendingFiles([]);
+    if (!pendingFiles.length || sendingAttachmentsRef.current) return;
+    const filesToSend = [...pendingFiles];
     const caption = text.trim();
-    setText("");
-    setReplyTo?.(null);
+    sendingAttachmentsRef.current = true;
+    setSendingAttachments(true);
     setShowEmoji(false);
+
+    const failed = [];
     for (let i = 0; i < filesToSend.length; i++) {
-      const { file, previewUrl } = filesToSend[i];
+      const { file, id } = filesToSend[i];
       const isLast = i === filesToSend.length - 1;
       const fd = new FormData();
       fd.append("file", file);
@@ -161,18 +182,38 @@ export default function useComposerDraft({
         const res = await uploadFile(fd).unwrap();
         setUploadPct(100);
         const { type, attachment } = res.data;
+        // Never treat a user document as a voice note
+        const safeType =
+          type === "voice" || type === "audio"
+            ? file.type?.startsWith("audio/") ||
+              /\.(webm|ogg|mp3|m4a|wav|aac|opus)$/i.test(file.name || "")
+              ? type
+              : "file"
+            : type;
         sendPayload({
-          type: type === "audio" ? "audio" : type,
+          type: safeType === "audio" ? "audio" : safeType,
           body: isLast ? caption : "",
           attachments: [attachment],
         });
+        setPendingFiles((prev) => {
+          const target = prev.find((f) => f.id === id);
+          if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
+          return prev.filter((f) => f.id !== id);
+        });
       } catch (err) {
         toast.error(err?.data?.message || "Upload failed");
+        failed.push(id);
       } finally {
         setTimeout(() => setUploadPct(null), 400);
-        if (previewUrl) URL.revokeObjectURL(previewUrl);
       }
     }
+
+    if (!failed.length) {
+      setText("");
+      setReplyTo?.(null);
+    }
+    sendingAttachmentsRef.current = false;
+    setSendingAttachments(false);
   }, [pendingFiles, text, uploadFile, sendPayload, setReplyTo]);
 
   const handleSend = useCallback(async () => {
@@ -203,13 +244,25 @@ export default function useComposerDraft({
     editMsg,
     text,
     active,
-    myId,
     sendPayload,
     pendingFiles,
     sendPendingAttachments,
     onClearEditing,
     setReplyTo,
   ]);
+
+  const startVoiceMode = useCallback(() => {
+    if (pickingFileRef.current || sendingAttachmentsRef.current) return;
+    if (pendingFiles.length > 0) {
+      handleSend();
+      return;
+    }
+    if (text.trim()) {
+      handleSend();
+      return;
+    }
+    setVoiceMode(true);
+  }, [pendingFiles.length, text, handleSend]);
 
   const onVoiceSend = useCallback(
     (payload) => {
@@ -224,17 +277,30 @@ export default function useComposerDraft({
 
   const pickPhotos = useCallback(() => {
     if (!fileRef.current) return;
+    pickingFileRef.current = true;
     fileRef.current.accept = "image/*,video/*";
+    fileRef.current.value = "";
     fileRef.current.click();
     setShowAttach(false);
   }, []);
 
   const pickDocument = useCallback(() => {
     if (!fileRef.current) return;
+    pickingFileRef.current = true;
     fileRef.current.accept = "*/*";
+    fileRef.current.value = "";
     fileRef.current.click();
     setShowAttach(false);
   }, []);
+
+  const onFileInputChange = useCallback(
+    (e) => {
+      addPendingFiles(e.target.files);
+      // Allow selecting the same file again later
+      e.target.value = "";
+    },
+    [addPendingFiles]
+  );
 
   return {
     text,
@@ -247,6 +313,7 @@ export default function useComposerDraft({
     setVoiceMode,
     uploadPct,
     pendingFiles,
+    sendingAttachments,
     mentionOpen,
     setMentionOpen,
     mentionCandidates,
@@ -257,9 +324,11 @@ export default function useComposerDraft({
     addPendingFiles,
     removePendingFile,
     onPasteFile,
+    onFileInputChange,
     insertMention,
     onType,
     handleSend,
+    startVoiceMode,
     onVoiceSend,
     pickPhotos,
     pickDocument,
