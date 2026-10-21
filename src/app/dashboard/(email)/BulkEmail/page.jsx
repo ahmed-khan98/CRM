@@ -70,10 +70,10 @@ const BulkEmailsPage = () => {
               <Mails className="h-7 w-7 text-gray-800" />
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold ">
+              <h1 className="text-lg md:text-lg font-semibold ">
                 Bulk Email Dashboard
               </h1>
-              <p className="text-gray-500 text-sm mt-1">
+              <p className="text-zinc-500 text-sm mt-1">
                 Manage your sent email campaigns with ease.
               </p>
             </div>
@@ -82,7 +82,7 @@ const BulkEmailsPage = () => {
             whileHover={{ scale: 0.95 }}
             whileTap={{ scale: 0.99 }}
             onClick={() => router.push("/dashboard/SentBulkEmail")}
-            className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-zinc-900 transition-colors shadow-lg"
+            className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 transition-colors shadow-lg"
           >
             <Send className="h-4 w-4" />
            New Campaign

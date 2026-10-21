@@ -7,29 +7,29 @@ const Email = ({ email, index, onOpenDetails }) => {
   return (
     <motion.div
       key={email.id}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="bg-white rounded-2xl shadow-md p-6 border border-gray-100 transform transition-transform hover:scale-[1.02] cursor-pointer"
+      className="cursor-pointer rounded-2xl border border-zinc-800 bg-[#161616] p-5 transition hover:border-zinc-700 hover:bg-zinc-900/80"
       onClick={() => onOpenDetails(email)}
     >
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="font-bold  truncate capitalize">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <h4 className="truncate font-semibold capitalize text-zinc-100">
           {email.subject}
         </h4>
         {email.status === "sent" ? (
-          <div className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+          <div className="flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/15 px-2 py-1 text-xs font-semibold text-emerald-300">
             <CheckCircle size={12} />
             Sent
           </div>
         ) : (
-          <div className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+          <div className="flex items-center gap-1 rounded-full border border-rose-500/30 bg-rose-500/15 px-2 py-1 text-xs font-semibold text-rose-300">
             <X size={12} />
             Failed
           </div>
         )}
       </div>
-      <div className="flex items-center gap-4 text-gray-500 text-xs mb-4">
+      <div className="mb-4 flex items-center gap-4 text-xs text-zinc-500">
         <div className="flex items-center gap-1">
           <Clock size={12} />
           <span>{formatDate(email.sentAt)}</span>
@@ -39,8 +39,8 @@ const Email = ({ email, index, onOpenDetails }) => {
           <span>{email.recipientsCount} Recipients</span>
         </div>
       </div>
-      <p className="text-gray-600 text-sm line-clamp-3 mb-4">{email.body}</p>
-      <div className="flex items-center gap-2 text-blue-500 font-semibold text-sm">
+      <p className="mb-4 line-clamp-3 text-sm text-zinc-400">{email.body}</p>
+      <div className="flex items-center gap-2 text-sm font-semibold text-sky-400">
         <Eye size={16} />
         <span>View Email</span>
       </div>

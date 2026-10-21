@@ -14,7 +14,7 @@ function TaskDetailSidebar({ task, project, onProjectClick }) {
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
 
   return (
-    <div className="hidden sm:flex sm:w-52 shrink-0 border-l border-white/[0.07] bg-[#121820] px-4 py-4 flex-col gap-4 overflow-y-auto custom-scrollbar-dark">
+    <div className="hidden sm:flex sm:w-52 shrink-0 border-l border-white/[0.07] bg-ink px-4 py-4 flex-col gap-4 overflow-y-auto custom-scrollbar-dark">
       {(projectName || departmentName) && (
         <>
           {projectName && (
@@ -23,13 +23,13 @@ function TaskDetailSidebar({ task, project, onProjectClick }) {
                 <button
                   type="button"
                   onClick={() => onProjectClick(projectId)}
-                  className="flex items-center gap-1.5 text-xs font-normal text-zinc-200 hover:text-white transition cursor-pointer text-left"
+                  className="flex items-center gap-1.5 text-xs font-normal text-zinc-100 hover:text-white transition cursor-pointer text-left"
                 >
                   <FolderOpen className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
                   <span className="leading-snug">{projectName}</span>
                 </button>
               ) : (
-                <div className="flex items-center gap-1.5 text-zinc-200">
+                <div className="flex items-center gap-1.5 text-zinc-100">
                   <FolderOpen className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
                   <span className="leading-snug">{projectName}</span>
                 </div>
@@ -39,7 +39,7 @@ function TaskDetailSidebar({ task, project, onProjectClick }) {
 
           {departmentName && (
             <MetaRow label="Department">
-              <div className="flex items-center gap-1.5 text-zinc-200">
+              <div className="flex items-center gap-1.5 text-zinc-100">
                 <Building2 className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
                 <span className="capitalize leading-snug">{departmentName}</span>
               </div>
@@ -52,7 +52,7 @@ function TaskDetailSidebar({ task, project, onProjectClick }) {
         <div className="flex items-center gap-2">
           <Avatar user={task.createdBy} size={7} />
           <div className="min-w-0">
-            <p className="capitalize leading-tight text-zinc-200">
+            <p className="capitalize leading-tight text-zinc-100">
               {task.createdBy?.fullName || "—"}
             </p>
             {task.createdBy?.departmentId?.name && (
@@ -68,7 +68,7 @@ function TaskDetailSidebar({ task, project, onProjectClick }) {
         <MetaRow label="Due date">
           <div className="flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5 text-zinc-500" />
-            <span className={isOverdue ? "text-red-400 font-medium" : "text-zinc-200"}>
+            <span className={isOverdue ? "text-rose-600 font-medium" : "text-zinc-100"}>
               {formatDate(task.dueDate)}
             </span>
           </div>
@@ -82,7 +82,7 @@ function TaskDetailSidebar({ task, project, onProjectClick }) {
               <div key={a._id} className="flex items-center gap-2">
                 <Avatar user={a} size={6} />
                 <div className="min-w-0">
-                  <p className="capitalize leading-tight text-zinc-200">
+                  <p className="capitalize leading-tight text-zinc-100">
                     {a.fullName}
                   </p>
                   {a.departmentId?.name && (

@@ -74,7 +74,7 @@ export default function Client() {
         <div className="flex flex-col gap-2 pb-5 justify-between items-center md:flex-row">
           <div className="flex items-center gap-2">
             <LayoutPanelTop className="h-5 w-5 text-gray-800" />
-            <h3 className="text-[#242424] text-xl font-bold">
+            <h3 className="text-[#242424] text-lg font-semibold">
               All Email Template
             </h3>
           </div>
@@ -83,7 +83,7 @@ export default function Client() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-[12px] font-medium hover:bg-zinc-900 transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-[12px] font-medium hover:bg-zinc-800 transition-colors"
             >
               <Plus className="h-4 w-4 text--white" />
               Create Template
@@ -99,21 +99,13 @@ export default function Client() {
               description="Create a template to reuse for campaigns and follow-ups."
             />
           ) : (
-            <div className="overflow-hidden rounded-xl md:border md:border-gray-200">
+            <div className="overflow-hidden rounded-xl md:border md:border-zinc-200">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-zinc-800">
-                    <tr>
-                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
-                        Name{" "}
-                      </th>
-                      {/* <th className="px-2 py-3 text-center text-[13px] font-medium capitalize tracking-wider">
-                        Content{" "}
-                      </th> */}
-
-                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
-                        Action
-                      </th>
+                  <thead>
+                    <tr className="table-head-row">
+                      <th className="table-head-cell text-left">Name</th>
+                      <th className="table-head-cell text-left">Action</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -123,7 +115,7 @@ export default function Client() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="hover:bg-zinc-100 transition-colors"
+                        className="hover:bg-zinc-50 transition-colors"
                       >
                         <td className="px-2 py-3 whitespace-nowrap text-[14px] font-medium text-gray-800 capitalize">
                           {emp?.name ? `${emp.name}` : "-"}
@@ -142,7 +134,7 @@ export default function Client() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleEdit(emp)}
-                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-900 transition-colors"
+                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-800 transition-colors"
                           >
                             <Edit className="h-4 w-4" />
                           </motion.button>
@@ -150,7 +142,7 @@ export default function Client() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setConfirmDelete(emp._id)}
-                            className="inline-flex items-center cursor-pointer p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                            className="inline-flex items-center cursor-pointer p-2 bg-rose-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                           >
                             <DeleteIcon className="h-4 w-4" />
 

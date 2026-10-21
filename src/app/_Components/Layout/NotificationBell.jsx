@@ -166,11 +166,11 @@ const NotificationBell = ({ mobile = false }) => {
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-zinc-300">
               <Bell size={15} />
             </span>
-            <span className="flex-1 text-[13px] font-semibold text-zinc-200">
+            <span className="flex-1 text-sm font-semibold text-zinc-100">
               Notifications
             </span>
             {unreadCount > 0 && (
-              <span className="min-w-[20px] shrink-0 rounded-full bg-red-500 px-1.5 py-0.5 text-center text-[10px] font-bold leading-none text-white">
+              <span className="min-w-[20px] shrink-0 rounded-full bg-rose-500 px-1.5 py-0.5 text-center text-xs font-medium leading-none text-white">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}
@@ -180,7 +180,7 @@ const NotificationBell = ({ mobile = false }) => {
           <>
             <Bell size={14} />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white leading-none">
+              <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-rose-500 text-xs font-medium text-white leading-none">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}
@@ -190,7 +190,7 @@ const NotificationBell = ({ mobile = false }) => {
 
       {open && (
         <div
-          className={`absolute z-[80] mt-2 rounded-2xl border border-white/[0.1] bg-[#141416] shadow-2xl overflow-hidden ${
+          className={`absolute z-[80] mt-2 rounded-2xl border border-white/[0.1] bg-ink shadow-2xl overflow-hidden ${
             mobile
               ? "left-0 right-0 w-full"
               : "right-0 w-[340px]"
@@ -203,7 +203,7 @@ const NotificationBell = ({ mobile = false }) => {
                 type="button"
                 onClick={handleMarkAll}
                 disabled={markingAll}
-                className="text-[11px] font-medium text-zinc-400 hover:text-white disabled:opacity-50"
+                className="text-xs font-medium text-zinc-400 hover:text-white disabled:opacity-50"
               >
                 Mark all read
               </button>
@@ -237,15 +237,15 @@ const NotificationBell = ({ mobile = false }) => {
                       <p className="text-xs font-semibold text-zinc-100">
                         {n.title}
                         {n.count > 1 && (
-                          <span className="ml-1.5 text-[10px] font-medium text-zinc-500">
+                          <span className="ml-1.5 text-xs font-medium text-zinc-500">
                             · {n.count} new
                           </span>
                         )}
                       </p>
-                      <p className="mt-0.5 text-[11px] leading-relaxed text-zinc-400">
+                      <p className="mt-0.5 text-xs leading-relaxed text-zinc-400">
                         {n.message}
                       </p>
-                      <p className="mt-1 text-[10px] text-zinc-600">
+                      <p className="mt-1 text-xs text-zinc-500">
                         {moment(n.createdAt)
                           .tz("Asia/Karachi")
                           .fromNow()}

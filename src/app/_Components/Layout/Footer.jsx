@@ -31,16 +31,16 @@
 //           {/* Logo & Contact Info */}
 //           <div>
 //             <Image src={logo} alt="logo" className="md:m-0 m-auto" />
-//             <a href="#" className="text-red-500 block mt-2">
+//             <a href="#" className="text-rose-600 block mt-2">
 //               [support@example.com]
 //             </a>
-//             <p className="text-gray-500 mt-1 ">0-000-000-000</p>
+//             <p className="text-zinc-500 mt-1 ">0-000-000-000</p>
 //           </div>
 
 //           {/* Footer Links */}
 //           <div>
 //             <h3 className="font-bold text-lg text-gray-700 ">About Us</h3>
-//             <ul className="mt-2 text-gray-500">
+//             <ul className="mt-2 text-zinc-500">
 //               <li>
 //                 <a href="#" className="hover:text-gray-700 ">
 //                   How To's
@@ -51,7 +51,7 @@
 
 //           <div>
 //             <h3 className="font-bold text-lg text-gray-700 ">How To's</h3>
-//             <ul className="mt-2 text-gray-500">
+//             <ul className="mt-2 text-zinc-500">
 //               <li>
 //                 <a href="#" className="hover:text-gray-700 ">
 //                   Terms
@@ -62,7 +62,7 @@
 
 //           <div>
 //             <h3 className="font-bold text-lg text-gray-700">FAQ's</h3>
-//             <ul className="mt-2 text-gray-500">
+//             <ul className="mt-2 text-zinc-500">
 //               <li>
 //                 <a href="#" className="hover:text-gray-700">
 //                   Policy
@@ -96,7 +96,7 @@
 //       </div>
 
 //       {/* Bottom Copyright */}
-//       <div className="bg-gray-100 text-gray-600 text-center text-sm py-7 flex justify-center flex-wrap  gap-[50%]">
+//       <div className="bg-zinc-50 text-gray-600 text-center text-sm py-7 flex justify-center flex-wrap  gap-[50%]">
 //         <p className="">Copyright by <Link href="https://hnhsofttechsolutions.com/">HNH Soft Tech Solutions</Link> . All Rights Reserved.</p>
 //         {/* <p className="">HNH Soft Tech Solutions</p> */}
 //       </div>
@@ -121,7 +121,7 @@ const Footer = () => {
             href="https://zytronworld.com/"
             className="text-blue-300 hover:underline"
           >
-            ZYTRON WORLD
+            zyro
           </a>
         </p>
       </div>

@@ -27,6 +27,7 @@ const ChatComposer = forwardRef(function ChatComposer(
     sendPayload,
     uploadFile,
     editMsg,
+    dark = false,
   },
   ref
 ) {
@@ -70,7 +71,7 @@ const ChatComposer = forwardRef(function ChatComposer(
 
       <UploadProgress uploadPct={draft.uploadPct} />
 
-      <footer className={`shrink-0 px-2 py-2 sm:px-3 ${theme.composer}`}>
+      <footer className={`shrink-0 px-2.5 py-2.5 sm:px-4 sm:py-3 ${theme.composer}`}>
         {draft.voiceMode ? (
           <VoiceRecorder
             conversationId={activeId}
@@ -83,35 +84,39 @@ const ChatComposer = forwardRef(function ChatComposer(
               files={draft.pendingFiles}
               onRemove={draft.removePendingFile}
             />
-            <div className="flex w-full min-w-0 items-center gap-1">
+            <div className="flex w-full min-w-0 items-end gap-2">
               <ClickAway
                 enabled={draft.showEmoji}
                 onAway={() => draft.setShowEmoji(false)}
-                className="relative shrink-0 flex items-center"
+                className="relative flex h-11 w-11 shrink-0 items-center justify-center"
               >
                 <IconButton
                   label="Emoji"
-                  className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full hover:bg-black/5"
+                  className={`inline-flex h-11 w-11 items-center justify-center rounded-full transition ${theme.iconBtn}`}
                   onClick={() => {
                     draft.setShowEmoji((v) => !v);
                     draft.setShowAttach(false);
                   }}
                 >
-                  <Smile className="h-5 w-5 text-zinc-500 sm:h-6 sm:w-6" />
+                  <Smile className="h-5 w-5 text-zinc-500" />
                 </IconButton>
                 {draft.showEmoji && (
-                  <EmojiPicker onPick={(em) => draft.setText((t) => t + em)} />
+                  <EmojiPicker
+                    dark={dark}
+                    theme={theme}
+                    onPick={(em) => draft.setText((t) => t + em)}
+                  />
                 )}
               </ClickAway>
 
               <ClickAway
                 enabled={draft.showAttach}
                 onAway={() => draft.setShowAttach(false)}
-                className="relative shrink-0 flex items-center"
+                className="relative flex h-11 w-11 shrink-0 items-center justify-center"
               >
                 <IconButton
                   label="Attach"
-                  className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-full hover:bg-black/5"
+                  className={`inline-flex h-11 w-11 items-center justify-center rounded-full transition ${theme.iconBtn}`}
                   onClick={() => {
                     draft.setShowAttach((v) => !v);
                     draft.setShowEmoji(false);
@@ -123,6 +128,8 @@ const ChatComposer = forwardRef(function ChatComposer(
                   <AttachMenu
                     onPhotos={draft.pickPhotos}
                     onDocument={draft.pickDocument}
+                    dark={dark}
+                    theme={theme}
                   />
                 )}
                 <input
@@ -136,6 +143,7 @@ const ChatComposer = forwardRef(function ChatComposer(
 
               <ComposerTextField
                 theme={theme}
+                dark={dark}
                 textAreaRef={draft.textAreaRef}
                 text={draft.text}
                 onType={draft.onType}
@@ -164,7 +172,7 @@ const ChatComposer = forwardRef(function ChatComposer(
                   label="Send"
                   onClick={draft.handleSend}
                   disabled={draft.sendingAttachments}
-                  className={`inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full shadow-sm ${theme.accent} disabled:opacity-60`}
+                  className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full shadow-sm transition ${theme.accent} disabled:opacity-60`}
                 >
                   <Send className="h-5 w-5" />
                 </IconButton>
@@ -172,7 +180,7 @@ const ChatComposer = forwardRef(function ChatComposer(
                 <IconButton
                   label="Voice message"
                   onClick={draft.startVoiceMode}
-                  className={`inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full shadow-sm ${theme.accent}`}
+                  className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full shadow-sm transition ${theme.accent}`}
                 >
                   <Mic className="h-5 w-5" />
                 </IconButton>

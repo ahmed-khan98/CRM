@@ -1,9 +1,9 @@
-import DashboardClientLayout from "@/app/_Components/Layout/DashboardClientLayout";
+﻿import DashboardClientLayout from "@/app/_Components/Layout/DashboardClientLayout";
 
 export const metadata = {
   title: {
     default: "Dashboard",
-    template: "%s | CRM Zytron World",
+    template: "%s | zyro",
   },
   robots: { index: false, follow: false },
 };

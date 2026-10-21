@@ -8,18 +8,24 @@ import TaskCard from "../task/TaskCard";
 
 function KanbanColumn({ column, tasks, onAddTask, onOpenTask, showProject, onProjectClick }) {
   return (
-    <div className={`flex min-w-0 w-full flex-col rounded-xl border border-zinc-100 border-t-[3px] bg-zinc-50/80 shadow-sm ${column.accent}`}>
+    <div
+      className={`flex min-w-0 w-full flex-col rounded-xl border border-zinc-800 border-t-[3px] bg-[#121212] shadow-none ${column.accent}`}
+    >
       <div className="flex items-center justify-between px-3 pt-3 pb-2">
         <div className="flex items-center gap-2">
           <span className={`h-2 w-2 rounded-full ${column.dot}`} />
-          <span className="text-xs font-semibold text-zinc-700">{column.label}</span>
-          <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${column.countBg}`}>{tasks.length}</span>
+          <span className="text-xs font-semibold text-zinc-100">{column.label}</span>
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${column.countBg}`}
+          >
+            {tasks.length}
+          </span>
         </div>
         {onAddTask && (
           <button
             type="button"
             onClick={() => onAddTask(column.id)}
-            className="flex h-6 w-6 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 transition-all cursor-pointer"
+            className="flex h-6 w-6 items-center justify-center rounded-lg text-zinc-500 transition-all hover:bg-zinc-800 hover:text-zinc-100 cursor-pointer"
           >
             <Plus className="h-3.5 w-3.5" />
           </button>
@@ -31,15 +37,30 @@ function KanbanColumn({ column, tasks, onAddTask, onOpenTask, showProject, onPro
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex flex-col gap-2 min-h-[120px] min-w-0 px-2 pb-2 transition-colors rounded-b-2xl ${snapshot.isDraggingOver ? "bg-zinc-100" : ""}`}
+            className={`flex min-h-[120px] min-w-0 flex-col gap-2 rounded-b-2xl px-2 pb-2 transition-colors ${
+              snapshot.isDraggingOver ? "bg-zinc-900/80" : ""
+            }`}
           >
             {tasks.map((task, index) => (
-              <TaskCard key={task._id} task={task} index={index} onOpen={onOpenTask} showProject={showProject} onProjectClick={onProjectClick} />
+              <TaskCard
+                key={task._id}
+                task={task}
+                index={index}
+                onOpen={onOpenTask}
+                showProject={showProject}
+                onProjectClick={onProjectClick}
+              />
             ))}
             {provided.placeholder}
             {tasks.length === 0 && !snapshot.isDraggingOver && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-8 text-center">
-                <p className="text-[11px] font-semibold text-zinc-400">Drop tasks here</p>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col items-center justify-center py-8 text-center"
+              >
+                <p className="text-[11px] font-semibold text-zinc-500">
+                  Drop tasks here
+                </p>
               </motion.div>
             )}
           </div>

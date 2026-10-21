@@ -31,10 +31,11 @@ function ChatHeader({
   setConfirmDeleteChat,
   adminDisable,
   adminEnable,
+  dark = false,
 }) {
   return (
     <header
-      className={`flex shrink-0 items-center gap-1.5 border-b px-2 py-2 sm:gap-3 sm:px-3 sm:py-2.5 ${theme.header}`}
+      className={`relative z-40 flex shrink-0 items-center gap-1.5 overflow-visible border-b px-2 py-2.5 sm:gap-3 sm:px-4 sm:py-3 ${theme.header}`}
     >
       <button
         type="button"
@@ -60,12 +61,13 @@ function ChatHeader({
           myId={myId}
           peer={peer}
           startOutgoing={startOutgoing}
+          theme={theme}
         />
         <ChatTooltip label="Contact info" side="bottom">
           <button
             type="button"
             aria-label="Contact info"
-            className="rounded-full p-1.5 hover:bg-black/5 cursor-pointer sm:p-2"
+            className={`rounded-xl p-1.5 cursor-pointer sm:p-2 transition ${theme.iconBtn}`}
             onClick={() => setShowInfo((v) => !v)}
           >
             <Info className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
@@ -85,6 +87,8 @@ function ChatHeader({
           onAddMembers={onAddMembers}
           adminDisable={adminDisable}
           adminEnable={adminEnable}
+          dark={dark}
+          theme={theme}
         />
       </div>
     </header>

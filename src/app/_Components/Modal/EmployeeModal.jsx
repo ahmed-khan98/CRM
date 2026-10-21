@@ -21,7 +21,7 @@ import ModalShell from "./ModalShell";
 import { fleet } from "../fleet/fleetTheme";
 
 const inputClass = (hasError) =>
-  `${fleet.modalInput} ${hasError ? "border-red-500/50" : ""}`;
+  `${fleet.modalInput} ${hasError ? "border-danger/50" : ""}`;
 
 const FieldLabel = ({ children }) => (
   <label className={fleet.modalLabel}>{children}</label>
@@ -31,7 +31,7 @@ const ErrMsg = ({ name }) => (
   <ErrorMessage
     name={name}
     component="p"
-    className="text-[11px] mt-1 font-medium text-red-400"
+    className="text-[11px] mt-1 font-medium text-rose-600"
   />
 );
 
@@ -102,28 +102,56 @@ const hrmsJsonBody = (values) => ({
   emergencyContact: values.emergencyContact || {},
 });
 
-const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
+const EmployeeModal = ({
+  isOpen,
+  closeModal,
+  data,
+  prefill = null,
+  hireMeta = null,
+  warning = null,
+  refetch,
+  onCreated,
+}) => {
   const [createEmployee] = useCreateEmployeeMutation();
   const [updateEmployee] = useUpdateEmployeeMutation();
   const { data: departments } = useAllDepartmentsQuery();
-  const isEdit = !!data;
+  const isEdit = Boolean(data?._id);
+  const seed = isEdit ? data : prefill || null;
+  const isRecruitmentHire = Boolean(hireMeta?.source === "recruitment");
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const payload = new FormData();
       payload.append("id", data?._id);
-      payload.append("image", values?.image);
+      if (values?.image instanceof File) {
+        payload.append("image", values.image);
+      } else if (typeof values?.image === "string" && values.image.startsWith("http")) {
+        payload.append("imageUrl", values.image);
+      } else if (values?.image) {
+        payload.append("image", values.image);
+      }
       payload.append("fullName", values?.fullName);
-      payload.append("password", values?.password);
+      payload.append("password", values?.password || "");
       payload.append("email", values?.email);
       payload.append("joiningDate", values?.joiningDate);
-      payload.append("address", values?.address);
+      payload.append("address", values?.address || "");
       payload.append("departmentId", values?.departmentId);
       payload.append("role", values?.role);
       payload.append("CNIC", values?.CNIC);
       payload.append("phoneNo", values?.phoneNo);
       payload.append("designation", values?.designation);
       appendHrmsFields(payload, values);
+
+      if (isRecruitmentHire && hireMeta) {
+        payload.append("source", "recruitment");
+        if (hireMeta.candidateId)
+          payload.append("candidateId", hireMeta.candidateId);
+        if (hireMeta.applicationId)
+          payload.append("applicationId", hireMeta.applicationId);
+        if (hireMeta.offerId) payload.append("offerId", hireMeta.offerId);
+        if (hireMeta.joiningDetailsId)
+          payload.append("joiningDetailsId", hireMeta.joiningDetailsId);
+      }
 
       const response = await (isEdit
         ? updateEmployee(
@@ -153,49 +181,58 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
             ? "Employee updated successfully!"
             : "Employee created successfully!",
         );
+        if (!isEdit && typeof onCreated === "function") {
+          onCreated(response.data);
+        }
       } else {
         toast.error(response.message || "Failed to process Employee");
       }
       resetForm();
       closeModal();
-      refetch();
+      if (typeof refetch === "function") refetch();
     } catch (error) {
-      toast.error(error.data?.message || "Failed to create employee");
+      const dupId = error?.data?.errors?.[0]?.employeeId;
+      toast.error(
+        dupId
+          ? `${error.data?.message || "Duplicate"} — open existing employee from the list`
+          : error.data?.message || "Failed to create employee",
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   const initialValues = {
-    departmentId: data?.departmentId?._id || data?.departmentId || "",
-    joiningDate: dateOnly(data?.joiningDate),
-    fullName: data?.fullName || "",
-    designation: data?.designation || "",
-    email: data?.email || "",
-    CNIC: data?.CNIC || "",
-    status: data?.status || "",
-    role: data?.role || "USER",
-    phoneNo: data?.phoneNo || "",
-    address: data?.address || "",
-    image: data?.image || "",
+    departmentId: seed?.departmentId?._id || seed?.departmentId || "",
+    joiningDate: dateOnly(seed?.joiningDate),
+    fullName: seed?.fullName || "",
+    designation: seed?.designation || "",
+    email: seed?.email || "",
+    CNIC: seed?.CNIC || "",
+    status: seed?.status || "",
+    role: seed?.role || "USER",
+    phoneNo: seed?.phoneNo || "",
+    address: seed?.address || "",
+    image: seed?.image || "",
     password: "",
-    isEdit: !!data,
-    dateOfBirth: dateOnly(data?.dateOfBirth),
-    gender: data?.gender || "",
-    maritalStatus: data?.maritalStatus || "",
-    bloodGroup: data?.bloodGroup || "",
-    employmentType: data?.employmentType || "",
-    currentSalary: data?.currentSalary ?? "",
-    bankName: data?.bankName || "",
-    accountTitle: data?.accountTitle || "",
-    accountNumber: data?.accountNumber || "",
-    iban: data?.iban || "",
-    ntn: data?.ntn || "",
-    shiftStart: toTimeInputValue(data?.shiftStart),
-    shiftEnd: toTimeInputValue(data?.shiftEnd),
+    isEdit,
+    isRecruitmentHire,
+    dateOfBirth: dateOnly(seed?.dateOfBirth),
+    gender: seed?.gender || "",
+    maritalStatus: seed?.maritalStatus || "",
+    bloodGroup: seed?.bloodGroup || "",
+    employmentType: seed?.employmentType || "",
+    currentSalary: seed?.currentSalary ?? "",
+    bankName: seed?.bankName || "",
+    accountTitle: seed?.accountTitle || "",
+    accountNumber: seed?.accountNumber || "",
+    iban: seed?.iban || "",
+    ntn: seed?.ntn || "",
+    shiftStart: toTimeInputValue(seed?.shiftStart),
+    shiftEnd: toTimeInputValue(seed?.shiftEnd),
     emergencyContact: {
       ...emptyEmergency(),
-      ...(data?.emergencyContact || {}),
+      ...(seed?.emergencyContact || {}),
     },
   };
 
@@ -214,7 +251,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
       onClose={closeModal}
       title={isEdit ? "Edit Employee" : "Add Employee"}
       maxWidthClass="max-w-4xl"
-      zClass="z-50"
+      zClass="z-[110]"
     >
       <Formik
         initialValues={initialValues}
@@ -266,6 +303,17 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
 
           return (
             <Form className="space-y-3">
+              {warning ? (
+                <div className="rounded-xl border border-amber-800/60 bg-amber-950/30 px-3 py-2 text-xs text-amber-100">
+                  {warning}
+                </div>
+              ) : null}
+              {isRecruitmentHire ? (
+                <p className="text-[11px] text-zinc-500">
+                  Hired via Recruitment. Leave password empty to auto-generate.
+                  Employment type left blank for HR.
+                </p>
+              ) : null}
               <input
                 type="file"
                 ref={fileInputRef1}
@@ -295,8 +343,8 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                       />
                     ) : (
                       <div className="flex flex-col items-center gap-1">
-                        <Upload className="w-5 h-5 text-zinc-600" />
-                        <span className="text-[10px] font-bold text-center px-2 text-zinc-600">
+                        <Upload className="w-5 h-5 text-zinc-500" />
+                        <span className="text-[10px] font-bold text-center px-2 text-zinc-500">
                           Upload Photo
                         </span>
                       </div>
@@ -307,7 +355,7 @@ const EmployeeModal = ({ isOpen, closeModal, data, refetch }) => {
                     <button
                       type="button"
                       onClick={handleDeleteMainImage}
-                      className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer bg-red-500/90 border-2 border-[#0f1419]"
+                      className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer bg-red-600 border-2 border-[#0f1419]"
                     >
                       <Trash2 className="w-3 h-3 text-white" />
                     </button>

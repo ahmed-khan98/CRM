@@ -5,7 +5,7 @@ import { PhoneCall, Video } from "lucide-react";
 import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
 import { conversationAvatar, conversationTitle, isSelfChat } from "@/app/_Components/chat/chatUtils";
 
-function HeaderCallButtons({ active, activeId, myId, peer, startOutgoing }) {
+function HeaderCallButtons({ active, activeId, myId, peer, startOutgoing, theme }) {
   // No calls on "Message yourself" notes chat
   if (isSelfChat(active, myId)) return null;
   if (!(peer || active.type === "group")) return null;
@@ -30,7 +30,7 @@ function HeaderCallButtons({ active, activeId, myId, peer, startOutgoing }) {
         <button
           type="button"
           aria-label="Voice call"
-          className="rounded-full p-1.5 hover:bg-black/5 cursor-pointer sm:p-2"
+          className={`rounded-xl p-1.5 cursor-pointer sm:p-2 transition ${theme?.iconBtn || "hover:bg-zinc-50"}`}
           onClick={() => start("voice")}
         >
           <PhoneCall className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
@@ -43,7 +43,7 @@ function HeaderCallButtons({ active, activeId, myId, peer, startOutgoing }) {
         <button
           type="button"
           aria-label="Video call"
-          className="rounded-full p-1.5 hover:bg-black/5 cursor-pointer sm:p-2"
+          className={`rounded-xl p-1.5 cursor-pointer sm:p-2 transition ${theme?.iconBtn || "hover:bg-zinc-50"}`}
           onClick={() => start("video")}
         >
           <Video className="h-[18px] w-[18px] sm:h-5 sm:w-5" />

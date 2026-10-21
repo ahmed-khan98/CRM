@@ -13,7 +13,7 @@ function VehicleInfoSection({ vehicle }) {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className={`${fleet.card} overflow-hidden`}>
-          <div className="relative h-44 bg-zinc-100 flex items-center justify-center">
+          <div className="relative h-44 bg-zinc-50 flex items-center justify-center">
             {vehicle.images?.[0]?.url ? (
               <Image
                 src={vehicle.images[0].url}
@@ -29,7 +29,7 @@ function VehicleInfoSection({ vehicle }) {
           </div>
           <div className="p-4 space-y-3">
             {vehicle.color && (
-              <div className="flex items-center gap-2 text-sm text-zinc-700 capitalize">
+              <div className="flex items-center gap-2 text-sm text-zinc-900 capitalize">
                 <span className="h-4 w-4 rounded-full border border-zinc-200 bg-zinc-200" />
                 {vehicle.color}
               </div>
@@ -44,7 +44,7 @@ function VehicleInfoSection({ vehicle }) {
                   {vehicle.vendor.companyName}
                 </Link>
               ) : (
-                <p className="text-sm font-semibold text-zinc-800">—</p>
+                <p className="text-sm font-semibold text-zinc-900">—</p>
               )}
             </div>
           </div>
@@ -88,7 +88,7 @@ function VehicleInfoSection({ vehicle }) {
 
           {vehicle.notes && (
             <SectionCard icon={StickyNote} title="Notes">
-              <p className="text-sm text-zinc-600 leading-relaxed">{vehicle.notes}</p>
+              <p className="text-sm text-zinc-500 leading-relaxed">{vehicle.notes}</p>
             </SectionCard>
           )}
         </div>
@@ -109,7 +109,7 @@ function VehicleInfoSection({ vehicle }) {
                       href={img.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100"
+                      className="group relative aspect-[4/3] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-50"
                     >
                       <Image
                         src={img.url}
@@ -133,17 +133,17 @@ function VehicleInfoSection({ vehicle }) {
                   {vehicle.videos.map((vid, i) => (
                     <div
                       key={`vid-${i}`}
-                      className="rounded-xl overflow-hidden border border-zinc-200 bg-black"
+                      className="rounded-xl overflow-hidden border border-zinc-200 bg-ink"
                     >
                       <video
                         src={vid.url}
                         controls
-                        className="w-full max-h-56 object-contain bg-black"
+                        className="w-full max-h-56 object-contain bg-ink"
                       >
                         Your browser does not support the video tag.
                       </video>
                       {vid.originalName && (
-                        <p className="px-3 py-1.5 text-[11px] text-zinc-400 bg-zinc-900 truncate">
+                        <p className="px-3 py-1.5 text-[11px] text-zinc-400 bg-ink truncate">
                           {vid.originalName}
                         </p>
                       )}

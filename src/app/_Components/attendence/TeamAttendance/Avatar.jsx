@@ -1,12 +1,12 @@
 import React, { memo, useMemo } from "react";
 
 const COLORS = [
-  "bg-violet-100 text-violet-700",
-  "bg-rose-100 text-rose-700",
-  "bg-amber-100 text-amber-700",
-  "bg-emerald-100 text-emerald-700",
-  "bg-sky-100 text-sky-700",
-  "bg-orange-100 text-orange-700",
+  "bg-violet-500/20 text-violet-300",
+  "bg-rose-500/20 text-rose-300",
+  "bg-amber-500/20 text-amber-300",
+  "bg-emerald-500/20 text-emerald-300",
+  "bg-sky-500/20 text-sky-300",
+  "bg-orange-500/20 text-orange-300",
 ];
 
 export const Avatar = memo(({ name }) => {
@@ -25,7 +25,10 @@ export const Avatar = memo(({ name }) => {
   }, [name]);
 
   return (
-    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-black ${color}`}>
+    <div
+      className={`flex size-8 min-h-8 min-w-8 max-h-8 max-w-8 shrink-0 grow-0 self-center items-center justify-center overflow-hidden rounded-full text-xs font-medium leading-none ${color}`}
+      style={{ borderRadius: "9999px", aspectRatio: "1 / 1" }}
+    >
       {initials}
     </div>
   );

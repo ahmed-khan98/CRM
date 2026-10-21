@@ -112,7 +112,7 @@ function MessageContextMenu({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm rounded-t-2xl sm:rounded-2xl bg-white p-2 text-zinc-800 shadow-xl"
+        className="w-full max-w-sm rounded-t-2xl sm:rounded-2xl bg-white p-2 text-zinc-900 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {items.map((item) => (

@@ -77,20 +77,20 @@
 //             <div className="p-2 bg-purple-100 rounded-lg text-gray-800">
 //               <Calendar className="h-5 w-5" />
 //             </div>
-//             <h3 className="text-xl font-bold text-gray-800 tracking-tight">
+//             <h3 className="text-lg font-semibold text-gray-800 tracking-tight">
 //               Attendance History
 //             </h3>
 //           </div>
 //           <div className="bg-white p-1 rounded-2xl shadow-sm border border-purple-50 flex flex-wrap gap-3 items-center justify-between shrink-0">
-//             <div className="flex bg-gray-100 rounded-xl p-1 w-full sm:w-auto">
+//             <div className="flex bg-zinc-50 rounded-xl p-1 w-full sm:w-auto">
 //               {["current_month", "custom_range"].map((t) => (
 //                 <button
 //                   key={t}
 //                   onClick={() => setViewType(t)}
-//                   className={`flex-1 sm:flex-none px-3 py-1 text-[11px] rounded-lg transition-all capitalize font-bold ${
+//                   className={`flex-1 sm:flex-none px-3 py-1 text-xs rounded-lg transition-all capitalize font-bold ${
 //                     viewType === t
 //                       ? "bg-white text-gray-800 shadow-sm"
-//                       : "text-gray-500"
+//                       : "text-zinc-500"
 //                   }`}
 //                 >
 //                   {t.replace("_", " ")}
@@ -104,7 +104,7 @@
 //                   <input
 //                     type="date"
 //                     value={customRange.start}
-//                     className="bg-gray-50 border-none p-2 rounded-lg text-[11px] focus:ring-2 focus:ring-purple-200 outline-none w-full"
+//                     className="bg-zinc-50 border-none p-2 rounded-lg text-xs focus:ring-2 focus:ring-purple-200 outline-none w-full"
 //                     onChange={(e) =>
 //                       setCustomRange({ ...customRange, start: e.target.value })
 //                     }
@@ -113,7 +113,7 @@
 //                   <input
 //                     type="date"
 //                     value={customRange.end}
-//                     className="bg-gray-50 border-none p-2 rounded-lg text-[11px] focus:ring-2 focus:ring-purple-200 outline-none w-full"
+//                     className="bg-zinc-50 border-none p-2 rounded-lg text-xs focus:ring-2 focus:ring-purple-200 outline-none w-full"
 //                     onChange={(e) =>
 //                       setCustomRange({ ...customRange, end: e.target.value })
 //                     }
@@ -123,7 +123,7 @@
 //               {(viewType !== "current_month" || customRange.start) && (
 //                 <button
 //                   onClick={handleClearFilters}
-//                   className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"
+//                   className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
 //                 >
 //                   <XCircle size={20} />
 //                 </button>
@@ -140,7 +140,7 @@
 //           <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-purple-100">
 //             <table className="w-full text-left border-collapse">
 //               {/* Sticky Header */}
-//               <thead className="sticky top-0 z-20 bg-gray-50 border-b border-gray-100 ">
+//               <thead className="sticky top-0 z-20 bg-zinc-50 border-b border-gray-100 ">
 //                 <tr>
 //                   {[
 //                     "Date",
@@ -151,7 +151,7 @@
 //                   ].map((h) => (
 //                     <th
 //                       key={h}
-//                       className="p-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+//                       className="p-4 text-xs font-medium text-zinc-400 uppercase tracking-widest"
 //                     >
 //                       {h}
 //                     </th>
@@ -271,7 +271,7 @@
 //             <div className="p-2 bg-zinc-200 rounded-lg text-gray-800">
 //               <Calendar className="h-5 w-5" />
 //             </div>
-//             <h3 className="text-xl font-bold text-gray-800 tracking-tight">
+//             <h3 className="text-lg font-semibold text-gray-800 tracking-tight">
 //               Attendance History
 //             </h3>
 //           </div>
@@ -280,15 +280,15 @@
 //           <div className="bg-white p-1 rounded-2xl shadow-sm border border-purple-50 flex flex-wrap gap-3 items-center justify-between shrink-0">
 
 //             {/* View Toggle */}
-//             <div className="flex bg-gray-100 rounded-xl p-1 w-full sm:w-auto">
+//             <div className="flex bg-zinc-50 rounded-xl p-1 w-full sm:w-auto">
 //               {["current_month", "custom_range"].map((type) => (
 //                 <button
 //                   key={type}
 //                   onClick={() => setViewType(type)}
-//                   className={`cursor-pointer flex-1 sm:flex-none px-3 py-1 text-[11px] rounded-lg transition-all capitalize font-bold ${
+//                   className={`cursor-pointer flex-1 sm:flex-none px-3 py-1 text-xs rounded-lg transition-all capitalize font-bold ${
 //                     viewType === type
 //                       ? "bg-white text-gray-800 shadow-sm"
-//                       : "text-gray-500"
+//                       : "text-zinc-500"
 //                   }`}
 //                 >
 //                   {type.replace("_", " ")}
@@ -304,14 +304,14 @@
 //                     type="date"
 //                     value={customRange.start}
 //                     onChange={(e) => setCustomRange({ ...customRange, start: e.target.value })}
-//                     className="bg-gray-50 border-none p-2 rounded-lg text-[11px] focus:ring-2 focus:ring-purple-200 outline-none w-full"
+//                     className="bg-zinc-50 border-none p-2 rounded-lg text-xs focus:ring-2 focus:ring-purple-200 outline-none w-full"
 //                   />
 //                   <span className="text-gray-300 font-bold">-</span>
 //                   <input
 //                     type="date"
 //                     value={customRange.end}
 //                     onChange={(e) => setCustomRange({ ...customRange, end: e.target.value })}
-//                     className="bg-gray-50 border-none p-2 rounded-lg text-[11px] focus:ring-2 focus:ring-purple-200 outline-none w-full"
+//                     className="bg-zinc-50 border-none p-2 rounded-lg text-xs focus:ring-2 focus:ring-purple-200 outline-none w-full"
 //                   />
 //                 </div>
 //               )}
@@ -322,7 +322,7 @@
 //                     setViewType("current_month");
 //                     setCustomRange({ start: "", end: "" });
 //                   }}
-//                   className="cursor-pointer p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"
+//                   className="cursor-pointer p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
 //                 >
 //                   <XCircle size={20} />
 //                 </button>
@@ -332,7 +332,7 @@
 //         </div>
 
 //         {/* Table */}
-//         <div className="flex-1  rounded-2xl shadow-lg border border-zinc-100 flex flex-col overflow-hidden min-h-0">
+//         <div className="flex-1  rounded-2xl shadow-lg border border-zinc-200 flex flex-col overflow-hidden min-h-0">
 //           <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-purple-100">
 //             <table className="w-full text-left border-collapse">
 
@@ -341,7 +341,7 @@
 //                   {TABLE_HEADERS.map((header) => (
 //                     <th
 //                       key={header}
-//                       className="p-4 text-[10px] bg-zinc-800 font-bold text-zinc-300 uppercase tracking-widest"
+//                       className="p-4 text-xs bg-zinc-800 font-bold text-zinc-300 uppercase tracking-widest"
 //                     >
 //                       {header}
 //                     </th>
@@ -367,7 +367,7 @@
 //                   <tr>
 //                     <td
 //                       colSpan={TABLE_HEADERS.length}
-//                       className="p-20 text-center text-gray-400 font-medium"
+//                       className="p-20 text-center text-zinc-400 font-medium"
 //                     >
 //                       No attendance records found
 //                     </td>
@@ -392,7 +392,7 @@ import {
   calculateAttendanceStats,
   getAllTableData,
   getStatCards,
-  PALETTES,
+  PALETTES_DARK,
   isDiscrepancyRecord,
 } from "@/app/utilities/attendence";
 import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/AttendenceHeader";
@@ -436,11 +436,11 @@ const statCards = useMemo(() => {
   return getStatCards({
     stats,
     data: allData,
-    palettes: PALETTES,
+    palettes: PALETTES_DARK,
     extraCard: {
       label: "Working Days",
       icon: TrendingUp,
-      palette: PALETTES.total,
+      palette: PALETTES_DARK.total,
       getValue: (data) => data.filter((r) => !r.isWeekend).length,
     },
   });
@@ -464,24 +464,21 @@ const statCards = useMemo(() => {
   }, []);
   
   return (
-    <div className="flex min-h-screen flex-col gap-3 p-1 text-zinc-800">
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm shadow-slate-200/60 sm:px-5">
-      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <AttendenceHeader
-          icon={CalendarSearch}
-          length={allData?.length}
-          name="My Attendance"
-        />
-
+    <div className=" section-stack min-h-screen  text-zinc-100 -mx-1 rounded-2xl px-1 py-1 sm:px-2 sm:py-2">
+      <AttendenceHeader
+        icon={CalendarSearch}
+        length={allData?.length}
+        name="My Attendance"
+      >
         <FilterBar
+          variant="dark"
           viewType={viewType}
           setViewType={setViewType}
           customRange={customRange}
           setCustomRange={setCustomRange}
           clearFilters={clearFilters}
         />
-      </div>
-      </div>
+      </AttendenceHeader>
 
       {/* Stat Cards */}
       <StatsSection

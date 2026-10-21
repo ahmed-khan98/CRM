@@ -169,7 +169,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
                   <ErrorMessage
                     name="image"
                     component="div"
-                    className="text-red-400 text-[11px] mt-1"
+                    className="text-rose-600 text-[11px] mt-1"
                   />
                   {previewSrc && (
                     <button
@@ -177,7 +177,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
                       onClick={handleDeleteMainImage}
                       className="absolute -top-2 -right-2 bg-[#1c2330] border border-white/10 rounded-full p-1 shadow hover:bg-[#232b3a]"
                     >
-                      <Trash2 className="w-4 h-4 text-red-400" />
+                      <Trash2 className="w-4 h-4 text-rose-600" />
                     </button>
                   )}
                 </div>

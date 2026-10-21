@@ -45,7 +45,7 @@ const Field = ({ label, name, required, children, className = "" }) => (
     </label>
     {children}
     {name && (
-      <ErrorMessage name={name} component="p" className="text-red-400 text-[11px] mt-1" />
+      <ErrorMessage name={name} component="p" className="text-rose-600 text-[11px] mt-1" />
     )}
   </div>
 );
@@ -166,14 +166,14 @@ const VehicleModal = ({ isOpen, closeModal, data, defaultVendorId }) => {
                         <button
                           type="button"
                           onClick={() => imageRef.current?.click()}
-                          className="inline-flex items-center gap-2 rounded-lg bg-white/10 text-zinc-200 px-3 py-2 text-xs font-semibold hover:bg-white/15"
+                          className="inline-flex items-center gap-2 rounded-lg bg-white/10 text-zinc-100 px-3 py-2 text-xs font-semibold hover:bg-white/15"
                         >
                           <Upload className="w-3.5 h-3.5" /> Upload Photos
                         </button>
                         <button
                           type="button"
                           onClick={() => videoRef.current?.click()}
-                          className="inline-flex items-center gap-2 rounded-lg bg-white/10 text-zinc-200 px-3 py-2 text-xs font-semibold hover:bg-white/15"
+                          className="inline-flex items-center gap-2 rounded-lg bg-white/10 text-zinc-100 px-3 py-2 text-xs font-semibold hover:bg-white/15"
                         >
                           <Film className="w-3.5 h-3.5" /> Upload Videos
                         </button>
@@ -306,7 +306,7 @@ const VehicleModal = ({ isOpen, closeModal, data, defaultVendorId }) => {
                   <button type="button" onClick={closeModal} className="px-4 py-2.5 rounded-xl text-sm font-semibold text-zinc-400 hover:text-white">
                     Cancel
                   </button>
-                  <button type="submit" disabled={isSubmitting} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-zinc-100 text-zinc-950 hover:bg-white disabled:opacity-60">
+                  <button type="submit" disabled={isSubmitting} className="px-5 py-2.5 rounded-xl text-sm font-medium bg-zinc-50 text-zinc-900 hover:bg-white disabled:opacity-60">
                     {isSubmitting ? "Saving..." : isEdit ? "Update Vehicle" : "Add Vehicle"}
                   </button>
                 </div>

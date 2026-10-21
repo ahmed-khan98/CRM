@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { clearAuthCookies } from "@/app/_utils/authCookies";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment-timezone";
-import Main from "../../../app/Assets/zytronlogo.png";
+import BrandLogo from "@/app/_Components/brand/BrandLogo";
 import { X, Menu, Clock, Timer, Activity, CheckCircle } from "lucide-react";
 import LeftNav from "./LeftNav";
 import ActionButtons from "./NavbarActions";
@@ -129,8 +129,7 @@ const Navbar = () => {
       const response = await logout().unwrap();
       if (response.statusCode === 200) {
         toast.success("Logged out successfully");
-        Cookies.remove("token", { path: "/" });
-        Cookies.remove("currentuser", { path: "/" });
+        clearAuthCookies();
         clearExtensionAndRedirect();
         dispatch(resumeWork());
         dispatch(removeAttendence());
@@ -163,14 +162,14 @@ const Navbar = () => {
 
       return (
         <div
-          className={`flex flex-col md:flex-row md:items-center gap-2 rounded-lg px-3 py-1 bg-yellow-500/[0.07] border border-yellow-500/15 ${mobileWidthClass(
+          className={`flex flex-col md:flex-row md:items-center gap-2 rounded-lg px-3 py-1 bg-warning/[0.07] border border-yellow-500/15 ${mobileWidthClass(
             mobile,
           )}`}
         >
           <div className="flex flex-wrap items-center gap-2 w-full">
             <div className="flex flex-col min-w-[120px]">
-              <span className="text-[8px] text-zinc-500 uppercase">Status</span>
-              <span className="text-[11px] font-bold text-yellow-400 break-words leading-tight">
+              <span className="text-xs text-zinc-500 uppercase">Status</span>
+              <span className="text-xs font-medium text-yellow-400 break-words leading-tight">
                 {`User on ${activeBreak.type.toLowerCase()} break`}
               </span>
             </div>
@@ -178,10 +177,10 @@ const Navbar = () => {
             <div className="hidden md:block w-px h-5 bg-white/[0.08]" />
 
             <div className="flex flex-col min-w-[70px]">
-              <span className="text-[8px] text-zinc-500 uppercase">
+              <span className="text-xs text-zinc-500 uppercase">
                 Break In
               </span>
-              <span className="text-[11px] text-zinc-200 leading-tight">
+              <span className="text-xs text-zinc-100 leading-tight">
                 {formatTime(activeBreak.breakIn)}
               </span>
             </div>
@@ -189,10 +188,10 @@ const Navbar = () => {
             <div className="hidden md:block w-px h-5 bg-white/[0.08]" />
 
             <div className="flex flex-col min-w-[60px]">
-              <span className="text-[8px] text-zinc-500 uppercase">
+              <span className="text-xs text-zinc-500 uppercase">
                 Duration
               </span>
-              <span className="text-[11px] font-mono text-white leading-tight">
+              <span className="text-xs font-mono text-white leading-tight">
                 {duration} min
               </span>
             </div>
@@ -200,8 +199,8 @@ const Navbar = () => {
             <div className="hidden md:block w-px h-5 bg-white/[0.08]" />
 
             <div className="flex flex-col flex-1 min-w-[100px]">
-              <span className="text-[8px] text-zinc-500 uppercase">Reason</span>
-              <span className="text-[11px] text-zinc-300 break-words leading-tight">
+              <span className="text-xs text-zinc-500 uppercase">Reason</span>
+              <span className="text-xs text-zinc-300 break-words leading-tight">
                 {activeBreak.reason || "-"}
               </span>
             </div>
@@ -213,37 +212,37 @@ const Navbar = () => {
     if (attendence?.timeIn && !attendence?.timeOut) {
       const statusClasses =
         attendence.status === "present"
-          ? "bg-green-500/15 text-green-400 border-green-500/25"
-          : "bg-yellow-500/15 text-yellow-400 border-yellow-500/25";
+          ? "bg-success/15 text-green-400 border-emerald-200"
+          : "bg-warning/15 text-yellow-400 border-yellow-500/25";
 
       return (
         <div
-          className={`flex items-center gap-3 rounded-lg px-3 py-1 bg-white/5 border border-white/[0.08] ${mobileWidthClass(mobile)}`}
+          className={`flex items-center gap-3 rounded-lg px-3 py-1 bg-white/2 border border-white/[0.08] ${mobileWidthClass(mobile)}`}
         >
           <div className="flex flex-col items-center gap-0">
-            <span className="flex items-center gap-1 text-[8px] font-bold tracking-[0.12em] uppercase text-zinc-500">
-              <Clock size={8} /> Time In
+            <span className="flex items-center gap-1 text-xs font-mono font-black leading-tight uppercase text-zinc-500">
+              <Clock size={9} /> Time In
             </span>
-            <span className="text-[11px] font-bold leading-tight text-zinc-200">
+            <span className="text-xs font-medium leading-tight text-zinc-300">
               {formatTime(attendence.timeIn)}
             </span>
           </div>
           <div className="w-px h-5 bg-white/[0.08]" />
           <div className="flex flex-col items-center gap-0">
-            <span className="flex items-center gap-1 text-[8px] font-bold tracking-[0.12em] uppercase text-zinc-500">
-              <Timer size={8} /> Working
+            <span className="flex items-center gap-1 text-xs font-mono font-black leading-tight uppercase text-zinc-500">
+              <Timer size={9} /> Working
             </span>
-            <span className="text-[11px] font-mono font-black leading-tight text-zinc-100">
+            <span className="text-xs font-mono font-black leading-tight text-zinc-300">
               {workingTime}
             </span>
           </div>
           <div className="w-px h-5 bg-white/[0.08]" />
           <div className="flex flex-col items-center gap-0">
-            <span className="flex items-center gap-1 text-[8px] font-bold tracking-[0.12em] uppercase text-zinc-500">
-              <Activity size={8} /> Status
+            <span className="flex items-center gap-1 text-xs font-mono font-black leading-tight uppercase text-zinc-500">
+              <Activity size={9} /> Status
             </span>
             <span
-              className={`text-[8px] font-bold px-1.5 py-px rounded-full uppercase border leading-tight ${statusClasses}`}
+              className={`text-xs font-mono px-1.5  rounded-full uppercase border leading-tight ${statusClasses}`}
             >
               {attendence.status}
             </span>
@@ -255,14 +254,14 @@ const Navbar = () => {
     if (attendence?.timeIn && attendence?.timeOut) {
       return (
         <div
-          className={`flex items-center gap-2 rounded-lg px-3 py-1 bg-green-500/[0.07] border border-green-500/15 ${mobileWidthClass(mobile)}`}
+          className={`flex items-center gap-2 rounded-lg px-3 py-1 bg-success/[0.07] border border-green-500/15 ${mobileWidthClass(mobile)}`}
         >
           <CheckCircle size={13} className="text-green-400 shrink-0" />
           <div>
-            <p className="text-[9px] font-black uppercase tracking-widest text-green-400 leading-tight">
+            <p className="text-xs font-medium uppercase tracking-widest text-green-400 leading-tight">
               Shift Completed
             </p>
-            <p className="text-[10px] text-zinc-500 leading-tight">Great work today!</p>
+            <p className="text-xs text-zinc-500 leading-tight">Great work today!</p>
           </div>
         </div>
       );
@@ -270,14 +269,14 @@ const Navbar = () => {
 
     return (
       <div
-        className={`flex items-center gap-2 rounded-lg px-3 py-1 animate-pulse bg-red-500/[0.07] border border-red-500/[0.18] ${mobileWidthClass(mobile)}`}
+        className={`flex items-center gap-2 rounded-lg px-3 py-1 animate-pulse bg-danger/[0.07] border border-zinc-300 ${mobileWidthClass(mobile)}`}
       >
-        <Clock size={13} className="text-red-400 shrink-0" />
+        <Clock size={13} className="text-rose-600 shrink-0" />
         <div>
-          <p className="text-[9px] font-black uppercase tracking-widest text-red-400 leading-tight">
+          <p className="text-xs font-medium uppercase tracking-widest text-rose-600 leading-tight">
             Attention Needed!
           </p>
-          <p className="text-[10px] text-zinc-500 leading-tight">
+          <p className="text-xs text-zinc-500 leading-tight">
             Please mark your attendance.
           </p>
         </div>
@@ -303,12 +302,12 @@ const Navbar = () => {
   return (
     <>
       {/* Main Navbar */}
-      <div className="fixed top-0 left-0 w-full z-50 bg-[#0f0f11] border-b border-white/[0.07] ">
+      <div className="fixed top-0 left-0 w-full z-50 bg-ink border-b border-white/[0.07] ">
         <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/20 to-white/5" />
         <nav className="flex items-center justify-between px-3 md:px-5 py-1 gap-2">
           <div className="flex min-w-0 items-center gap-4">
-            <Link href="/dashboard/statictics" className="shrink-0">
-              <Image src={Main} alt="Logo" height={36} width={100} priority />
+            <Link href="/dashboard/statistics" className="shrink-0">
+              <BrandLogo href={null} width={100} height={36} priority />
             </Link>
             <NavBreadcrumb />
           </div>
@@ -352,7 +351,7 @@ const Navbar = () => {
 
       {/* Mobile Drawer */}
       <div
-        className={`lg:hidden fixed top-0 left-0 z-[70] h-full flex flex-col transition-transform duration-300 ease-in-out w-[min(330px,88vw)] rounded-r-[28px] bg-[#0d0d0f] border-r border-white/[0.08] ${
+        className={`lg:hidden fixed top-0 left-0 z-[70] h-full flex flex-col transition-transform duration-300 ease-in-out w-[min(330px,88vw)] rounded-r-[28px] bg-ink border-r border-white/[0.08] ${
           isMenuOpen
             ? "translate-x-0 shadow-[18px_0_60px_rgba(0,0,0,0.65)]"
             : "-translate-x-full shadow-none pointer-events-none invisible"
@@ -361,10 +360,10 @@ const Navbar = () => {
       >
         <div className="h-[1.5px] w-full shrink-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
         <div className="flex items-center justify-between px-4 py-4 shrink-0 border-b border-white/[0.06]">
-          <Image src={Main} alt="Logo" width={110} height={36} />
+          <BrandLogo href="/dashboard/statistics" width={110} height={36} />
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-2xl cursor-pointer transition-all duration-150 bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09] hover:text-zinc-200"
+            className="flex h-9 w-9 items-center justify-center rounded-2xl cursor-pointer transition-all duration-150 bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09] hover:text-zinc-100"
           >
             <X size={15} />
           </button>
@@ -373,7 +372,7 @@ const Navbar = () => {
           <AttendanceStatus mobile />
         </div>
         <div className="px-3 pt-3 pb-2 shrink-0 flex flex-col gap-2">
-          <p className="px-1 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+          <p className="px-1 text-xs font-medium uppercase tracking-wider text-zinc-500">
             Quick actions
           </p>
           <NotificationBell mobile />

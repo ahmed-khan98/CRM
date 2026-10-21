@@ -24,13 +24,16 @@ function ChatOptionsMenu({
   onAddMembers,
   adminDisable,
   adminEnable,
+  dark = false,
+  theme,
 }) {
   if (!conv) return null;
 
   const peer = conversationPeer(conv, myId);
   const selfChat = isSelfChat(conv, myId);
   const iAmGroupAdmin = isConversationGroupAdmin(conv, myId);
-  const item = "flex w-full items-center gap-2 px-4 py-2.5 text-left hover:bg-zinc-50 cursor-pointer";
+  const hover = theme?.menuItem || (dark ? "hover:bg-white/[0.06]" : "hover:bg-zinc-50");
+  const item = `flex w-full items-center gap-2 px-4 py-2.5 text-left cursor-pointer ${hover}`;
 
   return (
     <>
@@ -58,7 +61,7 @@ function ChatOptionsMenu({
       </button>
       <button
         type="button"
-        className={`${item} text-red-600`}
+        className={`${item} text-rose-600`}
         onClick={() => {
           onClose();
           setConfirmDeleteChat(conv._id);
@@ -70,7 +73,7 @@ function ChatOptionsMenu({
         <>
           <button
             type="button"
-            className={`${item} text-red-600`}
+            className={`${item} text-rose-600`}
             onClick={async () => {
               onClose();
               try {
@@ -88,7 +91,7 @@ function ChatOptionsMenu({
           </button>
           <button
             type="button"
-            className={`${item} text-emerald-700`}
+            className={`${item} ${dark ? "text-emerald-700" : "text-emerald-700"}`}
             onClick={async () => {
               onClose();
               try {
@@ -118,7 +121,7 @@ function ChatOptionsMenu({
       {conv.type === "group" && (
         <button
           type="button"
-          className={`${item} text-red-600`}
+          className={`${item} text-rose-600`}
           onClick={() => {
             onClose();
             setConfirmAction({
@@ -133,7 +136,7 @@ function ChatOptionsMenu({
       {conv.type === "group" && iAmGroupAdmin && (
         <button
           type="button"
-          className={`${item} text-red-600`}
+          className={`${item} text-rose-600`}
           onClick={() => {
             onClose();
             setConfirmAction({

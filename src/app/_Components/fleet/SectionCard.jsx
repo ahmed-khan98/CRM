@@ -8,8 +8,8 @@ function SectionCard({ icon: Icon, title, children, action }) {
     <div className={`${fleet.card} p-5`}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          {Icon && <Icon className="w-4 h-4 text-zinc-700" />}
-          <h3 className="text-sm font-bold text-zinc-900">{title}</h3>
+          {Icon && <Icon className="w-4 h-4 text-zinc-900" />}
+          <h3 className="text-sm font-medium text-zinc-900">{title}</h3>
         </div>
         {action}
       </div>

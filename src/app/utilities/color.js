@@ -1,38 +1,39 @@
-
 const STATUS_CLASS = {
-  draft: "text-gray-600 bg-gray-200",
-  cancelled: "text-gray-600 bg-gray-200",
-  pending: "text-yellow-700 bg-yellow-200",
-  paid: "text-green-700 bg-green-200",
-  completed: "text-green-700 bg-green-200",
-  active: "text-green-700 bg-green-200",
-  partial: "text-blue-700 bg-blue-200",
-  scheduled: "text-blue-700 bg-blue-200",
-  missed: "text-red-700 bg-red-200",
-  failed: "text-red-700 bg-red-200",
-  deactive: "text-red-700 bg-red-200",
-  refunded: "text-purple-700 bg-purple-200",
-  default: "text-gray-700 bg-gray-200",
+  draft: "text-zinc-300 bg-zinc-800 border border-zinc-600",
+  cancelled: "text-zinc-300 bg-zinc-800 border border-zinc-600",
+  pending: "text-amber-300 bg-amber-500/15 border border-amber-500/30",
+  paid: "text-emerald-300 bg-emerald-500/15 border border-emerald-500/30",
+  completed: "text-emerald-300 bg-emerald-500/15 border border-emerald-500/30",
+  active: "text-emerald-300 bg-emerald-500/15 border border-emerald-500/30",
+  partial: "text-sky-300 bg-sky-500/15 border border-sky-500/30",
+  scheduled: "text-sky-300 bg-sky-500/15 border border-sky-500/30",
+  missed: "text-rose-300 bg-rose-500/15 border border-rose-500/30",
+  failed: "text-rose-300 bg-rose-500/15 border border-rose-500/30",
+  deactive: "text-rose-300 bg-rose-500/15 border border-rose-500/30",
+  refunded: "text-zinc-200 bg-zinc-800 border border-zinc-600",
+  default: "text-zinc-300 bg-zinc-800 border border-zinc-600",
 };
 
 const ACTION_STATUS_CLASS = {
-  "no action": "text-gray-600 bg-gray-200",
-  "no answer": "text-yellow-700 bg-yellow-200",
-  invalid: "text-red-700 bg-red-200",
-  "in loop": "text-purple-700 bg-purple-200",
-  general: "text-yellow-700 bg-yellow-200",
-  interested: "text-green-700 bg-green-200",
-  "not interested": "text-red-700 bg-red-200",
-  schedule: "text-blue-700 bg-blue-200",
-  active: "text-green-700 bg-green-200",
-  'de active': "text-red-700 bg-red-200",
-  'SUBADMIN': "text-gray-700 bg-gray-200",
-  'DEP_ADMIN': "text-yellow-700 bg-yellow-200",
-  'HR_ADMIN': "text-green-700 bg-green-200",
-  'FINANCE_ADMIN': "text-blue-700 bg-blue-200",
-  'USER': "text-blue-700 bg-blue-200",
-  
+  "no action": "text-zinc-300 bg-zinc-800 border border-zinc-600",
+  "no answer": "text-amber-300 bg-amber-500/15 border border-amber-500/30",
+  invalid: "text-rose-300 bg-rose-500/15 border border-rose-500/30",
+  "in loop": "text-zinc-200 bg-zinc-800 border border-zinc-600",
+  general: "text-amber-300 bg-amber-500/15 border border-amber-500/30",
+  interested: "text-emerald-300 bg-emerald-500/15 border border-emerald-500/30",
+  "not interested": "text-rose-300 bg-rose-500/15 border border-rose-500/30",
+  schedule: "text-sky-300 bg-sky-500/15 border border-sky-500/30",
+  active: "text-emerald-300 bg-emerald-500/15 border border-emerald-500/30",
+  "de active": "text-rose-300 bg-rose-500/15 border border-rose-500/30",
+  SUBADMIN: "text-zinc-300 bg-zinc-800 border border-zinc-600",
+  DEP_ADMIN: "text-amber-300 bg-amber-500/15 border border-amber-500/30",
+  HR_ADMIN: "text-emerald-300 bg-emerald-500/15 border border-emerald-500/30",
+  FINANCE_ADMIN: "text-sky-300 bg-sky-500/15 border border-sky-500/30",
+  USER: "text-sky-300 bg-sky-500/15 border border-sky-500/30",
+  default: "text-zinc-300 bg-zinc-800 border border-zinc-600",
 };
-export const getActionStatusColor = (s) =>ACTION_STATUS_CLASS[s] || ACTION_STATUS_CLASS.default;
+
+export const getActionStatusColor = (s) =>
+  ACTION_STATUS_CLASS[s] || ACTION_STATUS_CLASS.default;
 
 export const getStatusColor = (s) => STATUS_CLASS[s] || STATUS_CLASS.default;

@@ -28,7 +28,7 @@ const PaidPaymentLink = ({ isMasterPayemntLink,currency, amount, name, email, br
             <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-white/30">
               <CheckCircle2 className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-xl font-black text-white tracking-tight mb-1">
+            <h2 className="text-lg font-semibold text-white tracking-tight mb-1">
               Payment Successful
             </h2>
             <p className="text-emerald-100 text-[12px]">
@@ -39,7 +39,7 @@ const PaidPaymentLink = ({ isMasterPayemntLink,currency, amount, name, email, br
           {/* Amount pill — overlapping banner and card */}
           <div className="flex justify-center -mt-5 mb-1 px-6">
             <div className="bg-white border border-zinc-200 shadow-md rounded-full px-6 py-2 flex items-baseline gap-1.5">
-              <span className="text-zinc-400 text-sm font-bold">{sym}</span>
+              <span className="text-zinc-400 text-sm font-medium">{sym}</span>
               <span className="text-zinc-900 font-black text-2xl tracking-tight">
                 {Number(amount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
@@ -54,7 +54,7 @@ const PaidPaymentLink = ({ isMasterPayemntLink,currency, amount, name, email, br
           <div className="px-5 pb-5 space-y-0">
 
             {/* Customer info */}
-            <div className="border border-zinc-100 rounded-xl overflow-hidden divide-y divide-zinc-100">
+            <div className="border border-zinc-200 rounded-xl overflow-hidden divide-y divide-zinc-100">
               {(!isMasterPayemntLink && name) && (
               <SuccessRow icon={User} label="Customer Name" value={name} />
               )}
@@ -92,7 +92,7 @@ const PaidPaymentLink = ({ isMasterPayemntLink,currency, amount, name, email, br
                   <FileText className="w-3 h-3" /> Description
                 </p>
                 <div className="px-3 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl">
-                  <p className="text-[12px] text-zinc-600 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-[12px] text-zinc-500 leading-relaxed whitespace-pre-wrap">
                     {description}
                   </p>
                 </div>

@@ -1,24 +1,26 @@
-{
-  "name": "CRM ZYTRON WORLD",
-  "short_name": "CRM",
-  "description": "CRM PWA for Zytron World",
+﻿{
+  "name": "zyro CRM",
+  "short_name": "zyro",
+  "description": "zyro CRM — employees, sales, chat, and operations.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffffff",
+  "background_color": "#09090b",
   "theme_color": "#27272a",
   "icons": [
     {
-      "src": "/favicon.192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "/brand/zyro-mark.jpg",
+      "type": "image/jpeg",
+      "sizes": "192x192",
+      "purpose": "any"
     },
-     {
-      "src": "/favicon.512.png",
+    {
+      "src": "/brand/zyro-mark.jpg",
+      "type": "image/jpeg",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"}
+      "purpose": "any maskable"
+    }
   ],
   "screenshots": [
     {

@@ -35,7 +35,7 @@ export default function PhoneNo({ onSubmit, isLoading }) {
             <Image src={Main} alt="Logo" />
           </Link>        </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Phone No.</h2>
-        {/* <p className="text-gray-500">Optional?</p> */}
+        {/* <p className="text-zinc-500">Optional?</p> */}
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-3">
@@ -46,11 +46,11 @@ export default function PhoneNo({ onSubmit, isLoading }) {
                 ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                 : formik.touched.phone && formik.errors.phone
                   ? "border-red-300"
-                  : "border-gray-200"
+                  : "border-zinc-200"
               }`}
           >
             <div className="absolute inset-y-0 left-3 flex items-center">
-              <Phone className="h-5 w-5 text-gray-400" />
+              <Phone className="h-5 w-5 text-zinc-400" />
             </div>
             <input
               type="text"
@@ -87,7 +87,7 @@ export default function PhoneNo({ onSubmit, isLoading }) {
             "Create Account"
           )}
         </motion.button>
-        <div className="text-center text-sm text-gray-500">
+        <div className="text-center text-sm text-zinc-500">
           Already have an account?{" "}
           <Link href="/login" className="text-[#FB3B11] font-medium hover:underline">
             Sign in

@@ -98,7 +98,7 @@ function CreateTemplateModal({ isOpen, closeModal, data, refetch }) {
               <ErrorMessage
                 name="content"
                 component="div"
-                className="text-red-400 text-[11px] mt-1.5"
+                className="text-rose-600 text-[11px] mt-1.5"
               />
             </div>
 

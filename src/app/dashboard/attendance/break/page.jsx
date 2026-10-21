@@ -15,7 +15,7 @@ import AttendenceHeader from "@/app/_Components/attendence/MyAttendance/Attenden
 import FilterBar from "@/app/_Components/attendence/MyAttendance/FilterBar";
 import StatsSection from "@/app/_Components/attendence/StatsSection";
 import ActiveFilterShowing from "@/app/_Components/attendence/MyAttendance/ActiveFilterShowing";
-import { getStatCards, getStatusConfig, PALETTES } from "@/app/utilities/attendence";
+import { getStatCards, getStatusConfig, PALETTES_DARK } from "@/app/utilities/attendence";
 import BreakTable from "@/app/_Components/break/BreakTable";
 const TZ = "Asia/Karachi";
 
@@ -128,7 +128,7 @@ export default function BreakPage() {
     return getStatCards({
       stats,
       data: items,
-      palettes: PALETTES,
+      palettes: PALETTES_DARK,
       config: {
         smoking: { label: "Smoking", icon: Cigarette },
         'rest room': { label: "Rest Room", icon: Bath },
@@ -141,7 +141,7 @@ export default function BreakPage() {
       extraCard: {
         label: "Total",
         icon: Coffee,
-        palette: PALETTES.total,
+        palette: PALETTES_DARK.total,
         value: stats.total,
       },
     });
@@ -178,15 +178,12 @@ export default function BreakPage() {
   }, []);
 
   return (
-    <div className="min-h-screen text-zinc-800 p-1 flex flex-col gap-3">
-      {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <AttendenceHeader
-          icon={Coffee}
-          length={meta?.total}
-          name="My Breaks"
-        />
-        {/* Filter bar */}
+    <div className="section-stack min-h-screen text-zinc-900">
+      <AttendenceHeader
+        icon={Coffee}
+        length={meta?.total}
+        name="My Breaks"
+      >
         <FilterBar
           viewType={viewType}
           setViewType={setViewType}
@@ -194,7 +191,7 @@ export default function BreakPage() {
           setCustomRange={setCustomRange}
           clearFilters={clearFilters}
         />
-      </div>
+      </AttendenceHeader>
 
       {/* ── Stat Cards ── */}
       <StatsSection

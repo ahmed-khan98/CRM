@@ -27,6 +27,7 @@ import { LeadRow } from "@/app/_Components/table/tableRow/LeadRow";
 import { LEADHEADERS } from "@/app/_Components/table/tableRow/tableHeader/leadHeader";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
+import PageHeader from "@/app/_Components/PageHeader/page";
 import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 import { tableWrap, thClass, theadRow } from "@/app/_Components/ui/saas/DataTable";
 import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
@@ -233,133 +234,116 @@ function Leads() {
   return (
     <div className=" mx-1">
       <div className="max-full mx-auto  flex flex-col space-y-2">
-        <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm shadow-slate-200/60 sm:px-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-zinc-900 text-white">
-                <ChartBar className="h-4 w-4" />
-              </div>
-              <div>
-                <h1 className="text-lg font-black tracking-tight text-zinc-900">All Leads</h1>
-                <p className="text-[11px] font-medium text-zinc-500">Pipeline records for your brands</p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={handleEdit}
-                className="inline-flex h-11 items-center gap-2 rounded-2xl bg-slate-950 px-4 text-sm font-semibold text-white shadow-md shadow-slate-900/15 transition hover:bg-slate-800"
-              >
-                <Plus className="h-4 w-4" />
-                Add New Lead
-              </motion.button>
-
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={handleExport}
-                className="inline-flex h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
-              >
-                <Download className="h-4 w-4" />
-                Export
-              </motion.button>
-
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={() => setIsImportOpen(true)}
-                className="inline-flex h-11 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
-              >
-                <Plus className="h-4 w-4" />
-                Import
-              </motion.button>
-            </div>
-          </div>
-        </div>
-
-        {/* Brand filter chips */}
-
-        <div className="flex flex-wrap items-center gap-1.5 rounded-2xl border border-zinc-100 bg-white p-1.5 shadow-sm">
-          <button
-            onClick={() => onFilterChange("all")}
-            className={`cursor-pointer rounded-xl px-3 py-1.5 text-[11px] font-bold transition ${
-              activeFilter === "all"
-                ? "bg-zinc-900 text-white shadow-sm"
-                : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
-            }`}
+        <PageHeader
+          icon={ChartBar}
+          length={meta?.total ?? items?.length ?? 0}
+          name="All Leads"
+          btnName="Add New Lead"
+          handleEdit={handleEdit}
+        >
+          <motion.button
+            type="button"
+            whileTap={{ scale: 0.97 }}
+            onClick={handleExport}
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-700 bg-zinc-900 px-3.5 text-sm font-medium text-zinc-200 transition hover:bg-zinc-800"
           >
-            All
-          </button>
+            <Download className="h-3.5 w-3.5" />
+            Export
+          </motion.button>
+          <motion.button
+            type="button"
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setIsImportOpen(true)}
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] border border-zinc-700 bg-zinc-900 px-3.5 text-sm font-medium text-zinc-200 transition hover:bg-zinc-800"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Import
+          </motion.button>
+        </PageHeader>
 
-          {brandList?.map((b) => (
+        {/* Brand filters + Table/Pipeline — one row */}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 rounded-2xl border border-zinc-200 bg-white p-1.5 shadow-sm">
             <button
-              key={b?._id}
-              onClick={() => onFilterChange(b?._id)}
-              className={`cursor-pointer rounded-xl px-3 py-1.5 text-[11px] font-bold capitalize transition ${
-                activeFilter === b?._id
-                  ? "bg-zinc-900 text-white shadow-sm"
-                  : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
+              onClick={() => onFilterChange("all")}
+              className={`cursor-pointer rounded-xl px-3 py-1.5 text-[11px] font-bold transition ${
+                activeFilter === "all"
+                  ? "bg-ink text-white shadow-sm"
+                  : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
               }`}
             >
-              {b?.name}
+              All
             </button>
-          ))}
-        </div>
 
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-          <SearchFilterBar
-            searchTerm={search}
-            onSearchChange={setSearch}
-            searchPlaceholder="Search name, email, phone, serial..."
-            debouncedSearchTerm={debouncedSearch}
-            tabItems={[]}
-          />
-
-          <div className="flex flex-wrap items-center gap-2">
-            <CrmSelect
-              className="w-[9.5rem]"
-              variant="pill"
-              options={LEAD_ACTION_FILTER_OPTIONS}
-              value={lastActionFilter}
-              onChange={setLastActionFilter}
-            />
-
-            <CrmSelect
-              className="w-[11rem]"
-              variant="pill"
-              options={LEAD_PAID_FILTER_OPTIONS}
-              value={paidFilter}
-              onChange={setPaidFilter}
-            />
-
-            <div className="flex rounded-xl border border-slate-200 bg-white p-1">
+            {brandList?.map((b) => (
               <button
-                type="button"
-                onClick={() => setViewMode("table")}
-                className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold ${
-                  viewMode === "table" ? "bg-zinc-900 text-white" : "text-zinc-500"
+                key={b?._id}
+                onClick={() => onFilterChange(b?._id)}
+                className={`cursor-pointer rounded-xl px-3 py-1.5 text-[11px] font-bold capitalize transition ${
+                  activeFilter === b?._id
+                    ? "bg-ink text-white shadow-sm"
+                    : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
                 }`}
               >
-                <Table2 className="h-3.5 w-3.5" /> Table
+                {b?.name}
               </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("kanban")}
-                className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold ${
-                  viewMode === "kanban" ? "bg-zinc-900 text-white" : "text-zinc-500"
-                }`}
-              >
-                <LayoutGrid className="h-3.5 w-3.5" /> Pipeline
-              </button>
-            </div>
+            ))}
+          </div>
+
+          <div className="flex shrink-0 rounded-xl border border-zinc-200 bg-white p-1 shadow-sm">
+            <button
+              type="button"
+              onClick={() => setViewMode("table")}
+              className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold ${
+                viewMode === "table" ? "bg-ink text-white" : "text-zinc-500"
+              }`}
+            >
+              <Table2 className="h-3.5 w-3.5" /> Table
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("kanban")}
+              className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-bold ${
+                viewMode === "kanban" ? "bg-ink text-white" : "text-zinc-500"
+              }`}
+            >
+              <LayoutGrid className="h-3.5 w-3.5" /> Pipeline
+            </button>
           </div>
         </div>
+
+        <SearchFilterBar
+          searchTerm={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search name, email, phone, serial..."
+          debouncedSearchTerm={debouncedSearch}
+          tabItems={[]}
+          endSlot={
+            <>
+              <CrmSelect
+                className="w-[9.5rem]"
+                variant="pill"
+                options={LEAD_ACTION_FILTER_OPTIONS}
+                value={lastActionFilter}
+                onChange={setLastActionFilter}
+              />
+              <CrmSelect
+                className="w-[11rem]"
+                variant="pill"
+                options={LEAD_PAID_FILTER_OPTIONS}
+                value={paidFilter}
+                onChange={setPaidFilter}
+              />
+            </>
+          }
+        />
 
         <motion.div
           variants={itemVariants}
-          className=" md:mx-0 rounded-2xl shadow-lg border border-zinc-100 relative"
+          className=" md:mx-0 shadow-lg relative"
         >
           {isPaginationLoading && (
-            <div className="absolute inset-0 bg-white/70 z-10 flex items-center justify-center rounded-2xl border border-gray-200">
+            <div className="absolute inset-0 bg-white/70 z-10 flex items-center justify-center rounded-2xl border border-zinc-200">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{
@@ -393,7 +377,7 @@ function Leads() {
           ) : (
             <div className={tableWrap}>
               <div
-                className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-260px)]"
+                className="overflow-x-auto overflow-y-auto"
                 style={{
                   scrollbarWidth: "thin",
                   scrollbarColor: "#52525b transparent",

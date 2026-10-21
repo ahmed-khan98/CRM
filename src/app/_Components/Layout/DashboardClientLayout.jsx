@@ -5,6 +5,7 @@ import LeftNav from "@/app/_Components/Layout/LeftNav";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { clearAuthCookies } from "@/app/_utils/authCookies";
 import {
   removeAttendence,
   resumeWork,
@@ -37,6 +38,7 @@ const DashboardLayout = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
 
   const pathname = usePathname();
+  const isChatRoute = pathname?.startsWith("/dashboard/chat");
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -105,8 +107,7 @@ const DashboardLayout = ({ children }) => {
       const response = await logout({ forceLogout: true }).unwrap();
       if (response.statusCode === 200) {
         toast.success("Logged out successfully");
-        Cookies.remove("token", { path: "/" });
-        Cookies.remove("currentuser", { path: "/" });
+        clearAuthCookies();
         clearExtensionAndRedirect();
         dispatch(resumeWork());
         dispatch(removeAttendence());
@@ -217,8 +218,8 @@ const DashboardLayout = ({ children }) => {
     
   if (isLoggedLoading) {
     return (
-      <div className="min-h-screen bg-zinc-100 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-zinc-300 border-t-zinc-600 rounded-full animate-spin" />
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-zinc-200 border-t-zinc-600 rounded-full animate-spin" />
       </div>
     );
   }
@@ -237,7 +238,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <SocketProvider>
     <CallProvider>
-    <div className="app-container overflow-x-hidden">
+    <div className="theme-zyro-dark bg-ink app-container">
       <CallOverlay />
       {isOnBreak 
        ? (
@@ -246,14 +247,19 @@ const DashboardLayout = ({ children }) => {
         <>
         <Navbar />
         <div
-          //   style={{
-          //   background: "#0f0f11",
-          //   border: "1px solid rgba(255,255,255,0.07)",
-          //   // boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-          // }}
-          className="min-h-screen bg-slate-50 flex flex-col pt-14 overflow-x-hidden"
+          className={
+            isChatRoute
+              ? "flex h-dvh flex-col overflow-hidden pt-14"
+              : "flex min-h-screen flex-col pt-14"
+          }
         >
-          <div className="flex flex-1 relative min-w-0 overflow-x-hidden">
+          <div
+            className={
+              isChatRoute
+                ? "relative flex min-h-0 min-w-0 flex-1 overflow-hidden"
+                : "relative flex min-w-0 flex-1"
+            }
+          >
             {isMobile && isSidebarOpen && (
               <div
                 className="fixed inset-0 backdrop-blur-sm bg-black/20 z-20"
@@ -273,7 +279,7 @@ const DashboardLayout = ({ children }) => {
                         ? "shadow-xl"
                         : "shadow-none pointer-events-none invisible"
                     }`
-                  : "lg:relative lg:top-0 h-[calc(100dvh-3.5rem)] overflow-y-auto shrink-0"
+                  : "lg:sticky lg:top-14 lg:h-[calc(100dvh-3.5rem)] lg:overflow-y-auto shrink-0 self-start"
               } transition-transform duration-300 ease-in-out`}
               aria-hidden={isMobile && !isSidebarOpen ? true : undefined}
             >
@@ -281,17 +287,26 @@ const DashboardLayout = ({ children }) => {
             </div>
 
             <main
-              className={`flex flex-1 min-w-0 flex-col overflow-y-auto overflow-x-hidden h-[calc(100dvh-3.5rem)] transition-all duration-300 ease-in-out px-1 
-            ${isMobile ? "w-full" : ""}`}
+              className={`flex min-w-0 flex-1 flex-col px-2 transition-all duration-300 ease-in-out ${
+                isMobile ? "w-full" : ""
+              } ${
+                isChatRoute
+                  ? "min-h-0 overflow-hidden"
+                  : ""
+              }`}
             >
-              <AnnouncementMarquee />
-              <div className="w-full min-h-0 min-w-0 flex-1 pt-1">
+              {!isChatRoute ? <AnnouncementMarquee /> : null}
+              <div
+                className={`w-full min-h-0 min-w-0 flex-1 ${
+                  isChatRoute ? "flex flex-col overflow-hidden pt-1" : "pt-1"
+                }`}
+              >
                 <RoutePermissionGuard>{children}</RoutePermissionGuard>
               </div>
             </main>
           </div>
         </div>
-        <Footer />
+        {!isChatRoute ? <Footer /> : null}
         </>
       )}
       <AnnouncementPopup />

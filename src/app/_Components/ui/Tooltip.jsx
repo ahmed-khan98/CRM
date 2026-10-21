@@ -111,7 +111,7 @@ export default function Tooltip({
               left: coords.left,
               transform: coords.transform,
             }}
-            className={`pointer-events-none z-[9999] max-w-[280px] rounded-md bg-zinc-900 px-2.5 py-1 text-[11px] font-medium tracking-wide text-zinc-50 shadow-lg shadow-black/30 ring-1 ring-white/10 ${
+            className={`pointer-events-none z-[9999] max-w-[280px] rounded-xl bg-ink px-2 py-1 text-xs font-medium tracking-wide text-zinc-50 shadow-md ${
               String(tip).length > 48
                 ? "whitespace-normal break-words text-left"
                 : "whitespace-nowrap"

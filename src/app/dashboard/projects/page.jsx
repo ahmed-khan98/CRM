@@ -194,7 +194,7 @@ export default function ProjectsPage() {
   const hasVisibleProjects = visibleCount > 0;
 
   return (
-    <div className="flex flex-col gap-5 p-2">
+    <div className="flex min-w-0 flex-col gap-5 p-2">
       <PageHeader
         name="Projects"
         icon={FolderKanban}
@@ -204,14 +204,16 @@ export default function ProjectsPage() {
       />
 
       {hasProjects && (
-        <SearchFilterBar
-          searchTerm={search}
-          onSearchChange={setSearch}
-          searchPlaceholder="Search by project, client name, or email..."
-          tabItems={deptTabItems}
-          activeTab={activeDept}
-          onTabChange={setActiveDept}
-        />
+        <div className="min-w-0 w-full">
+          <SearchFilterBar
+            searchTerm={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search by project, client name, or email..."
+            tabItems={deptTabItems}
+            activeTab={activeDept}
+            onTabChange={setActiveDept}
+          />
+        </div>
       )}
 
       {hasProjects ? (

@@ -37,8 +37,8 @@ const PaymentDetailPayPal = ({ id, paypalClientId, position, brandParam,currency
 
   if (show === undefined) {
     return (
-      <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
-        <div className="text-center text-sm text-slate-500">Loading payment options...</div>
+      <div className="bg-white rounded-2xl shadow-xl border border-zinc-200 p-8">
+        <div className="text-center text-sm text-zinc-500">Loading payment options...</div>
       </div>
     );
   }

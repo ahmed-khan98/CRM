@@ -13,21 +13,23 @@ function SidebarSearch({
   setListFilter,
 }) {
   return (
-    <div className="px-3 py-2 space-y-2">
-      <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${theme.input} border`}>
-        <Search className="h-4 w-4 text-zinc-400" />
+    <div className="px-3 pb-3 pt-1 space-y-2.5">
+      <div
+        className={`flex items-center gap-2 rounded-2xl px-3 py-2.5 ${theme.input}`}
+      >
+        <Search className="h-4 w-4 shrink-0 text-zinc-400" />
         <input
           value={filter}
           onChange={onFilterChange}
-          placeholder="Search or start new chat"
-          className={`w-full bg-transparent text-sm outline-none ${
+          placeholder="Search conversations"
+          className={`w-full bg-transparent text-[13px] outline-none ${
             dark
-              ? "text-zinc-100 placeholder:text-zinc-400"
-              : "text-zinc-900 placeholder:text-zinc-500"
+              ? "text-zinc-100 placeholder:text-zinc-500"
+              : "text-zinc-900 placeholder:text-zinc-400"
           }`}
         />
       </div>
-      <div className="flex gap-2 text-xs">
+      <div className="flex gap-1.5">
         {[
           ["all", "All"],
           ["groups", "Groups"],
@@ -37,7 +39,7 @@ function SidebarSearch({
             key={id}
             label={label}
             onClick={() => setListFilter(id)}
-            className={`rounded-full px-3 py-1 font-medium ${
+            className={`rounded-full px-3 py-1 text-[11px] font-semibold transition ${
               listFilter === id ? theme.chipOn : theme.chipOff
             }`}
           >

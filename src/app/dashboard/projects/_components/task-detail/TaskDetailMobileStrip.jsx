@@ -13,7 +13,7 @@ function TaskDetailMobileStrip({ task, project, onProjectClick }) {
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date();
 
   return (
-    <div className="sm:hidden shrink-0 border-b border-white/[0.07] bg-[#121820] px-4 py-2.5">
+    <div className="sm:hidden shrink-0 border-b border-white/[0.07] bg-ink px-4 py-2.5">
       {(projectName || departmentName) && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2 text-xs text-zinc-300">
           {projectName &&
@@ -33,7 +33,7 @@ function TaskDetailMobileStrip({ task, project, onProjectClick }) {
               </span>
             ))}
           {projectName && departmentName && (
-            <span className="text-zinc-600">·</span>
+            <span className="text-zinc-500">·</span>
           )}
           {departmentName && (
             <span className="inline-flex items-center gap-1 capitalize">
@@ -48,7 +48,7 @@ function TaskDetailMobileStrip({ task, project, onProjectClick }) {
         {task.dueDate && (
           <span
             className={`inline-flex items-center gap-1 ${
-              isOverdue ? "text-red-400 font-medium" : ""
+              isOverdue ? "text-rose-600 font-medium" : ""
             }`}
           >
             <Calendar className="h-3 w-3" />

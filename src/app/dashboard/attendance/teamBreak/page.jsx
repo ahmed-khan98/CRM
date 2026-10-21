@@ -23,7 +23,7 @@ import StatsSection from "@/app/_Components/attendence/StatsSection";
 import ActiveFilterShowing from "@/app/_Components/attendence/MyAttendance/ActiveFilterShowing";
 import {
   getStatCards,
-  PALETTES,
+  PALETTES_DARK,
 } from "@/app/utilities/attendence";
 import BreakTable from "@/app/_Components/break/BreakTable";
 import FiltersBar from "@/app/_Components/attendence/TeamAttendance/FilterBar";
@@ -169,7 +169,7 @@ export default function BreakPage() {
     return getStatCards({
       stats,
       data: items,
-      palettes: PALETTES,
+      palettes: PALETTES_DARK,
       config: {
         live: { label: "Live Break", icon: Zap },
         smoking: { label: "Smoking", icon: Cigarette },
@@ -183,7 +183,7 @@ export default function BreakPage() {
       extraCard: {
         label: "Total",
         icon: Coffee,
-        palette: PALETTES.total,
+        palette: PALETTES_DARK.total,
         value: stats.total,
       },
     });
@@ -207,27 +207,24 @@ export default function BreakPage() {
     viewType !== "today" || customRange.start || selectedEmployee || activeFilter;
 
   return (
-    <div className="min-h-screen text-zinc-800 p-1 flex flex-col gap-3">
-      {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <AttendenceHeader
-          icon={Coffee}
-          length={meta?.total}
-          name="Team Breaks"
-        />
+    <div className="section-stack min-h-screen min-w-0 text-zinc-900">
+      <AttendenceHeader
+        icon={Coffee}
+        length={meta?.total}
+        name="Team Breaks"
+      />
 
-        <FiltersBar
-          employeeOptions={employeeOptions}
-          selectedEmployee={selectedEmployee}
-          setSelectedEmployee={setSelectedEmployee}
-          viewType={viewType}
-          setViewType={setViewType}
-          customRange={customRange}
-          setCustomRange={setCustomRange}
-          showClearBtn={showClearBtn}
-          onClear={clearFilters}
-        />
-      </div>
+      <FiltersBar
+        employeeOptions={employeeOptions}
+        selectedEmployee={selectedEmployee}
+        setSelectedEmployee={setSelectedEmployee}
+        viewType={viewType}
+        setViewType={setViewType}
+        customRange={customRange}
+        setCustomRange={setCustomRange}
+        showClearBtn={showClearBtn}
+        onClear={clearFilters}
+      />
 
       {/* ── Stat Cards ── */}
       <StatsSection

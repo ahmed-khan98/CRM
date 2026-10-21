@@ -59,19 +59,19 @@
 
 //   return (
 //     <tr
-//       className={`${isWeekend ? "bg-blue-50/20" : "hover:bg-gray-50"} transition-all border-b border-gray-50 group`}
+//       className={`${isWeekend ? "bg-sky-50/20" : "hover:bg-zinc-50"} transition-all border-b border-gray-50 group`}
 //     >
 //       <td className="px-6 py-4">
 //         <div className="flex flex-col">
-//           <span className="text-xs font-bold text-gray-600">
+//           <span className="text-xs font-medium text-gray-600">
 //             {formatDate(date, "dayDate")}
 //           </span>
 //           {isWeekend ? (
-//             <span className="text-[9px] text-blue-400 font-black uppercase tracking-tighter">
+//             <span className="text-xs text-blue-400 font-black uppercase tracking-tighter">
 //               Weekend
 //             </span>
 //           ) : (
-//             <span className="text-[10px] text-gray-400">
+//             <span className="text-xs text-zinc-400">
 //               {moment(date).format("dddd")}
 //             </span>
 //           )}
@@ -80,37 +80,37 @@
 
 //       <td className="p-4">
 //         <div className="flex items-center gap-2">
-//           <span className="text-green-600 bg-green-50 px-2 py-0.5 rounded text-[11px] font-bold">
+//           <span className="text-emerald-700 bg-emerald-50 px-2 rounded text-xs font-medium">
 //             {formatTimeOnly(record?.timeIn)}
 //           </span>
 
 //           <span className="text-gray-300">→</span>
 
 //           {record?.timeOut ? (
-//             <span className="text-red-600 bg-red-50 px-2 py-0.5 rounded text-[11px] font-bold">
+//             <span className="text-rose-600 bg-rose-50 px-2 rounded text-xs font-medium">
 //               {formatTimeOnly(record.timeOut)}
 //             </span>
 //           ) : isDiscrepancy ? ( // <-- Pehle isay check karein
 //             <Tooltip text="Missing Time-Out! Contact Manager.">
-//               <span className="text-red-400 font-bold flex items-center gap-1 cursor-help uppercase text-[9px] tracking-tight underline decoration-dotted">
+//               <span className="text-rose-600 font-bold flex items-center gap-1 cursor-help uppercase text-xs tracking-tight underline decoration-dotted">
 //                 DISCREPANCY <AlertCircle size={12} />
 //               </span>
 //             </Tooltip>
 //           ) : isActive ? (
-//             <span className="bg-purple-50 text-purple-600 px-2 py-0.5 rounded text-[9px] font-black flex items-center gap-1.5 border border-purple-100 animate-pulse">
+//             <span className="bg-violet-50 text-purple-600 px-2 rounded text-xs font-medium flex items-center gap-1 border border-purple-100 animate-pulse">
 //               ACTIVE
 //             </span>
 //           ) : (
-//             <span className="text-gray-300 text-[11px] font-bold">--:--</span>
+//             <span className="text-gray-300 text-xs font-medium">--:--</span>
 //           )}
 //         </div>
 //       </td>
 
-//       <td className="px-6 py-3 text-xs font-bold text-gray-700">
+//       <td className="px-6 py-3 text-xs font-medium text-gray-700">
 //         {calculateDuration(record?.timeIn, record?.timeOut)}
 //       </td>
 
-//       <td className="px-6 py-3 text-xs font-bold text-gray-700">
+//       <td className="px-6 py-3 text-xs font-medium text-gray-700">
 //         {record?.totalBreakMinutes >= 0
 //           ? `${record?.totalBreakMinutes}min`
 //           : "-"}
@@ -118,12 +118,12 @@
 
 //       <td className="px-4 py-2">
 //         {isWeekend ? (
-//           <span className="text-[10px] font-bold text-gray-300 uppercase px-4">
+//           <span className="text-xs font-medium text-gray-300 uppercase px-4">
 //             Off
 //           </span>
 //         ) : (
 //           <span
-//             className={`px-4 py-1 rounded-full text-[10px] font-black uppercase border tracking-tighter ${getStatusClasses(currentStatus)}`}
+//             className={`px-4 py-1 rounded-full text-xs font-medium uppercase border tracking-tighter ${getStatusClasses(currentStatus)}`}
 //           >
 //             {currentStatus}
 //           </span>
@@ -186,26 +186,26 @@ function AttendanceRow({ row }) {
   const renderTimeOut = () => {
     if (hasTimeOut)
       return (
-        <span className="text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-bold tabular-nums">
+        <span className="text-rose-600 bg-rose-50 border border-rose-200 px-1.5 rounded-md text-[10px] font-medium tabular-nums">
           {formatTimeOnly(record.timeOut)}
         </span>
       );
     if (isDiscrepancy)
       return (
         <Tooltip text="Missing Time-Out — contact your manager">
-          <span className="text-orange-500 font-bold flex items-center gap-1 text-[9px] tracking-wide cursor-help border border-orange-200 bg-orange-50 px-2 py-1 rounded-lg">
-            <AlertCircle size={10} /> DISCREPANCY
+          <span className="inline-flex items-center gap-0.5 text-[9px] font-medium uppercase tracking-wider text-amber-400 cursor-help border border-amber-500/50 bg-amber-500/10 px-1.5 py-0.5 rounded-full">
+            <AlertCircle size={9} /> DISCREPANCY
           </span>
         </Tooltip>
       );
     if (isActive)
       return (
-        <span className="bg-zinc-800 text-white px-2.5 py-1 rounded-lg text-[9px] font-black flex items-center gap-1.5 border border-zinc-700 animate-pulse">
-          <Zap size={9} className="fill-white" /> LIVE
+        <span className="bg-zinc-800 text-white px-1.5 rounded-md text-[9px] font-medium flex items-center gap-0.5 border border-zinc-700 animate-pulse">
+          <Zap size={8} className="fill-white" /> LIVE
         </span>
       );
     return (
-      <span className="text-zinc-300 text-[11px] font-bold tabular-nums">
+      <span className="text-zinc-300 text-[10px] font-medium tabular-nums">
         --:--
       </span>
     );
@@ -213,23 +213,23 @@ function AttendanceRow({ row }) {
 
   return (
     <tr
-      className={`group border-b border-zinc-100 transition-colors duration-100
-${isToday ? "bg-zinc-50 md:border-l-2 md:border-l-zinc-400" : isWeekend ? "bg-sky-50/40" : "hover:bg-zinc-50/80"}`}
+      className={`group border-b border-zinc-200 transition-colors duration-100
+${isToday ? "bg-zinc-800/60 md:border-l-2 md:border-l-zinc-500" : isWeekend ? "bg-violet-950/50" : "hover:bg-zinc-800/40"}`}
     >
-      <td className="px-5 py-3.5">
+      <td className="px-3 py-1">
         <div className="flex items-center gap-2.5">
           {isToday && (
-            <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 shrink-0" />
           )}{" "}
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-0">
             <span
-              className={`text-xs font-extrabold ${isToday ? "text-zinc-800" : "text-zinc-700"}`}
+              className={`text-[11px] font-semibold ${isToday ? "text-zinc-100" : "text-zinc-100"}`}
             >
               {" "}
               {formatDate(date)}
             </span>
             <span
-              className={`text-[9px] font-semibold uppercase tracking-wider ${isWeekend ? "text-sky-500" : "text-zinc-400"}`}
+              className={`text-[10px] font-medium uppercase tracking-wider ${isWeekend ? "text-violet-300" : "text-zinc-400"}`}
             >
               {moment(date).format("ddd")}
               {isToday && " · Today"}
@@ -239,23 +239,23 @@ ${isToday ? "bg-zinc-50 md:border-l-2 md:border-l-zinc-400" : isWeekend ? "bg-sk
       </td>
 
       {/* In/Out */}
-      <td className="px-5 py-3.5">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg text-[11px] font-bold tabular-nums">
+      <td className="px-3 py-1">
+        <div className="flex items-center gap-1 flex-wrap">
+          <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5  rounded-md text-[10px] font-medium tabular-nums">
             {formatTimeOnly(record?.timeIn)}
           </span>
-          <span className="text-zinc-300 text-xs">→</span>
+          <span className="text-zinc-300 text-[10px]">→</span>
           {renderTimeOut()}
         </div>
       </td>
 
       {/* Total Hours */}
-      <td className="px-5 py-3.5 text-xs font-bold text-zinc-600 tabular-nums">
+      <td className="px-3 py-1 text-[10px] font-medium text-zinc-500 tabular-nums">
         {calculateDuration(record?.timeIn, record?.timeOut)}
       </td>
 
       {/* Working Hours */}
-      <td className="px-5 py-3.5 text-xs font-bold text-zinc-600 tabular-nums">
+      <td className="px-3 py-1 text-[10px] font-medium text-zinc-500 tabular-nums">
         {onlyWorkingHours(
           record?.timeIn,
           record?.timeOut,
@@ -264,11 +264,11 @@ ${isToday ? "bg-zinc-50 md:border-l-2 md:border-l-zinc-400" : isWeekend ? "bg-sk
       </td>
 
       {/* Break */}
-      <td className="px-5 py-3.5">
-        <span className="text-xs font-bold text-zinc-500 tabular-nums flex items-center gap-1">
+      <td className="px-3 py-1">
+        <span className="text-[10px] font-medium text-zinc-500 tabular-nums flex items-center gap-1">
           {record?.totalBreakMinutes >= 0 ? (
             <>
-              <Coffee size={10} className="text-zinc-400" />
+              <Coffee size={9} className="text-zinc-400" />
               {formatBreakMinutes(record.totalBreakMinutes)}
             </>
           ) : (
@@ -280,7 +280,7 @@ ${isToday ? "bg-zinc-50 md:border-l-2 md:border-l-zinc-400" : isWeekend ? "bg-sk
       {/* Status */}
       <td className="px-4 py-3.5 w-25">
         <span
-          className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
+          className={`inline-flex items-center gap-1 px-1.5 rounded-full text-[10px] font-medium uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
         >
           <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
           {isWeekend ? "Off" : cfg.label || currentStatus}

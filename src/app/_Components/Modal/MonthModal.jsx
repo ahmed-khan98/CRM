@@ -10,7 +10,7 @@ import { fleet } from "../fleet/fleetTheme";
 
 
 const inputClass = (hasError) =>
-  `${fleet.modalInput} ${hasError ? "border-red-500/50" : ""}`;
+  `${fleet.modalInput} ${hasError ? "border-danger/50" : ""}`;
 
 const FieldLabel = ({ children }) => (
   <label className={fleet.modalLabel}>{children}</label>
@@ -20,7 +20,7 @@ const ErrMsg = ({ name }) => (
   <ErrorMessage
     name={name}
     component="p"
-    className="text-[11px] mt-1 font-medium text-red-400"
+    className="text-[11px] mt-1 font-medium text-rose-600"
   />
 );
 
@@ -129,7 +129,7 @@ const MonthModal = ({ isOpen, closeModal, data, refetch }) => {
                       <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
                       <p className="text-[11px] text-zinc-500 leading-relaxed">
                         Month code will be auto-generated from the name. Only one month can be{" "}
-                        <span className="text-emerald-400 font-bold">OPEN</span> at a time.
+                        <span className="text-emerald-700 font-bold">OPEN</span> at a time.
                       </p>
                     </div>
 

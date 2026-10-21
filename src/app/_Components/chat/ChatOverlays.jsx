@@ -53,6 +53,8 @@ function ChatOverlays({
   confirmModalProps,
   confirmBusy,
   handleConfirmAction,
+  dark = false,
+  theme,
 }) {
   return (
     <>
@@ -92,6 +94,8 @@ function ChatOverlays({
         onAddMembers={onAddMembersFromMenu}
         adminDisable={adminDisable}
         adminEnable={adminEnable}
+        dark={dark}
+        theme={theme}
       />
 
       {showNew && (
@@ -102,6 +106,8 @@ function ChatOverlays({
           searchUsers={searchUsers}
           users={userSearch?.data || []}
           canCreateGroup={canCreateGroup}
+          dark={dark}
+          theme={theme}
           onPickDirect={async (userId) => {
             try {
               const res = await createDirect({ userId }).unwrap();
@@ -136,6 +142,8 @@ function ChatOverlays({
           searchUsers={searchUsers}
           users={userSearch?.data || []}
           onClose={() => setShowAddMembers(false)}
+          dark={dark}
+          theme={theme}
           onAdd={async (memberIds) => {
             try {
               await addMembers({ id: activeId, memberIds }).unwrap();

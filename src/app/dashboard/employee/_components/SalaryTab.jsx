@@ -54,7 +54,7 @@ export default function SalaryTab({ employeeId, currentSalary }) {
   return (
     <div className="space-y-4">
       <SectionCard title="Current Salary">
-        <p className="text-2xl font-semibold text-zinc-100">
+        <p className="text-2xl font-bold text-zinc-100">
           {formatMoney(currentSalary)}
         </p>
       </SectionCard>

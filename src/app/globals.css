@@ -1,24 +1,5 @@
 @import "tailwindcss";
-
-:root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --crm-bg: #f8fafc;
-  --crm-surface: #ffffff;
-  --crm-border: #e2e8f0;
-  --crm-text: #0f172a;
-  --crm-muted: #64748b;
-  --crm-primary: #0f172a;
-  --crm-accent: #2563eb;
-  --crm-radius: 12px;
-  --crm-radius-sm: 8px;
-  --crm-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --crm-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --crm-success: #059669;
-  --crm-warning: #d97706;
-  --crm-error: #dc2626;
-  --crm-info: #2563eb;
-}
+@import "./styles/tokens.css";
 
 .crm-field {
   border: 1px solid #e4e4e7 !important;
@@ -32,14 +13,54 @@
   background-color: #fafafa !important;
 }
 
-.react-select-container.crm-select .rs__control {
-  border: 1px solid #e4e4e7 !important;
+.react-select-container.crm-select .rs__control,
+.react-select-container .rs__control,
+.crm-select__control {
+  border: 1px solid #27272a !important;
+  background-color: #121212 !important;
   min-height: 42px !important;
   box-shadow: none !important;
+  color: #f4f4f5 !important;
 }
-.react-select-container.crm-select .rs__control--is-focused {
-  border-color: #a1a1aa !important;
-  box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.06) !important;
+.react-select-container.crm-select .rs__control--is-focused,
+.react-select-container .rs__control--is-focused,
+.crm-select__control--is-focused {
+  border-color: #a3a3a3 !important;
+  box-shadow: none !important;
+}
+.react-select-container .rs__indicator-separator,
+.crm-select__indicator-separator {
+  display: none !important;
+}
+.react-select-container .rs__menu,
+.crm-select__menu {
+  background-color: #18181b !important;
+  border: 1px solid #27272a !important;
+}
+.react-select-container .rs__option,
+.crm-select__option {
+  background-color: #18181b !important;
+  color: #fafafa !important;
+}
+.react-select-container .rs__option--is-focused,
+.crm-select__option--is-focused {
+  background-color: #1c1c1f !important;
+}
+.react-select-container .rs__option--is-selected,
+.crm-select__option--is-selected {
+  background-color: #27272a !important;
+}
+.react-select-container .rs__single-value,
+.crm-select__single-value {
+  color: #e4e4e7 !important;
+}
+.react-select-container .rs__input input,
+.crm-select__input input {
+  color: #fafafa !important;
+}
+.react-select-container .rs__placeholder,
+.crm-select__placeholder {
+  color: #71717a !important;
 }
 .custom-scrollbar {
   scrollbar-width: thin;
@@ -93,10 +114,39 @@
 }
 
 @theme inline {
+  --color-ink: #050505;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-brand), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --text-xs: 0.6875rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.375rem;
+  --text-lg: 1rem;
+  --text-lg--line-height: 1.375rem;
+  --text-xl: 1.125rem;
+  --text-xl--line-height: 1.5rem;
+  --text-2xl: 1.625rem;
+  --text-2xl--line-height: 2rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 500;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 500;
+  --font-weight-black: 500;
+
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -112,7 +162,10 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto), "Roboto", sans-serif;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  font-weight: var(--weight-regular);
 }
 
 /* Clickable controls use a pointer. Utilities like cursor-not-allowed still win. */
@@ -139,10 +192,7 @@ body {
   }
 }
 
-::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-}
+/* Use browser default scrollbar — do not zero-out or restyle globally */
 
 @keyframes marquee {
   0% {
@@ -159,21 +209,21 @@ body {
 }
 
 .montserrat {
-  font-family: var(--font-roboto), "Roboto", sans-serif;
+  font-family: var(--font-body);
   font-style: normal;
-  font-optical-sizing: auto;
 }
 .orange-bg {
   background: linear-gradient(90deg, #ff6a3d, #f33e0a);
 }
 
+/* Only html — overflow-x:hidden on BOTH html+body creates 2 vertical scrollbars */
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 body {
   background-color: white;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 @media (max-width: 767px) {
@@ -221,4 +271,208 @@ menu {
   overflow: hidden !important;
   position: fixed; /* Ye har qism ki scrolling rok deta hai */
   width: 100%;
+}
+
+/* Dark auth inputs — kill Chrome blue autofill */
+.auth-input:-webkit-autofill,
+.auth-input:-webkit-autofill:hover,
+.auth-input:-webkit-autofill:focus,
+.auth-input:-webkit-autofill:active {
+  -webkit-text-fill-color: #f4f4f5 !important;
+  caret-color: #f4f4f5;
+  transition: background-color 99999s ease-out;
+  box-shadow: 0 0 0 1000px #18181b inset !important;
+  border-color: #3f3f46 !important;
+}
+
+/* ── Zyro dark theme (Dashboard + Employee + Attendance) ── */
+.theme-zyro-dark {
+  --zyro-accent: #e5e7eb;
+  --zyro-accent-mid: #a3a3a3;
+  --zyro-accent-dark: #525252;
+  --zyro-accent-gradient: linear-gradient(135deg, #f5f5f5 0%, #a3a3a3 45%, #525252 100%);
+  --zyro-accent-gradient-hover: linear-gradient(135deg, #ffffff 0%, #c4c4c4 45%, #6b6b6b 100%);
+  --zyro-surface: #121212;
+  --zyro-surface-2: #18181b;
+  --zyro-border: #27272a;
+  --zyro-muted: #a1a1aa;
+  --zyro-text: #f4f4f5;
+  background-color: #050505;
+  color: var(--zyro-text);
+  min-height: 100%;
+}
+
+.theme-zyro-dark .header-surface,
+.theme-zyro-dark .panel-surface,
+.theme-zyro-dark .toolbar-surface,
+.theme-zyro-dark .card-surface {
+  background: var(--zyro-surface) !important;
+  border-color: var(--zyro-border) !important;
+  box-shadow: none !important;
+  color: var(--zyro-text);
+}
+
+.theme-zyro-dark .table-head-row {
+  background: #0a0a0a !important;
+  border-color: var(--zyro-border) !important;
+}
+
+.theme-zyro-dark .table-head-cell {
+  color: var(--zyro-muted) !important;
+}
+
+.theme-zyro-dark .type-label,
+.theme-zyro-dark .type-meta,
+.theme-zyro-dark .field-label {
+  color: var(--zyro-muted) !important;
+}
+
+.theme-zyro-dark .type-title,
+.theme-zyro-dark .type-body,
+.theme-zyro-dark .type-stat {
+  color: var(--zyro-text) !important;
+}
+
+.theme-zyro-dark .input-control {
+  background: var(--zyro-surface-2) !important;
+  border-color: var(--zyro-border) !important;
+  color: var(--zyro-text) !important;
+}
+
+.theme-zyro-dark .input-control::placeholder {
+  color: #71717a !important;
+}
+
+.theme-zyro-dark .input-control:focus {
+  border-color: var(--zyro-accent-mid) !important;
+  box-shadow: 0 0 0 3px rgba(163, 163, 163, 0.22) !important;
+}
+
+/* Metallic silver primary CTAs */
+.theme-zyro-dark .zyro-accent-btn,
+.theme-zyro-dark .header-surface > button.bg-ink,
+.theme-zyro-dark button.bg-ink,
+.theme-zyro-dark button.zyro-btn-primary {
+  background-color: transparent !important;
+  background-image: var(--zyro-accent-gradient) !important;
+  color: #0a0a0a !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.theme-zyro-dark .zyro-accent-btn:hover,
+.theme-zyro-dark .header-surface > button.bg-ink:hover,
+.theme-zyro-dark button.bg-ink:hover,
+.theme-zyro-dark button.zyro-btn-primary:hover {
+  background-image: var(--zyro-accent-gradient-hover) !important;
+  color: #050505 !important;
+}
+
+.theme-zyro-dark .zyro-accent-text {
+  background-image: var(--zyro-accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-zyro-dark .zyro-accent-ring:focus,
+.theme-zyro-dark .zyro-accent-border {
+  border-color: var(--zyro-accent-mid) !important;
+}
+
+/* Common light surfaces → dark */
+.theme-zyro-dark .bg-white {
+  background-color: var(--zyro-surface) !important;
+}
+.theme-zyro-dark .bg-zinc-50,
+.theme-zyro-dark .bg-slate-50 {
+  background-color: var(--zyro-surface-2) !important;
+}
+.theme-zyro-dark .border-zinc-100,
+.theme-zyro-dark .border-zinc-200,
+.theme-zyro-dark .border-slate-100,
+.theme-zyro-dark .border-slate-200 {
+  border-color: var(--zyro-border) !important;
+}
+.theme-zyro-dark .bg-zinc-100 {
+  background-color: var(--zyro-surface-2) !important;
+}
+.theme-zyro-dark .text-zinc-800,
+.theme-zyro-dark .text-zinc-700,
+.theme-zyro-dark .text-zinc-600 {
+  color: var(--zyro-text) !important;
+}
+.theme-zyro-dark .text-zinc-900,
+.theme-zyro-dark .text-slate-700,
+.theme-zyro-dark .text-slate-900,
+.theme-zyro-dark .text-slate-950,
+.theme-zyro-dark .text-gray-800 {
+  color: var(--zyro-text) !important;
+}
+.theme-zyro-dark .text-zinc-500,
+.theme-zyro-dark .text-zinc-400,
+.theme-zyro-dark .text-slate-500 {
+  color: var(--zyro-muted) !important;
+}
+.theme-zyro-dark .hover\:bg-zinc-50:hover,
+.theme-zyro-dark .hover\:bg-white\/80:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+.theme-zyro-dark .hover\:text-zinc-900:hover {
+  color: #fff !important;
+}
+.theme-zyro-dark tbody.bg-white,
+.theme-zyro-dark tbody {
+  background-color: transparent !important;
+}
+.theme-zyro-dark tr.border-b {
+  border-color: var(--zyro-border) !important;
+}
+.theme-zyro-dark .hover\:bg-zinc-50:hover,
+.theme-zyro-dark tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.theme-zyro-dark .toolbar-surface .bg-white {
+  background-color: var(--zyro-surface-2) !important;
+}
+.theme-zyro-dark .toolbar-surface .ring-zinc-200 {
+  --tw-ring-color: #3f3f46;
+}
+
+/* Soft status badge bases on dark */
+.theme-zyro-dark .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.14) !important; }
+.theme-zyro-dark .bg-rose-50 { background-color: rgba(244, 63, 94, 0.14) !important; }
+.theme-zyro-dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.14) !important; }
+.theme-zyro-dark .border-emerald-200 { border-color: rgba(16, 185, 129, 0.28) !important; }
+.theme-zyro-dark .border-rose-200 { border-color: rgba(244, 63, 94, 0.28) !important; }
+.theme-zyro-dark .text-emerald-700 { color: #34d399 !important; }
+.theme-zyro-dark .text-rose-600 { color: #fb7185 !important; }
+.theme-zyro-dark .text-amber-700 { color: #fbbf24 !important; }
+
+.theme-zyro-dark .zyro-accent {
+  color: var(--zyro-accent);
+}
+
+.theme-zyro-dark .zyro-panel {
+  background: var(--zyro-surface) !important;
+  border-color: var(--zyro-border) !important;
+  box-shadow: none !important;
+}
+
+.theme-zyro-dark .header-surface .border-zinc-700.bg-zinc-50 {
+  background: #18181b !important;
+  border-color: #3f3f46 !important;
+  color: #a1a1aa !important;
+}
+.theme-zyro-dark .header-surface .text-zinc-700 {
+  color: #d4d4d8 !important;
+}
+
+/* Dashboard KPI cards under theme */
+.theme-zyro-dark .zyro-kpi {
+  background: var(--zyro-surface);
+  border: 1px solid var(--zyro-border);
+  color: var(--zyro-text);
 }

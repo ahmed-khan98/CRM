@@ -21,7 +21,7 @@ export default memo(function TaskCardContent({ task, showProject, priority, onPr
             {priority.label}
           </span>
           {deptName && (
-            <span className="inline-flex items-center gap-1 rounded-full border border-indigo-100 bg-indigo-50/80 px-2 py-0.5 text-[10px] font-medium text-indigo-600">
+            <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/15 px-2 py-0.5 text-[10px] font-medium text-purple-300">
               <Building2 className="h-2.5 w-2.5" />
               <span className="truncate max-w-[72px]">{deptName}</span>
             </span>
@@ -36,10 +36,10 @@ export default memo(function TaskCardContent({ task, showProject, priority, onPr
 
       <TaskCardBadges task={task} showProject={showProject} onProjectClick={onProjectClick} />
 
-      <p className="text-sm font-semibold text-zinc-800 leading-snug line-clamp-2 mb-1">{task.title}</p>
+      <p className="text-sm font-semibold text-zinc-100 leading-snug line-clamp-2 mb-1">{task.title}</p>
 
       {task.description && (
-        <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-1 mb-1">
+        <p className="text-[11px] text-zinc-500 leading-relaxed line-clamp-1 mb-1">
           {getPlainTextFromHtml(task.description)}
         </p>
       )}

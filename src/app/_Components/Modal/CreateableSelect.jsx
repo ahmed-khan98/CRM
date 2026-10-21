@@ -1,5 +1,5 @@
-import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import { crmDarkSelectStyles } from "@/app/_Components/ui/CrmSelect";
 
 // Reusable Formik-aware Select
 function FormikCreateableSelect({
@@ -31,12 +31,33 @@ function FormikCreateableSelect({
 
   const hasError = Boolean(error && touched);
 
+  const styles = {
+    ...crmDarkSelectStyles,
+    control: (base, state) => ({
+      ...crmDarkSelectStyles.control(base, state),
+      borderRadius: "0.75rem",
+      minHeight: "2.625rem",
+      textTransform: "capitalize",
+      fontSize: "13px",
+      borderColor: hasError
+        ? "rgba(248,113,113,0.7)"
+        : state.isFocused
+          ? "#a3a3a3"
+          : "#27272a",
+    }),
+    option: (base, state) => ({
+      ...crmDarkSelectStyles.option(base, state),
+      textTransform: "capitalize",
+      fontSize: "13px",
+    }),
+  };
+
   return (
     <div>
       {label ? (
         <label
           htmlFor={name}
-          className="block text-[12px] font-medium text-gray-800 mb-1"
+          className="mb-1.5 block text-[12px] font-medium text-zinc-300"
         >
           {label}
         </label>
@@ -87,60 +108,10 @@ function FormikCreateableSelect({
           onChangeExtra(val);
         }}
         onBlur={() => setFieldTouched(name, true)}
-        styles={{
-          control: (base, state) => ({
-            ...base,
-            borderRadius: 16,
-            minHeight: "2.5rem",
-            textTransform: "capitalize",
-            fontSize: "14px",
-            cursor: "pointer",
-            backgroundColor: "white",
-            borderWidth: 1,
-            borderStyle: "solid",
-            borderColor: state.isFocused
-              ? "#a1a1aa"
-              : hasError
-              ? "#ef4444"
-              : "#e4e4e7",
-            boxShadow: state.isFocused ? "0 0 0 3px rgba(24, 24, 27, 0.06)" : "none",
-            ":hover": { borderColor: "#d4d4d8" },
-          }),
-
-          option: (base, state) => ({
-            ...base,
-            textTransform: "capitalize",
-            fontSize: "14px",
-            cursor: "pointer",
-            fontWeight: "500",
-            backgroundColor: state.isSelected
-              ? "#f4f4f5"
-              : state.isFocused
-              ? "#fafafa"
-              : "white",
-            "&:hover": {
-              backgroundColor: "#18181b",
-              color: "white",
-            },
-            color: state.isSelected ? "#09090b" : "#3f3f46",
-          }),
-
-          valueContainer: (b) => ({ ...b, padding: "0 0.75rem" }),
-          placeholder: (b) => ({ ...b, color: "#9ca3af" }),
-          singleValue: (b) => ({ ...b, color: "#111827" }),
-          menu: (b) => ({
-            ...b,
-            zIndex: 50,
-            borderRadius: "12px",
-            overflow: "hidden",
-            border: "1px solid #e5e7eb",
-            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-          }),
-          menuPortal: (b) => ({ ...b, zIndex: 9999 }),
-        }}
+        styles={styles}
       />
       {hasError ? (
-        <div className="text-red-500 text-[11px] mt-1">{error}</div>
+        <div className="mt-1 text-[11px] text-rose-400">{error}</div>
       ) : null}
     </div>
   );

@@ -56,7 +56,7 @@ function Pagination({ meta, onPageChange }) {
           p === "…" ? (
             <span
               key={`ellipsis-${idx}`}
-              className="px-2 text-gray-400 select-none cursor-pointer"
+              className="px-2 text-zinc-400 select-none cursor-pointer"
             >
               …
             </span>

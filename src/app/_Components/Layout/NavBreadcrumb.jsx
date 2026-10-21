@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 
 const LABELS = {
   dashboard: "Dashboard",
+  statistics: "Overview",
   statictics: "Overview",
   department: "Departments",
   brand: "Brands",
@@ -40,7 +41,7 @@ export default function NavBreadcrumb() {
     <p className="hidden xl:block truncate text-xs text-zinc-500">
       {parts.map((part, i) => (
         <span key={`${part}-${i}`}>
-          {i > 0 && <span className="mx-1.5 text-zinc-700">/</span>}
+          {i > 0 && <span className="mx-1.5 text-zinc-900">/</span>}
           <span className={i === parts.length - 1 ? "text-zinc-300" : ""}>
             {LABELS[part] || (part.length === 24 ? "Record" : part)}
           </span>

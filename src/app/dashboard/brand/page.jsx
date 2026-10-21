@@ -62,7 +62,7 @@ export default function AppointmentBooking() {
   }
 
   return (
-    <div className="mx-1">
+    <div className="">
       <div className="w-full mx-auto p-1 flex flex-col space-y-3">
         <PageHeader
           icon={Home}
@@ -119,12 +119,12 @@ export default function AppointmentBooking() {
                           {/* </div> */}
                         </td>
                         <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          <span className="text-[12px] font-semibold text-zinc-800 capitalize">
+                          <span className="text-[12px] font-semibold text-zinc-900 capitalize">
                             {br?.name}
                           </span>
                         </td>
                         <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-600 capitalize">
-                          <span className="text-[12px] font-semibold text-zinc-600 capitalize">
+                          <span className="text-[12px] font-semibold text-zinc-500 capitalize">
                             {br?.departmentId?.name}
                           </span>
                         </td>
@@ -140,7 +140,7 @@ export default function AppointmentBooking() {
                               whileHover={{ scale: 1.08 }}
                               whileTap={{ scale: 0.93 }}
                               onClick={() => handleEdit(br)}
-                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-ink border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
                             >
                               <Edit className="h-3.5 w-3.5" />
                             </motion.button>
@@ -148,7 +148,7 @@ export default function AppointmentBooking() {
                               whileHover={{ scale: 1.08 }}
                               whileTap={{ scale: 0.93 }}
                               onClick={() => setConfirmDelete(br._id)}
-                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
+                              className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-rose-50 border border-rose-200 text-rose-600 hover:bg-red-100 transition-all"
                             >
                               <DeleteIcon className="h-3.5 w-3.5" />
                             </motion.button>

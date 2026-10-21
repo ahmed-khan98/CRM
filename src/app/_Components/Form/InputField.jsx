@@ -19,11 +19,11 @@ const InputField = ({
   const isDark = variant === "dark";
 
   const lightClass = hasError
-    ? "border-[1px] border-solid border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-2 focus:ring-red-100"
+    ? "border-[1px] border-solid border-red-300 bg-rose-50/40 focus:border-red-400 focus:ring-2 focus:ring-red-100"
     : "border-[1px] border-solid border-zinc-200 bg-white focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100";
 
   const darkClass = hasError
-    ? "border-red-400/60 bg-[#161b22] text-white focus:border-red-400"
+    ? "border-red-400/60 bg-zinc-800 text-white focus:border-red-400"
     : fleet.modalInput;
 
   return (
@@ -65,7 +65,7 @@ const InputField = ({
       <ErrorMessage
         name={name}
         component="div"
-        className={`text-[11px] mt-1 ${isDark ? "text-red-400" : "text-red-500"}`}
+        className={`text-[11px] mt-1 ${isDark ? "text-rose-600" : "text-rose-600"}`}
       />
     </div>
   );

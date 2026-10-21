@@ -80,10 +80,10 @@ export default function page() {
                   name="oldPassword"
                   onChange={formik.handleChange}
                   value={formik.values.oldPassword}
-                  className={`w-full p-4 bg-gray-50 border ${
+                  className={`w-full p-4 bg-zinc-50 border ${
                     formik.touched.oldPassword && formik.errors.oldPassword
                       ? "border-red-300 focus:ring-red-500"
-                      : "border-gray-200 focus:ring-[#5f2781]"
+                      : "border-zinc-200 focus:ring-[#5f2781]"
                   } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                   // className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
@@ -91,7 +91,7 @@ export default function page() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 pl-4"
+                    className="text-rose-600 text-sm mt-1 pl-4"
                   >
                     {formik.errors.oldPassword}
                   </motion.p>
@@ -107,10 +107,10 @@ export default function page() {
                   name="newPassword"
                   onChange={formik.handleChange}
                   value={formik.values.newPassword}
-                  className={`w-full p-4 bg-gray-50 border ${
+                  className={`w-full p-4 bg-zinc-50 border ${
                     formik.touched.newPassword && formik.errors.newPassword
                       ? "border-red-300 focus:ring-red-500"
-                      : "border-gray-200 focus:ring-[#5f2781]"
+                      : "border-zinc-200 focus:ring-[#5f2781]"
                   } rounded-2xl focus:outline-none focus:ring-2 transition-all duration-200`}
                   // className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
@@ -118,7 +118,7 @@ export default function page() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm mt-1 pl-4"
+                    className="text-rose-600 text-sm mt-1 pl-4"
                   >
                     {formik.errors.newPassword}
                   </motion.p>

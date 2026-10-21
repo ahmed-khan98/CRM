@@ -44,9 +44,9 @@
 
 //   const getStatusColor = (status) => {
 //     switch (status) {
-//       case "scheduled": return "text-blue-600 bg-blue-300";
-//       case "completed": return "text-green-600 bg-green-300";
-//       case "missed": return "text-red-600 bg-red-300";
+//       case "scheduled": return "text-sky-700 bg-blue-300";
+//       case "completed": return "text-emerald-700 bg-green-300";
+//       case "missed": return "text-rose-600 bg-red-300";
 //       case "cancelled": return "text-gray-600 bg-gray-300";
 //       default: return "text-gray-800 bg-purple-300";
 //     }
@@ -100,14 +100,14 @@
 //               <Users className="w-4 h-4 text-zinc-400" />
 //             </div>
 //             <div>
-//               <p className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-600">Management</p>
+//               <p className="text-xs font-medium tracking-[0.15em] uppercase text-zinc-500">Management</p>
 //               <h3 className="text-base font-black text-zinc-100">All Employees</h3>
 //             </div>
 //           </div>
 //           <motion.button
 //             whileTap={{ scale: 0.97 }}
 //             onClick={() => handleEdit()}
-//             className="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-xl text-sm font-bold transition-all duration-150 self-start sm:self-auto bg-white/[0.07] border border-white/10 text-zinc-200 hover:bg-white/[0.12]"
+//             className="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-xl text-sm font-medium transition-all duration-150 self-start sm:self-auto bg-white/[0.07] border border-white/10 text-zinc-100 hover:bg-white/[0.12]"
 //           >
 //             <Plus className="h-3.5 w-3.5" />
 //             Add Employee
@@ -120,10 +120,10 @@
 //             <button
 //               key={e}
 //               onClick={() => setActiveFilter(e)}
-//               className={`px-3 py-2.5 text-[11px] rounded-lg cursor-pointer transition-all duration-150 capitalize font-semibold border ${
+//               className={`px-3 py-2.5 text-xs rounded-lg cursor-pointer transition-all duration-150 capitalize font-semibold border ${
 //                 activeFilter === e
 //                   ? "bg-white/10 border-white/[0.14] text-zinc-100"
-//                   : "border-transparent text-zinc-600 hover:text-zinc-400"
+//                   : "border-transparent text-zinc-500 hover:text-zinc-400"
 //               }`}
 //             >
 //               {e}
@@ -136,10 +136,10 @@
 //           {employees.length === 0 ? (
 //             <div className="flex flex-col items-center justify-center rounded-2xl p-14 text-center bg-white/[0.03] border border-white/[0.06]">
 //               <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-white/5 border border-white/[0.08]">
-//                 <Users className="w-6 h-6 text-zinc-700" />
+//                 <Users className="w-6 h-6 text-zinc-900" />
 //               </div>
-//               <p className="text-sm font-bold mb-1 text-zinc-600">No Employees Found</p>
-//               <p className="text-[11px] text-zinc-700">
+//               <p className="text-sm font-medium mb-1 text-zinc-500">No Employees Found</p>
+//               <p className="text-xs text-zinc-900">
 //                 {activeFilter === "all"
 //                   ? "You don't have any employees yet."
 //                   : `No employees in ${activeFilter} department.`}
@@ -152,7 +152,7 @@
 //                   <thead>
 //                     <tr className="bg-white/5 border-b border-white/[0.07]">
 //                       {EMPLOYEE_HEADERS.map((col, index) => (
-//                         <th key={index} className="px-3 py-3 text-center text-[10px] font-bold uppercase tracking-[0.12em] whitespace-nowrap text-zinc-600">
+//                         <th key={index} className="px-3 py-3 text-center text-xs font-medium uppercase tracking-wider whitespace-nowrap text-zinc-500">
 //                           {col}
 //                         </th>
 //                       ))}
@@ -170,7 +170,7 @@
 //                         }`}
 //                       >
 //                         <td className="px-3 py-2.5 text-center">
-//                           <span className="text-[11px] font-bold text-zinc-600">{index + 1}</span>
+//                           <span className="text-xs font-medium text-zinc-500">{index + 1}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 text-center">
 //                           <div className="relative w-8 h-8 mx-auto">
@@ -183,31 +183,31 @@
 //                           </div>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap">
-//                           <span className="text-[11px] font-semibold capitalize text-zinc-300">{emp?.fullName || "-"}</span>
+//                           <span className="text-xs font-semibold capitalize text-zinc-300">{emp?.fullName || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap">
-//                           <span className="text-[11px] text-zinc-500">{emp?.email || "-"}</span>
+//                           <span className="text-xs text-zinc-500">{emp?.email || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
-//                           <span className="text-[11px] text-zinc-500">{emp?.designation || "-"}</span>
+//                           <span className="text-xs text-zinc-500">{emp?.designation || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
-//                           <span className="text-[11px] font-mono text-zinc-500">{emp?.CNIC || "-"}</span>
+//                           <span className="text-xs font-mono text-zinc-500">{emp?.CNIC || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
-//                           <span className="text-[11px] font-mono text-zinc-500">{emp?.phoneNo || "-"}</span>
+//                           <span className="text-xs font-mono text-zinc-500">{emp?.phoneNo || "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
 //                           {emp?.departmentId?.name ? (
-//                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${getStatusColor(emp?.departmentId?.name)}`}>
+//                             <span className={`px-2 py-0.5 rounded-full text-xs font-medium uppercase ${getStatusColor(emp?.departmentId?.name)}`}>
 //                               {emp.departmentId.name.charAt(0).toUpperCase() + emp.departmentId.name.slice(1)}
 //                             </span>
 //                           ) : (
-//                             <span className="text-zinc-700">-</span>
+//                             <span className="text-zinc-900">-</span>
 //                           )}
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
-//                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${getActionStatusColor(emp?.role)}`}>
+//                           <span className={`px-2 py-0.5 rounded-full text-xs font-medium uppercase ${getActionStatusColor(emp?.role)}`}>
 //                             {emp?.role ? emp.role.charAt(0).toUpperCase() + emp.role.slice(1) : "-"}
 //                           </span>
 //                         </td>
@@ -215,7 +215,7 @@
 //                           <button
 //                             disabled={statusLoading}
 //                             onClick={() => updateStatus({ id: emp?._id })}
-//                             className={`cursor-pointer px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all duration-150 ${getActionStatusColor(emp?.status)} ${
+//                             className={`cursor-pointer px-2.5 py-1 rounded-lg text-xs font-medium uppercase transition-all duration-150 ${getActionStatusColor(emp?.status)} ${
 //                               statusLoading && statusArgs?.id === emp?._id ? "opacity-50 cursor-not-allowed" : ""
 //                             }`}
 //                           >
@@ -233,7 +233,7 @@
 //                           </button>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap text-center">
-//                           <span className="text-[11px] text-zinc-500">{emp?.joiningDate ? formatDate(emp.joiningDate) : "-"}</span>
+//                           <span className="text-xs text-zinc-500">{emp?.joiningDate ? formatDate(emp.joiningDate) : "-"}</span>
 //                         </td>
 //                         <td className="px-3 py-2.5 whitespace-nowrap">
 //                           <div className="flex items-center justify-center gap-1.5">
@@ -241,7 +241,7 @@
 //                               whileHover={{ scale: 1.08 }}
 //                               whileTap={{ scale: 0.92 }}
 //                               onClick={() => handleEdit(emp)}
-//                               className="cursor-pointer w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150 bg-indigo-500/10 border border-indigo-500/[0.18] text-indigo-400 hover:bg-indigo-500/[0.18]"
+//                               className="cursor-pointer w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150 bg-indigo-500/10 border border-indigo-500/[0.18] text-zinc-900 hover:bg-indigo-500/[0.18]"
 //                             >
 //                               <Edit className="h-3.5 w-3.5" />
 //                             </motion.button>
@@ -249,7 +249,7 @@
 //                               whileHover={{ scale: 1.08 }}
 //                               whileTap={{ scale: 0.92 }}
 //                               onClick={() => setConfirmDelete(emp._id)}
-//                               className="cursor-pointer w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150 bg-red-500/[0.08] border border-red-500/[0.16] text-red-400 hover:bg-red-500/[0.16]"
+//                               className="cursor-pointer w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150 bg-danger/[0.08] border border-danger/[0.16] text-rose-600 hover:bg-danger/[0.16]"
 //                             >
 //                               <Trash2 className="h-3.5 w-3.5" />
 //                             </motion.button>
@@ -297,20 +297,18 @@ import {
 } from "@/app/_Services/employee/page";
 import EmployeeModal from "@/app/_Components/Modal/EmployeeModal";
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
-import Image from "next/image";
-import Link from "next/link";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import { getActionStatusColor, getStatusColor } from "@/app/utilities/color";
 import toast from "react-hot-toast";
-import { EMPLOYEE_HEADERS } from "@/app/_Components/table/tableRow/tableHeader/employeeHeader";
 import { getStatusConfig } from "@/app/utilities/attendence";
 import PageHeader from "@/app/_Components/PageHeader/page";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import SearchFilterBar from "@/app/_Components/filters/SearchFilterBar";
 import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
-import Tooltip from "@/app/_Components/ui/Tooltip";
-import EmptyState from "@/app/_Components/ui/saas/EmptyState";
-import { tableWrap, thClass, theadRow, trHover } from "@/app/_Components/ui/saas/DataTable";
+import DataTable, {
+  EntityCell,
+  IconActionButton,
+} from "@/app/_Components/ui/saas/DataTable";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -425,6 +423,158 @@ export default function AppointmentBooking() {
     ? filterData.map((name) => ({ label: name, value: name }))
     : [];
 
+  const columns = useMemo(
+    () => [
+      {
+        key: "sr",
+        label: "Sr",
+        width: 48,
+        render: (_row, index) => (
+          <span className="text-xs text-gray-600">{index + 1}</span>
+        ),
+      },
+      {
+        key: "employee",
+        label: "Employee Info",
+        render: (emp) => (
+          <EntityCell
+            image={emp?.image}
+            name={emp?.fullName}
+            subtitle={emp?.email || "-"}
+          />
+        ),
+      },
+      {
+        key: "designation",
+        label: "Designation",
+        width: 200,
+        wrap: true,
+        render: (emp) => (
+          <span className="block max-w-[200px] whitespace-normal break-words text-xs font-semibold text-zinc-900">
+            {emp?.designation || "-"}
+          </span>
+        ),
+      },
+      {
+        key: "cnic",
+        label: "CNIC",
+        render: (emp) => (
+          <span className="text-xs text-gray-600">{emp?.CNIC || "-"}</span>
+        ),
+      },
+      {
+        key: "phone",
+        label: "Phone No.",
+        render: (emp) => (
+          <span className="text-xs text-gray-600">
+            {emp?.phoneNo || "-"}
+          </span>
+        ),
+      },
+      {
+        key: "department",
+        label: "Department / Role",
+        wrap: true,
+        render: (emp) => (
+          <div className="flex flex-wrap items-center gap-1">
+            <span
+              className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium uppercase ${getStatusColor(
+                emp?.departmentId?.name
+              )}`}
+            >
+              {formatBadgeLabel(emp?.departmentId?.name)}
+            </span>
+            <span
+              className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium uppercase ${getActionStatusColor(
+                emp?.role
+              )}`}
+            >
+              {formatBadgeLabel(emp?.role)}
+            </span>
+          </div>
+        ),
+      },
+      {
+        key: "status",
+        label: "Status",
+        align: "center",
+        render: (emp) => {
+          const cfg = getStatusConfig(emp?.status);
+          return (
+            <span
+              onClick={() => handleStatus(emp?._id)}
+              className={`cursor-pointer inline-flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-medium uppercase tracking-wider ${cfg.bg} ${cfg.text} ${cfg.border}`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
+              {statusLoading && statusArgs?.id === emp?._id ? (
+                <span className="flex items-center gap-1">
+                  <svg
+                    className="h-3 w-3 animate-spin text-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  <span>Wait...</span>
+                </span>
+              ) : (
+                cfg.label || "-"
+              )}
+            </span>
+          );
+        },
+      },
+      {
+        key: "joining",
+        label: "Joining",
+        render: (emp) => (
+          <span className="text-xs text-gray-600">
+            {emp?.joiningDate ? formatDate(emp.joiningDate) : "-"}
+          </span>
+        ),
+      },
+      {
+        key: "action",
+        label: "Action",
+        render: (emp) => (
+          <div className="flex items-center gap-2">
+            <IconActionButton
+              icon={Eye}
+              label="View HRMS Profile"
+              href={`/dashboard/employee/${emp._id}`}
+              tone="info"
+            />
+            <IconActionButton
+              icon={Edit}
+              label="Edit"
+              onClick={() => handleEdit(emp)}
+              tone="dark"
+            />
+            <IconActionButton
+              icon={DeleteIcon}
+              label="Delete"
+              onClick={() => setConfirmDelete(emp._id)}
+              tone="danger"
+            />
+          </div>
+        ),
+      },
+    ],
+    [handleStatus, statusLoading, statusArgs]
+  );
+
   if (isLoading) {
     return (
       <PageLoader
@@ -435,8 +585,7 @@ export default function AppointmentBooking() {
   }
 
   return (
-    <div className="mx-1">
-      <div className="w-full mx-auto p-1 flex flex-col space-y-3">
+    <div className=" section-stack  -mx-1 rounded-2xl px-1 py-1 sm:px-2 sm:py-2">
         <PageHeader
           icon={Users}
           length={filteredEmployees.length}
@@ -454,7 +603,7 @@ export default function AppointmentBooking() {
         />
 
         {/* Status filter pills */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {[
             { value: "all", label: "All" },
             { value: "active", label: "Active" },
@@ -462,15 +611,16 @@ export default function AppointmentBooking() {
           ].map((s) => (
             <button
               key={s.value}
+              type="button"
               onClick={() => setStatusFilter(s.value)}
-              className={`cursor-pointer inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider transition-all border ${
+              className={`cursor-pointer inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium uppercase tracking-wider transition border ${
                 statusFilter === s.value
                   ? s.value === "active"
                     ? "bg-emerald-50 border-emerald-200 text-emerald-700"
                     : s.value === "de active"
-                    ? "bg-red-50 border-red-200 text-red-600"
-                    : "bg-zinc-900 border-zinc-900 text-white"
-                  : "border-zinc-200 bg-white text-zinc-500 hover:border-zinc-300 hover:text-zinc-700"
+                    ? "bg-rose-50 border-rose-200 text-rose-600"
+                    : "zyro-accent-btn border-transparent"
+                  : "border-zinc-200 bg-white text-zinc-500 hover:border-zinc-200 hover:text-zinc-900"
               }`}
             >
               {s.value !== "all" && (
@@ -489,193 +639,21 @@ export default function AppointmentBooking() {
             </button>
           ))}
         </div>
-        <motion.div variants={itemVariants} className="">
-          {filteredEmployees.length === 0 ? (
-            <EmptyState
-              icon={Users}
-              title="No employees found"
-              description={
-                searchTerm
-                  ? "No employee matched your search."
-                  : activeFilter === "all"
-                    ? "Add an employee to build your team directory."
-                    : `No ${activeFilter} employees yet.`
-              }
-            />
-          ) : (
-            <div className={`-mx-1 md:mx-0 ${tableWrap}`}>
-              <div
-                className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-220px)] "
-                style={{
-                  scrollbarWidth: "thin",
-                  scrollbarColor: "#52525b transparent",
-                }}
-              >
-                <table className="min-w-full">
-                  <thead className={`sticky top-0 z-10 ${theadRow}`}>
-                    <tr>
-                      {EMPLOYEE_HEADERS.map((col, index) => (
-                        <th
-                          key={index}
-                          className={`${thClass} text-center ${col === "Sr" ? "px-2 py-2.5" : ""} ${col === "Status" ? "px-5 py-3" : ""}`}
-                        >
-                          {col}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-100 bg-white">
-                    {filteredEmployees.map((emp, index) => {
-                      const cfg = getStatusConfig(emp?.status);
-                      return (
-                        <motion.tr
-                          key={index}
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: Math.min(index * 0.03, 0.3) }}
-                          className={trHover}
-                        >
-                          <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600 capitalize ">
-                            {index + 1}
-                          </td>
-
-                          <td className="px-2 py-2.5 min-w-[60px]">
-                            <div className="flex items-center gap-2">
-                              <div className="relative w-9 h-9 flex-shrink-0 ring-2 ring-purple-100 rounded-full overflow-hidden">
-                                <Image
-                                  src={emp?.image || "/dummy.png"}
-                                  alt="employee-img"
-                                  fill
-                                  sizes
-                                  className="object-cover w-full h-full rounded-full"
-                                />
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-[12px] font-semibold text-gray-800 leading-none capitalize">
-                                  {emp?.fullName || "-"}
-                                </span>
-                                <span className="text-[11px] text-gray-600 mt-1">
-                                  {emp?.email || "-"}
-                                </span>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-2 py-2.5 whitespace-nowrap text-[12px] font-bold text-zinc-800 min-w-[60px]">
-                            {emp?.designation || "-"}
-                          </td>
-
-                          <td className="px-1 py-2.5 whitespace-nowrap text-[11px] text-gray-600">
-                            {emp?.CNIC || "-"}
-                          </td>
-
-                          <td className="px-2 py-2.5 whitespace-nowrap text-[11px] text-gray-600">
-                            {emp?.phoneNo || "-"}
-                          </td>
-                          <td className="px-2 py-2.5 whitespace-normal min-w-[100px]">
-                            <div className="flex flex-wrap gap-1 items-center">
-                              <span
-                                className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium uppercase ${getStatusColor(
-                                  emp?.departmentId?.name,
-                                )}`}
-                              >
-                                {formatBadgeLabel(emp?.departmentId?.name)}
-                              </span>
-                              <span
-                                className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium uppercase ${getActionStatusColor(
-                                  emp?.role,
-                                )}`}
-                              >
-                                {formatBadgeLabel(emp?.role)}
-                              </span>
-                            </div>
-                          </td>
-
-                          <td className="px-1 py-2.5 whitespace-normal text-center min-w-[100px]">
-                            <span
-                              onClick={() => handleStatus(emp?._id)}
-                              disabled={statusLoading}
-                              className={`cursor-pointer inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font font-medium uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
-                            >
-                              <span
-                                className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`}
-                              />
-                              {statusLoading && statusArgs?.id === emp?._id ? (
-                                <div className="flex items-center gap-1">
-                                  <svg
-                                    className="animate-spin h-3 w-3 text-current"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <circle
-                                      className="opacity-25"
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                      stroke="currentColor"
-                                      strokeWidth="4"
-                                      fill="none"
-                                    />
-                                    <path
-                                      className="opacity-75"
-                                      fill="currentColor"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    />
-                                  </svg>
-                                  <span>Wait...</span>
-                                </div>
-                              ) : emp?.status ? (
-                                emp.status.charAt(0).toUpperCase() +
-                                emp.status.slice(1)
-                              ) : (
-                                "-"
-                              )}
-                            </span>
-                          </td>
-                          <td className="px-2 py-2.5 whitespace-nowrap">
-                            <div className="flex items-center gap-1">
-                              <span className="text-[11px] text-gray-600">
-                                {emp?.joiningDate
-                                  ? formatDate(emp.joiningDate)
-                                  : "-"}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="px-2 py-2.5 whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                              <Tooltip label="View HRMS Profile" side="top">
-                                <Link
-                                  href={`/dashboard/employee/${emp._id}`}
-                                  aria-label="View HRMS Profile"
-                                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-50 border border-sky-200 text-sky-600 hover:bg-sky-100 transition-all"
-                                >
-                                  <Eye className="h-3.5 w-3.5" />
-                                </Link>
-                              </Tooltip>
-                              <motion.button
-                                whileHover={{ scale: 1.08 }}
-                                whileTap={{ scale: 0.93 }}
-                                onClick={() => handleEdit(emp)}
-                                className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
-                              >
-                                <Edit className="h-3.5 w-3.5" />
-                              </motion.button>
-                              <motion.button
-                                whileHover={{ scale: 1.08 }}
-                                whileTap={{ scale: 0.93 }}
-                                onClick={() => setConfirmDelete(emp._id)}
-                                className="w-7 h-7 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
-                              >
-                                <DeleteIcon className="h-3.5 w-3.5" />
-                              </motion.button>
-                            </div>
-                          </td>
-                        </motion.tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+        <motion.div variants={itemVariants}>
+          <DataTable
+            columns={columns}
+            data={filteredEmployees}
+            emptyState={{
+              icon: Users,
+              title: "No employees found",
+              description: searchTerm
+                ? "No employee matched your search."
+                : activeFilter === "all"
+                  ? "Add an employee to build your team directory."
+                  : `No ${activeFilter} employees yet.`,
+            }}
+            getRowId={(emp, index) => emp?._id || String(index)}
+          />
         </motion.div>
         {confirmDelete && (
           <WarningModal
@@ -692,7 +670,6 @@ export default function AppointmentBooking() {
           closeModal={closeModal}
           refetch={refetch}
         />
-      </div>
     </div>
   );
 }

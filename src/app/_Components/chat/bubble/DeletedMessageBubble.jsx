@@ -30,7 +30,7 @@ function DeletedMessageBubble({
         }`}
       >
         {showSenderName && (
-          <p className="text-[11px] font-semibold text-sky-600 mb-0.5 px-0.5">
+          <p className="text-[11px] font-semibold text-sky-700 mb-0.5 px-0.5">
             {senderName}
           </p>
         )}

@@ -64,14 +64,8 @@ function ConversationRow({
 
   return (
     <div
-      className={`flex w-full cursor-pointer items-center border-b text-left transition select-none md:select-auto ${
-        dark ? "border-white/[0.06]" : "border-zinc-100"
-      } ${
-        selected
-          ? dark
-            ? "bg-white/[0.08]"
-            : "bg-[#f0f2f5]"
-          : "hover:bg-black/[0.03]"
+      className={`mx-2 mb-0.5 flex w-[calc(100%-1rem)] cursor-pointer items-center rounded-2xl text-left transition select-none md:select-auto ${
+        selected ? theme.rowSelected : theme.rowHover
       }`}
       style={{ WebkitTouchCallout: "none" }}
       onTouchStart={onOpenMenu ? startLongPress : undefined}
@@ -88,13 +82,13 @@ function ConversationRow({
           }
           onOpen(conv._id);
         }}
-        className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-3 py-3 text-left"
+        className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 px-2.5 py-2.5 text-left"
       >
         <Avatar src={avatar} name={title} online={online} />
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">
-            <span className="truncate font-semibold text-sm">{title}</span>
-            <span className="shrink-0 text-[11px] text-zinc-500">
+            <span className="truncate text-[13.5px] font-semibold tracking-tight">{title}</span>
+            <span className="shrink-0 text-[10.5px] font-medium text-zinc-400">
               {formatChatTime(conv.lastMessage?.createdAt)}
             </span>
           </div>
@@ -111,7 +105,7 @@ function ConversationRow({
             </p>
             {conv.unreadCount > 0 && (
               <span
-                className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold ${theme.unread}`}
+                className={`min-w-[18px] shrink-0 rounded-full px-1.5 py-0.5 text-center text-[10px] font-bold ${theme.unread}`}
               >
                 {conv.unreadCount}
               </span>

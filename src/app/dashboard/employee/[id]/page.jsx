@@ -26,6 +26,7 @@ import DocumentsTab from "../_components/DocumentsTab";
 import FamilyTab from "../_components/FamilyTab";
 import PreviousEmploymentTab from "../_components/PreviousEmploymentTab";
 import HistoryTab from "../_components/HistoryTab";
+import LeaveTab from "../_components/LeaveTab";
 import {
   formatMoney,
   formatDate,
@@ -41,16 +42,17 @@ const TABS = [
   { id: "family", label: "Family", icon: Users },
   { id: "previous", label: "Previous Jobs", icon: Building2 },
   { id: "history", label: "History", icon: History },
+  { id: "leave", label: "Leave", icon: CalendarDays },
 ];
 
 function QuickStat({ icon: Icon, label, value }) {
   return (
-    <div className={`${fleet.card} px-4 py-3.5 flex items-start gap-3 min-w-0`}>
-      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-600">
+    <div className={`${fleet.card} px-5 py-4 flex items-start gap-3 min-w-0`}>
+      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-50 text-zinc-500">
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+        <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
           {label}
         </p>
         <p className="mt-0.5 text-sm font-semibold text-zinc-900 truncate">
@@ -93,6 +95,8 @@ export default function EmployeeProfilePage() {
         return <PreviousEmploymentTab employeeId={id} />;
       case "history":
         return <HistoryTab employeeId={id} />;
+      case "leave":
+        return <LeaveTab employeeId={id} employeeName={employee.fullName} />;
       default:
         return null;
     }
@@ -110,7 +114,7 @@ export default function EmployeeProfilePage() {
   if (isError || !employee) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh] gap-3">
-        <p className="text-sm font-semibold text-zinc-700">Employee not found</p>
+        <p className="text-sm font-semibold text-zinc-900">Employee not found</p>
         <Link href="/dashboard/employee" className={fleet.secondaryBtn}>
           Back to employees
         </Link>
@@ -127,20 +131,20 @@ export default function EmployeeProfilePage() {
     .join(" · ");
 
   return (
-    <div className={fleet.page}>
+    <div className={` -mx-1 rounded-2xl px-1 py-1 sm:px-2 sm:py-2 ${fleet.page}`}>
       {/* Header with circular avatar — modern HRMS */}
-      <div className={`${fleet.card} p-4 sm:p-5 mb-4`}>
+      <div className={`${fleet.card} p-5 mb-4`}>
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
             <button
               type="button"
               onClick={() => router.push("/dashboard/employee")}
-              className="mt-2 p-2 rounded-xl border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 shrink-0"
+              className="mt-2 p-2 rounded-xl border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50 shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
 
-            <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-full ring-2 ring-zinc-100 shadow-sm bg-zinc-100">
+            <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-full ring-2 ring-primary-light shadow-sm bg-zinc-50">
               <Image
                 src={employee.image || "/dummy.png"}
                 alt={employee.fullName}
@@ -152,7 +156,7 @@ export default function EmployeeProfilePage() {
 
             <div className="min-w-0 pt-0.5">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight capitalize truncate">
+                <h1 className="text-lg font-semibold text-zinc-900 tracking-tight capitalize truncate">
                   {employee.fullName}
                 </h1>
                 <StatusBadge
@@ -160,7 +164,7 @@ export default function EmployeeProfilePage() {
                   label={employee.status || "—"}
                 />
                 {employee.role && (
-                  <span className="inline-flex rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zinc-600">
+                  <span className="inline-flex rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-xs font-medium uppercase tracking-wide text-zinc-500">
                     {employee.role}
                   </span>
                 )}
@@ -220,10 +224,10 @@ export default function EmployeeProfilePage() {
                 key={t.id}
                 type="button"
                 onClick={() => setTab(t.id)}
-                className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-2.5 text-xs font-bold transition whitespace-nowrap ${
+                className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium transition whitespace-nowrap ${
                   active
-                    ? "bg-zinc-950 text-white shadow-sm"
-                    : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900"
+                    ? "zyro-accent-btn shadow-sm"
+                    : "text-zinc-500 hover:bg-white/5 hover:text-zinc-100"
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />

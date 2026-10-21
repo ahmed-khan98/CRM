@@ -24,18 +24,18 @@ const BreakTable = ({
   onPageChange,
 }) => {
   return (
-    <div className="-mx-1 overflow-hidden rounded-2xl bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] md:mx-0 md:border md:border-zinc-200">
+    <div className="crm-table-wrap">
       <div
         className="overflow-x-auto"
         // style={{ maxHeight: "calc(100vh - 180px)" }}
       >
-        <table className="w-full text-left border-collapse min-w-[860px]">
+        <table className="crm-table w-full text-left border-collapse min-w-[860px]">
           <thead className="sticky top-0 z-20">
-            <tr className="bg-zinc-800 border-b border-zinc-700">
+            <tr className="table-head-row">
               {HEADERS.map((h) => (
                 <th
                   key={h}
-                  className="px-5 py-3 text-[10px] font-black text-zinc-300 uppercase tracking-widest whitespace-nowrap"
+                  className="table-head-cell px-5"
                 >
                   <span className="flex items-center gap-1">
                     {h}
@@ -58,7 +58,7 @@ const BreakTable = ({
               <tr>
                 <td colSpan={HEADERS.length} className="py-24 text-center">
                   <div className="flex flex-col items-center gap-3">
-                    <div className="p-4 rounded-full bg-zinc-100">
+                    <div className="p-4 rounded-full bg-zinc-800">
                       <Coffee className="h-7 w-7 text-zinc-400" />
                     </div>
                     <p className="text-zinc-500 font-semibold text-sm">

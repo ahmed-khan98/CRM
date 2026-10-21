@@ -37,7 +37,7 @@ function PortalMenu({ btnRef, open, onClose, children }) {
   useEffect(() => {
     if (!open) return;
     const handle = (e) => {
-      const inBtn  = btnRef.current?.contains(e.target);
+      const inBtn = btnRef.current?.contains(e.target);
       const inMenu = menuRef.current?.contains(e.target);
       if (!inBtn && !inMenu) onClose();
     };
@@ -59,7 +59,7 @@ function PortalMenu({ btnRef, open, onClose, children }) {
     <div
       ref={menuRef}
       style={style}
-      className="w-40 rounded-xl bg-white border border-zinc-200 shadow-xl overflow-hidden"
+      className="w-40 overflow-hidden rounded-xl border border-zinc-700 bg-zinc-900 shadow-xl"
     >
       {children}
     </div>,
@@ -77,9 +77,10 @@ function RowMenu({ emp, paymentUrl, onCopy, isCopied, onDelete, isEnabled, onTog
       <button
         ref={btnRef}
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex cursor-pointer items-center justify-center rounded-lg p-1.5 border border-zinc-200 hover:bg-zinc-100 transition-colors"
+        
+        className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-zinc-700 bg-ink p-1.5 text-zinc-300 transition-colors hover:bg-zinc-800"
       >
-        <EllipsisVertical className="h-3.5 w-3.5 text-zinc-500" />
+        <EllipsisVertical className="h-3.5 w-3.5" />
       </button>
 
       <PortalMenu btnRef={btnRef} open={open} onClose={() => setOpen(false)}>
@@ -91,11 +92,11 @@ function RowMenu({ emp, paymentUrl, onCopy, isCopied, onDelete, isEnabled, onTog
                 if (paymentUrl) window.open(paymentUrl, "_blank");
                 setOpen(false);
               }}
-              className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] text-zinc-700 hover:bg-zinc-50"
+              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-[12px] text-zinc-200 hover:bg-zinc-800"
             >
               <Eye className="h-3.5 w-3.5 text-zinc-400" />
               View
-              <ExternalLink className="h-3 w-3 ml-auto text-zinc-300" />
+              <ExternalLink className="ml-auto h-3 w-3 text-zinc-500" />
             </button>
 
             {/* Copy Link — shows "Copied!" for 1.5s then closes */}
@@ -104,29 +105,45 @@ function RowMenu({ emp, paymentUrl, onCopy, isCopied, onDelete, isEnabled, onTog
                 onCopy(emp?._id);
                 setTimeout(() => setOpen(false), 1500);
               }}
-              className={`cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] hover:bg-zinc-50 ${isCopied ? "text-emerald-600" : "text-blue-600"}`}
+              className={`flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-[12px] hover:bg-sky-500/10 ${
+                isCopied ? "text-emerald-400" : "text-sky-300"
+              }`}
             >
-              {isCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {isCopied ? (
+                <Check className="h-3.5 w-3.5" />
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
               {isCopied ? "Copied!" : "Copy Link"}
             </button>
 
-            <div className="border-t border-zinc-100 my-1" />
+            <div className="my-1 border-t border-zinc-700" />
 
             {/* Enable / Disable */}
             <button
-              onClick={() => { onToggle(); setOpen(false); }}
-              className={`cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] ${isEnabled ? "text-amber-600 hover:bg-amber-50" : "text-emerald-600 hover:bg-emerald-50"}`}
+              onClick={() => {
+                onToggle();
+                setOpen(false);
+              }}
+              className={`flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-[12px] ${
+                isEnabled
+                  ? "text-amber-300 hover:bg-amber-500/10"
+                  : "text-emerald-400 hover:bg-emerald-500/10"
+              }`}
             >
               <Power className="h-3.5 w-3.5" />
               {isEnabled ? "Disable Link" : "Enable Link"}
             </button>
 
-            <div className="border-t border-zinc-100 my-1" />
+            <div className="my-1 border-t border-zinc-700" />
 
             {/* Delete */}
             <button
-              onClick={() => { onDelete(emp?._id); setOpen(false); }}
-              className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-[12px] text-red-500 hover:bg-red-50"
+              onClick={() => {
+                onDelete(emp?._id);
+                setOpen(false);
+              }}
+              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-[12px] text-rose-400 hover:bg-rose-500/10"
             >
               <Trash2 className="h-3.5 w-3.5" />
               Delete

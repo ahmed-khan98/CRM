@@ -1,5 +1,5 @@
 export const metadata = { title: "Statistics" };
 
-export default function Layout({ children }) {
+export default function LegacyStaticticsLayout({ children }) {
   return children;
 }

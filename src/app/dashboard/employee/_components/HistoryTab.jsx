@@ -25,19 +25,19 @@ import {
 const TYPE_META = {
   Salary: {
     icon: Wallet,
-    className: "bg-zinc-900 text-white border-zinc-900",
+    className: "bg-zinc-900 text-zinc-100 border-zinc-700",
   },
   Allowance: {
     icon: BadgePercent,
-    className: "bg-violet-50 text-violet-700 border-violet-200",
+    className: "bg-purple-500/15 text-purple-300 border-purple-500/30",
   },
   Car: {
     icon: Car,
-    className: "bg-sky-50 text-sky-700 border-sky-200",
+    className: "bg-sky-500/15 text-sky-300 border-sky-500/30",
   },
   Fuel: {
     icon: Fuel,
-    className: "bg-amber-50 text-amber-800 border-amber-200",
+    className: "bg-amber-500/15 text-amber-300 border-amber-500/30",
   },
 };
 
@@ -65,9 +65,9 @@ export default function HistoryTab({ employeeId }) {
         title: h.reason || "Salary revision",
         detail: (
           <span className="inline-flex items-center gap-1.5 tabular-nums">
-            <span className="text-zinc-400">{formatMoney(h.previousSalary)}</span>
-            <ArrowRight className="h-3 w-3 text-zinc-300" />
-            <span className="font-bold text-zinc-900">
+            <span className="text-zinc-500">{formatMoney(h.previousSalary)}</span>
+            <ArrowRight className="h-3 w-3 text-zinc-600" />
+            <span className="font-bold text-zinc-100">
               {formatMoney(h.newSalary)}
             </span>
           </span>
@@ -161,7 +161,7 @@ export default function HistoryTab({ employeeId }) {
             return (
               <div
                 key={t.id}
-                className="flex gap-3 rounded-xl border border-zinc-200 bg-white px-3.5 py-3 hover:bg-zinc-50/80 transition"
+                className="flex gap-3 rounded-xl border border-zinc-800 bg-[#121212] px-3.5 py-3 transition hover:bg-zinc-900/80"
               >
                 <div
                   className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${meta.className}`}
@@ -170,29 +170,31 @@ export default function HistoryTab({ employeeId }) {
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex flex-wrap items-center gap-2 min-w-0">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                      <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                         {t.type}
                       </span>
-                      <span className="text-sm font-bold text-zinc-900 truncate">
+                      <span className="truncate text-sm font-medium text-zinc-100">
                         {t.title}
                       </span>
                       {t.tone === "off" && (
-                        <span className="rounded-full bg-zinc-100 border border-zinc-200 px-2 py-0.5 text-[10px] font-bold uppercase text-zinc-500">
-                          Deactive
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/50 bg-rose-500/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-rose-400">
+                          <span className="h-1.5 w-1.5 rounded-full bg-rose-400" />
+                          DE ACTIVE
                         </span>
                       )}
                       {t.tone === "on" && t.type === "Allowance" && (
-                        <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-700">
-                          Active
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-400">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                          ACTIVE
                         </span>
                       )}
                     </div>
-                    <span className="text-xs text-zinc-500 whitespace-nowrap">
+                    <span className="whitespace-nowrap text-xs text-zinc-500">
                       {formatDate(t.date)}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-zinc-600">{t.detail}</p>
+                  <p className="mt-1 text-sm text-zinc-500">{t.detail}</p>
                 </div>
               </div>
             );

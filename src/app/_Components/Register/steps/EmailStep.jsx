@@ -39,7 +39,7 @@ export default function GenZEmailStep({ onSubmit, isLoading, initialEmail = "" }
           </Link>
         </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Let's get started</h2>
-        <p className="text-gray-500">Enter your email to create an account</p>
+        <p className="text-zinc-500">Enter your email to create an account</p>
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-6">
@@ -50,7 +50,7 @@ export default function GenZEmailStep({ onSubmit, isLoading, initialEmail = "" }
                 ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                 : formik.touched.email && formik.errors.email
                   ? "border-red-300"
-                  : "border-gray-200"
+                  : "border-zinc-200"
             }`}
           >
             <input
@@ -73,7 +73,7 @@ export default function GenZEmailStep({ onSubmit, isLoading, initialEmail = "" }
             <motion.p
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-red-500 text-sm ml-2"
+              className="text-rose-600 text-sm ml-2"
             >
               {formik.errors.email}
             </motion.p>
@@ -99,7 +99,7 @@ export default function GenZEmailStep({ onSubmit, isLoading, initialEmail = "" }
           )}
         </motion.button>
 
-        <div className="text-center text-sm text-gray-500">
+        <div className="text-center text-sm text-zinc-500">
           Already have an account?{" "}
           <a href="/login" className="text-[#FB3B11] font-medium hover:underline">
             Sign in

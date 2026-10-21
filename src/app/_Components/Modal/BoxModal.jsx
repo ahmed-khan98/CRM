@@ -90,7 +90,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                 className={fleet.modalTextarea}
                 placeholder="describe the content of the box..."
               />
-              <ErrorMessage name="notes" component="div" className="text-red-400 text-sm mt-1" />
+              <ErrorMessage name="notes" component="div" className="text-rose-600 text-sm mt-1" />
             </div>
 
             <div>
@@ -113,7 +113,7 @@ const BoxModal = ({ isModalOpen, editingBox, closeModal, refetch }) => {
                 {values?.products?.map((p) => (
                   <span
                     key={p.value}
-                    className="inline-flex items-center bg-[#1c2330] text-zinc-200 border border-white/10 text-sm px-3 py-1 rounded-full text-start"
+                    className="inline-flex items-center bg-[#1c2330] text-zinc-100 border border-white/10 text-sm px-3 py-1 rounded-full text-start"
                   >
                     {p.label}
                     <button

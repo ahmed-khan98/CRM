@@ -68,7 +68,7 @@ const BulkEmailDetailsModal = ({ isOpen, onClose, email }) => {
         </div>
       </div>
 
-      <div className="rounded-xl p-4 border border-white/[0.08] bg-[#161b22]">
+      <div className="rounded-xl p-4 border border-white/[0.08] bg-zinc-800">
         <div className="flex items-center gap-3 text-white font-semibold mb-4">
           <FileText size={24} />
           <p className="text-md">Subject: {email.subject}</p>

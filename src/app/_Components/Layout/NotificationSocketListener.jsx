@@ -170,7 +170,7 @@ export default function NotificationSocketListener() {
               }}
               className={`${
                 t.visible ? "animate-enter" : "animate-leave"
-              } max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] px-4 py-3 shadow-xl text-left ${
+              } max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-ink px-4 py-3 shadow-xl text-left ${
                 canOpen
                   ? "cursor-pointer hover:border-white/20"
                   : "cursor-default"
@@ -181,7 +181,7 @@ export default function NotificationSocketListener() {
                 {payload?.message || ""}
               </p>
               {canOpen && (
-                <p className="mt-1.5 text-[10px] font-medium text-blue-400">
+                <p className="mt-1.5 text-xs font-medium text-blue-400">
                   {isChatNotify ? "Click to open chat" : "Click to open lead"}
                 </p>
               )}

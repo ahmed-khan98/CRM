@@ -193,7 +193,7 @@ function FormikBreakSelect({
       />
 
       {hasError && (
-        <div className="text-red-400 text-[11px] mt-1">{error}</div>
+        <div className="text-rose-600 text-[11px] mt-1">{error}</div>
       )}
     </div>
   );

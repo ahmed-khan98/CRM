@@ -266,51 +266,51 @@
 //       >
 //         <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-zinc-800">
 //           <div className="flex justify-between items-center mb-1">
-//             <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
+//             <span className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
 //               Total Records
 //             </span>
 //             <Users className="text-purple-500" size={18} />
 //           </div>
-//           <p className="text-2xl font-black text-gray-800">{stats.total}</p>
+//           <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
 //         </div>
 
 //         {/* Present Today Card */}
 //         <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-green-500">
 //           <div className="flex justify-between items-center mb-1">
-//             <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
+//             <span className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
 //               Present Today
 //             </span>
 //             <UserCheck className="text-green-500" size={18} />
 //           </div>
-//           <p className="text-2xl font-black text-gray-800">{stats.present}</p>
+//           <p className="text-2xl font-bold text-gray-800">{stats.present}</p>
 //         </div>
 
 //         {/* Absent Card */}
-//         <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-red-500">
+//         <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-rose-400">
 //           <div className="flex justify-between items-center mb-1">
-//             <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
+//             <span className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
 //               Absent
 //             </span>
-//             <UserX className="text-red-500" size={18} />
+//             <UserX className="text-rose-600" size={18} />
 //           </div>
-//           <p className="text-2xl font-black text-gray-800">{stats.absent}</p>
+//           <p className="text-2xl font-bold text-gray-800">{stats.absent}</p>
 //         </div>
 //         {viewType !== "today" && (
 //           <div className="bg-white p-4 rounded-2xl shadow-sm border-l-4 border-gray-500">
 //             <div className="flex justify-between items-center mb-1">
-//               <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">
+//               <span className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
 //                 Weekend
 //               </span>
-//               <BedDouble className="text-gray-500" size={18} />
+//               <BedDouble className="text-zinc-500" size={18} />
 //             </div>
-//             <p className="text-2xl font-black text-gray-800">{stats.weekend}</p>
+//             <p className="text-2xl font-bold text-gray-800">{stats.weekend}</p>
 //           </div>
 //         )}
 //       </div>
 
 //       <div className="bg-white p-3 rounded-2xl shadow-sm mb-4 flex flex-wrap items-end gap-3 shrink-0">
 //         <div className="flex flex-col gap-1 w-full sm:w-auto grow sm:grow-0">
-//           <label className="text-[10px] font-bold text-zinc-800 uppercase ml-1">
+//           <label className="text-xs font-medium text-zinc-900 uppercase ml-1">
 //             Search Employee
 //           </label>
 //           <Select
@@ -332,18 +332,18 @@
 
 //         {/* 2. Time Period Buttons */}
 //         <div className="flex flex-col gap-1">
-//           <label className="text-[10px] font-bold text-zinc-800 uppercase ml-1">
+//           <label className="text-xs font-medium text-zinc-900 uppercase ml-1">
 //             Time Period
 //           </label>
-//           <div className="flex bg-gray-100 p-1 rounded-xl h-[38px] items-center">
+//           <div className="flex bg-zinc-50 p-1 rounded-xl h-[38px] items-center">
 //             {["today", "month", "custom"].map((type) => (
 //               <button
 //                 key={type}
 //                 onClick={() => setViewType(type)}
-//                 className={`cursor-pointer px-4 py-1.5 h-full text-[10px] font-bold rounded-lg capitalize transition-all ${
+//                 className={`cursor-pointer px-4 py-1.5 h-full text-xs font-medium rounded-lg capitalize transition-all ${
 //                   viewType === type
-//                     ? "bg-white shadow-sm text-zinc-800"
-//                     : "text-gray-500"
+//                     ? "bg-white shadow-sm text-zinc-900"
+//                     : "text-zinc-500"
 //                 }`}
 //               >
 //                 {type}
@@ -355,13 +355,13 @@
 //         {/* 3. Custom Range Inputs (Only shows if 'custom' selected) */}
 //         {viewType === "custom" && (
 //           <div className="flex flex-col gap-1 w-full sm:w-auto">
-//             <label className="text-[10px] font-bold text-zinc-800 uppercase ml-1">
+//             <label className="text-xs font-medium text-zinc-900 uppercase ml-1">
 //               Select Range
 //             </label>
 //             <div className="flex items-center gap-2 h-[38px]">
 //               <input
 //                 type="date"
-//                 className="cursor-pointer bg-gray-50 p-2 h-full rounded-xl text-xs border border-gray-100 outline-none w-full sm:w-auto"
+//                 className="cursor-pointer bg-zinc-50 p-2 h-full rounded-xl text-xs border border-gray-100 outline-none w-full sm:w-auto"
 //                 onChange={(e) =>
 //                   setCustomRange({ ...customRange, start: e.target.value })
 //                 }
@@ -369,7 +369,7 @@
 //               <span className="text-gray-300">-</span>
 //               <input
 //                 type="date"
-//                 className="cursor-pointer bg-gray-50 p-2 h-full rounded-xl text-xs border border-gray-100 outline-none w-full sm:w-auto"
+//                 className="cursor-pointer bg-zinc-50 p-2 h-full rounded-xl text-xs border border-gray-100 outline-none w-full sm:w-auto"
 //                 onChange={(e) =>
 //                   setCustomRange({ ...customRange, end: e.target.value })
 //                 }
@@ -384,10 +384,10 @@
 //             <button
 //               onClick={handleClearFilters}
 //               title="Clear Filters"
-//               className="cursor-pointer p-2 text-red-400 hover:bg-red-50 rounded-xl transition-colors flex items-center gap-1 group"
+//               className="cursor-pointer p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors flex items-center gap-1 group"
 //             >
 //               <XCircle size={22} />
-//               <span className="text-[10px] font-bold hidden sm:group-hover:block transition-all">
+//               <span className="text-xs font-medium hidden sm:group-hover:block transition-all">
 //                 CLEAR
 //               </span>
 //             </button>
@@ -401,22 +401,22 @@
 //           <table className="w-full text-left border-separate border-spacing-0">
 //             <thead className="sticky top-0 z-20 ">
 //               <tr>
-//                 <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800">
+//                 <th className="sticky top-0 p-4 text-xs font-medium text-zinc-300 uppercase bg-zinc-800">
 //                   Employee Name
 //                 </th>
-//                 <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800">
+//                 <th className="sticky top-0 p-4 text-xs font-medium text-zinc-300 uppercase bg-zinc-800">
 //                   Shift Date
 //                 </th>
-//                 <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800">
+//                 <th className="sticky top-0 p-4 text-xs font-medium text-zinc-300 uppercase bg-zinc-800">
 //                   In / Out
 //                 </th>
-//                 <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800">
+//                 <th className="sticky top-0 p-4 text-xs font-medium text-zinc-300 uppercase bg-zinc-800">
 //                   Work Hours
 //                 </th>
-//                 <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800 text-center">
+//                 <th className="sticky top-0 p-4 text-xs font-medium text-zinc-300 uppercase bg-zinc-800 text-center">
 //                   Status
 //                 </th>
-//                 <th className="sticky top-0 p-4 text-[10px] font-bold text-zinc-300 uppercase bg-zinc-800 text-center">
+//                 <th className="sticky top-0 p-4 text-xs font-medium text-zinc-300 uppercase bg-zinc-800 text-center">
 //                   Action
 //                 </th>
 //               </tr>
@@ -485,24 +485,24 @@
 //                   return (
 //                     <tr
 //                       key={uniqueRowKey}
-//                       className={`hover:bg-purple-50/20 transition-colors border-b border-gray-50 group ${
+//                       className={`hover:bg-violet-50/20 transition-colors border-b border-gray-50 group ${
 //                         isWeekend
 //                           ? "bg-gray-50/50"
 //                           : isAbsent
-//                             ? "bg-red-50/10"
+//                             ? "bg-rose-50/10"
 //                             : ""
 //                       }`}
 //                     >
 //                       <td className="p-4">
 //                         <div className="flex items-center gap-3">
-//                           <div className="capitalize w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-700 font-bold text-xs">
+//                           <div className="capitalize w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-900 font-bold text-xs">
 //                             {emp?.fullName?.charAt(0) || "U"}
 //                           </div>
 //                           <div className="flex flex-col">
-//                             <span className="text-sm font-bold text-gray-700 capitalize">
+//                             <span className="text-sm font-medium text-gray-700 capitalize">
 //                               {emp?.fullName || "Unknown"}
 //                             </span>
-//                             <span className="text-[10px] text-gray-500 font-medium capitalize">
+//                             <span className="text-xs text-zinc-500 font-medium capitalize">
 //                               {emp?.designation}
 //                             </span>
 //                           </div>
@@ -511,12 +511,12 @@
 
 //                       <td className="p-4">
 //                         <div className="flex flex-col">
-//                           <span className="text-xs font-bold text-gray-600">
+//                           <span className="text-xs font-medium text-gray-600">
 //                             {moment(
 //                               record?.shiftDate || queryParams?.startDate,
 //                             ).format("DD MMM, YYYY")}
 //                           </span>
-//                           <span className="text-[10px] text-gray-400">
+//                           <span className="text-xs text-zinc-400">
 //                             {moment(
 //                               record?.shiftDate || queryParams?.startDate,
 //                             ).format("dddd")}
@@ -526,35 +526,35 @@
 
 //                       <td className="p-4">
 //                         {isWeekend ? (
-//                           <span className="text-gray-300 font-bold text-[11px]">
+//                           <span className="text-gray-300 font-bold text-xs">
 //                             -- : --
 //                           </span>
 //                         ) : isAbsent ? (
-//                           <span className="text-red-400 font-bold text-[11px] bg-red-50 px-2 py-1 rounded">
+//                           <span className="text-rose-600 font-bold text-xs bg-rose-50 px-2 py-1 rounded">
 //                             ABSENT
 //                           </span>
 //                         ) : (
 //                           <div className="flex items-center gap-2">
-//                             <span className="text-green-600 bg-green-50 px-2 py-0.5 rounded text-[11px] font-bold">
+//                             <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-xs font-medium">
 //                               {formatTimeOnly(record?.timeIn)}
 //                             </span>
 //                             <span className="text-gray-300">→</span>
 //                             {record?.timeOut ? (
-//                               <span className="text-red-600 bg-red-50 px-2 py-0.5 rounded text-[11px] font-bold">
+//                               <span className="text-rose-600 bg-rose-50 px-2 py-0.5 rounded text-xs font-medium">
 //                                 {formatTimeOnly(record.timeOut)}
 //                               </span>
 //                             ) : isDiscrepancy ? (
 //                               <Tooltip text="Missing Time-Out! Contact Manager.">
-//                                 <span className="text-red-400 font-bold flex items-center gap-1 cursor-help uppercase text-[9px] tracking-tight underline decoration-dotted">
+//                                 <span className="text-rose-600 font-bold flex items-center gap-1 cursor-help uppercase text-xs tracking-tight underline decoration-dotted">
 //                                   DISCREPANCY <AlertCircle size={12} />
 //                                 </span>
 //                               </Tooltip>
 //                             ) : isActive ? (
-//                               <span className="bg-purple-50 text-blue-600 px-2 py-0.5 rounded text-[9px] font-black animate-pulse border border-blue-200">
+//                               <span className="bg-violet-50 text-sky-700 px-2 py-0.5 rounded text-xs font-medium animate-pulse border border-sky-200">
 //                                 ACTIVE
 //                               </span>
 //                             ) : (
-//                               <span className="text-gray-300 text-[11px]">
+//                               <span className="text-gray-300 text-xs">
 //                                 --:--
 //                               </span>
 //                             )}
@@ -564,37 +564,37 @@
 
 //                       <td className="p-4">
 //                         {isWeekend || isAbsent ? (
-//                           <span className="text-gray-300 text-[10px]">
+//                           <span className="text-gray-300 text-xs">
 //                             -- : --
 //                           </span>
 //                         ) : (
 //                          <div className="flex flex-col gap-1">
 //   {/* 1. Total Time (TimeIn se TimeOut tak) */}
 //   <div className="flex items-center justify-between min-w-[120px]">
-//     <span className="text-[9px] text-gray-600 uppercase font-bold tracking-tighter">
+//     <span className="text-xs text-gray-600 uppercase font-bold tracking-tighter">
 //       Total:
 //     </span>
-//     <span className="text-[10px] font-bold text-gray-700">
+//     <span className="text-xs font-medium text-gray-700">
 //       {calculateDuration(record?.timeIn, record?.timeOut)}
 //     </span>
 //   </div>
 
 //   {/* 2. Working Time (Total Time - Break Time) */}
 //   <div className="flex items-center justify-between">
-//     <span className="text-[9px] text-gray-600 uppercase font-bold tracking-tighter">
+//     <span className="text-xs text-gray-600 uppercase font-bold tracking-tighter">
 //       Working:
 //     </span>
-//     <span className="text-[10px] font-bold text-blue-600">
+//     <span className="text-xs font-medium text-sky-700">
 //       {onlyWorkingHours(record?.timeIn, record?.timeOut, record?.totalBreakMinutes  )}
 //     </span>
 //   </div>
 
 //   {/* 3. Break Time */}
 //   <div className="flex items-center justify-between">
-//     <span className="text-[9px] text-gray-600 uppercase font-bold tracking-tighter">
+//     <span className="text-xs text-gray-600 uppercase font-bold tracking-tighter">
 //       Break:
 //     </span>
-//     <span className="text-[10px] font-bold text-yellow-600">
+//     <span className="text-xs font-medium text-yellow-600">
 //       {record?.totalBreakMinutes >= 0 ? `${formatBreakMinutes(record?.totalBreakMinutes)}` : "0min"}
 //     </span>
 //   </div>
@@ -604,12 +604,12 @@
 
 //                       <td className="p-4 text-center">
 //                         {isWeekend ? (
-//                           <span className="inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border border-gray-200 bg-gray-50 text-gray-400">
+//                           <span className="inline-flex px-3 py-1 rounded-lg text-xs font-medium uppercase tracking-widest border border-zinc-200 bg-zinc-50 text-zinc-400">
 //                             WEEKEND
 //                           </span>
 //                         ) : (
 //                           <span
-//                             className={`inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border shadow-sm ${getStatusClasses(record?.status || "absent")}`}
+//                             className={`inline-flex px-3 py-1 rounded-lg text-xs font-medium uppercase tracking-widest border shadow-sm ${getStatusClasses(record?.status || "absent")}`}
 //                           >
 //                             {record?.status || "absent"}
 //                           </span>
@@ -617,7 +617,7 @@
 //                       </td>
 //                       <td className="p-4 text-center">
 //                         {isWeekend ? (
-//                           <span className="inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border border-gray-200 bg-gray-50 text-gray-400">
+//                           <span className="inline-flex px-3 py-1 rounded-lg text-xs font-medium uppercase tracking-widest border border-zinc-200 bg-zinc-50 text-zinc-400">
 //                             WEEKEND
 //                           </span>
 //                         ) : isAbsent ? (
@@ -629,7 +629,7 @@
 //                                 queryParams?.startDate,
 //                               )
 //                             }
-//                             className="cursor-pointer text-[10px] font-black text-zinc-700 hover:text-white hover:bg-zinc-800 border border-zinc-200 px-3 py-1.5 rounded-xl transition-all"
+//                             className="cursor-pointer text-xs font-medium text-zinc-900 hover:text-white hover:bg-zinc-800 border border-zinc-200 px-3 py-1.5 rounded-xl transition-all"
 //                           >
 //                             MARK PRESENT
 //                           </button>
@@ -638,7 +638,7 @@
 //                             onClick={() =>
 //                               handleOpenModal(emp, record, record.shiftDate)
 //                             }
-//                             className="cursor-pointer text-gray-400 hover:text-purple-600 transition-colors p-1"
+//                             className="cursor-pointer text-zinc-400 hover:text-purple-600 transition-colors p-1"
 //                           >
 //                             <Edit3 size={14} />
 //                           </button>
@@ -651,7 +651,7 @@
 //                 <tr>
 //                   <td colSpan="5" className="p-20 text-center">
 //                     <div className="flex flex-col items-center justify-center gap-2">
-//                       <div className="bg-gray-50 p-4 rounded-full">
+//                       <div className="bg-zinc-50 p-4 rounded-full">
 //                         <svg
 //                           className="w-8 h-8 text-gray-300"
 //                           fill="none"
@@ -666,10 +666,10 @@
 //                           />
 //                         </svg>
 //                       </div>
-//                       <p className="text-gray-500 font-bold text-md">
+//                       <p className="text-zinc-500 font-bold text-md">
 //                         No Attendance Records Found
 //                       </p>
-//                       <p className="text-gray-400 text-[12px]">
+//                       <p className="text-zinc-400 text-xs">
 //                         Try changing the date or employee filter
 //                       </p>
 //                     </div>
@@ -702,7 +702,7 @@ import { exportAttendanceToExcel } from "@/app/utilities/exportToExcel";
 import moment from "moment-timezone";
 import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
 import {
-  PALETTES,
+  PALETTES_DARK,
   calculateAttendanceStats,
   getStatCards,
   isDiscrepancyRecord,
@@ -794,11 +794,11 @@ const TeamAttendence = () => {
     return getStatCards({
       stats,
       data: finalDisplayData,
-      palettes: PALETTES,
+      palettes: PALETTES_DARK,
       extraCard: {
         label: "Total",
         icon: Users,
-        palette: PALETTES.total,
+        palette: PALETTES_DARK.total,
         getValue: (data) => data.length,
       },
     });
@@ -884,26 +884,25 @@ const TeamAttendence = () => {
     viewType !== "today" || customRange.start || selectedEmployee;
 
   return (
-    <div className="h-screen flex flex-col gap-3 overflow-hidden p-1">
-      <div className="relative flex items-center justify-between gap-2 overflow-hidden rounded-3xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm shadow-slate-200/60 sm:px-5">
-        <AttendenceHeader
-          icon={Users}
-          length={finalDisplayData?.length}
-          name="Team Attendance"
-        />
+    <div className="section-stack h-screen min-w-0 overflow-x-hidden overflow-y-hidden -mx-1 rounded-2xl px-1 py-1 sm:px-2 sm:py-2">
+      <AttendenceHeader
+        icon={Users}
+        length={finalDisplayData?.length}
+        name="Team Attendance"
+      >
         <Tooltip label="Export to Excel" side="bottom">
           <button
             onClick={handleExportToExcel}
             aria-label="Export to Excel"
-            className="flex cursor-pointer items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 transition-colors hover:bg-emerald-100"
+            className="flex cursor-pointer items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 transition-colors hover:bg-emerald-50"
           >
-            <Download size={16} className="text-emerald-600" />
-            <span className="hidden text-xs font-black uppercase tracking-tight text-emerald-700 sm:inline">
+            <Download size={15} className="text-emerald-700" />
+            <span className="hidden text-xs font-medium uppercase tracking-tight text-emerald-700 sm:inline">
               Export Attendance Summary Report
             </span>
           </button>
         </Tooltip>
-      </div>
+      </AttendenceHeader>
       {/* ── Stat Cards ── */}
       <StatsSection
         statCards={statCards}
@@ -921,6 +920,7 @@ const TeamAttendence = () => {
       )}
 
       <FiltersBar
+        // variant="dark"
         employeeOptions={employeeOptions}
         selectedEmployee={selectedEmployee}
         setSelectedEmployee={setSelectedEmployee}
@@ -933,7 +933,7 @@ const TeamAttendence = () => {
       />
 
       {/* ── Table ── */}
-      <div className="-mx-1 min-h-0 flex-1 overflow-hidden rounded-2xl bg-white shadow-[0_4px_24px_rgba(0,0,0,0.07)] md:mx-0 md:border md:border-zinc-200">
+      <div className="min-h-0 flex-1 overflow-hidden rounded-3xl bg-white shadow-none">
         <div
           className="overflow-auto h-full scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent"
           style={{
@@ -941,9 +941,9 @@ const TeamAttendence = () => {
             scrollbarColor: "#52525b transparent",
           }}
         >
-          <table className="w-full text-left border-collapse min-w-[700px]">
+          <table className="crm-table w-full text-left border-collapse min-w-[700px]">
             <thead className="sticky top-0 z-20">
-              <tr className="bg-zinc-800">
+              <tr className="table-head-row">
                 {[
                   "Employee",
                   "Shift Date",
@@ -954,7 +954,7 @@ const TeamAttendence = () => {
                 ].map((h) => (
                   <th
                     key={h}
-                    className="px-4 py-3 text-[10px] font-black text-zinc-300 uppercase tracking-widest"
+                    className="table-head-cell"
                   >
                     {h}
                   </th>

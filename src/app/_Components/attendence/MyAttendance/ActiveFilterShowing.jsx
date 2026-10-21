@@ -9,15 +9,15 @@ const ActiveFilterShowing = ({ activeFilter, setActiveFilter, length }) => {
 
   return (
     <div 
-      className={`shrink-0 flex items-center justify-between px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all duration-200
+      className={`shrink-0 flex items-center justify-between px-4 py-2.5 rounded-xl border text-xs font-medium transition-all duration-200
         ${config.bg} ${config.text} ${config.border}`}
     >
-      <span className="flex items-center gap-2 text-[11px]">
+      <span className="flex items-center gap-2 text-xs">
         <Filter size={13} className="opacity-70" />
         <span className="tracking-tight">
-          Showing <span className="font-black uppercase">{activeFilter}</span> records 
+          Showing <span className="font-medium uppercase">{activeFilter}</span> records 
           <span className="mx-1.5 opacity-40">·</span> 
-          <span className="font-bold">{length}</span> found
+          <span className="font-medium tabular-nums">{length}</span> found
         </span>
       </span>
 

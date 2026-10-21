@@ -125,7 +125,7 @@ export default function DocumentsTab({ employeeId }) {
                         href={doc.fileUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-sky-600 hover:underline"
+                        className="text-sky-700 hover:underline"
                       >
                         {doc.fileName || "View"}
                       </a>

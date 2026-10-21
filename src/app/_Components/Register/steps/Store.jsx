@@ -35,7 +35,7 @@ export default function Store({ onSubmit, isLoading }) {
             <Image src={Main} alt="Logo" />
           </Link>        </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Store Name</h2>
-        {/* <p className="text-gray-500">Please enter a store name if you have any?</p> */}
+        {/* <p className="text-zinc-500">Please enter a store name if you have any?</p> */}
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-3">
@@ -46,11 +46,11 @@ export default function Store({ onSubmit, isLoading }) {
                 ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                 : formik.touched.store && formik.errors.store
                   ? "border-red-300"
-                  : "border-gray-200"
+                  : "border-zinc-200"
               }`}
           >
             <div className="absolute inset-y-0 left-3 flex items-center">
-              <StoreIcon className="h-5 w-5 text-gray-400" />
+              <StoreIcon className="h-5 w-5 text-zinc-400" />
             </div>
             <input
               type="text"
@@ -87,7 +87,7 @@ export default function Store({ onSubmit, isLoading }) {
             "Continue"
           )}
         </motion.button>
-        <div className="text-center text-sm text-gray-500">
+        <div className="text-center text-sm text-zinc-500">
           Already have an account?{" "}
           <Link href="/login" className="text-[#FB3B11] font-medium hover:underline">
             Sign in

@@ -224,7 +224,7 @@ export default function VoiceRecorder({ conversationId, onSend, onCancel }) {
           type="button"
           onClick={cancel}
           disabled={sending}
-          className="rounded-full p-2 text-red-600 hover:bg-red-50 disabled:opacity-40"
+          className="rounded-full p-2 text-rose-600 hover:bg-rose-50 disabled:opacity-40"
         >
           <Trash2 className="h-5 w-5" />
         </button>
@@ -232,16 +232,16 @@ export default function VoiceRecorder({ conversationId, onSend, onCancel }) {
       <div className="flex flex-1 items-center gap-2">
         <span
           className={`h-2.5 w-2.5 rounded-full ${
-            paused ? "bg-zinc-400" : "bg-red-500 animate-pulse"
+            paused ? "bg-zinc-400" : "bg-rose-500 animate-pulse"
           }`}
         />
         <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-200">
           <div
-            className="h-full bg-zinc-900 transition-all"
+            className="h-full bg-ink transition-all"
             style={{ width: `${Math.min(100, (seconds / 120) * 100)}%` }}
           />
         </div>
-        <span className="tabular-nums text-sm font-medium text-zinc-600">
+        <span className="tabular-nums text-sm font-medium text-zinc-500">
           {mm}:{ss}
         </span>
       </div>
@@ -250,7 +250,7 @@ export default function VoiceRecorder({ conversationId, onSend, onCancel }) {
           <button
             type="button"
             onClick={pause}
-            className="rounded-full p-2 text-zinc-700 hover:bg-zinc-100"
+            className="rounded-full p-2 text-zinc-900 hover:bg-zinc-50"
           >
             {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
           </button>
@@ -261,7 +261,7 @@ export default function VoiceRecorder({ conversationId, onSend, onCancel }) {
           type="button"
           disabled={sending}
           onClick={finishAndSend}
-          className="rounded-full bg-zinc-950 p-2.5 text-white hover:bg-zinc-800 disabled:opacity-50"
+          className="rounded-full bg-ink p-2.5 text-white hover:bg-zinc-800 disabled:opacity-50"
         >
           {sending ? (
             <Loader2 className="h-5 w-5 animate-spin" />

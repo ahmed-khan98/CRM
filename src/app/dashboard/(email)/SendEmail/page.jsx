@@ -75,7 +75,7 @@ function Sent() {
         >
           <div className="bg-white rounded-3xl shadow-md p-6 mt-3">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-700 flex items-center">
+              <h2 className="text-lg font-semibold text-gray-700 flex items-center">
                 <Mail className="mr-2 h-6 w-6 text-gray-800" />
                 Send Email
               </h2>
@@ -174,13 +174,13 @@ function Sent() {
                           className={`w-full px-4 py-2 text-sm border-1 capitalize ${
                             errors.name && touched.name
                               ? "border-zinc-500 focus:border-zinc-500"
-                              : "border-gray-200 focus:border-zinc-800"
+                              : "border-zinc-200 focus:border-zinc-400"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
                           name="name"
                           component="div"
-                          className="text-red-500 text-sm mt-1"
+                          className="text-rose-600 text-sm mt-1"
                         />
                       </div>
                       <div>
@@ -194,13 +194,13 @@ function Sent() {
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.email && touched.email
                               ? "border-zinc-500 focus:border-zinc-500"
-                              : "border-gray-200 focus:border-zinc-800"
+                              : "border-zinc-200 focus:border-zinc-400"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
                           name="email"
                           component="div"
-                          className="text-red-500 text-sm mt-1"
+                          className="text-rose-600 text-sm mt-1"
                         />
                       </div>
                     </div>
@@ -245,13 +245,13 @@ function Sent() {
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.fromemail && touched.fromemail
                               ? "border-zinc-500 focus:border-zinc-500"
-                              : "border-gray-200 focus:border-zinc-800"
+                              : "border-zinc-200 focus:border-zinc-400"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
                           name="fromemail"
                           component="div"
-                          className="text-red-500 text-sm mt-1"
+                          className="text-rose-600 text-sm mt-1"
                         />
                       </div>
 
@@ -279,13 +279,13 @@ function Sent() {
                           className={`w-full px-4 py-2 border-1 text-sm ${
                             errors.subject && touched.subject
                               ? "border-zinc-500 focus:border-zinc-500"
-                              : "border-gray-200 focus:border-zinc-800"
+                              : "border-zinc-200 focus:border-zinc-400"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
                           name="subject"
                           component="div"
-                          className="text-red-500 text-sm mt-1"
+                          className="text-rose-600 text-sm mt-1"
                         />
                       </div>
                     </div>
@@ -300,9 +300,9 @@ function Sent() {
                       <ErrorMessage
                         name="body"
                         component="div"
-                        className="text-red-500 text-sm mt-2"
+                        className="text-rose-600 text-sm mt-2"
                       />
-                      {/* <div className="text-xs text-gray-500 mt-2">
+                      {/* <div className="text-xs text-zinc-500 mt-2">
                                             You can use merge tags like <code>{"{{firstName}}"}</code>,{" "}
                                             <code>{"{{lastName}}"}</code>, <code>{"{{email}}"}</code>.
                                           </div> */}
@@ -314,7 +314,7 @@ function Sent() {
                         disabled={isSubmitting}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="flex items-center gap-2 px-2 md:px-4 py-2 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-xl text-sm font-semibold  hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                        className="flex items-center gap-2 px-2 md:px-4 py-2 cursor-pointer bg-gradient-to-r from-ink via-zinc-800 to-ink text-white rounded-xl text-sm font-semibold  hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center gap-2">

@@ -36,7 +36,7 @@ const FeeTab = () => {
             <Link href={tab.path} key={tab.path} passHref>
               <div
                 className={`relative rounded-full px-5 py-2.5 sm:my-4 md:my-0 text-sm font-medium transition-all duration-200 ${
-                  isActive ? " text-white  shadow-md" : "text-gray-600 hover:bg-gray-100 "
+                  isActive ? " text-white  shadow-md" : "text-gray-600 hover:bg-zinc-50 "
                   // isActive ? "text-white" : "text-gray-600 hover:bg-zinc-800"
                 }`}
               >

@@ -18,18 +18,18 @@ const EmailCard = ({ index, email, onOpenDetails }) => {
           {email.subject}
         </h4>
         {email.status === "sent" ? (
-          <div className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+          <div className="bg-green-100 text-emerald-700 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
             <CheckCircle size={12} />
             Sent
           </div>
         ) : (
-          <div className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+          <div className="bg-red-100 text-rose-600 text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
             <X size={12} />
             Failed
           </div>
         )}
       </div>
-      <div className="flex items-center gap-4 text-gray-500 text-xs mb-4">
+      <div className="flex items-center gap-4 text-zinc-500 text-xs mb-4">
         <div className="flex items-center gap-1">
           <Clock size={12} />
           <span>{formatDate(email.sentAt)}</span>

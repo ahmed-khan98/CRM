@@ -198,7 +198,7 @@ export default memo(function TaskModal({
             <label className={labelClass}>
               <Paperclip className="h-3 w-3" /> Attachments{" "}
               <span className="normal-case text-zinc-500">
-                (optional · ZIP up to 50 MB)
+                (optional · ZIP up to 100 MB)
               </span>
             </label>
             <input
@@ -224,18 +224,18 @@ export default memo(function TaskModal({
                 {attachmentFiles.map((f, i) => (
                   <div
                     key={`${f.name}-${f.lastModified}-${i}`}
-                    className="flex items-center justify-between rounded-xl border border-white/[0.1] bg-[#161b22] px-3 py-2"
+                    className="flex items-center justify-between rounded-xl border border-white/[0.1] bg-zinc-800 px-3 py-2"
                   >
                     <div className="flex min-w-0 items-center gap-2">
                       <FileText className="h-4 w-4 shrink-0 text-zinc-400" />
-                      <span className="truncate text-xs font-semibold text-zinc-200">{f.name}</span>
+                      <span className="truncate text-xs font-semibold text-zinc-100">{f.name}</span>
                     </div>
                     <button
                       type="button"
                       onClick={() =>
                         setAttachmentFiles((prev) => prev.filter((_, idx) => idx !== i))
                       }
-                      className="ml-2 shrink-0 text-zinc-400 hover:text-red-400 transition cursor-pointer"
+                      className="ml-2 shrink-0 text-zinc-400 hover:text-rose-600 transition cursor-pointer"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
@@ -263,12 +263,12 @@ export default memo(function TaskModal({
                 }
                 if (picked.length) setAttachmentFiles((prev) => [...prev, ...picked]);
               }}
-              className="flex w-full items-center gap-2 rounded-xl border border-dashed border-white/15 bg-[#161b22] px-3 py-2.5 text-xs font-semibold text-zinc-400 transition hover:border-white/25 hover:text-zinc-200 cursor-pointer outline-none focus:border-white/25 focus:text-zinc-200"
+              className="flex w-full items-center gap-2 rounded-xl border border-dashed border-white/15 bg-zinc-800 px-3 py-2.5 text-xs font-semibold text-zinc-400 transition hover:border-white/25 hover:text-zinc-100 cursor-pointer outline-none focus:border-white/25 focus:text-zinc-100"
             >
               <Upload className="h-4 w-4" />
               {attachmentFiles.length
                 ? "Add more, or paste a screenshot (Ctrl+V)"
-                : "Attach files (ZIP up to 50 MB), or paste (Ctrl+V)"}
+                : "Attach files (ZIP up to 100 MB), or paste (Ctrl+V)"}
             </div>
 
             {isEdit && task?.creatorAttachment?.length > 0 && (

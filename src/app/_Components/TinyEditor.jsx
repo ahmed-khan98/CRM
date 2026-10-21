@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Editor } from "@tinymce/tinymce-react";
@@ -19,7 +19,7 @@ export default function TinyEditor({
         branding: false,
         plugins: "lists link autolink",
         toolbar: "bold italic underline | bullist numlist | removeformat",
-        content_style: "body { font-family: Inter, Arial, sans-serif; font-size:13px; margin: 8px; }",
+        content_style: "body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size:14px; margin: 8px; }",
       }
     : {
         height: editorHeight,
@@ -39,12 +39,12 @@ export default function TinyEditor({
         block_formats:
           "Paragraph=p; Quote=blockquote; Heading 1=h1; Heading 2=h2; Heading 3=h3; Heading 4=h4",
         fontsize_formats: "10px 12px 14px 16px 18px 20px 24px 28px 32px 36px 48px",
-        content_style: "body { font-family: Inter, Arial, sans-serif; font-size:14px }",
+        content_style: "body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size:14px }",
         automatic_uploads: false,
       };
 
   return (
-    <div className="border-1 border-gray-200 rounded-xl overflow-hidden">
+    <div className="border-1 border-zinc-200 rounded-xl overflow-hidden">
       <Editor
         apiKey={apiKey}
         value={value}

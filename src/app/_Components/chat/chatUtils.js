@@ -18,6 +18,16 @@ export function sameId(a, b) {
   return String(a._id ?? a) === String(b._id ?? b);
 }
 
+/** Title-case a person name for chat UI ("ahmed khan" → "Ahmed Khan"). */
+export function formatDisplayName(name) {
+  if (!name || typeof name !== "string") return "";
+  return name
+    .trim()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
 /** Direct chat with only yourself (WhatsApp "Message yourself"). */
 export function isSelfChat(conv, myId) {
   if (!conv || conv.type !== "direct" || !myId) return false;
@@ -33,7 +43,7 @@ export function conversationTitle(conv, myId) {
   const other = (conv.participants || []).find(
     (p) => !sameId(p.userId, myId)
   );
-  return other?.userId?.fullName || "Chat";
+  return formatDisplayName(other?.userId?.fullName) || "Chat";
 }
 
 export function conversationAvatar(conv, myId) {
@@ -210,8 +220,8 @@ export function lastMessagePreview(msg) {
 
 export const QUICK_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏", "🔥", "✅"];
 
-/** Client-side caps — zip/rar go to VPS (50 MB); images stay on Cloudinary (10 MB);
- * video/audio stay on Cloudinary (100 MB). Other docs are allowed to 50 MB here
+/** Client-side caps — zip/rar go to VPS (100 MB); images stay on Cloudinary (10 MB);
+ * video/audio stay on Cloudinary (100 MB). Other docs are allowed to 100 MB here
  * so a zip with a generic mime type is not blocked as a 10 MB document. */
 const MB = 1024 * 1024;
 const ARCHIVE_EXTS = ["zip", "rar", "7z", "tar", "gz"];
@@ -225,7 +235,7 @@ export function getUploadSizeLimit(file) {
     /zip|x-rar|x-7z|x-tar|gzip/i.test(type) ||
     ARCHIVE_EXTS.some((e) => name.endsWith(`.${e}`));
 
-  if (isArchive) return { bytes: 50 * MB, label: "ZIP/archives" };
+  if (isArchive) return { bytes: 100 * MB, label: "ZIP/archives" };
   if (type.startsWith("image/")) return { bytes: 10 * MB, label: "Images" };
   if (
     type.startsWith("video/") ||
@@ -234,7 +244,7 @@ export function getUploadSizeLimit(file) {
   ) {
     return { bytes: 100 * MB, label: "Video/audio" };
   }
-  return { bytes: 50 * MB, label: "Documents/files" };
+  return { bytes: 100 * MB, label: "Documents/files" };
 }
 
 export function checkUploadSize(file) {
@@ -315,11 +325,19 @@ export function collectMentions(text, participants) {
   const mentions = [];
   (participants || []).forEach((p) => {
     const u = p.userId;
-    const id = u?._id || u;
-    const full = u?.fullName;
+    if (!u || typeof u !== "object") return;
+    const id = u._id;
+    const full = u.fullName;
     if (!id || !full) return;
-    const first = full.split(" ")[0];
-    if (text.includes(`@${full}`) || text.includes(`@${first}`)) {
+    const formatted = formatDisplayName(full);
+    const first = full.split(/\s+/)[0];
+    const firstFmt = formatted.split(/\s+/)[0];
+    if (
+      text.includes(`@${full}`) ||
+      text.includes(`@${formatted}`) ||
+      text.includes(`@${first}`) ||
+      text.includes(`@${firstFmt}`)
+    ) {
       mentions.push(id);
     }
   });
@@ -329,9 +347,14 @@ export function collectMentions(text, participants) {
 export function filterMentionCandidates(participants, query, myId, limit = 8) {
   const q = (query || "").trim().toLowerCase();
   return (participants || [])
-    .map((p) => p.userId)
+    .map((p) => {
+      const u = p?.userId;
+      if (!u || typeof u !== "object") return null;
+      if (!u._id && !u.fullName) return null;
+      return u;
+    })
     .filter(Boolean)
-    .filter((u) => String(u._id || u) !== String(myId))
+    .filter((u) => String(u._id || "") !== String(myId || ""))
     .filter((u) => {
       if (!q) return true;
       const name = (u.fullName || "").toLowerCase();
@@ -348,7 +371,7 @@ export function activityNames(map, participants, myId) {
       const p = participants?.find(
         (x) => (x.userId?._id || x.userId)?.toString() === uid
       );
-      return p?.userId?.fullName?.split(" ")[0] || "Someone";
+      return formatDisplayName(p?.userId?.fullName)?.split(" ")[0] || "Someone";
     });
 }
 
@@ -375,41 +398,51 @@ export function formatDuration(sec) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-/** WhatsApp layout + CRM zinc palette (no WA green) */
+/** Slack / Linear-style CRM chat — zinc, not WhatsApp green */
 export function getChatTheme(dark) {
   return dark
     ? {
-        shell: "bg-[#111111] text-zinc-100",
-        side: "bg-[#111111] border-white/[0.08]",
-        main: "bg-[#0b0b0d]",
-        bubbleMe: "bg-zinc-700 text-zinc-50",
-        bubbleThem: "bg-[#1c1c1f] text-zinc-100",
-        input: "bg-[#2a2a2e] text-white border-transparent",
-        header: "bg-[#1a1a1d] border-white/[0.06]",
-        accent: "bg-zinc-100 text-zinc-950 hover:bg-white",
+        shell: "bg-[#0c0c0e] text-zinc-100",
+        side: "bg-[#111113] border-white/[0.07]",
+        main: "bg-[#0a0a0c]",
+        bubbleMe: "bg-zinc-800 text-zinc-100",
+        bubbleThem: "bg-[#161618] text-zinc-100 ring-1 ring-white/[0.06]",
+        input: "bg-[#1c1c20] text-white border border-white/[0.08]",
+        header: "bg-[#111113]/95 backdrop-blur-md border-white/[0.07]",
+        accent: "bg-[#f4f4f5] text-[#09090b] hover:bg-[#e4e4e7]",
         accentSoft: "bg-white/10 text-zinc-100",
-        chipOn: "bg-zinc-100 text-zinc-950",
-        chipOff: "bg-white/5 text-zinc-400",
-        unread: "bg-zinc-100 text-zinc-950",
-        dayChip: "bg-[#1c1c1f]/95 text-zinc-300 shadow",
-        composer: "bg-[#1a1a1d]",
-        meta: "text-zinc-400",
+        chipOn: "bg-[#f4f4f5] text-[#09090b] shadow-sm",
+        chipOff: "bg-white/[0.06] text-zinc-300 hover:bg-white/[0.1] hover:text-zinc-100",
+        unread: "bg-[#f4f4f5] text-[#09090b]",
+        dayChip: "bg-ink/95 text-zinc-400 ring-1 ring-white/[0.06] shadow-sm",
+        composer: "bg-[#111113]/95 backdrop-blur-md border-t border-white/[0.06]",
+        meta: "text-zinc-500",
+        rowSelected: "bg-white/[0.07]",
+        rowHover: "hover:bg-white/[0.04]",
+        iconBtn: "hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-100",
+        menu: "bg-[#111113] text-zinc-100 border-white/[0.08] shadow-[0_16px_40px_rgba(0,0,0,0.5)]",
+        menuItem: "hover:bg-white/[0.06]",
       }
     : {
-        shell: "bg-[#f0f2f5] text-zinc-900",
-        side: "bg-white border-zinc-200",
-        main: "bg-[#e8e8ea]",
-        bubbleMe: "bg-zinc-800 text-white",
-        bubbleThem: "bg-white text-zinc-900 shadow-sm",
-        input: "bg-white text-zinc-900 border-transparent",
-        header: "bg-[#f0f2f5] border-zinc-200/80",
-        accent: "bg-zinc-950 text-white hover:bg-zinc-800",
-        accentSoft: "bg-zinc-100 text-zinc-800",
-        chipOn: "bg-zinc-950 text-white",
-        chipOff: "bg-zinc-100 text-zinc-600",
-        unread: "bg-zinc-950 text-white",
-        dayChip: "bg-white/90 text-zinc-600 shadow-sm",
-        composer: "bg-[#f0f2f5]",
+        shell: "bg-white text-zinc-900",
+        side: "bg-[#fafafa] border-zinc-200/80",
+        main: "bg-[#f4f4f5]",
+        bubbleMe: "bg-ink text-white",
+        bubbleThem: "bg-white text-zinc-900 shadow-[0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-zinc-200/80",
+        input: "bg-white text-zinc-900 border border-zinc-200",
+        header: "bg-white/90 backdrop-blur-md border-zinc-200/80",
+        accent: "bg-ink text-white hover:bg-zinc-800",
+        accentSoft: "bg-zinc-50 text-zinc-900",
+        chipOn: "bg-ink text-white shadow-sm",
+        chipOff: "bg-zinc-50 text-zinc-500 hover:bg-border/70",
+        unread: "bg-ink text-white",
+        dayChip: "bg-white/95 text-zinc-500 ring-1 ring-zinc-200/80 shadow-sm",
+        composer: "bg-white/90 backdrop-blur-md border-t border-zinc-200/80",
         meta: "text-zinc-500",
+        rowSelected: "bg-zinc-50",
+        rowHover: "hover:bg-zinc-50",
+        iconBtn: "hover:bg-zinc-50 text-zinc-500 hover:text-zinc-900",
+        menu: "bg-white text-zinc-900 border-zinc-200 shadow-[0_12px_40px_rgba(0,0,0,0.12)]",
+        menuItem: "hover:bg-zinc-50",
       };
 }

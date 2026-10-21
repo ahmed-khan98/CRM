@@ -9,7 +9,7 @@ function PageButton({ children, active, onClick }) {
         ${
           active
             ? "bg-zinc-800 text-white border-zinc-800"
-            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+            : "bg-white text-gray-700 border-zinc-200 hover:bg-zinc-50"
         }`}
     >
       {children}

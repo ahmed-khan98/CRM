@@ -54,7 +54,7 @@ function VerifyEmailForm() {
         }
     }
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="flex justify-center items-center min-h-screen bg-zinc-50">
             <div className="max-w-md w-full p-6 bg-white shadow-md rounded-lg">
                 <div className="flex py-6">
                     <Link href="/" className="mx-auto">
@@ -75,7 +75,7 @@ function VerifyEmailForm() {
                             className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                         {formik.errors.code && formik.touched.code ? (
-                            <span className="text-red-500 text-sm pl-2">{formik.errors.code}</span>
+                            <span className="text-rose-600 text-sm pl-2">{formik.errors.code}</span>
                         ) : null}
                     </div>
 

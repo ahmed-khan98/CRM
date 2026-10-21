@@ -34,7 +34,7 @@ const shippingSchema = Yup.object().shape({
 })
 
 const fieldError = (errors, touched, name) =>
-    errors[name] && touched[name] ? "border-red-500/50" : ""
+    errors[name] && touched[name] ? "border-danger/50" : ""
 
 const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
 
@@ -159,7 +159,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                     <option value="pickup">🏪 Pickup from Store</option>
                                     <option value="shipping">🚚 Home Delivery (Request Shipping)</option>
                                 </Field>
-                                <ErrorMessage name="deliveryMethod" component="div" className="text-red-400 text-sm mt-2" />
+                                <ErrorMessage name="deliveryMethod" component="div" className="text-rose-600 text-sm mt-2" />
                             </div>
 
                             <AnimatePresence>
@@ -171,8 +171,8 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                         exit="exit"
                                         className="space-y-6"
                                     >
-                                        <div className="rounded-2xl p-6 border border-white/[0.08] bg-[#161b22]/80 space-y-4">
-                                            <h3 className="font-bold text-zinc-200 flex items-center gap-2">
+                                        <div className="rounded-2xl p-6 border border-white/[0.08] bg-zinc-800/80 space-y-4">
+                                            <h3 className="font-bold text-zinc-100 flex items-center gap-2">
                                                 <Calendar className="w-5 h-5" />
                                                 Schedule Pickup Appointment
                                             </h3>
@@ -189,7 +189,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                         min={new Date().toISOString().split("T")[0]}
                                                         className={`${fleet.modalInput} ${fieldError(errors, touched, "appointmentDate")}`}
                                                     />
-                                                    <ErrorMessage name="appointmentDate" component="div" className="text-red-400 text-sm mt-1" />
+                                                    <ErrorMessage name="appointmentDate" component="div" className="text-rose-600 text-sm mt-1" />
                                                 </div>
 
                                                 <div>
@@ -209,7 +209,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                             </option>
                                                         ))}
                                                     </Field>
-                                                    <ErrorMessage name="appointmentTime" component="div" className="text-red-400 text-sm mt-1" />
+                                                    <ErrorMessage name="appointmentTime" component="div" className="text-rose-600 text-sm mt-1" />
                                                 </div>
                                             </div>
 
@@ -222,7 +222,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                     placeholder="Any special instructions or notes..."
                                                     className={fleet.modalTextarea}
                                                 />
-                                                <ErrorMessage name="notes" component="div" className="text-red-400 text-sm mt-1" />
+                                                <ErrorMessage name="notes" component="div" className="text-rose-600 text-sm mt-1" />
                                             </div>
                                         </div>
                                     </motion.div>
@@ -238,8 +238,8 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                         exit="exit"
                                         className="space-y-6"
                                     >
-                                        <div className="rounded-2xl p-6 border border-white/[0.08] bg-[#161b22]/80 space-y-4">
-                                            <h3 className="font-bold text-zinc-200 flex items-center gap-2">
+                                        <div className="rounded-2xl p-6 border border-white/[0.08] bg-zinc-800/80 space-y-4">
+                                            <h3 className="font-bold text-zinc-100 flex items-center gap-2">
                                                 <MapPin className="w-5 h-5" />
                                                 Shipping Address
                                             </h3>
@@ -253,7 +253,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                         placeholder="Enter your street address"
                                                         className={`${fleet.modalInput} ${fieldError(errors, touched, "street")}`}
                                                     />
-                                                    <ErrorMessage name="street" component="div" className="text-red-400 text-sm mt-1" />
+                                                    <ErrorMessage name="street" component="div" className="text-rose-600 text-sm mt-1" />
                                                 </div>
 
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -265,7 +265,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                             placeholder="Enter city"
                                                             className={`${fleet.modalInput} ${fieldError(errors, touched, "city")}`}
                                                         />
-                                                        <ErrorMessage name="city" component="div" className="text-red-400 text-sm mt-1" />
+                                                        <ErrorMessage name="city" component="div" className="text-rose-600 text-sm mt-1" />
                                                     </div>
 
                                                     <div>
@@ -276,7 +276,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                             placeholder="Enter state"
                                                             className={`${fleet.modalInput} ${fieldError(errors, touched, "state")}`}
                                                         />
-                                                        <ErrorMessage name="state" component="div" className="text-red-400 text-sm mt-1" />
+                                                        <ErrorMessage name="state" component="div" className="text-rose-600 text-sm mt-1" />
                                                     </div>
                                                 </div>
 
@@ -289,7 +289,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                             placeholder="12345"
                                                             className={`${fleet.modalInput} ${fieldError(errors, touched, "zipCode")}`}
                                                         />
-                                                        <ErrorMessage name="zipCode" component="div" className="text-red-400 text-sm mt-1" />
+                                                        <ErrorMessage name="zipCode" component="div" className="text-rose-600 text-sm mt-1" />
                                                     </div>
                                                     <div>
                                                         <label className={fleet.modalLabel}>Contact Number</label>
@@ -303,7 +303,7 @@ const PickupScheduleModal = ({ isOpen, onClose, auctionWin }) => {
                                                             placeholder="+1 (555) 123-4567"
                                                             className={`${fleet.modalInput} ${fieldError(errors, touched, "contactPhone")}`}
                                                         />
-                                                        <ErrorMessage name="contactPhone" component="div" className="text-red-400 text-sm mt-1" />
+                                                        <ErrorMessage name="contactPhone" component="div" className="text-rose-600 text-sm mt-1" />
                                                     </div>
                                                 </div>
                                             </div>

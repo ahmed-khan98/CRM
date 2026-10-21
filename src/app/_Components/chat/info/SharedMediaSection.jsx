@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import { FileText } from "lucide-react";
-import { formatChatTime } from "@/app/_Components/chat/chatUtils";
+import { formatChatTime, formatDisplayName } from "@/app/_Components/chat/chatUtils";
 import { getAttachmentProxyUrl } from "@/app/_utils/attachmentUrl";
 
 const MEDIA_TABS = [
@@ -14,7 +14,7 @@ const MEDIA_TABS = [
 function SharedMediaSection({ mediaTab, setMediaTab, mediaData }) {
   return (
     <div>
-      <p className="mb-2 text-xs font-bold uppercase text-zinc-500">Shared media</p>
+      <p className="mb-2 text-xs font-medium uppercase text-zinc-500">Shared media</p>
       <div className="mb-2 flex gap-1.5 text-[11px]">
         {MEDIA_TABS.map((t) => (
           <button
@@ -23,8 +23,8 @@ function SharedMediaSection({ mediaTab, setMediaTab, mediaData }) {
             onClick={() => setMediaTab(t.id)}
             className={`rounded-full px-2.5 py-1 font-medium ${
               mediaTab === t.id
-                ? "bg-zinc-900 text-white"
-                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+                ? "bg-ink text-white"
+                : "bg-zinc-50 text-zinc-500 hover:bg-zinc-200"
             }`}
           >
             {t.label}
@@ -49,7 +49,7 @@ function SharedMediaSection({ mediaTab, setMediaTab, mediaData }) {
                   href={att.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="relative aspect-square overflow-hidden rounded bg-zinc-900"
+                  className="relative aspect-square overflow-hidden rounded bg-ink"
                 >
                   <video
                     src={att.url}
@@ -101,11 +101,11 @@ function SharedMediaSection({ mediaTab, setMediaTab, mediaData }) {
                 rel="noreferrer"
                 className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-2.5 py-2 hover:bg-zinc-50"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-600">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
                   <FileText className="h-4 w-4" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-medium text-zinc-800">{name}</p>
+                  <p className="truncate text-xs font-medium text-zinc-900">{name}</p>
                   <p className="text-[10px] text-zinc-400">
                     {[sizeKb, formatChatTime(m.createdAt)].filter(Boolean).join(" · ")}
                   </p>
@@ -135,7 +135,7 @@ function SharedMediaSection({ mediaTab, setMediaTab, mediaData }) {
               >
                 <p className="truncate text-xs font-medium text-sky-700">{url}</p>
                 <p className="mt-0.5 text-[10px] text-zinc-400">
-                  {m.senderId?.fullName || "Someone"} · {formatChatTime(m.createdAt)}
+                  {formatDisplayName(m.senderId?.fullName) || "Someone"} · {formatChatTime(m.createdAt)}
                 </p>
               </a>
             );

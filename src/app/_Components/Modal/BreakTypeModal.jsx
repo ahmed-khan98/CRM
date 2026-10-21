@@ -81,7 +81,7 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
 
             <div>
               <label className={fleet.modalLabel}>
-                Reason <span className="text-zinc-600 normal-case tracking-normal font-medium">(optional)</span>
+                Reason <span className="text-zinc-500 normal-case tracking-normal font-medium">(optional)</span>
               </label>
               <Field
                 as="textarea"
@@ -89,13 +89,13 @@ const BreakTypeModal = memo(({ isOpen, closeModal }) => {
                 rows={3}
                 placeholder="Why are you taking this break?"
                 className={`${fleet.modalInput} resize-none ${
-                  errors.reason && touched.reason ? "border-red-500/50" : ""
+                  errors.reason && touched.reason ? "border-danger/50" : ""
                 }`}
               />
               <ErrorMessage
                 name="reason"
                 component="div"
-                className="text-red-400 text-xs mt-1.5 font-medium"
+                className="text-rose-600 text-xs mt-1.5 font-medium"
               />
             </div>
 

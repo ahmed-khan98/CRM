@@ -22,12 +22,12 @@ const PaymentOrderSummary = ({
   return (
     <>
       <section className="bg-white rounded-2xl shadow-md border border-zinc-200 overflow-visible">
-        <div className="flex items-center gap-2.5 px-5 py-4 bg-zinc-50 rounded-t-2xl border-b border-zinc-100">
+        <div className="flex items-center gap-2.5 px-5 py-4 bg-zinc-50 rounded-t-2xl border-b border-zinc-200">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-800">
             <Receipt className="w-4 h-4 text-white" />
           </div>
           <div>
-            <p className="text-[13px] font-black text-zinc-800 tracking-tight">
+            <p className="text-[13px] font-black text-zinc-900 tracking-tight">
               Order Summary
             </p>
             <p className="text-[11px] text-zinc-500">
@@ -38,7 +38,7 @@ const PaymentOrderSummary = ({
 
         <div className="space-y-1">
           {!isMasterPayemntLink && (
-            <div className=" p-4 grid grid-cols-1 sm:grid-cols-2 gap-y-3 border-b border-zinc-100">
+            <div className=" p-4 grid grid-cols-1 sm:grid-cols-2 gap-y-3 border-b border-zinc-200">
               {/* Agar name or email null/falsy hain to component hide ho jaye ga */}
               {name && <DetailRow label="Customer" value={name} />}
 
@@ -56,7 +56,7 @@ const PaymentOrderSummary = ({
           )}
 
           <div className={!isMasterPayemntLink ? "px-4 py-2" : "p-6"}>
-            <p className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 mb-2 uppercase tracking-wider">
+            <p className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-500 mb-2 uppercase tracking-wider">
               <Tag className="w-3 h-3" /> Services Provided
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -82,12 +82,12 @@ const PaymentOrderSummary = ({
             </div>
           </div>
           {(!isMasterPayemntLink && description) && (
-            <div className="px-4 py-3 border-t border-zinc-100">
-              <p className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
+            <div className="px-4 py-3 border-t border-zinc-200">
+              <p className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
                 <FileText className="w-3 h-3" /> Description
               </p>
 
-              <p className="text-[12px] text-zinc-600 leading-relaxed whitespace-pre-wrap bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5">
+              <p className="text-[12px] text-zinc-500 leading-relaxed whitespace-pre-wrap bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5">
                 {description}
               </p>
             </div>
@@ -95,7 +95,7 @@ const PaymentOrderSummary = ({
         </div>
 
         {/* Total Display */}
-        <div className="p-6 bg-zinc-900 text-white flex justify-between items-center rounded-2xl">
+        <div className="p-6 bg-ink text-white flex justify-between items-center rounded-2xl">
           <div>
             <p className="text-zinc-300 text-xs uppercase font-bold tracking-widest">
               Total Amount Due
@@ -116,8 +116,8 @@ const PaymentOrderSummary = ({
       </section>
 
       <div className="flex items-center gap-2 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
-        <ShieldCheck className="text-emerald-600 shrink-0" size={24} />
-        <p className="text-xs text-emerald-800 leading-relaxed">
+        <ShieldCheck className="text-emerald-700 shrink-0" size={24} />
+        <p className="text-xs text-emerald-700 leading-relaxed">
           Your transaction is protected by industry-standard encryption. No
           sensitive card data is stored on our servers.
         </p>

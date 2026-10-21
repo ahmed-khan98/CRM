@@ -8,7 +8,6 @@ import {
   DollarSign,
   Mail,
   Phone,
-  Tag,
   TrendingUp,
   User,
   Users,
@@ -71,8 +70,8 @@ function formatSaleType(type) {
 
 function saleTypeTone(type) {
   const label = formatSaleType(type);
-  if (label === "UPSELL") return "info";
-  if (label === "FRESH") return "success";
+  if (label === "FRESH") return "info"; // blue
+  if (label === "UPSELL") return "purple";
   return "neutral";
 }
 
@@ -91,13 +90,13 @@ function InfoTile({ icon: Icon, label, value, href, highlight }) {
     <div
       className={`rounded-2xl border p-3.5 ${
         highlight
-          ? "border-emerald-100 bg-emerald-50/70"
-          : "border-slate-100 bg-slate-50/80"
+          ? "border-emerald-500/30 bg-emerald-500/10"
+          : "border-zinc-800 bg-[#050505]"
       }`}
     >
       <div
         className={`mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider ${
-          highlight ? "text-emerald-600" : "text-slate-400"
+          highlight ? "text-emerald-400" : "text-zinc-500"
         }`}
       >
         <Icon className="h-3.5 w-3.5" />
@@ -106,14 +105,14 @@ function InfoTile({ icon: Icon, label, value, href, highlight }) {
       {href && value ? (
         <a
           href={href}
-          className="break-all text-sm font-semibold text-slate-900 hover:text-indigo-600"
+          className="break-all text-sm font-semibold text-zinc-100 hover:text-white"
         >
           {content}
         </a>
       ) : (
         <p
           className={`break-all text-sm font-semibold ${
-            highlight ? "text-emerald-800" : "capitalize text-slate-900"
+            highlight ? "text-emerald-400" : "capitalize text-zinc-100"
           }`}
         >
           {content}
@@ -185,7 +184,7 @@ export default function ClientDetailPage() {
 
   if (!client) {
     return (
-      <div className="p-8 text-center text-slate-600">Client not found.</div>
+      <div className="p-8 text-center text-zinc-500">Client not found.</div>
     );
   }
 
@@ -195,13 +194,13 @@ export default function ClientDetailPage() {
 
   return (
     <div className="mx-1 space-y-4 pb-8">
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm shadow-slate-200/60">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-zinc-900/[0.04]" />
-        <div className="relative border-b border-slate-100 px-5 py-4 sm:px-6">
+      <div className="relative overflow-hidden rounded-3xl border border-zinc-800 bg-[#050505] shadow-sm">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-white/[0.02]" />
+        <div className="relative border-b border-zinc-800 px-5 py-4 sm:px-6">
           <button
             type="button"
             onClick={() => router.push("/dashboard/client")}
-            className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 transition hover:text-slate-900"
+            className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-400 transition hover:text-zinc-100"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to clients
@@ -209,12 +208,12 @@ export default function ClientDetailPage() {
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-start gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-zinc-900 text-white shadow-md shadow-zinc-900/20">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-900 text-zinc-100">
                 <User className="h-6 w-6" />
               </div>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl font-black tracking-tight text-slate-900 capitalize sm:text-2xl">
+                  <h1 className="text-lg font-semibold tracking-tight text-zinc-100 capitalize sm:text-2xl">
                     {client.name}
                   </h1>
                   {client.signupType && (
@@ -223,7 +222,7 @@ export default function ClientDetailPage() {
                     </Badge>
                   )}
                 </div>
-                <p className="mt-1 text-sm font-medium text-slate-500">
+                <p className="mt-1 text-sm font-medium text-zinc-500">
                   Client profile & sales activity
                 </p>
               </div>
@@ -232,12 +231,12 @@ export default function ClientDetailPage() {
             {(client.brandId?.name || client.departmentId?.name) && (
               <div className="flex flex-wrap gap-1.5">
                 {client.brandId?.name && (
-                  <span className="rounded-lg border border-blue-100 bg-blue-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-blue-600">
+                  <span className="inline-flex items-center rounded-full border border-sky-500/30 bg-sky-500/15 px-2 py-1 text-xs font-medium uppercase tracking-wider text-sky-300">
                     {client.brandId.name}
                   </span>
                 )}
                 {client.departmentId?.name && (
-                  <span className="rounded-lg border border-violet-100 bg-violet-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-violet-600">
+                  <span className="inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/15 px-2 py-1 text-xs font-medium uppercase tracking-wider text-purple-300">
                     {client.departmentId.name}
                   </span>
                 )}
@@ -272,35 +271,21 @@ export default function ClientDetailPage() {
             highlight
           />
         </div>
-
-        {(client.brandId?.name || client.departmentId?.name) && (
-          <div className="border-t border-slate-100 px-5 py-3 sm:px-6">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-              <Tag className="h-3.5 w-3.5" />
-              <span className="font-semibold">Assigned to</span>
-              <span className="font-medium text-slate-700 capitalize">
-                {[client.brandId?.name, client.departmentId?.name]
-                  .filter(Boolean)
-                  .join(" · ")}
-              </span>
-            </div>
-          </div>
-        )}
       </div>
 
-      <div className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-200/60 sm:p-6">
+      <div className="rounded-3xl border border-zinc-800 bg-[#050505] p-5 shadow-sm sm:p-6">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-sm font-black uppercase tracking-wider text-slate-700">
+            <h2 className="text-sm font-medium uppercase tracking-wider text-zinc-200">
               Sales timeline
             </h2>
-            <p className="mt-0.5 text-xs text-slate-500">
+            <p className="mt-0.5 text-xs text-zinc-500">
               Sales recorded for this client
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1">
+            <div className="inline-flex rounded-xl border border-zinc-700 bg-zinc-900/80 p-1">
               {[
                 { key: "all", label: `All (${timeline.length})` },
                 { key: "paid", label: `Paid (${paidCount})` },
@@ -316,8 +301,8 @@ export default function ClientDetailPage() {
                         ? "bg-emerald-600 text-white shadow-sm"
                         : item.key === "pending"
                           ? "bg-amber-500 text-white shadow-sm"
-                          : "bg-zinc-900 text-white shadow-sm"
-                      : "text-slate-500 hover:bg-white hover:text-slate-800"
+                          : "bg-zinc-700 text-white shadow-sm"
+                      : "text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200"
                   }`}
                 >
                   {item.label}
@@ -331,15 +316,15 @@ export default function ClientDetailPage() {
         </div>
 
         {activityLoading ? (
-          <p className="text-sm text-slate-500">Loading sales...</p>
+          <p className="text-sm text-zinc-500">Loading sales...</p>
         ) : filteredTimeline.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-10 text-center">
-            <p className="text-sm font-semibold text-slate-600">
+          <div className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-900/40 px-4 py-10 text-center">
+            <p className="text-sm font-semibold text-zinc-400">
               {timeline.length === 0
                 ? "No sales yet"
                 : `No ${statusFilter} sales found`}
             </p>
-            <p className="mt-1 text-xs text-slate-400">
+            <p className="mt-1 text-xs text-zinc-500">
               {timeline.length === 0
                 ? "Sales will appear here once recorded"
                 : "Try switching the filter"}
@@ -350,19 +335,19 @@ export default function ClientDetailPage() {
             {filteredTimeline.map((row) => (
               <div
                 key={row._id}
-                className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 transition hover:border-slate-200 hover:bg-white"
+                className="flex items-start gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-3.5 transition hover:border-zinc-700 hover:bg-zinc-900"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50">
-                  <TrendingUp className="h-4 w-4 text-blue-600" />
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-sky-500/30 bg-sky-500/15">
+                  <TrendingUp className="h-4 w-4 text-sky-400" />
                 </div>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-sm font-semibold text-slate-900">Sale</p>
+                    <p className="text-sm font-semibold text-zinc-100">Sale</p>
                     <Badge tone={saleTypeTone(row._type)}>{row._type}</Badge>
                     <StatusBadge status={row._status} />
                   </div>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-zinc-500">
                     {row._at ? formatDate(row._at) : "—"}
                     {row.amount != null && row.amount !== ""
                       ? ` · ${formatMoney(parseAmount(row.amount), row.currency)}`

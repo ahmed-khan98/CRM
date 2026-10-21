@@ -9,8 +9,8 @@ import Tooltip from "@/app/_Components/ui/Tooltip";
 const STATUS_STYLES = {
   paid: "bg-emerald-50 text-emerald-700 border-emerald-200",
   pending: "bg-amber-50 text-amber-700 border-amber-200",
-  failed: "bg-red-50 text-red-700 border-red-200",
-  expired: "bg-zinc-100 text-zinc-500 border-zinc-200",
+  failed: "bg-rose-50 text-rose-600 border-rose-200",
+  expired: "bg-zinc-50 text-zinc-500 border-zinc-200",
 };
 
 const paymentPageUrl = (
@@ -82,26 +82,26 @@ export const LinkRow = memo(
 
     const statusStyle =
       STATUS_STYLES[emp?.paymentStatus] ??
-      "bg-zinc-100 text-zinc-500 border-zinc-200";
+      "bg-zinc-50 text-zinc-500 border-zinc-200";
     const sym = currencySymbols[emp?.currency] || emp?.currency || "$";
 
-    // ── Row background ──
-    const rowBg = !isEnabled ? "bg-gray-200" : "bg-white";
+    // Sticky Actions needs an opaque surface matching .crm-table-wrap (#121212).
+    const rowStateClass = !isEnabled ? "opacity-50" : "";
 
     return (
       <tr
-        className={`group border-b border-zinc-100 transition-colors ${rowBg} hover:brightness-95`}
+        className={`group border-b border-zinc-700/60 transition-colors hover:bg-zinc-800/30 ${rowStateClass}`}
       >
         {/* Customer */}
         <td className="px-2 py-2.5 min-w-[150px]">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[12px] font-semibold text-zinc-600 capitalize truncate max-w-[135px]">
+            <span className="text-[12px] font-semibold text-zinc-500 capitalize truncate max-w-[135px]">
               {emp?.clientId?.name || emp?.name || "Master Link"}
             </span>
-            <span className="text-[11px] text-zinc-600 truncate max-w-[160px]">
+            <span className="text-[11px] text-zinc-500 truncate max-w-[160px]">
               {emp?.clientId?.email || emp?.email || "—"}
             </span>
-            <span className="text-[10px] text-zinc-600 truncate max-w-[160px]">
+            <span className="text-[10px] text-zinc-500 truncate max-w-[160px]">
               {emp?.clientId?.phoneNo || emp?.phoneNo || "-"}
             </span>
           </div>
@@ -115,7 +115,7 @@ export const LinkRow = memo(
             className="max-w-full"
             delay
           >
-            <p className="text-[11px] text-zinc-700 font-medium capitalize truncate max-w-[130px]">
+            <p className="text-[11px] text-zinc-900 font-medium capitalize truncate max-w-[130px]">
               {emp?.brandId?.name || "No Brand"}
             </p>
           </Tooltip>
@@ -129,13 +129,13 @@ export const LinkRow = memo(
                 {emp.service.slice(0, 2).map((s, i) => (
                   <span
                     key={i}
-                    className="inline-flex px-1.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-full text-[10px] font-medium capitalize whitespace-nowrap"
+                    className="inline-flex px-1.5 py-0.5 rounded-full border border-sky-500/30 bg-sky-500/15 text-[10px] font-medium capitalize whitespace-nowrap text-sky-300"
                   >
                     {s}
                   </span>
                 ))}
                 {emp.service.length > 2 && (
-                  <span className="inline-flex px-1.5 py-0.5 bg-zinc-100 text-zinc-500 border border-zinc-200 rounded-full text-[10px] font-medium">
+                  <span className="inline-flex px-1.5 py-0.5 bg-zinc-50 text-zinc-500 border border-zinc-200 rounded-full text-[10px] font-medium">
                     +{emp.service.length - 2}
                   </span>
                 )}
@@ -148,7 +148,7 @@ export const LinkRow = memo(
 
         {/* Merchant */}
         <td className="px-1 py-2.5 min-w-[100px]">
-          <p className="text-[11px] text-zinc-600 truncate max-w-[95px]">
+          <p className="text-[11px] text-zinc-500 truncate max-w-[95px]">
             {emp?.merchantType || "—"}
           </p>
         </td>
@@ -157,10 +157,10 @@ export const LinkRow = memo(
         <td className="px-1 py-2.5 min-w-[90px]">
           {emp?.type ? (
             <span
-              className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold border whitespace-nowrap ${
-                emp.type === "UP SELL"
-                  ? "bg-violet-50 text-violet-700 border-violet-200"
-                  : "bg-sky-50 text-sky-700 border-sky-200"
+              className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium whitespace-nowrap ${
+                String(emp.type).toUpperCase().includes("UP")
+                  ? "border-purple-500/30 bg-purple-500/15 text-purple-300"
+                  : "border-sky-500/30 bg-sky-500/15 text-sky-300"
               }`}
             >
               {emp.type}
@@ -173,7 +173,7 @@ export const LinkRow = memo(
         {/* Status */}
         <td className="px-1 py-2.5 min-w-[80px]">
           <span
-            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border whitespace-nowrap ${statusStyle}`}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-medium whitespace-nowrap ${statusStyle}`}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
             {emp?.paymentStatus
@@ -185,7 +185,7 @@ export const LinkRow = memo(
 
         {/* Amount */}
         <td className="px-1 py-2.5 min-w-[60px]">
-          <span className="inline-flex items-center px-2 py-0.5 rounded-lg text-[12px] font-bold bg-zinc-800 text-white whitespace-nowrap">
+          <span className="inline-flex items-center rounded-full border border-zinc-600 bg-zinc-800 px-2 py-1 text-xs font-medium text-zinc-100 whitespace-nowrap">
             {sym}
             {emp?.amount?.toLocaleString() ?? "0"}
           </span>
@@ -207,7 +207,7 @@ export const LinkRow = memo(
 
         {/* Actions — sticky right */}
         <td
-          className={`px-2 py-2.5 sticky right-0 transition-colors md:border-l md:border-zinc-100 w-10 ${rowBg}`}
+          className="px-2 py-2.5 sticky right-0 z-[1] w-10 bg-[#121212] transition-colors md:border-l md:border-zinc-700/60 group-hover:bg-zinc-800/30"
         >
           <RowMenu
             emp={emp}

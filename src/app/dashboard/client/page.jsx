@@ -123,11 +123,10 @@ export default function Client() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="w-full mx-auto px-1 flex flex-col space-y-3">
+    <div className="section-stack">
         <PageHeader
           icon={Users}
-          length={data?.data?.length}
+          length={filteredClients.length}
           name="All Clients"
           btnName="Create Client"
           handleEdit={handleEdit}
@@ -135,7 +134,7 @@ export default function Client() {
           <button
             type="button"
             onClick={handleExport}
-            className="inline-flex h-10 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+            className="inline-flex h-10 items-center gap-2 rounded-[10px] border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-900 hover:bg-zinc-50"
           >
             <Download className="h-4 w-4" />
             Export
@@ -188,7 +187,6 @@ export default function Client() {
           closeModal={closeModal}
           refetch={refetch}
         />
-      </div>
     </div>
   );
 }

@@ -50,7 +50,19 @@ export default function useComposerDraft({
     setVoiceMode(false);
     setSendingAttachments(false);
     sendingAttachmentsRef.current = false;
+    setMentionOpen(false);
+    setMentionQuery("");
+    setMentionStart(-1);
   }, [activeId]);
+
+  // Mentions are group-only — never keep picker open on DMs
+  useEffect(() => {
+    if (active?.type !== "group") {
+      setMentionOpen(false);
+      setMentionQuery("");
+      setMentionStart(-1);
+    }
+  }, [active?.type]);
 
   useEffect(() => {
     if (editing) setText(editing.body || "");

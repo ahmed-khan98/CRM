@@ -10,7 +10,7 @@ function MessageReactions({ reactions, mine }) {
         <span
           key={`${r.emoji}-${i}`}
           className={`rounded-full px-1.5 text-xs shadow-sm ${
-            mine ? "bg-black/25" : "bg-zinc-100"
+            mine ? "bg-black/25" : "bg-zinc-50"
           }`}
         >
           {r.emoji}

@@ -75,10 +75,10 @@ export default function GenZResetPasswordForm() {
 
   const getStrengthColor = () => {
     if (passwordStrength === 0) return "bg-gray-200";
-    if (passwordStrength === 1) return "bg-red-500";
-    if (passwordStrength === 2) return "bg-orange-500";
-    if (passwordStrength === 3) return "bg-yellow-500";
-    return "bg-green-500";
+    if (passwordStrength === 1) return "bg-rose-500";
+    if (passwordStrength === 2) return "bg-amber-500";
+    if (passwordStrength === 3) return "bg-amber-500";
+    return "bg-emerald-500";
   };
 
   return (
@@ -106,7 +106,7 @@ export default function GenZResetPasswordForm() {
               {/* <h2 className="text-2xl font-bold mb-1 text-gray-800">
                 Reset Password
               </h2> */}
-              <p className="text-gray-500 font-normal">
+              <p className="text-zinc-500 font-normal">
                 Reset Password
                 {/* Create a new password for your account */}
               </p>
@@ -120,11 +120,11 @@ export default function GenZResetPasswordForm() {
                       ? "border-zinc-800 shadow-sm shadow-orange-100"
                       : formik.touched.code && formik.errors.code
                       ? "border-red-300"
-                      : "border-gray-200"
+                      : "border-zinc-200"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
-                    <Hash className="h-5 w-5 text-gray-400" />
+                    <Hash className="h-5 w-5 text-zinc-400" />
                   </div>
                   <input
                     type="text"
@@ -144,7 +144,7 @@ export default function GenZResetPasswordForm() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm ml-2"
+                    className="text-rose-600 text-sm ml-2"
                   >
                     {formik.errors.code}
                   </motion.p>
@@ -158,11 +158,11 @@ export default function GenZResetPasswordForm() {
                       ? "border-zinc-800 shadow-sm shadow-orange-100"
                       : formik.touched.password && formik.errors.password
                       ? "border-red-300"
-                      : "border-gray-200"
+                      : "border-zinc-200"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
-                    <Lock className="h-5 w-5 text-gray-400" />
+                    <Lock className="h-5 w-5 text-zinc-400" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -183,9 +183,9 @@ export default function GenZResetPasswordForm() {
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-gray-400" />
+                      <EyeOff className="h-5 w-5 text-zinc-400" />
                     ) : (
-                      <Eye className="h-5 w-5 text-gray-400" />
+                      <Eye className="h-5 w-5 text-zinc-400" />
                     )}
                   </button>
                 </div>
@@ -208,7 +208,7 @@ export default function GenZResetPasswordForm() {
                           />
                         ))}
                       </div>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-zinc-500">
                         {getStrengthText()}
                       </span>
                     </div>
@@ -219,7 +219,7 @@ export default function GenZResetPasswordForm() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-500 text-sm ml-2"
+                    className="text-rose-600 text-sm ml-2"
                   >
                     {formik.errors.password}
                   </motion.p>
@@ -234,11 +234,11 @@ export default function GenZResetPasswordForm() {
                       : formik.touched.confirmPassword &&
                         formik.errors.confirmPassword
                       ? "border-red-300"
-                      : "border-gray-200"
+                      : "border-zinc-200"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
-                    <Lock className="h-5 w-5 text-gray-400" />
+                    <Lock className="h-5 w-5 text-zinc-400" />
                   </div>
                   <input
                     type={showConfirmPassword ? "text" : "password"}
@@ -259,9 +259,9 @@ export default function GenZResetPasswordForm() {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="h-5 w-5 text-gray-400" />
+                      <EyeOff className="h-5 w-5 text-zinc-400" />
                     ) : (
-                      <Eye className="h-5 w-5 text-gray-400" />
+                      <Eye className="h-5 w-5 text-zinc-400" />
                     )}
                   </button>
                 </div>
@@ -270,7 +270,7 @@ export default function GenZResetPasswordForm() {
                     <motion.p
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-red-500 text-sm ml-2"
+                      className="text-rose-600 text-sm ml-2"
                     >
                       {formik.errors.confirmPassword}
                     </motion.p>
@@ -281,7 +281,7 @@ export default function GenZResetPasswordForm() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full  cursor-pointer bg-zinc-800 hover:bg-zinc-900 text-white py-3 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all"
+                className="w-full  cursor-pointer bg-zinc-800 hover:bg-zinc-800 text-white py-3 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">

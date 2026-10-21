@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import Image from "next/image";
+import { toHttpsUrl } from "@/app/_utils/attachmentUrl";
 
 const SIZE_PX = { xs: 20, sm: 36, lg: 56, md: 44 };
 
@@ -12,7 +13,8 @@ function canOptimizeSrc(src) {
   );
 }
 
-function ChatAvatar({ src, name, online, size = "md" }) {
+function ChatAvatar({ src: rawSrc, name, online, size = "md" }) {
+  const src = toHttpsUrl(rawSrc);
   const px = SIZE_PX[size] || SIZE_PX.md;
   const sz =
     size === "xs"
@@ -41,7 +43,7 @@ function ChatAvatar({ src, name, online, size = "md" }) {
         <img src={src} alt="" className={`${sz} rounded-full object-cover`} />
       ) : (
         <div
-          className={`${sz} flex items-center justify-center rounded-full bg-zinc-900 font-semibold text-white`}
+          className={`${sz} flex items-center justify-center rounded-full bg-ink font-semibold text-white ring-1 ring-black/10`}
         >
           {(name || "?").charAt(0).toUpperCase()}
         </div>

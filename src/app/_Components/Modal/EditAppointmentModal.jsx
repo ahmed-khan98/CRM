@@ -15,7 +15,7 @@ const appointmentSchema = Yup.object().shape({
 })
 
 const fieldError = (errors, touched, name) =>
-  errors[name] && touched[name] ? "border-red-500/50" : ""
+  errors[name] && touched[name] ? "border-danger/50" : ""
 
 const EditAppointmentModal = ({ isModalOpen, editingAppointment, closeModal, refetch }) => {
   const [updateAppointment, { isLoading: updateLoading }] = useUpdateAppointmentMutation()
@@ -79,7 +79,7 @@ const EditAppointmentModal = ({ isModalOpen, editingAppointment, closeModal, ref
                     setFieldValue("appointmentTime", "")
                   }}
                 />
-                <ErrorMessage name="appointmentDate" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="appointmentDate" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
 
               <div>
@@ -100,9 +100,9 @@ const EditAppointmentModal = ({ isModalOpen, editingAppointment, closeModal, ref
                     </option>
                   ))}
                 </Field>
-                <ErrorMessage name="appointmentTime" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="appointmentTime" component="div" className="text-rose-600 text-sm mt-1" />
                 {values.appointmentDate && getAvailableTimeSlots(values.appointmentDate).length === 0 && (
-                  <p className="text-amber-400 text-sm mt-1">
+                  <p className="text-amber-700 text-sm mt-1">
                     No available time slots for today. Please select a future date.
                   </p>
                 )}
@@ -121,7 +121,7 @@ const EditAppointmentModal = ({ isModalOpen, editingAppointment, closeModal, ref
                 className={fleet.modalTextarea}
                 placeholder="Any additional notes for the appointment..."
               />
-              <ErrorMessage name="notes" component="div" className="text-red-400 text-sm mt-1" />
+              <ErrorMessage name="notes" component="div" className="text-rose-600 text-sm mt-1" />
             </div>
 
             <div className="flex justify-end gap-2 pt-3 border-t border-white/[0.06]">

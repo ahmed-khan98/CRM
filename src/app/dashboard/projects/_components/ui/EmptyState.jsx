@@ -13,7 +13,7 @@ function EmptyState({ icon: Icon, title, description, action }) {
       <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-zinc-200 bg-white shadow-sm">
         <Icon className="h-5 w-5 text-zinc-400" />
       </div>
-      <p className="text-sm font-black text-zinc-600">{title}</p>
+      <p className="text-sm font-medium text-zinc-500">{title}</p>
       {description && <p className="mt-1 text-xs text-zinc-400">{description}</p>}
       {action}
     </motion.div>

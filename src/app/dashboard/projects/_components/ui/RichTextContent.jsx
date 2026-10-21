@@ -12,11 +12,11 @@ export default function RichTextContent({ html, className = "", emptyFallback = 
   if (isHtml) {
     return (
       <div
-        className={`rich-text-content text-xs leading-relaxed font-normal text-zinc-700 [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_strong]:font-semibold ${className}`}
+        className={`rich-text-content text-xs leading-relaxed font-normal text-zinc-900 [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_strong]:font-semibold ${className}`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
   }
 
-  return <p className={`text-xs leading-relaxed font-normal text-zinc-700 whitespace-pre-wrap ${className}`}>{html}</p>;
+  return <p className={`text-xs leading-relaxed font-normal text-zinc-900 whitespace-pre-wrap ${className}`}>{html}</p>;
 }

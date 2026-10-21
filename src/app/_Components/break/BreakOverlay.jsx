@@ -37,17 +37,17 @@
 //   return (
     
 //      <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/100 backdrop-blur-lg">
-//       <div className="w-full max-w-sm mx-4  rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d0d0f] shadow-[0_24px_64px_rgba(0,0,0,0.7)]">
+//       <div className="w-full max-w-sm mx-4  rounded-2xl overflow-hidden border border-white/[0.08] bg-ink shadow-[0_24px_64px_rgba(0,0,0,0.7)]">
 
 //         {/* Top accent line */}
 //         <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
 //         {/* Header */}
 //         <div className="flex flex-col items-center gap-2 px-6 pt-6 pb-4 border-b border-white/[0.04]">
-//           <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-red-500/10 border border-red-500/20 text-2xl">
+//           <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-danger/10 border border-rose-200 text-2xl">
 //             🚫
 //           </div>
-//           <p className="text-xs font-black uppercase tracking-[0.18em] text-red-400">
+//           <p className="text-xs font-medium uppercase tracking-[0.18em] text-rose-600">
 //             System Idle (On Break)
 //           </p>
 //         </div>
@@ -57,7 +57,7 @@
 
 //           {/* Break started at */}
 //           <div className="flex items-center justify-between rounded-xl px-4 py-2.5 bg-white/[0.03] border border-white/[0.06]">
-//             <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-600">
+//             <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-500">
 //               Break Started At
 //             </span>
 //             <span className="text-xs font-mono font-bold text-zinc-300">
@@ -69,10 +69,10 @@
 
 //           {/* Duration */}
 //           <div className="flex flex-col items-center gap-1 rounded-xl px-4 py-4 bg-white/[0.03] border border-white/[0.06]">
-//             <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600">
+//             <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-500">
 //               Duration
 //             </span>
-//             <span className="text-3xl font-black font-mono text-zinc-100 tabular-nums">
+//             <span className="text-3xl font-bold font-mono text-zinc-100 tabular-nums">
 //               {duration}
 //             </span>
 //           </div>
@@ -141,17 +141,17 @@ const BreakOverlay = ({ startTime, onBreakOut }) => {
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/100 backdrop-blur-lg">
-      <div className="w-full max-w-sm mx-4 rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d0d0f] shadow-[0_24px_64px_rgba(0,0,0,0.7)]">
+      <div className="w-full max-w-sm mx-4 rounded-2xl overflow-hidden border border-white/[0.08] bg-ink shadow-[0_24px_64px_rgba(0,0,0,0.7)]">
 
         {/* Top line */}
         <div className="h-[1.5px] w-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
 
         {/* Header */}
         <div className="flex flex-col items-center gap-2 px-6 pt-6 pb-4 border-b border-white/[0.04]">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-red-500/10 border border-red-500/20 text-2xl">
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-danger/10 border border-rose-200 text-2xl">
             🚫
           </div>
-          <p className="text-sm font-black uppercase tracking-[0.18em] text-red-400">
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-rose-600">
            {type !==  'SYSTEM IDLE' ? `User on ${type} break` : `System Idle`}
           </p>
         </div>
@@ -161,7 +161,7 @@ const BreakOverlay = ({ startTime, onBreakOut }) => {
 
           {/* Break start */}
           <div className="flex items-center justify-between rounded-xl px-4 py-2.5 bg-white/[0.03] border border-white/[0.06]">
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-600">
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-500">
               Break Started At
             </span>
             <span className="text-xs font-mono font-bold text-zinc-300">
@@ -173,10 +173,10 @@ const BreakOverlay = ({ startTime, onBreakOut }) => {
 
           {/* Duration */}
           <div className="flex flex-col items-center gap-1 rounded-xl px-4 py-4 bg-white/[0.03] border border-white/[0.06]">
-            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600">
+            <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-500">
               Duration
             </span>
-            <span className="text-3xl font-black font-mono text-zinc-100 tabular-nums">
+            <span className="text-3xl font-bold font-mono text-zinc-100 tabular-nums">
               {duration}
             </span>
           </div>

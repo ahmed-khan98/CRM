@@ -88,7 +88,7 @@ const page = () => {
                 <Tab tabs={myAccountTabs} />
                 <div className="my-6">
                     <h1 className="text-xl md:text-2xl font-bold text-gray-800">Address Details</h1>
-                    <p className="text-gray-500 mt-1">Manage your personal information and preferences</p>
+                    <p className="text-zinc-500 mt-1">Manage your personal information and preferences</p>
                 </div>
 
 
@@ -112,10 +112,10 @@ const page = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <h2 className="text-xl font-bold text-gray-800 capitalize">
+                                        <h2 className="text-lg font-semibold text-gray-800 capitalize">
                                             {formData.firstName ? `${formData.firstName} ${formData.lastName || ""}` : "Your Profile"}
                                         </h2>
-                                        <p className="text-gray-500">{formData.email}</p>
+                                        <p className="text-zinc-500">{formData.email}</p>
                                     </div>
                                 </div>
 
@@ -145,11 +145,11 @@ const page = () => {
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: "auto" }}
                                 exit={{ opacity: 0, height: 0 }}
-                                className="bg-green-50 border-l-4 border-green-500 p-4 mx-8"
+                                className="bg-emerald-50 border-l-4 border-green-500 p-4 mx-8"
                             >
                                 <div className="flex items-center gap-3">
                                     <CheckCircle className="h-5 w-5 text-green-500" />
-                                    <p className="text-green-700">Your Address Detail has been updated successfully!</p>
+                                    <p className="text-emerald-700">Your Address Detail has been updated successfully!</p>
                                 </div>
                             </motion.div>
                         )}
@@ -172,8 +172,8 @@ const page = () => {
                                         onChange={handleChange}
                                         disabled={!isEditable}
                                         // rows={4}
-                                        className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                                            } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                        className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-zinc-50  focus:ring-[#F33E0A]"
+                                            } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                         placeholder="Your full street address"
                                     />
                                 </div>
@@ -190,8 +190,8 @@ const page = () => {
                                         value={formData?.address?.city}
                                         onChange={handleChange}
                                         disabled={!isEditable}
-                                        className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                                            } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                        className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-zinc-50  focus:ring-[#F33E0A]"
+                                            } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                         placeholder="Your city"
                                     />
                                 </div>
@@ -231,8 +231,8 @@ const page = () => {
                                         value={formData?.address?.zipCode}
                                         onChange={handleChange}
                                         disabled={!isEditable}
-                                        className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-gray-50  focus:ring-[#F33E0A]"
-                                            } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                        className={`w-full p-4  border ${isEditable ? "bg-white  focus:ring-red-500" : "bg-zinc-50  focus:ring-[#F33E0A]"
+                                            } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                         placeholder="Your zip code"
                                     />
                                 </div>

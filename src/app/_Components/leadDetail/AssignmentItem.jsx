@@ -2,20 +2,16 @@ import React from "react";
 
 const AssignmentItem = ({ icon: Icon, label, value }) => {
   return (
-    <div
-      className="rounded-xl p-4"
-      style={{
-        background: "rgba(99,102,241,0.06)",
-        border: "1px solid rgba(99,102,241,0.1)",
-      }}
-    >
-      <div className="flex items-center gap-2 mb-2">
-        <Icon className="w-3.5 h-3.5" style={{ color: "#818cf8" }} />
-        <p className="text-[10px] font-bold tracking-[0.15em] uppercase" style={{ color: "#818cf8" }}>
+    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
+      <div className="mb-2 flex items-center gap-2">
+        <Icon className="h-3.5 w-3.5 text-zinc-400" />
+        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500">
           {label}
         </p>
       </div>
-      <p className="text-sm font-semibold capitalize text-white/80">{value || "N/A"}</p>
+      <p className="text-sm font-semibold capitalize text-zinc-100">
+        {value || "N/A"}
+      </p>
     </div>
   );
 };

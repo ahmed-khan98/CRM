@@ -47,7 +47,7 @@ export default function Mailing({ onSubmit, isLoading, }) {
           </Link>
         </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Mailing Address</h2>
-        {/* <p className="text-gray-500">optional</p> */}
+        {/* <p className="text-zinc-500">optional</p> */}
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-6">
@@ -58,7 +58,7 @@ export default function Mailing({ onSubmit, isLoading, }) {
               ? "border-[#FB3B11] shadow-sm shadow-orange-100"
               : formik.touched.address && formik.errors.address
                 ? "border-red-300"
-                : "border-gray-200"
+                : "border-zinc-200"
               }`}
           >
             <input
@@ -86,7 +86,7 @@ export default function Mailing({ onSubmit, isLoading, }) {
                 ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                 : formik.touched.city && formik.errors.city
                   ? "border-red-300"
-                  : "border-gray-200"
+                  : "border-zinc-200"
                 }`}
             >
               <input
@@ -140,7 +140,7 @@ export default function Mailing({ onSubmit, isLoading, }) {
           )}
         </motion.button>
 
-        <div className="text-center text-sm text-gray-500">
+        <div className="text-center text-sm text-zinc-500">
           Already have an account?{" "}
           <Link href="/login" className="text-[#FB3B11] font-medium hover:underline">
             Sign in

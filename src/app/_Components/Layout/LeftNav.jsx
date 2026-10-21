@@ -26,18 +26,21 @@ import {
   ArrowRight,
   CalendarDays,
   Coffee,
+  CalendarCheck,
+  Wallet,
   FolderKanban,
   ListTodo,
   Truck,
   MessageCircle,
+  Briefcase,
 } from "lucide-react";
-import Image from "next/image";
 import Tooltip from "@/app/_Components/ui/Tooltip";
-import Main from "../../../app/Assets/zytronlogo.png";
+import BrandLogo from "@/app/_Components/brand/BrandLogo";
 import { useLogoutMutation } from "@/app/_Services/authentication/page";
 import toast from "react-hot-toast";
 import { removeAttendence, resumeWork } from "@/redux/filterSlice";
 import { useDispatch } from "react-redux";
+import { effectiveRole } from "@/app/config/permissions";
 
 const LeftNav = ({ set }) => {
   const pathname = usePathname();
@@ -51,12 +54,14 @@ const LeftNav = ({ set }) => {
 
   const userCookie = Cookies.get("currentuser");
   const user = userCookie ? JSON.parse(userCookie) : null;
+  // HR department staff see HRMS menus like HR_ADMIN
+  const navRole = effectiveRole(user) || user?.role;
 
   const menuItems = [
     {
       name: "Dashboard",
       icon: <LayoutDashboard className="w-4 h-4" />,
-      path: ["/dashboard/statictics"],
+      path: ["/dashboard/statistics"],
       roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
       section: "Overview",
     },
@@ -95,18 +100,29 @@ const LeftNav = ({ set }) => {
       roles: ["USER", "DEP_ADMIN"],
       section: "CRM",
     },
-    {
-      name: "Projects",
-      icon: <FolderKanban className="w-4 h-4" />,
-      path: ["/dashboard/projects"],
+      {
+      name: "Leads",
+      icon: <ChartBar className="w-4 h-4" />,
+      path: ["/dashboard/lead"],
       roles: ["USER", "DEP_ADMIN"],
       section: "CRM",
     },
     {
-      name: "All Tasks",
-      icon: <ListTodo className="w-4 h-4" />,
-      path: ["/dashboard/tasks"],
-      roles: ["USER", "DEP_ADMIN"],
+      name: "Payment Link",
+      icon: <Link className="w-4 h-4" />,
+      path: [
+        "/dashboard/paymentLink",
+        "/dashboard/createLeadPayment",
+        "/dashboard/createPaymentLink",
+      ],
+      roles: ["USER", "FINANCE_ADMIN", "DEP_ADMIN"],
+      section: "CRM",
+    },
+       {
+      name: "Sales",
+      icon: <BadgeDollarSign className="w-4 h-4" />,
+      path: ["/dashboard/sale"],
+      roles: ["DEP_ADMIN", "FINANCE_ADMIN", "USER", "HR_ADMIN"],
       section: "CRM",
     },
     {
@@ -123,6 +139,21 @@ const LeftNav = ({ set }) => {
       ],
       section: "CRM",
     },
+    {
+      name: "Projects",
+      icon: <FolderKanban className="w-4 h-4" />,
+      path: ["/dashboard/projects"],
+      roles: ["USER", "DEP_ADMIN"],
+      section: "CRM",
+    },
+    {
+      name: "All Tasks",
+      icon: <ListTodo className="w-4 h-4" />,
+      path: ["/dashboard/tasks"],
+      roles: ["USER", "DEP_ADMIN"],
+      section: "CRM",
+    },
+    
     {
       name: "Fleet",
       icon: <Truck className="w-4 h-4" />,
@@ -144,24 +175,7 @@ const LeftNav = ({ set }) => {
         },
       ],
     },
-    {
-      name: "Leads",
-      icon: <ChartBar className="w-4 h-4" />,
-      path: ["/dashboard/lead"],
-      roles: ["USER", "DEP_ADMIN"],
-      section: "CRM",
-    },
-    {
-      name: "Payment Link",
-      icon: <Link className="w-4 h-4" />,
-      path: [
-        "/dashboard/paymentLink",
-        "/dashboard/createLeadPayment",
-        "/dashboard/createPaymentLink",
-      ],
-      roles: ["USER", "FINANCE_ADMIN", "DEP_ADMIN"],
-      section: "CRM",
-    },
+  
     // {
     //   name: "Email",
     //   icon: <Mail className="w-4 h-4" />,
@@ -222,13 +236,7 @@ const LeftNav = ({ set }) => {
       roles: ["DEP_ADMIN", "HR_ADMIN", "FINANCE_ADMIN"],
       section: "CRM",
     },
-    {
-      name: "Sales",
-      icon: <BadgeDollarSign className="w-4 h-4" />,
-      path: ["/dashboard/sale"],
-      roles: ["DEP_ADMIN", "FINANCE_ADMIN", "USER", "HR_ADMIN"],
-      section: "CRM",
-    },
+ 
     {
       name: "My Account",
       icon: <User className="w-4 h-4" />,
@@ -239,12 +247,18 @@ const LeftNav = ({ set }) => {
     {
       name: "Attendance",
       icon: <CalendarDays className="w-4 h-4" />,
-      path: ["/dashboard/attendance", "/dashboard/attendance"],
+      path: [
+        "/dashboard/attendance",
+        "/dashboard/attendance/break",
+        "/dashboard/attendance/teamAttendence",
+        "/dashboard/attendance/teamBreak",
+        "/dashboard/leave",
+      ],
       roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
       section: "Operations",
       submenu: [
         {
-          name: "My Attendance",
+          name: "Attendance",
           path: "/dashboard/attendance",
           roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
           icon: <CalendarDays className="w-3.5 h-3.5" />,
@@ -256,7 +270,7 @@ const LeftNav = ({ set }) => {
           icon: <CalendarDays className="w-3.5 h-3.5" />,
         },
         {
-          name: "My Break",
+          name: "Break",
           path: "/dashboard/attendance/break",
           roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
           icon: <Coffee className="w-3.5 h-3.5" />,
@@ -267,21 +281,133 @@ const LeftNav = ({ set }) => {
           roles: ["HR_ADMIN", "DEP_ADMIN"],
           icon: <Coffee className="w-3.5 h-3.5" />,
         },
+        // USER: Leave lives under Attendance (no separate Leave menu)
+        {
+          name: "Leave",
+          path: "/dashboard/leave",
+          roles: ["USER"],
+          icon: <CalendarCheck className="w-3.5 h-3.5" />,
+        },
+      ],
+    },
+    {
+      name: "Leave",
+      icon: <CalendarCheck className="w-4 h-4" />,
+      path: ["/dashboard/leave", "/dashboard/leave/team", "/dashboard/leave/settings"],
+      roles: ["HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+      section: "Operations",
+      submenu: [
+        {
+          name: "Leave",
+          path: "/dashboard/leave",
+          roles: ["HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+          icon: <CalendarCheck className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Team Leave",
+          path: "/dashboard/leave/team",
+          roles: ["HR_ADMIN", "DEP_ADMIN"],
+          icon: <Users className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Leave Settings",
+          path: "/dashboard/leave/settings",
+          roles: ["HR_ADMIN"],
+          icon: <CalendarDays className="w-3.5 h-3.5" />,
+        },
+      ],
+    },
+    {
+      name: "Payroll",
+      icon: <Wallet className="w-4 h-4" />,
+      path: ["/dashboard/payroll", "/dashboard/payroll/run", "/dashboard/payroll/settings"],
+      roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+      section: "Operations",
+      submenu: [
+        {
+          name: "Run Payroll",
+          path: "/dashboard/payroll/run",
+          roles: ["HR_ADMIN",, "FINANCE_ADMIN"],
+          icon: <Wallet className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Payslips",
+          path: "/dashboard/payroll",
+          roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
+          icon: <Wallet className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Payroll Settings",
+          path: "/dashboard/payroll/settings",
+          roles: ["HR_ADMIN"],
+          icon: <CalendarDays className="w-3.5 h-3.5" />,
+        },
+      ],
+    },
+    {
+      name: "Recruitment",
+      icon: <Briefcase className="w-4 h-4" />,
+      path: [
+        "/dashboard/recruitment",
+        "/dashboard/recruitment/jobs",
+        "/dashboard/recruitment/interviews",
+        "/dashboard/recruitment/offers",
+        "/dashboard/recruitment/reports",
+        "/dashboard/recruitment/settings",
+      ],
+      roles: ["HR_ADMIN"],
+      section: "Operations",
+      submenu: [
+        {
+          name: "Dashboard",
+          path: "/dashboard/recruitment",
+          roles: ["HR_ADMIN"],
+          icon: <LayoutDashboard className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Jobs",
+          path: "/dashboard/recruitment/jobs",
+          roles: ["HR_ADMIN"],
+          icon: <Briefcase className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Interviews",
+          path: "/dashboard/recruitment/interviews",
+          roles: ["HR_ADMIN"],
+          icon: <CalendarDays className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Offers",
+          path: "/dashboard/recruitment/offers",
+          roles: ["HR_ADMIN"],
+          icon: <Mail className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Reports",
+          path: "/dashboard/recruitment/reports",
+          roles: ["HR_ADMIN"],
+          icon: <ChartBar className="w-3.5 h-3.5" />,
+        },
+        {
+          name: "Settings",
+          path: "/dashboard/recruitment/settings",
+          roles: ["HR_ADMIN"],
+          icon: <CalendarDays className="w-3.5 h-3.5" />,
+        },
       ],
     },
   ];
 
   const filteredMenuItems = menuItems
     .filter((item) => {
-      if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
-
-      return item.roles?.includes(user?.role);
+      if (navRole === "ADMIN" || navRole === "SUBADMIN") return true;
+      return item.roles?.includes(navRole);
     })
     .map((item) => {
       if (item.submenu) {
         const filteredSub = item.submenu.filter((sub) => {
-          if (user?.role === "ADMIN" || user?.role === "SUBADMIN") return true;
-          return sub.roles?.includes(user?.role);
+          if (navRole === "ADMIN" || navRole === "SUBADMIN") return true;
+          return sub.roles?.includes(navRole);
         });
 
         return { ...item, submenu: filteredSub };
@@ -334,7 +460,7 @@ const LeftNav = ({ set }) => {
         ${isMobileDrawer ? "w-full" : isCollapsed ? "w-[74px]" : "w-[230px]"}`}
     >
       <div
-        className={`flex flex-col min-h-0 min-w-0 flex-1 overflow-hidden bg-zinc-950 border-white/[0.07] shadow-2xl ${isMobileDrawer ? "mx-3 mb-3 rounded-3xl border" : "mx-1 rounded-2xl border"}`}
+        className={`mb-2 flex flex-col min-h-0 min-w-0 flex-1 overflow-hidden bg-ink border-white/[0.07] shadow-2xl ${isMobileDrawer ? "mx-3 mb-3 rounded-3xl border" : "mx-1 rounded-2xl border"}`}
       >
         {/* Top accent line */}
         <div className="h-[1.5px] w-full flex-shrink-0 bg-gradient-to-r from-transparent via-white/30 to-white/5" />
@@ -345,16 +471,25 @@ const LeftNav = ({ set }) => {
             className={`flex-shrink-0 flex items-center px-2 py-2
           ${isCollapsed ? "justify-center" : "justify-between"}`}
           >
-            {!isCollapsed && (
-              <Image
-                src={Main}
-                alt="Zytron"
-                height={28}
-                width={86}
-                className="ml-1 brightness-0 invert opacity-90"
+            {/* {!isCollapsed && (
+              <BrandLogo
+                href={null}
+                width={96}
+                height={32}
+                className="ml-1 opacity-95"
                 priority
               />
             )}
+            {isCollapsed && (
+              <BrandLogo
+                href={null}
+                compact
+                width={28}
+                height={28}
+                className="opacity-95"
+                priority
+              />
+            )} */}
             <Tooltip
               label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               side="bottom"
@@ -362,7 +497,7 @@ const LeftNav = ({ set }) => {
               <button
                 onClick={() => setIsCollapsed((prev) => !prev)}
                 aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                className="cursor-pointer flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-200 transition-all duration-150"
+                className="cursor-pointer flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-300 hover:bg-white/10 hover:text-zinc-100 transition-all duration-150"
               >
                 {isCollapsed ? (
                   <ArrowRight className="w-4 h-4" />
@@ -410,17 +545,17 @@ const LeftNav = ({ set }) => {
                       if (set) set();
                     }
                   }}
-                  className={`relative flex items-center cursor-pointer rounded-xl border transition-all duration-150 group
+                  className={`relative flex items-center cursor-pointer rounded-xl  transition-all duration-150 group
                     ${isCollapsed ? "justify-center py-[2px]" : isMobileDrawer ? "justify-between px-3 py-2.5 my-1.5" : "justify-between px-2 py-1 my-1"}
                     ${
                       isActive
-                        ? "bg-white/[0.09] border-white/[0.12]"
-                        : "border-transparent hover:bg-white/[0.04]"
+                        ? "bg-white/[0.08] border border-zinc-200"
+                        : " hover:bg-white/[0.04]"
                     }`}
                 >
                   {/* Active left pill */}
                   {isActive && !isCollapsed && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[18px] bg-white rounded-r-full" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[18px] bg-zinc-400 rounded-r-full" />
                   )}
 
                   <div
@@ -429,7 +564,7 @@ const LeftNav = ({ set }) => {
                     {/* Icon */}
                     <span
                       className={` ${isCollapsed ? "w-8 h-8" : isMobileDrawer ? "w-9 h-9" : "w-7 h-7"} flex items-center justify-center  rounded-lg transition-all duration-150 flex-shrink-0
-                      ${isActive ? "bg-white/15 text-white" : "bg-white/5 text-zinc-500 group-hover:text-zinc-300"}`}
+                      ${isActive ? "bg-white/5 text-zinc-300" : "bg-white/5 text-zinc-500 group-hover:text-zinc-300"}`}
                     >
                       {item.icon}
                     </span>
@@ -438,13 +573,13 @@ const LeftNav = ({ set }) => {
                     {!isCollapsed && (
                       <>
                         <span
-                          className={`${isMobileDrawer ? "text-[13px] font-semibold" : "text-[12px] font-normal"} capitalize tracking-wide leading-none transition-colors duration-150 whitespace-nowrap
-                          ${isActive ? "text-zinc-100" : "text-zinc-500 group-hover:text-zinc-300"}`}
+                          className={`${isMobileDrawer ? "text-sm font-semibold" : "text-xs font-normal"} capitalize tracking-wide leading-none transition-colors duration-150 whitespace-nowrap
+                          ${isActive ? "text-zinc-300" : "text-zinc-500 group-hover:text-zinc-300"}`}
                         >
                           {label}
                         </span>
                         {item.badge && (
-                          <span className="ml-1 px-2 py-[1px] text-[10px] font-bold rounded-full bg-white/[0.08] text-zinc-400 border border-white/10">
+                          <span className="ml-1 px-2 py-[1px] text-xs font-medium rounded-full bg-white/[0.08] text-zinc-400 border border-white/10">
                             {item.badge}
                           </span>
                         )}
@@ -455,7 +590,7 @@ const LeftNav = ({ set }) => {
                   {/* Chevron — only when expanded */}
                   {hasSubmenu && !isCollapsed && (
                     <span
-                      className={`flex-shrink-0 transition-all duration-200 ${isActive ? "text-zinc-300" : "text-zinc-700 group-hover:text-zinc-500"}`}
+                      className={`flex-shrink-0 transition-all duration-200 ${isActive ? "text-zinc-300" : "text-zinc-500 group-hover:text-zinc-500"}`}
                     >
                       {isExpanded ? (
                         <ChevronDown size={13} />
@@ -481,18 +616,19 @@ const LeftNav = ({ set }) => {
                             if (set) set();
                             router.push(subItem.path);
                           }}
-                          className={`flex items-center gap-2 ${isMobileDrawer ? "py-2 px-3" : "py-1.5 px-3"} rounded-lg cursor-pointer transition-all duration-150 border
+                          className={`flex items-center gap-2 ${isMobileDrawer ? "py-2 px-3" : "py-1.5 px-3"} rounded-lg cursor-pointer transition-all duration-150 
                             ${
                               subActive
-                                ? "bg-white/[0.08] border-white/10 text-zinc-200"
-                                : "border-transparent text-zinc-600 hover:bg-white/[0.04] hover:text-zinc-400"
+                                ? "bg-white/[0.08]  text-zinc-300 border border-zinc-200"
+                                : "border-transparent text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300"
                             }`}
                         >
+                          
                           <span
                             className={
                               subActive
                                 ? "text-zinc-300"
-                                : "text-zinc-600 group-hover:text-zinc-300"
+                                : "text-zinc-500 group-hover:text-zinc-300"
                             }
                           >
                             {subItem.icon}
@@ -501,7 +637,7 @@ const LeftNav = ({ set }) => {
                             {subItem.name}
                           </span>
                           {subActive && (
-                            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" />
+                            <span className="ml-auto w-1 h-1 rounded-full bg-zinc-400 flex-shrink-0" />
                           )}
                         </div>
                       );
@@ -530,7 +666,7 @@ const LeftNav = ({ set }) => {
                 <LogOut className="w-3.5 h-3.5" />
               </span>
               {!isCollapsed && (
-                <span className="text-[12px] font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors whitespace-nowrap">
+                <span className="text-xs font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors whitespace-nowrap">
                   Logout
                 </span>
               )}
@@ -661,7 +797,7 @@ export default LeftNav;
 //   const isSubmenuActive = (path) => pathname === path;
 
 //   return (
-//     <div className="h-full flex flex-col overflow-hidden rounded-2xl mx-2 bg-zinc-950 border border-white/[0.07] ">
+//     <div className="h-full flex flex-col overflow-hidden rounded-2xl mx-2 bg-ink border border-white/[0.07] ">
 //       {/* Top accent line */}
 //       <div className="h-[1.5px] w-full flex-shrink-0 bg-gradient-to-r from-transparent via-white/30 to-white/5" />
 
@@ -700,20 +836,20 @@ export default LeftNav;
 //                   >
 //                     {item.icon}
 //                   </span>
-//                   <span className={`text-[13px] font-semibold capitalize tracking-wide leading-none transition-colors duration-150
+//                   <span className={`text-sm font-semibold capitalize tracking-wide leading-none transition-colors duration-150
 //                     ${isActive ? "text-zinc-100" : "text-zinc-500 group-hover:text-zinc-300"}`}
 //                   >
 //                     {sidebars?.data?.[index]?.title ?? item?.name}
 //                   </span>
 //                   {item.badge && (
-//                     <span className="ml-1 px-2 py-[1px] text-[10px] font-bold rounded-full bg-white/[0.08] text-zinc-400 border border-white/10">
+//                     <span className="ml-1 px-2 py-[1px] text-xs font-medium rounded-full bg-white/[0.08] text-zinc-400 border border-white/10">
 //                       {item.badge}
 //                     </span>
 //                   )}
 //                 </div>
 
 //                 {hasSubmenu && (
-//                   <span className={`flex-shrink-0 transition-all duration-200 ${isActive ? "text-zinc-300" : "text-zinc-700 group-hover:text-zinc-500"}`}>
+//                   <span className={`flex-shrink-0 transition-all duration-200 ${isActive ? "text-zinc-300" : "text-zinc-900 group-hover:text-zinc-500"}`}>
 //                     {isExpanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
 //                   </span>
 //                 )}
@@ -730,11 +866,11 @@ export default LeftNav;
 //                         onClick={() => { if (set) set(); router.push(subItem.path); }}
 //                         className={`flex items-center gap-2 py-[7px] px-3 rounded-lg cursor-pointer transition-all duration-150 border
 //                           ${subActive
-//                             ? "bg-white/[0.08] border-white/10 text-zinc-200"
-//                             : "border-transparent text-zinc-600 hover:bg-white/[0.04] hover:text-zinc-400"
+//                             ? "bg-white/[0.08] border-white/10 text-zinc-100"
+//                             : "border-transparent text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-400"
 //                           }`}
 //                       >
-//                         <span className={subActive ? "text-zinc-300" : "text-zinc-700"}>
+//                         <span className={subActive ? "text-zinc-300" : "text-zinc-900"}>
 //                           {subItem.icon}
 //                         </span>
 //                         <span className="text-xs font-semibold tracking-wide">{subItem.name}</span>
@@ -761,7 +897,7 @@ export default LeftNav;
 //           <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/[0.06] text-zinc-500 group-hover:text-zinc-300 flex-shrink-0">
 //             <LogOut className="w-3.5 h-3.5" />
 //           </span>
-//           <span className="text-[13px] font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors">
+//           <span className="text-sm font-semibold text-zinc-500 group-hover:text-zinc-300 transition-colors">
 //             Logout
 //           </span>
 //         </div>

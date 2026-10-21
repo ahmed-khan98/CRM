@@ -1,53 +1,47 @@
+import { BADGE_BASE } from "@/app/_Components/ui/saas/Badge";
+
 const SIGNUP_TYPE_STYLES = {
-  cold:      "bg-sky-50 text-sky-700 border-sky-200",
-  PPC:       "bg-violet-50 text-violet-700 border-violet-200",
-  chat:      "bg-teal-50 text-teal-700 border-teal-200",
-  email:     "bg-blue-50 text-blue-700 border-blue-200",
-  google:    "bg-red-50 text-red-600 border-red-200",
-  facebook:  "bg-indigo-50 text-indigo-700 border-indigo-200",
-  USPTO:     "bg-amber-50 text-amber-700 border-amber-200",
-  meta:      "bg-purple-50 text-purple-700 border-purple-200",
-  instagram: "bg-pink-50 text-pink-700 border-pink-200",
-  linkedin:  "bg-cyan-50 text-cyan-700 border-cyan-200",
-  twitter:   "bg-sky-50 text-sky-600 border-sky-200",
-  other:     "bg-zinc-100 text-zinc-500 border-zinc-200",
+  cold:      "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  PPC:       "bg-zinc-800 text-zinc-200 border-zinc-600",
+  chat:      "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  email:     "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  google:    "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  facebook:  "bg-zinc-800 text-zinc-200 border-zinc-600",
+  USPTO:     "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  meta:      "bg-zinc-800 text-zinc-200 border-zinc-600",
+  instagram: "bg-pink-500/15 text-pink-300 border-pink-500/30",
+  linkedin:  "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",
+  twitter:   "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  other:     "bg-zinc-800 text-zinc-300 border-zinc-600",
 };
 
 const SIGNUP_TYPE_DOTS = {
   cold:      "bg-sky-400",
-  PPC:       "bg-violet-400",
-  chat:      "bg-teal-400",
-  email:     "bg-blue-400",
-  google:    "bg-red-400",
-  facebook:  "bg-indigo-400",
+  PPC:       "bg-zinc-400",
+  chat:      "bg-emerald-400",
+  email:     "bg-sky-400",
+  google:    "bg-rose-400",
+  facebook:  "bg-zinc-400",
   USPTO:     "bg-amber-400",
-  meta:      "bg-purple-400",
+  meta:      "bg-zinc-400",
   instagram: "bg-pink-400",
   linkedin:  "bg-cyan-400",
   twitter:   "bg-sky-400",
-  other:     "bg-zinc-400",
+  other:     "bg-zinc-500",
 };
 
 export default function SignupTypeBadge({ type }) {
   if (!type) {
-    return (
-      <td className="border-b border-zinc-100 px-4 py-2.5 whitespace-nowrap">
-        <span className="text-[11px] text-zinc-400">—</span>
-      </td>
-    );
+    return <span className="text-[11px] text-zinc-500">—</span>;
   }
 
   const badgeStyle = SIGNUP_TYPE_STYLES[type] ?? SIGNUP_TYPE_STYLES.other;
   const dotStyle   = SIGNUP_TYPE_DOTS[type]   ?? SIGNUP_TYPE_DOTS.other;
 
   return (
-    <td className="px-4 py-2.5 whitespace-nowrap">
-      <span
-        className={`inline-flex capitalize items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${badgeStyle}`}
-      >
-        <span className={`w-1.5 h-1.5 rounded-full ${dotStyle}`} />
-        {type}
-      </span>
-    </td>
+    <span className={`${BADGE_BASE} capitalize ${badgeStyle}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${dotStyle}`} />
+      {type}
+    </span>
   );
 }

@@ -10,7 +10,7 @@ const SuccessRow = ({ icon: Icon, label, value }) => {
         <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
           {label}
         </p>
-        <p className="text-[12px] font-semibold text-zinc-800">{value}</p>
+        <p className="text-[12px] font-semibold text-zinc-900">{value}</p>
       </div>
     </div>
   );

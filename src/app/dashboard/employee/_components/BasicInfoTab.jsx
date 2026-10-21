@@ -25,7 +25,7 @@ export default function BasicInfoTab({ employee }) {
           <InfoItem label="Blood Group" value={employee.bloodGroup} />
           <InfoItem label="Status" value={employee.status} />
         </div>
-        <div className="mt-4 pt-4 border-t border-zinc-100">
+        <div className="mt-4 pt-4 border-t border-zinc-200">
           <InfoItem label="Address" value={employee.address} />
         </div>
       </SectionCard>

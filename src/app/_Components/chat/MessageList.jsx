@@ -27,7 +27,7 @@ function MessageList({
   return (
     <div
       ref={listRef}
-      className={`relative min-h-0 flex-1 overflow-y-auto px-2 sm:px-4 py-3 space-y-0.5 ${
+      className={`relative min-h-0 flex-1 overflow-y-auto px-3 sm:px-5 py-4 space-y-0.5 ${
         dark ? "custom-scrollbar-dark" : "custom-scrollbar"
       }`}
       style={chatWallpaper(dark)}
@@ -39,7 +39,7 @@ function MessageList({
       }}
     >
       {dragOver && (
-        <div className="pointer-events-none absolute inset-4 z-10 flex items-center justify-center rounded-2xl border-2 border-dashed border-zinc-500 bg-zinc-900/20 text-zinc-800 font-semibold backdrop-blur-[1px]">
+        <div className="pointer-events-none absolute inset-4 z-10 flex items-center justify-center rounded-2xl border-2 border-dashed border-zinc-500 bg-ink/20 text-zinc-900 font-semibold backdrop-blur-[1px]">
           Drop files to upload
         </div>
       )}
@@ -47,7 +47,7 @@ function MessageList({
         <div className="sticky top-0 z-10 mb-2 flex justify-center">
           <button
             type="button"
-            className="rounded-full border border-zinc-200/70 bg-white/90 px-3 py-1 text-xs font-medium text-zinc-600 shadow-sm backdrop-blur transition hover:bg-white disabled:opacity-60"
+            className="rounded-full border border-zinc-200/70 bg-white/90 px-3 py-1 text-xs font-medium text-zinc-500 shadow-sm backdrop-blur transition hover:bg-white disabled:opacity-60"
             disabled={loadingMsgs}
             onClick={() => loadMessages(activeId, messages[0]?._id)}
           >
@@ -62,6 +62,7 @@ function MessageList({
           prevMessage={messages[idx - 1]}
           myId={myId}
           theme={theme}
+          dark={dark}
           active={active}
           activeVoiceId={activeVoiceId}
           onContextMenu={onContextMenu}

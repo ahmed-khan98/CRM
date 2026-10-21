@@ -52,10 +52,10 @@ function CallMessageBubble({
         : PhoneIncoming;
 
   const iconWrap = missed
-    ? "bg-red-500/15 text-red-500"
+    ? "bg-danger/15 text-rose-600"
     : mine
       ? "bg-white/15 text-zinc-100"
-      : "bg-zinc-900/8 text-zinc-700";
+      : "bg-ink/8 text-zinc-900";
 
   const subLeft = durLabel
     ? durLabel
@@ -77,7 +77,7 @@ function CallMessageBubble({
       <div className="min-w-0 flex-1">
         <p
           className={`text-[12.5px] font-medium leading-tight ${
-            missed ? "text-red-500" : ""
+            missed ? "text-rose-600" : ""
           }`}
         >
           {title}

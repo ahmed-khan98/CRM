@@ -35,8 +35,8 @@ export const empSchema = Yup.object().shape({
       if (!v || typeof v === "string") return true;
       return v.size <= 2 * 1024 * 1024;
     }),
-  password: Yup.string().when("isEdit", {
-    is: true,
+  password: Yup.string().when(["isEdit", "isRecruitmentHire"], {
+    is: (isEdit, isRecruitmentHire) => isEdit || isRecruitmentHire,
     then: (schema) => schema.notRequired(),
     otherwise: (schema) =>
       schema

@@ -56,7 +56,7 @@ export default function VendorDetailPage() {
           <button
             type="button"
             onClick={handleBack}
-            className="mt-1 p-2 rounded-xl border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"
+            className="mt-1 p-2 rounded-xl border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -75,7 +75,7 @@ export default function VendorDetailPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className={`${fleet.card} p-6 flex flex-col items-center text-center`}>
-          <div className="relative h-24 w-24 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center overflow-hidden mb-4">
+          <div className="relative h-24 w-24 rounded-full bg-zinc-50 border border-zinc-200 flex items-center justify-center overflow-hidden mb-4">
             {vendor.profilePicture?.url ? (
               <Image
                 src={vendor.profilePicture.url}
@@ -88,7 +88,7 @@ export default function VendorDetailPage() {
               <Building2 className="w-10 h-10 text-zinc-500" />
             )}
           </div>
-          <p className="text-lg font-bold text-zinc-900">{vendor.vendorName}</p>
+          <p className="text-lg font-semibold text-zinc-900">{vendor.vendorName}</p>
           <p className="text-sm text-zinc-500 mt-0.5">{vendor.companyName}</p>
           <p className="text-[11px] text-zinc-400 mt-3">
             Created by {vendor.createdBy?.fullName || "—"}
@@ -126,7 +126,7 @@ export default function VendorDetailPage() {
 
           {vendor.notes && (
             <SectionCard icon={StickyNote} title="Notes">
-              <p className="text-sm text-zinc-600 leading-relaxed">{vendor.notes}</p>
+              <p className="text-sm text-zinc-500 leading-relaxed">{vendor.notes}</p>
             </SectionCard>
           )}
         </div>
@@ -135,8 +135,8 @@ export default function VendorDetailPage() {
       <div className={`${fleet.card} p-5 mt-4`}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Car className="w-4 h-4 text-zinc-700" />
-            <h3 className="text-sm font-bold text-zinc-900">
+            <Car className="w-4 h-4 text-zinc-900" />
+            <h3 className="text-sm font-medium text-zinc-900">
               Vehicles ({vehicles.length || vendor.vehicleCount || 0})
             </h3>
           </div>

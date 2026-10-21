@@ -83,7 +83,7 @@ export default function EmailListModal({ ...props }) {
         </>
       }
     >
-      <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 px-4 py-3 text-blue-200 flex items-start gap-3">
+      <div className="rounded-xl border border-blue-500/20 bg-info/10 px-4 py-3 text-blue-200 flex items-start gap-3">
         <Info className="w-5 h-5 mt-0.5 shrink-0" />
         <div className="text-sm">
           <div className="font-semibold">Heads up</div>
@@ -116,13 +116,13 @@ export default function EmailListModal({ ...props }) {
         type="button"
         onClick={() => fileInputRef.current?.click()}
         disabled={isImporting}
-        className="w-full px-4 py-2.5 rounded-xl border border-white/[0.1] bg-[#161b22] text-sm font-semibold text-zinc-200 hover:bg-white/5 transition-colors disabled:opacity-60"
+        className="w-full px-4 py-2.5 rounded-xl border border-white/[0.1] bg-zinc-800 text-sm font-semibold text-zinc-100 hover:bg-white/5 transition-colors disabled:opacity-60"
       >
         {selectedFile ? `Selected: ${selectedFile.name}` : "Choose CSV/XLSX File"}
       </button>
 
       {selectedFile && (
-        <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-emerald-300">
+        <div className="rounded-xl border border-emerald-500/20 bg-success/10 px-4 py-3 text-emerald-700">
           <div className="text-sm">
             File selected:{" "}
             <span className="font-semibold">{selectedFile.name}</span> (
@@ -138,7 +138,7 @@ export default function EmailListModal({ ...props }) {
           </div>
           <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
             <div
-              className="h-2 bg-zinc-100 transition-all duration-100"
+              className="h-2 bg-zinc-50 transition-all duration-100"
               style={{ width: `${percent}%` }}
             />
           </div>

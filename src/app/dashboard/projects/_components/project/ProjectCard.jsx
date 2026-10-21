@@ -29,7 +29,7 @@ function ProjectCard({ project, onDelete, onClick, canDelete = false }) {
     <motion.div
       whileHover={{ y: -2 }}
       onClick={handleCardClick}
-      className="group cursor-pointer rounded-2xl border border-zinc-100 bg-white p-5 shadow-sm hover:shadow-md hover:border-zinc-200 transition-all flex flex-col gap-4"
+      className="group cursor-pointer rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm hover:shadow-md hover:border-zinc-200 transition-all flex flex-col gap-4"
     >
       <div className="flex items-start justify-between gap-1">
         <div className="min-w-0 flex-1">
@@ -38,7 +38,7 @@ function ProjectCard({ project, onDelete, onClick, canDelete = false }) {
               {statusCfg.label}
             </span>
             {deptName && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-zinc-100 bg-zinc-50 px-2 py-0.5 text-[10px] font-medium text-zinc-500">
+              <span className="inline-flex items-center gap-1 rounded-full border border-zinc-200 bg-zinc-50 px-2 py-0.5 text-[10px] font-medium text-zinc-500">
                 <Building2 className="h-2.5 w-2.5" />
                 {deptName}
               </span>
@@ -87,13 +87,13 @@ function ProjectCard({ project, onDelete, onClick, canDelete = false }) {
                 type="button"
                 aria-label="Delete project"
                 onClick={(e) => { e.stopPropagation(); onDelete(project); }}
-                className="opacity-0 group-hover:opacity-100 flex h-7 w-7 items-center justify-center rounded-lg text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer"
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
             </Tooltip>
           )}
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-50 border border-zinc-100 text-zinc-400 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 transition-all">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-50 border border-zinc-200 text-zinc-400 group-hover:bg-zinc-800 group-hover:text-white group-hover:border-zinc-800 transition-all">
             <ArrowRight className="h-3.5 w-3.5" />
           </div>
         </div>
@@ -105,7 +105,7 @@ function ProjectCard({ project, onDelete, onClick, canDelete = false }) {
             <div className="flex flex-wrap gap-1.5">
               {PROJECT_STATUS_COUNTS.map(({ key, label, color, bg }) =>
                 counts[key] > 0 ? (
-                  <span key={key} className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold ${bg} ${color}`}>
+                  <span key={key} className={`inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium ${bg} ${color}`}>
                     {counts[key]} {label}
                   </span>
                 ) : null
@@ -122,3 +122,4 @@ function ProjectCard({ project, onDelete, onClick, canDelete = false }) {
 }
 
 export default memo(ProjectCard);
+

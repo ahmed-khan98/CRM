@@ -89,28 +89,28 @@ function SaleFilters({
   );
 
   return (
-    <div className="rounded-3xl border border-zinc-800/70 bg-gradient-to-br from-zinc-900 to-zinc-950 p-3 shadow-2xl sm:p-4">
+    <div className="rounded-3xl border border-zinc-800/70 bg-gradient-to-br from-ink to-ink p-3 shadow-2xl sm:p-4">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10">
-            <Filter className="h-4 w-4 text-indigo-400" />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-zinc-700/60 bg-zinc-800/60">
+            <Filter className="h-4 w-4 text-zinc-300" />
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.18em] text-zinc-500">
               Filters
             </p>
-            <h3 className="text-sm font-black leading-tight text-zinc-100">
+            <h3 className="text-sm font-medium leading-tight text-zinc-100">
               Month wise sale overview
             </h3>
           </div>
         </div>
 
         {openMonth ? (
-          <span className="w-fit rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-bold text-emerald-400">
+          <span className="w-fit rounded-full border border-emerald-500/20 bg-success/10 px-3 py-1.5 text-[11px] font-bold text-emerald-700">
             Open Month: {openMonth.monthCode || openMonth.name}
           </span>
         ) : (
-          <span className="w-fit rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1.5 text-[11px] font-bold text-red-400">
+          <span className="w-fit rounded-full border border-rose-200 bg-danger/10 px-3 py-1.5 text-[11px] font-bold text-rose-600">
             No open month
           </span>
         )}
@@ -170,7 +170,7 @@ function SaleFilters({
         <button
           type="button"
           onClick={onReset}
-          className="flex h-11 cursor-pointer items-center justify-center gap-2 self-end rounded-xl border border-zinc-700 bg-zinc-800 px-3 text-xs font-black text-zinc-200 transition hover:bg-zinc-700"
+          className="flex h-11 cursor-pointer items-center justify-center gap-2 self-end rounded-xl border border-zinc-700 bg-zinc-800 px-3 text-xs font-medium text-zinc-100 transition hover:bg-zinc-800"
         >
           <RotateCcw className="h-3.5 w-3.5" />
           Reset

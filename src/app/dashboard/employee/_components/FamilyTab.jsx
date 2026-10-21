@@ -15,13 +15,7 @@ import {
   btnCancel,
 } from "./hrmsUi";
 import CrmSelect from "@/app/_Components/ui/CrmSelect";
-
-const GENDER_OPTIONS = [
-  { value: "", label: "Gender" },
-  { value: "Male", label: "Male" },
-  { value: "Female", label: "Female" },
-  { value: "Other", label: "Other" },
-];
+import { GENDER_OPTIONS } from "@/app/schema/employee";
 
 export default function FamilyTab({ employeeId }) {
   const { data, isLoading, refetch } = useGetEmployeeFamilyQuery(employeeId);
@@ -30,7 +24,7 @@ export default function FamilyTab({ employeeId }) {
   const [form, setForm] = useState({
     fatherName: "",
     motherName: "",
-    spouse: { name: "", dob: "", cnic: "", phone: "", occupation: "" },
+    spouse: { name: "", dob: "", cnic: "", occupation: "" },
     children: [],
   });
 
@@ -44,7 +38,6 @@ export default function FamilyTab({ employeeId }) {
         name: f.spouse?.name || "",
         dob: f.spouse?.dob ? String(f.spouse.dob).split("T")[0] : "",
         cnic: f.spouse?.cnic || "",
-        phone: f.spouse?.phone || "",
         occupation: f.spouse?.occupation || "",
       },
       children: (f.children || []).map((c) => ({
@@ -101,7 +94,6 @@ export default function FamilyTab({ employeeId }) {
             ["name", "Name", "text"],
             ["dob", "Date of Birth", "date"],
             ["cnic", "CNIC", "text"],
-            ["phone", "Phone", "text"],
             ["occupation", "Occupation", "text"],
           ].map(([key, label, type]) => (
             <div key={key}>

@@ -75,7 +75,7 @@ function FleetRowMenu({ onView, onEdit, onDelete }) {
           e.stopPropagation();
           setOpen((v) => !v);
         }}
-        className="p-2 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 border border-transparent hover:border-zinc-200"
+        className="p-2 rounded-lg text-zinc-400 hover:text-zinc-900 hover:bg-zinc-50 border border-transparent hover:border-zinc-200"
         aria-label="Actions"
       >
         <MoreVertical className="w-4 h-4" />
@@ -92,7 +92,7 @@ function FleetRowMenu({ onView, onEdit, onDelete }) {
             {onView && (
               <button
                 type="button"
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-50"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-zinc-900 hover:bg-zinc-50"
                 onClick={() => run(onView)}
               >
                 <Eye className="w-3.5 h-3.5" /> View
@@ -101,7 +101,7 @@ function FleetRowMenu({ onView, onEdit, onDelete }) {
             {onEdit && (
               <button
                 type="button"
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-50"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-zinc-900 hover:bg-zinc-50"
                 onClick={() => run(onEdit)}
               >
                 <Pencil className="w-3.5 h-3.5" /> Edit
@@ -110,7 +110,7 @@ function FleetRowMenu({ onView, onEdit, onDelete }) {
             {onDelete && (
               <button
                 type="button"
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-rose-600 hover:bg-rose-50"
                 onClick={() => run(onDelete)}
               >
                 <Trash2 className="w-3.5 h-3.5" /> Delete

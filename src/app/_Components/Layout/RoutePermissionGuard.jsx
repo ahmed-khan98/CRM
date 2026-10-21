@@ -20,7 +20,7 @@ export default function RoutePermissionGuard({ children }) {
       const user = JSON.parse(userCookie);
       const role = user?.role;
       if (!canAccessRoute(pathname, role)) {
-        router.replace("/dashboard/statictics");
+        router.replace("/dashboard/statistics");
       }
     } catch {
       /* ignore malformed cookie */

@@ -79,7 +79,7 @@ export default function ExportLeadModal({ ...props }) {
       footer={footer}
     >
       {/* Info alert */}
-      <div className="rounded-2xl border border-white/10 bg-[#161b22] px-4 py-3 text-zinc-300 flex items-start gap-3">
+      <div className="rounded-2xl border border-white/10 bg-zinc-800 px-4 py-3 text-zinc-300 flex items-start gap-3">
         <Info className="w-5 h-5 mt-0.5 shrink-0 text-zinc-400" />
         <div className="text-sm">
           <div className="font-semibold text-white">Heads up</div>
@@ -111,7 +111,7 @@ export default function ExportLeadModal({ ...props }) {
         type="button"
         onClick={() => fileInputRef.current?.click()}
         disabled={isImporting}
-        className="cursor-pointer w-full px-4 py-3 rounded-xl border border-white/10 bg-[#161b22] text-zinc-200 font-semibold hover:bg-[#1c2330] transition-colors disabled:opacity-60"
+        className="cursor-pointer w-full px-4 py-3 rounded-xl border border-white/10 bg-zinc-800 text-zinc-100 font-semibold hover:bg-[#1c2330] transition-colors disabled:opacity-60"
       >
         {selectedFile
           ? `Selected: ${selectedFile.name}`
@@ -120,7 +120,7 @@ export default function ExportLeadModal({ ...props }) {
 
       {/* Selected file alert */}
       {selectedFile && (
-        <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-emerald-300">
+        <div className="rounded-2xl border border-emerald-500/25 bg-success/10 px-4 py-3 text-emerald-700">
           <div className="text-sm">
             File selected:{" "}
             <span className="font-semibold">{selectedFile.name}</span> (
@@ -137,7 +137,7 @@ export default function ExportLeadModal({ ...props }) {
           </div>
           <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
             <div
-              className="h-2 bg-zinc-100 transition-all duration-100"
+              className="h-2 bg-zinc-50 transition-all duration-100"
               style={{ width: `${percent}%` }}
             />
           </div>

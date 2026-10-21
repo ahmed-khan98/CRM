@@ -1,29 +1,29 @@
 export const PRIORITY_CONFIG = {
-  critical: { label: "Critical", badge: "bg-red-50 text-red-600 border-red-200", dot: "bg-red-500", cardBadge: "bg-red-500/10 text-red-500 border-red-500/20" },
-  high:     { label: "High",     badge: "bg-orange-50 text-orange-600 border-orange-200", dot: "bg-orange-500", cardBadge: "bg-orange-400/10 text-orange-400 border-orange-400/20" },
-  medium:   { label: "Medium",   badge: "bg-amber-50 text-amber-600 border-amber-200", dot: "bg-amber-400", cardBadge: "bg-amber-400/10 text-amber-400 border-amber-400/20" },
-  low:      { label: "Low",      badge: "bg-emerald-50 text-emerald-600 border-emerald-200", dot: "bg-emerald-400", cardBadge: "bg-emerald-400/10 text-emerald-400 border-emerald-400/20" },
+  critical: { label: "Critical", badge: "bg-rose-500/15 text-rose-300 border-rose-500/30", dot: "bg-rose-400", cardBadge: "bg-rose-500/15 text-rose-300 border-rose-500/30" },
+  high:     { label: "High",     badge: "bg-amber-500/15 text-amber-300 border-amber-500/30", dot: "bg-amber-400", cardBadge: "bg-orange-500/15 text-amber-300 border-orange-500/30" },
+  medium:   { label: "Medium",   badge: "bg-amber-500/15 text-amber-300 border-amber-500/30", dot: "bg-amber-400", cardBadge: "bg-amber-500/15 text-amber-300 border-amber-500/30" },
+  low:      { label: "Low",      badge: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30", dot: "bg-emerald-400", cardBadge: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" },
 };
 
 export const STATUS_CONFIG = {
-  todo:        { label: "To Do",       style: "bg-zinc-100 text-zinc-600 border-zinc-200" },
-  "in-progress": { label: "In Progress", style: "bg-blue-50 text-blue-600 border-blue-200" },
-  "in-review": { label: "In Review",   style: "bg-amber-50 text-amber-600 border-amber-200" },
-  done:        { label: "Done",        style: "bg-emerald-50 text-emerald-600 border-emerald-200" },
+  todo:        { label: "To Do",       style: "bg-zinc-800 text-zinc-300 border-zinc-700" },
+  "in-progress": { label: "In Progress", style: "bg-sky-500/15 text-sky-300 border-sky-500/30" },
+  "in-review": { label: "In Review",   style: "bg-amber-500/15 text-amber-300 border-amber-500/30" },
+  done:        { label: "Done",        style: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" },
 };
 
 export const KANBAN_COLUMNS = [
-  { id: "todo",        label: "To Do",       accent: "border-t-zinc-400",    countBg: "bg-zinc-100 text-zinc-500",    dot: "bg-zinc-400" },
-  { id: "in-progress", label: "In Progress", accent: "border-t-blue-500",    countBg: "bg-blue-50 text-blue-600",     dot: "bg-blue-500" },
-  { id: "in-review",   label: "In Review",   accent: "border-t-amber-500",   countBg: "bg-amber-50 text-amber-600",   dot: "bg-amber-400" },
-  { id: "done",        label: "Done",        accent: "border-t-emerald-500", countBg: "bg-emerald-50 text-emerald-600", dot: "bg-emerald-500" },
+  { id: "todo",        label: "To Do",       accent: "border-t-zinc-500",    countBg: "bg-zinc-800 text-zinc-300",       dot: "bg-zinc-400" },
+  { id: "in-progress", label: "In Progress", accent: "border-t-blue-500",    countBg: "bg-sky-500/15 text-sky-300",      dot: "bg-sky-400" },
+  { id: "in-review",   label: "In Review",   accent: "border-t-amber-500",   countBg: "bg-amber-500/15 text-amber-300",  dot: "bg-amber-400" },
+  { id: "done",        label: "Done",        accent: "border-t-emerald-500", countBg: "bg-emerald-500/15 text-emerald-300", dot: "bg-emerald-400" },
 ];
 
 export const PROJECT_STATUS_CONFIG = {
-  active:    { label: "Active",    style: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  completed: { label: "Completed", style: "bg-blue-50 text-blue-700 border-blue-200" },
+  active:    { label: "ACTIVE",    style: "bg-emerald-500/10 text-emerald-400 border-emerald-500/50" },
+  completed: { label: "Completed", style: "bg-sky-50 text-sky-700 border-sky-200" },
   "on-hold": { label: "On Hold",   style: "bg-amber-50 text-amber-700 border-amber-200" },
-  archived:  { label: "Archived",  style: "bg-zinc-100 text-zinc-500 border-zinc-200" },
+  archived:  { label: "Archived",  style: "bg-zinc-50 text-zinc-500 border-zinc-200" },
 };
 
 export const PROJECT_STATUS_OPTIONS = [
@@ -34,10 +34,10 @@ export const PROJECT_STATUS_OPTIONS = [
 ];
 
 export const PROJECT_STATUS_COUNTS = [
-  { key: "todo",        label: "To Do",       color: "text-zinc-500",    bg: "bg-zinc-100" },
-  { key: "in-progress", label: "In Progress", color: "text-blue-600",    bg: "bg-blue-50" },
-  { key: "in-review",   label: "In Review",   color: "text-amber-600",   bg: "bg-amber-50" },
-  { key: "done",        label: "Done",        color: "text-emerald-600", bg: "bg-emerald-50" },
+  { key: "todo",        label: "To Do",       color: "text-zinc-500",    bg: "bg-zinc-50" },
+  { key: "in-progress", label: "In Progress", color: "text-sky-700",    bg: "bg-sky-50" },
+  { key: "in-review",   label: "In Review",   color: "text-amber-700",   bg: "bg-amber-50" },
+  { key: "done",        label: "Done",        color: "text-emerald-700", bg: "bg-emerald-50" },
 ];
 
 export const TASK_PRIORITIES = [
@@ -66,23 +66,48 @@ export const selectStyles = {
     ...base,
     minHeight: "2.25rem",
     borderRadius: "0.75rem",
-    backgroundColor: "#fafafa",
-    borderColor: state.isFocused ? "#18181b" : "#e4e4e7",
+    backgroundColor: "#121212",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: state.isFocused ? "#a3a3a3" : "#27272a",
     boxShadow: "none",
     fontSize: "0.75rem",
     fontWeight: 600,
     cursor: "pointer",
-    ":hover": { borderColor: "#18181b" },
+    color: "#e4e4e7",
+    ":hover": { borderColor: "#52525b" },
   }),
   option: (base, state) => ({
     ...base,
     fontSize: "0.75rem",
     fontWeight: 500,
     cursor: "pointer",
-    backgroundColor: state.isSelected ? "#18181b" : state.isFocused ? "#f4f4f5" : "white",
-    color: state.isSelected ? "white" : "#18181b",
+    backgroundColor: state.isSelected
+      ? "#27272a"
+      : state.isFocused
+        ? "#1c1c1f"
+        : "#18181b",
+    color: "#fafafa",
   }),
-  menu: (base) => ({ ...base, borderRadius: "0.75rem", overflow: "hidden", zIndex: 99 }),
-  multiValue: (base) => ({ ...base, borderRadius: "0.5rem", backgroundColor: "#f4f4f5" }),
-  singleValue: (base) => ({ ...base, fontWeight: 600 }),
+  menu: (base) => ({
+    ...base,
+    borderRadius: "0.75rem",
+    overflow: "hidden",
+    zIndex: 99,
+    backgroundColor: "#18181b",
+    border: "1px solid #3f3f46",
+  }),
+  menuList: (base) => ({ ...base, backgroundColor: "#18181b" }),
+  multiValue: (base) => ({
+    ...base,
+    borderRadius: "0.5rem",
+    backgroundColor: "#27272a",
+  }),
+  multiValueLabel: (base) => ({ ...base, color: "#e4e4e7" }),
+  singleValue: (base) => ({ ...base, fontWeight: 600, color: "#e4e4e7" }),
+  input: (base) => ({ ...base, color: "#fafafa" }),
+  placeholder: (base) => ({ ...base, color: "#71717a" }),
+  dropdownIndicator: (base) => ({ ...base, color: "#71717a" }),
+  clearIndicator: (base) => ({ ...base, color: "#71717a" }),
+  indicatorSeparator: (base) => ({ ...base, backgroundColor: "#3f3f46" }),
 };

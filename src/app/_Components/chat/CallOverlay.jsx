@@ -114,7 +114,7 @@ function VideoEl({ stream, muted, mirror, className = "", fit = "cover" }) {
       autoPlay
       playsInline
       muted={muted}
-      className={`h-full w-full ${fit === "contain" ? "object-contain bg-black" : "object-cover"} ${
+      className={`h-full w-full ${fit === "contain" ? "object-contain bg-ink" : "object-cover"} ${
         mirror ? "scale-x-[-1]" : ""
       } ${className}`}
     />
@@ -228,7 +228,7 @@ function ParticipantTile({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl bg-zinc-900 transition-[box-shadow,ring] duration-150 ${
+      className={`relative overflow-hidden rounded-xl bg-ink transition-[box-shadow,ring] duration-150 ${
         speaking
           ? "ring-2 ring-emerald-400"
           : "ring-1 ring-white/10"
@@ -266,9 +266,9 @@ function ParticipantTile({
         <p className="truncate text-[10px] font-medium text-white">
           {name}
           {isScreen ? (
-            <span className="ml-1 text-sky-300">· screen</span>
+            <span className="ml-1 text-sky-700">· screen</span>
           ) : speaking ? (
-            <span className="ml-1 text-emerald-300">· speaking</span>
+            <span className="ml-1 text-emerald-700">· speaking</span>
           ) : null}
         </p>
       </div>
@@ -386,7 +386,7 @@ export default function CallOverlay() {
               ? { left: chipDrag.pos.left, top: chipDrag.pos.top, right: "auto", bottom: "auto" }
               : undefined
           }
-          className={`fixed z-[100] flex max-w-[min(100vw-2rem,320px)] cursor-grab items-center gap-2 rounded-full border border-zinc-700 bg-zinc-950 px-3 py-2 text-white shadow-xl touch-none active:cursor-grabbing ${
+          className={`fixed z-[100] flex max-w-[min(100vw-2rem,320px)] cursor-grab items-center gap-2 rounded-full border border-zinc-700 bg-ink px-3 py-2 text-white shadow-xl touch-none active:cursor-grabbing ${
             chipDrag.pos ? "" : "bottom-4 right-4 sm:bottom-6 sm:right-6"
           }`}
         >
@@ -400,10 +400,10 @@ export default function CallOverlay() {
             aria-label="Expand call"
           >
             <span
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-medium ${
                 isIncoming
-                  ? "animate-pulse bg-emerald-500/25 text-emerald-300"
-                  : "bg-emerald-500/20 text-emerald-300"
+                  ? "animate-pulse bg-success/25 text-emerald-700"
+                  : "bg-success/20 text-emerald-700"
               }`}
             >
               {avatarLetter}
@@ -429,7 +429,7 @@ export default function CallOverlay() {
                   e.stopPropagation();
                   rejectIncoming();
                 }}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-500 hover:bg-red-600"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-500 hover:bg-red-600"
               >
                 <PhoneOff className="h-3.5 w-3.5" />
               </button>
@@ -456,7 +456,7 @@ export default function CallOverlay() {
                 e.stopPropagation();
                 endCall();
               }}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-500 hover:bg-red-600"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-500 hover:bg-red-600"
             >
               <PhoneOff className="h-3.5 w-3.5" />
             </button>
@@ -516,7 +516,7 @@ export default function CallOverlay() {
               }
             : undefined
         }
-        className={`fixed z-[100] flex flex-col overflow-hidden border border-zinc-700/80 bg-zinc-950 text-white shadow-2xl
+        className={`fixed z-[100] flex flex-col overflow-hidden border border-zinc-700/80 bg-ink text-white shadow-2xl
           ${
             panelDrag.pos
               ? "rounded-2xl"
@@ -587,7 +587,7 @@ export default function CallOverlay() {
           ) : (
             <div className="flex flex-col gap-2 p-2.5">
               {screenStream ? (
-                <div className="relative overflow-hidden rounded-xl bg-black ring-1 ring-sky-500/40">
+                <div className="relative overflow-hidden rounded-xl bg-ink ring-1 ring-sky-500/40">
                   <div className="aspect-video w-full">
                     <VideoEl stream={screenStream} fit="contain" />
                   </div>
@@ -655,7 +655,7 @@ export default function CallOverlay() {
                 type="button"
                 aria-label="Decline"
                 onClick={rejectIncoming}
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 active:scale-95"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-500 text-white hover:bg-red-600 active:scale-95"
               >
                 <PhoneOff className="h-5 w-5" />
               </button>
@@ -733,7 +733,7 @@ export default function CallOverlay() {
                 type="button"
                 aria-label="End call"
                 onClick={endCall}
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 active:scale-95"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-500 text-white hover:bg-red-600 active:scale-95"
               >
                 <PhoneOff className="h-5 w-5" />
               </button>

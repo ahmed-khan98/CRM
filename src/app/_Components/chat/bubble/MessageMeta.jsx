@@ -14,7 +14,7 @@ function MessageMeta({ message, myId, mine, status }) {
     >
       {message.editedAt && <span className="italic">edited</span>}
       {message.starredBy?.some((id) => id === myId || id?.toString() === myId) && (
-        <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+        <Star className="h-3 w-3 fill-amber-400 text-amber-700" />
       )}
       <span>{formatMessageClock(message.createdAt)}</span>
       {mine && <Ticks status={status} soft />}

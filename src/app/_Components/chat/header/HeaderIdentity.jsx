@@ -33,10 +33,18 @@ function HeaderIdentity({
         size="sm"
       />
       <div className="min-w-0 flex-1 overflow-hidden">
-        <p className="truncate text-sm font-semibold leading-tight sm:text-[15px]">
+        <p className="truncate text-sm font-semibold tracking-tight leading-tight sm:text-[15px]">
           {conversationTitle(active, myId)}
         </p>
-        <p className="truncate text-[11px] leading-tight text-zinc-500 sm:text-xs">
+        <p
+          className={`truncate text-[11px] leading-tight sm:text-xs ${
+            typingLabel.length || recordingLabel.length
+              ? "font-medium text-emerald-700"
+              : peerOnline && !selfChat
+                ? "font-medium text-emerald-700"
+                : "text-zinc-500"
+          }`}
+        >
           {recordingLabel.length
             ? `${recordingLabel.join(", ")} recording…`
             : typingLabel.length
@@ -45,10 +53,10 @@ function HeaderIdentity({
                 ? "Message yourself"
                 : peer
                   ? peerOnline
-                    ? "\u00A0"
+                    ? "Online"
                     : peerPresence?.lastSeen
-                      ? `last seen ${formatChatTime(peerPresence.lastSeen)}`
-                      : ""
+                      ? `Last seen ${formatChatTime(peerPresence.lastSeen)}`
+                      : "Offline"
                   : `${active.participants?.length || 0} members`}
         </p>
       </div>

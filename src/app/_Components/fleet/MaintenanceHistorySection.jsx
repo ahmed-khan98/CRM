@@ -80,7 +80,7 @@ function MaintenanceHistorySection({ vehicleId, maintenanceHistory }) {
       {showForm && (
         <form
           onSubmit={submitMaintenance}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 p-3 rounded-xl bg-zinc-50 border border-zinc-100"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 p-3 rounded-xl bg-zinc-50 border border-zinc-200"
         >
           <input
             type="date"
@@ -105,7 +105,7 @@ function MaintenanceHistorySection({ vehicleId, maintenanceHistory }) {
             onChange={onNotesChange}
             className={fleet.input}
           />
-          <label className="sm:col-span-3 flex items-center gap-2 text-xs text-zinc-600">
+          <label className="sm:col-span-3 flex items-center gap-2 text-xs text-zinc-500">
             <input type="checkbox" checked={form.setStatus} onChange={onSetStatusChange} />
             Set status to Maintenance
           </label>

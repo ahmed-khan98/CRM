@@ -62,7 +62,7 @@ const initialValues = {
 }
 
 const fieldError = (errors, touched, name) =>
-  errors[name] && touched[name] ? "border-red-500/50" : ""
+  errors[name] && touched[name] ? "border-danger/50" : ""
 
 export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -86,10 +86,10 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
       maxWidthClass="max-w-2xl"
       zClass="z-50"
     >
-      <div className="rounded-2xl p-4 mb-6 border border-white/[0.08] bg-[#161b22]">
+      <div className="rounded-2xl p-4 mb-6 border border-white/[0.08] bg-zinc-800">
         <div className="flex items-center justify-center gap-2 mb-1">
           <DollarSign className="h-5 w-5 text-zinc-300" />
-          <span className="font-semibold text-zinc-200">One-Time Setup Fee: $50</span>
+          <span className="font-semibold text-zinc-100">One-Time Setup Fee: $50</span>
         </div>
         <p className="text-sm text-zinc-500 text-center">
           This covers store verification, lifetime access, and premium features
@@ -108,7 +108,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                 placeholder="Enter your store name (e.g., John's Electronics)"
                 className={`${fleet.modalInput} ${fieldError(errors, touched, "name")}`}
               />
-              <ErrorMessage name="name" component="div" className="mt-1 text-sm text-red-400 flex items-center gap-1" />
+              <ErrorMessage name="name" component="div" className="mt-1 text-sm text-rose-600 flex items-center gap-1" />
               {values.name && !errors.name && (
                 <div className="mt-1 text-sm text-green-400 flex items-center gap-1">
                   <Check className="h-4 w-4" />
@@ -128,8 +128,8 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                 className={fleet.modalTextarea}
               />
               <div className="flex justify-between items-center mt-1">
-                <ErrorMessage name="description" component="div" className="text-sm text-red-400" />
-                <span className={`text-sm ${values.description.length > 500 ? "text-red-400" : "text-zinc-500"}`}>
+                <ErrorMessage name="description" component="div" className="text-sm text-rose-600" />
+                <span className={`text-sm ${values.description.length > 500 ? "text-rose-600" : "text-zinc-500"}`}>
                   {values.description.length}/500
                 </span>
               </div>
@@ -150,7 +150,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                 placeholder="Employer Identification Number"
                 className={`${fleet.modalInput} ${fieldError(errors, touched, "ein")}`}
               />
-              <ErrorMessage name="ein" component="div" className="mt-1 text-sm text-red-400" />
+              <ErrorMessage name="ein" component="div" className="mt-1 text-sm text-rose-600" />
             </div>
 
             <div>
@@ -162,7 +162,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                 placeholder="Enter owner's full name"
                 className={`${fleet.modalInput} ${fieldError(errors, touched, "ownerName")}`}
               />
-              <ErrorMessage name="ownerName" component="div" className="mt-1 text-sm text-red-400" />
+              <ErrorMessage name="ownerName" component="div" className="mt-1 text-sm text-rose-600" />
             </div>
 
             <hr className="my-2 border-t border-white/[0.06]" />
@@ -172,27 +172,27 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
               <div>
                 <label htmlFor="storeStreet" className={fleet.modalLabel}>Street *</label>
                 <Field name="storeStreet" className={`${fleet.modalInput} ${fieldError(errors, touched, "storeStreet")}`} />
-                <ErrorMessage name="storeStreet" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="storeStreet" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
               <div>
                 <label htmlFor="storeCity" className={fleet.modalLabel}>City *</label>
                 <Field name="storeCity" className={`${fleet.modalInput} ${fieldError(errors, touched, "storeCity")}`} />
-                <ErrorMessage name="storeCity" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="storeCity" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
               <div>
                 <label htmlFor="storeState" className={fleet.modalLabel}>State *</label>
                 <Field name="storeState" className={`${fleet.modalInput} ${fieldError(errors, touched, "storeState")}`} />
-                <ErrorMessage name="storeState" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="storeState" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
               <div>
                 <label htmlFor="storeZipCode" className={fleet.modalLabel}>ZIP Code *</label>
                 <Field name="storeZipCode" className={`${fleet.modalInput} ${fieldError(errors, touched, "storeZipCode")}`} />
-                <ErrorMessage name="storeZipCode" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="storeZipCode" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
               <div className="md:col-span-2">
                 <label htmlFor="storeCountry" className={fleet.modalLabel}>Country *</label>
                 <Field name="storeCountry" className={`${fleet.modalInput} ${fieldError(errors, touched, "storeCountry")}`} />
-                <ErrorMessage name="storeCountry" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="storeCountry" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
             </div>
 
@@ -203,27 +203,27 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
               <div>
                 <label htmlFor="ownerStreet" className={fleet.modalLabel}>Street *</label>
                 <Field name="ownerStreet" className={`${fleet.modalInput} ${fieldError(errors, touched, "ownerStreet")}`} />
-                <ErrorMessage name="ownerStreet" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="ownerStreet" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
               <div>
                 <label htmlFor="ownerCity" className={fleet.modalLabel}>City *</label>
                 <Field name="ownerCity" className={`${fleet.modalInput} ${fieldError(errors, touched, "ownerCity")}`} />
-                <ErrorMessage name="ownerCity" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="ownerCity" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
               <div>
                 <label htmlFor="ownerState" className={fleet.modalLabel}>State *</label>
                 <Field name="ownerState" className={`${fleet.modalInput} ${fieldError(errors, touched, "ownerState")}`} />
-                <ErrorMessage name="ownerState" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="ownerState" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
               <div>
                 <label htmlFor="ownerZipCode" className={fleet.modalLabel}>ZIP Code *</label>
                 <Field name="ownerZipCode" className={`${fleet.modalInput} ${fieldError(errors, touched, "ownerZipCode")}`} />
-                <ErrorMessage name="ownerZipCode" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="ownerZipCode" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
               <div className="md:col-span-2">
                 <label htmlFor="ownerCountry" className={fleet.modalLabel}>Country *</label>
                 <Field name="ownerCountry" className={`${fleet.modalInput} ${fieldError(errors, touched, "ownerCountry")}`} />
-                <ErrorMessage name="ownerCountry" component="div" className="text-sm text-red-400 mt-1" />
+                <ErrorMessage name="ownerCountry" component="div" className="text-sm text-rose-600 mt-1" />
               </div>
             </div>
 
@@ -238,7 +238,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                 placeholder="(123) 456-7890"
                 className={`${fleet.modalInput} ${fieldError(errors, touched, "businessPhone")}`}
               />
-              <ErrorMessage name="businessPhone" component="div" className="mt-1 text-sm text-red-400" />
+              <ErrorMessage name="businessPhone" component="div" className="mt-1 text-sm text-rose-600" />
             </div>
 
             <div>
@@ -250,7 +250,7 @@ export default function CreateStoreModal({ isOpen, onClose, onSubmit }) {
                 placeholder="(123) 456-7890"
                 className={`${fleet.modalInput} ${fieldError(errors, touched, "ownerPhone")}`}
               />
-              <ErrorMessage name="ownerPhone" component="div" className="mt-1 text-sm text-red-400" />
+              <ErrorMessage name="ownerPhone" component="div" className="mt-1 text-sm text-rose-600" />
             </div>
 
             <hr className="my-2 border-t border-white/[0.06]" />

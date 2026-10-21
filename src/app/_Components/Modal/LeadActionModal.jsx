@@ -50,7 +50,7 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
       <div className="overflow-hidden rounded-2xl border border-white/[0.08]">
         <div className="overflow-x-auto">
           <table className="min-w-full">
-            <thead className="bg-[#161b22] border-b border-white/[0.08]">
+            <thead className="bg-zinc-800 border-b border-white/[0.08]">
               <tr>
                 <th className="px-2 py-3 text-start text-[12px] font-semibold text-zinc-300 capitalize">
                   Last Action Date{" "}
@@ -71,7 +71,7 @@ const LeadActionModal = ({ isOpen, data, closeModal, refetch }) => {
                 )}
               </tr>
             </thead>
-            <tbody className="bg-[#0f1419] divide-y divide-white/[0.06]">
+            <tbody className="bg-ink divide-y divide-white/[0.06]">
               <motion.tr
                 key={data?._id}
                 initial={{ opacity: 0, x: -20 }}

@@ -138,15 +138,15 @@ export default function Paymentlink() {
   }
 
   return (
-    <div className="min-h-screen mx-1">
-      <div className="w-full mx-auto px-1 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-1 justify-between items-center md:flex-row">
+    <div className="min-h-screen">
+      <div className="w-full  flex flex-col space-y-2">
+        <div className="flex flex-col gap-1 pb-1 justify-between items-center md:flex-row">
           <div className="flex flex-wrap gap-2">
             {loggedUser?.data?.departmentId === "68c0775f7461c6fef325f17c" && (
               <>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-900 transition-all duration-300"
+                  className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-800 transition-all duration-300"
                   onClick={() =>
                     copyLink(
                       "writerz",
@@ -165,7 +165,7 @@ export default function Paymentlink() {
 
                 <motion.button
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-900 transition-all duration-300"
+                  className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-800 transition-all duration-300"
                   onClick={() =>
                     copyLink(
                       "boston",
@@ -218,10 +218,11 @@ export default function Paymentlink() {
           ) : (
             <div className={`-mx-1 md:mx-0 ${tableWrap}`}>
               <div
+                className="overflow-x-auto overflow-y-auto"
                 style={{
-                  overflowX: "auto",
-                  overflowY: "auto",
-                  maxHeight: "90vh",
+                  maxHeight: "calc(100vh - 220px)",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#52525b transparent",
                 }}
               >
                 <table
@@ -240,7 +241,7 @@ export default function Paymentlink() {
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody>
                     {items?.map((emp) => (
                       <LinkRow
                         key={emp?._id}

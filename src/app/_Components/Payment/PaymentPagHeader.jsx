@@ -6,7 +6,7 @@ import Image from "next/image";
 const PaymentPagHeader = ({ image }) => {
   console.log("Rendering PaymentPagHeader with image:", image);
   return (
-    <div className="bg-white border-b border-slate-200 py-2.5 px-6 mb-6">
+    <div className="bg-white border-b border-zinc-200 py-2.5 px-6 mb-6">
            <div className="max-w-5xl mx-auto flex justify-between items-center h-10">
             {image && (
               <Image
@@ -17,8 +17,8 @@ const PaymentPagHeader = ({ image }) => {
               />
             )}
            
-             <div className="hidden md:flex items-center gap-2 text-slate-500 text-sm">
-               <ShieldCheck size={18} className="text-emerald-500" />
+             <div className="hidden md:flex items-center gap-2 text-zinc-500 text-sm">
+               <ShieldCheck size={18} className="text-emerald-700" />
                Secure Checkout
              </div>
            </div>

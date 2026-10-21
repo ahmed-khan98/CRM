@@ -24,15 +24,15 @@ function TaskCardBadges({ task, showProject, onProjectClick }) {
         <button
           type="button"
           onClick={handleProjectClick}
-          className="flex max-w-full items-center gap-1 rounded-lg bg-zinc-50 px-2 py-0.5 text-[10px] font-medium text-zinc-600 hover:bg-zinc-100 transition cursor-pointer"
+          className="flex max-w-full items-center gap-1.5 rounded-full border border-zinc-700 bg-zinc-800/80 px-2 py-1 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition cursor-pointer"
         >
-          <FolderOpen className="h-2.5 w-2.5 shrink-0 text-zinc-400" />
+          <FolderOpen className="h-2.5 w-2.5 shrink-0 text-zinc-500" />
           <span className="truncate">{projectName}</span>
           <ExternalLink className="h-2 w-2 shrink-0 opacity-40" />
         </button>
       )}
       {clientName !== "No client" && (
-        <span className="flex items-center gap-1 text-[10px] text-zinc-400">
+        <span className="flex items-center gap-1 text-[10px] text-zinc-500">
           <User2 className="h-2.5 w-2.5" />
           <span className="truncate max-w-[80px]">{clientName}</span>
         </span>

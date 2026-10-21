@@ -120,7 +120,7 @@ export default function AllowancesTab({ employeeId }) {
                   }
                   className={`rounded-xl px-4 py-2.5 text-sm font-semibold border transition ${
                     form.benefitMode === "cash"
-                      ? "bg-zinc-100 text-zinc-950 border-white/90"
+                      ? "bg-zinc-50 text-zinc-900 border-white/90"
                       : "bg-white/[0.04] text-zinc-400 border-white/[0.08] hover:bg-white/[0.08]"
                   }`}
                 >
@@ -131,14 +131,14 @@ export default function AllowancesTab({ employeeId }) {
                   onClick={() => setForm({ ...form, benefitMode: "company_car" })}
                   className={`rounded-xl px-4 py-2.5 text-sm font-semibold border transition ${
                     form.benefitMode === "company_car"
-                      ? "bg-zinc-100 text-zinc-950 border-white/90"
+                      ? "bg-zinc-50 text-zinc-900 border-white/90"
                       : "bg-white/[0.04] text-zinc-400 border-white/[0.08] hover:bg-white/[0.08]"
                   }`}
                 >
                   Take company car
                 </button>
               </div>
-              <p className="text-[11px] text-zinc-500 mt-2">
+              <p className="text-xs text-zinc-500 mt-2">
                 Employee can either receive a monthly cash car allowance, or get
                 an unassigned company vehicle from the fleet.
               </p>
@@ -185,7 +185,7 @@ export default function AllowancesTab({ employeeId }) {
                 placeholder="Select available car"
               />
               {!loadingCars && availableCars.length === 0 && (
-                <p className="text-[11px] text-amber-400 mt-1.5">
+                <p className="text-xs text-amber-700 mt-1.5">
                   No unassigned cars available. Add or free a vehicle in Fleet
                   Management first.
                 </p>
@@ -237,7 +237,7 @@ export default function AllowancesTab({ employeeId }) {
                   <p className="text-sm font-medium text-zinc-100">
                     {a.allowanceType}{" "}
                     {a.benefitMode === "company_car" ? (
-                      <span className="text-sky-300">
+                      <span className="text-sky-700">
                         → Company car
                         {a.vehicleId?.vehicleName
                           ? `: ${a.vehicleId.vehicleName} (${a.vehicleId.registrationNumber || "—"})`

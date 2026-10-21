@@ -59,7 +59,7 @@ function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="rounded-xl border border-white/[0.1] bg-[#161b22] overflow-hidden [&_.ProseMirror]:text-zinc-200 [&_button]:text-zinc-400 [&_button:hover]:bg-white/10 [&_button:hover]:text-zinc-100 [&_button.bg-zinc-900]:bg-white/15 [&_button.bg-zinc-900]:text-white">
+        <div className="rounded-xl border border-white/[0.1] bg-zinc-800 overflow-hidden [&_.ProseMirror]:text-zinc-100 [&_button]:text-zinc-400 [&_button:hover]:bg-white/10 [&_button:hover]:text-zinc-100 [&_button.bg-ink]:bg-white/15 [&_button.bg-ink]:text-white">
           <TaskRichTextEditor
             compact
             value={commentText}
@@ -73,7 +73,7 @@ function TaskDetailComments({ task, projectId, currentUserId, isAdminRole }) {
             type="button"
             onClick={handleAddComment}
             disabled={!getPlainTextFromHtml(commentText) || submitting}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 px-4 py-2 text-xs font-bold text-zinc-950 transition hover:bg-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-50 px-4 py-2 text-xs font-medium text-zinc-900 transition hover:bg-white disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
           >
             <Send className="h-3.5 w-3.5" />
             {submitting ? "Posting..." : "Post comment"}

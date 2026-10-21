@@ -39,7 +39,7 @@ function ConversationSidebar({
     <aside
       className={`${
         mobileShowChat ? "hidden md:flex" : "flex"
-      } w-full md:w-[320px] lg:w-[360px] min-h-0 flex-col border-r ${theme.side}`}
+      } h-full w-full min-h-0 shrink-0 flex-col overflow-hidden border-r md:w-[340px] lg:w-[380px] ${theme.side}`}
     >
       <SidebarHeader
         theme={theme}

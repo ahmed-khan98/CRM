@@ -6,6 +6,7 @@ import { Truck } from "lucide-react";
 import FleetRowMenu from "./FleetRowMenu";
 import { fleet, fleetStatusClass } from "./fleetTheme";
 import { withRowMemo } from "@/app/_utils/withRowMemo";
+import StatusBadge from "@/app/_Components/ui/saas/StatusBadge";
 
 const VEHICLE_ROW_FIELDS = [
   "vehicle._id",
@@ -30,7 +31,7 @@ function FleetVehicleRow({ vehicle: v, onView, onEdit, onDelete }) {
     <tr className={fleet.tableRow}>
       <td className={fleet.tableCell}>
         <div className="flex items-center gap-3 min-w-[180px]">
-          <div className="h-11 w-14 rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 shrink-0 flex items-center justify-center">
+          <div className="h-11 w-14 rounded-lg overflow-hidden bg-zinc-50 border border-zinc-200 shrink-0 flex items-center justify-center">
             {v.images?.[0]?.url ? (
               <Image
                 src={v.images[0].url}
@@ -61,7 +62,11 @@ function FleetVehicleRow({ vehicle: v, onView, onEdit, onDelete }) {
           : "—"}
       </td>
       <td className={fleet.tableCell}>
-        <span className={fleetStatusClass(v.status)}>{v.status}</span>
+        {v.status === "active" || v.status === "inactive" ? (
+          <StatusBadge status={v.status} />
+        ) : (
+          <span className={fleetStatusClass(v.status)}>{v.status}</span>
+        )}
       </td>
       <td className={fleet.tableCell}>
         <FleetRowMenu onView={handleView} onEdit={handleEdit} onDelete={handleDelete} />

@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import FleetRowMenu from "./FleetRowMenu";
 import { fleet, fleetStatusClass } from "./fleetTheme";
 import { withRowMemo } from "@/app/_utils/withRowMemo";
+import StatusBadge from "@/app/_Components/ui/saas/StatusBadge";
 
 const VENDOR_ROW_FIELDS = [
   "vendor._id",
@@ -30,7 +31,11 @@ function FleetVendorRow({ vendor: v, onView, onEdit, onDelete }) {
       <td className={fleet.tableCell}>{v.phone}</td>
       <td className={fleet.tableCell}>{v.city || "—"}</td>
       <td className={fleet.tableCell}>
-        <span className={fleetStatusClass(v.status)}>{v.status}</span>
+        {v.status === "active" || v.status === "inactive" ? (
+          <StatusBadge status={v.status} />
+        ) : (
+          <span className={fleetStatusClass(v.status)}>{v.status}</span>
+        )}
       </td>
       <td className={fleet.tableCell}>
         <FleetRowMenu onView={handleView} onEdit={handleEdit} onDelete={handleDelete} />

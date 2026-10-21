@@ -63,9 +63,15 @@ export function isDownloadOnlyFile(url, filename) {
   ].some((ext) => name.endsWith(ext));
 }
 
+/** Upgrade http→https so HTTPS pages don't show Chrome "Not secure" (mixed content). */
+export function toHttpsUrl(url) {
+  if (!url || typeof url !== "string") return url || "";
+  return url.replace(/^http:\/\//i, "https://");
+}
+
 export function getDirectOpenUrl(url) {
   if (!url) return "#";
-  return url.replace(/^http:\/\//i, "https://");
+  return toHttpsUrl(url);
 }
 
 function getAccessToken() {

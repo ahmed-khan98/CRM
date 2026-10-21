@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
@@ -57,17 +59,26 @@
     "react-select": "^5.10.2",
     "react-simple-star-rating": "^5.1.7",
     "react-spinners": "^0.15.0",
+    "recharts": "^2.15.4",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.8.1",
+    "sonner": "^2.0.8",
     "swiper": "^11.2.5",
     "tinymce": "^8.1.2",
     "xlsx": "^0.18.5",
     "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.64.2",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/node": "24.5.2",
+    "jsdom": "^29.1.1",
     "tailwindcss": "^4.1.13",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vitest": "^4.1.11"
   }
 }

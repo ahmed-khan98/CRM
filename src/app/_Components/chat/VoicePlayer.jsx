@@ -13,6 +13,7 @@ function VoicePlayer({
   url,
   duration,
   mine = false,
+  dark = false,
   avatarSrc,
   avatarName,
   timeLabel = "",
@@ -130,16 +131,17 @@ function VoicePlayer({
     }
   };
 
-  // mine = dark zinc bubble → light wave; received = white → dark wave
-  const playBtn = mine
+  // Match bubble surface (dark mode inverts: mine=light, them=dark)
+  const onDarkBubble = mine ? !dark : dark;
+  const playBtn = onDarkBubble
     ? "bg-white text-zinc-900"
-    : "bg-zinc-900 text-white";
-  const barOn = mine ? "bg-white" : "bg-zinc-800";
-  const barOff = mine ? "bg-white/35" : "bg-zinc-300";
-  const thumb = mine ? "bg-white" : "bg-zinc-900";
-  const meta = mine ? "text-zinc-300" : "text-zinc-500";
-  const micBadge = mine
-    ? "bg-zinc-950 text-white ring-2 ring-zinc-700"
+    : "bg-ink text-white";
+  const barOn = onDarkBubble ? "bg-white" : "bg-zinc-800";
+  const barOff = onDarkBubble ? "bg-white/40" : "bg-zinc-500";
+  const thumb = onDarkBubble ? "bg-white" : "bg-ink";
+  const meta = onDarkBubble ? "text-zinc-300" : "text-zinc-500";
+  const micBadge = onDarkBubble
+    ? "bg-ink text-white ring-2 ring-zinc-700"
     : "bg-zinc-800 text-white ring-2 ring-white";
 
   return (
@@ -235,7 +237,7 @@ function VoicePlayer({
             className="h-9 w-9 rounded-full object-cover"
           />
         ) : (
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-xs font-semibold text-white">
             {(avatarName || "?").charAt(0).toUpperCase()}
           </div>
         )}

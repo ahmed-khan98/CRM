@@ -40,34 +40,34 @@ function LeadKanban({ items = [], onEdit, setConfirmDelete }) {
       {PIPELINE_COLUMNS.map((col) => (
         <div
           key={col.key}
-          className="min-w-[240px] rounded-3xl border border-slate-200 bg-slate-50/80 p-3"
+          className="min-w-[240px] rounded-3xl border border-zinc-800 bg-[#121212] p-3"
         >
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-xs font-black uppercase tracking-wider text-slate-600">
+            <h3 className="text-xs font-medium uppercase tracking-wider text-zinc-500">
               {col.label}
             </h3>
-            <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-slate-500 shadow-sm">
+            <span className="rounded-full border border-zinc-700 bg-zinc-900 px-2 py-0.5 text-[10px] font-bold text-zinc-400">
               {grouped[col.key]?.length || 0}
             </span>
           </div>
 
-          <div className="space-y-2 max-h-[calc(100vh-320px)] overflow-y-auto">
+          <div className="custom-scrollbar-dark max-h-[calc(100vh-320px)] space-y-2 overflow-y-auto">
             {(grouped[col.key] || []).map((lead) => (
               <div
                 key={lead._id}
-                className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
+                className="rounded-2xl border border-zinc-800 bg-zinc-900 p-3 shadow-none"
               >
                 <button
                   type="button"
                   onClick={() => router.push(`/dashboard/lead/detail/${lead._id}`)}
                   className="w-full text-left"
                 >
-                  <p className="text-sm font-semibold capitalize text-slate-900">
+                  <p className="text-sm font-semibold capitalize text-zinc-100">
                     {lead.name}
                   </p>
-                  <p className="mt-0.5 text-[11px] text-slate-500">{lead.email || lead.phoneNo}</p>
+                  <p className="mt-0.5 text-[11px] text-zinc-500">{lead.email || lead.phoneNo}</p>
                   {lead.lastComment && (
-                    <p className="mt-2 line-clamp-2 text-[11px] text-slate-600">
+                    <p className="mt-2 line-clamp-2 text-[11px] text-zinc-500">
                       {lead.lastComment}
                     </p>
                   )}
@@ -82,7 +82,7 @@ function LeadKanban({ items = [], onEdit, setConfirmDelete }) {
                     {col.label}
                   </span>
                   {lead.scheduleDate && (
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-zinc-500">
                       {formatDate(lead.scheduleDate)}
                     </span>
                   )}
@@ -92,14 +92,14 @@ function LeadKanban({ items = [], onEdit, setConfirmDelete }) {
                   <button
                     type="button"
                     onClick={() => onEdit?.(lead)}
-                    className="rounded-xl bg-slate-900 px-2.5 py-1 text-[10px] font-semibold text-white"
+                    className="rounded-xl border border-sky-500/40 px-2.5 py-1 text-[10px] font-semibold text-sky-300 hover:bg-sky-500/10"
                   >
                     Action
                   </button>
                   <button
                     type="button"
                     onClick={() => setConfirmDelete?.(lead._id)}
-                    className="rounded-xl border border-red-200 px-2.5 py-1 text-[10px] font-semibold text-red-600"
+                    className="rounded-xl border border-rose-500/40 px-2.5 py-1 text-[10px] font-semibold text-rose-400 hover:bg-rose-500/10"
                   >
                     Delete
                   </button>
@@ -108,7 +108,7 @@ function LeadKanban({ items = [], onEdit, setConfirmDelete }) {
             ))}
 
             {!grouped[col.key]?.length && (
-              <p className="py-6 text-center text-[11px] text-slate-400">No leads</p>
+              <p className="py-6 text-center text-[11px] text-zinc-500">No leads</p>
             )}
           </div>
         </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -74,7 +74,17 @@ export default function ChatApp() {
   const [newMode, setNewMode] = useState("direct");
   const [menuMsg, setMenuMsg] = useState(null);
   const [forwardMsg, setForwardMsg] = useState(null);
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      const saved = window.localStorage.getItem("crm-chat-theme");
+      if (saved === "light") return false;
+      if (saved === "dark") return true;
+    } catch {
+      /* ignore */
+    }
+    return true; // default dark
+  });
   const [mobileShowChat, setMobileShowChat] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [activeVoiceId, setActiveVoiceId] = useState(null);
@@ -238,7 +248,17 @@ export default function ChatApp() {
     if (conv?._id) setActiveId(conv._id);
     setShowAddMembers(true);
   }, []);
-  const onToggleDark = useCallback(() => setDark((d) => !d), []);
+  const onToggleDark = useCallback(() => {
+    setDark((d) => {
+      const next = !d;
+      try {
+        window.localStorage.setItem("crm-chat-theme", next ? "dark" : "light");
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
   const onNewChat = useCallback(() => {
     setShowNew(true);
     setNewMode("direct");
@@ -278,7 +298,9 @@ export default function ChatApp() {
 
   return (
     <div
-      className={`flex h-full min-h-0 overflow-hidden rounded-xl border border-zinc-200 shadow-sm ${theme.shell}`}
+      className={`flex h-full min-h-0 overflow-hidden rounded-2xl border shadow-[0_8px_40px_rgba(0,0,0,0.06)] ${
+        dark ? "border-white/[0.08]" : "border-zinc-200/80"
+      } ${theme.shell}`}
     >
       <ConversationSidebar
         theme={theme}
@@ -314,7 +336,7 @@ export default function ChatApp() {
         }}
       >
         {!active ? (
-          <ChatEmptyState />
+          <ChatEmptyState dark={dark} />
         ) : (
           <>
             <ChatHeader
@@ -341,6 +363,7 @@ export default function ChatApp() {
               setConfirmDeleteChat={confirm.setConfirmDeleteChat}
               adminDisable={adminDisable}
               adminEnable={adminEnable}
+              dark={dark}
             />
 
             <MessageList
@@ -378,6 +401,7 @@ export default function ChatApp() {
               sendPayload={sendPayload}
               uploadFile={uploadFile}
               editMsg={editMsg}
+              dark={dark}
             />
           </>
         )}
@@ -446,6 +470,8 @@ export default function ChatApp() {
         confirmModalProps={confirm.confirmModalProps}
         confirmBusy={confirm.confirmBusy}
         handleConfirmAction={confirm.handleConfirmAction}
+        dark={dark}
+        theme={theme}
       />
     </div>
   );

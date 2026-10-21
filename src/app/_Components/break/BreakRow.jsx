@@ -20,7 +20,7 @@ const BreakRow = ({ item }) => {
 
   return (
     <tr
-      className={`group border-b border-zinc-100 transition-colors duration-100
+      className={`group border-b border-zinc-200 transition-colors duration-100
           ${isToday ? "bg-zinc-50 md:border-l-2 md:border-l-zinc-400" : "hover:bg-zinc-50/80"}`}
     >
       {/* Date */}
@@ -31,7 +31,7 @@ const BreakRow = ({ item }) => {
           )}
           <div className="flex flex-col">
             <span
-              className={`text-xs font-extrabold ${isToday ? "text-zinc-800" : "text-zinc-700"}`}
+              className={`text-sm font-semibold ${isToday ? "text-zinc-900" : "text-zinc-900"}`}
             >
               {formatOnlyDate(item?.shiftDate)}
             </span>
@@ -48,7 +48,7 @@ const BreakRow = ({ item }) => {
       {/* Employee */}
       <td className="px-5 py-3.5">
         <div className="flex flex-col">
-          <span className="text-xs font-bold text-zinc-700 capitalize">
+          <span className="text-xs font-medium text-zinc-900 capitalize">
             {item.userId?.fullName ?? "—"}
           </span>
           <span className="text-[9px] font-medium text-zinc-400 uppercase tracking-wide">
@@ -59,7 +59,7 @@ const BreakRow = ({ item }) => {
 
       {/* Break In */}
       <td className="px-5 py-3.5">
-        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg text-[11px] font-bold tabular-nums">
+        <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg text-xs font-medium tabular-nums">
           {toLocal(item.breakIn)}
         </span>
       </td>
@@ -67,11 +67,11 @@ const BreakRow = ({ item }) => {
       {/* Break Out */}
       <td className="px-5 py-3.5">
         {item.breakOut ? (
-          <span className="text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-bold tabular-nums">
+          <span className="text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg text-xs font-medium tabular-nums">
             {toLocal(item.breakOut)}
           </span>
         ) : isActive ? (
-          <span className="bg-zinc-800 text-white px-2.5 py-1 rounded-lg text-[9px] font-black flex items-center gap-1.5 border border-zinc-700 w-fit animate-pulse">
+          <span className="bg-zinc-800 text-white px-2.5 py-1 rounded-lg text-xs font-medium flex items-center gap-1.5 border border-zinc-700 w-fit animate-pulse">
             <span className="w-1.5 h-1.5 rounded-full bg-white" /> LIVE
           </span>
         ) : (
@@ -82,14 +82,14 @@ const BreakRow = ({ item }) => {
       </td>
 
       {/* Duration */}
-      <td className="px-5 py-3.5 text-xs font-bold text-zinc-600 tabular-nums">
+      <td className="px-5 py-3.5 text-xs font-medium text-zinc-500 tabular-nums">
         {formatDuration(item.duration)}
       </td>
 
       {/* Type */}
       <td className="px-5 py-3.5">
         <span
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${typeCfg.bg} ${typeCfg.text} ${typeCfg.border}`}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium uppercase tracking-wider border ${typeCfg.bg} ${typeCfg.text} ${typeCfg.border}`}
         >
           {typeCfg.label}
         </span>
@@ -98,7 +98,7 @@ const BreakRow = ({ item }) => {
       {/* Status */}
       <td className="px-5 py-3.5">
         <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${statusCfg.bg} ${statusCfg.text} ${statusCfg.border}`}
+          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider border ${statusCfg.bg} ${statusCfg.text} ${statusCfg.border}`}
         >
           <span className={`w-1.5 h-1.5 rounded-full ${statusCfg.dot}`} />
           {statusCfg.label}
@@ -109,15 +109,15 @@ const BreakRow = ({ item }) => {
         {item.type?.toUpperCase() === "OFFICIAL" ? (
           item.reason ? (
             <Tooltip label={item.reason} side="top" className="max-w-full" delay>
-              <span className="text-xs text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg font-medium block truncate">
+              <span className="text-xs text-sky-700 bg-sky-50 border border-sky-200 px-2.5 py-1 rounded-lg font-medium block truncate">
                 {item.reason}
               </span>
             </Tooltip>
           ) : (
-            <span className="text-zinc-300 text-xs font-bold">—</span>
+            <span className="text-zinc-300 text-xs font-medium">—</span>
           )
         ) : (
-          <span className="text-zinc-300 text-xs font-bold">—</span>
+          <span className="text-zinc-300 text-xs font-medium">—</span>
         )}
       </td>
     </tr>

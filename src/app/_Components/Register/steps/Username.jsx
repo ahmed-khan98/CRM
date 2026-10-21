@@ -43,7 +43,7 @@ export default function Username({ onSubmit, isLoading }) {
             <Image src={Main} alt="Logo" />
           </Link>        </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Create Username</h2>
-        <p className="text-gray-500">Tell us a unique username</p>
+        <p className="text-zinc-500">Tell us a unique username</p>
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-3">
@@ -53,7 +53,7 @@ export default function Username({ onSubmit, isLoading }) {
                   ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                   : formik.touched.username && formik.errors.username
                     ? "border-red-300"
-                    : "border-gray-200"
+                    : "border-zinc-200"
                 }`}
             >
               <input
@@ -75,7 +75,7 @@ export default function Username({ onSubmit, isLoading }) {
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-red-500 text-xs ml-2"
+                className="text-rose-600 text-xs ml-2"
               >
                 {formik.errors.username}
               </motion.p>
@@ -99,7 +99,7 @@ export default function Username({ onSubmit, isLoading }) {
             "Continue"
           )}
         </motion.button>
-        <div className="text-center text-sm text-gray-500">
+        <div className="text-center text-sm text-zinc-500">
           Already have an account?{" "}
           <Link href="/login" className="text-[#FB3B11] font-medium hover:underline">
             Sign in

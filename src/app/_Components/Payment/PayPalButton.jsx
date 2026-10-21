@@ -188,9 +188,9 @@ console.log("SDK Currency:", currency);
   if (error) {
     return (
       <div
-        className={`b-[#5f2781] border border-red-200 rounded-xl p-4 ${className}`}
+        className={`b-[#5f2781] border border-rose-200 rounded-xl p-4 ${className}`}
       >
-        <div className="flex items-center text-red-600">
+        <div className="flex items-center text-rose-600">
           <AlertCircle className="h-5 w-5 mr-2" />
           <span className="text-sm font-medium">{error}</span>
         </div>
@@ -229,7 +229,7 @@ console.log("SDK Currency:", currency);
 
       {/* Security Notice */}
         <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3">
-            <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
             <p className="text-amber-700 text-[11px] leading-relaxed">
               This is a one-time secure payment link. Do not share it with others.
               It will expire once payment is completed.

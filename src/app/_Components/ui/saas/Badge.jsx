@@ -1,15 +1,21 @@
+/** Payroll / StatusBadge chrome — rounded-full pills across CRM */
+export const BADGE_BASE =
+  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium";
+
 const tones = {
-  success: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  warning: "bg-amber-50 text-amber-800 border-amber-200",
-  error: "bg-red-50 text-red-700 border-red-200",
-  info: "bg-blue-50 text-blue-700 border-blue-200",
-  neutral: "bg-slate-100 text-slate-600 border-slate-200",
+  success: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  warning: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  error: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  danger: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  info: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  purple: "bg-purple-500/15 text-purple-300 border-purple-500/30",
+  neutral: "bg-zinc-800 text-zinc-300 border-zinc-600",
 };
 
 export default function Badge({ children, tone = "neutral", className = "" }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold ${tones[tone] || tones.neutral} ${className}`}
+      className={`${BADGE_BASE} ${tones[tone] || tones.neutral} ${className}`}
     >
       {children}
     </span>

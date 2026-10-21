@@ -105,7 +105,7 @@ export default function GenZVerificationStep({
             <Image src={Main} alt="Logo"  />
           </Link>        </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Verify your email</h2>
-        <p className="text-gray-500 mb-1">We sent a 6-digit code to</p>
+        <p className="text-zinc-500 mb-1">We sent a 6-digit code to</p>
         <p className="font-medium text-gray-700">{email}</p>
       </div>
 
@@ -128,10 +128,10 @@ export default function GenZVerificationStep({
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={index === 0 ? handlePaste : undefined}
-                className={`w-12 h-14 text-center text-xl font-bold border-2 rounded-xl transition-all focus:outline-none ${
+                className={`w-12 h-14 text-center text-lg font-semibold border-2 rounded-xl transition-all focus:outline-none ${
                   digit
-                    ? "border-[#FB3B11] bg-orange-50 text-[#FB3B11]"
-                    : "border-gray-200 focus:border-[#FB3B11] focus:ring-2 focus:ring-orange-100"
+                    ? "border-[#FB3B11] bg-amber-50 text-[#FB3B11]"
+                    : "border-zinc-200 focus:border-[#FB3B11] focus:ring-2 focus:ring-orange-100"
                 }`}
                 autoComplete="one-time-code"
               />
@@ -157,7 +157,7 @@ export default function GenZVerificationStep({
 
         <div className="text-center">
           {timeLeft > 0 ? (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               Resend code in <span className="font-medium text-gray-700">{formatTime(timeLeft)}</span>
             </p>
           ) : (

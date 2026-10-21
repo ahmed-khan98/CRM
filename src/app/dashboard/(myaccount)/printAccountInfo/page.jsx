@@ -89,11 +89,11 @@ const page = () => {
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: "auto" }}
                                 exit={{ opacity: 0, height: 0 }}
-                                className="bg-green-50 border-l-4 border-green-500 p-4 mx-8"
+                                className="bg-emerald-50 border-l-4 border-green-500 p-4 mx-8"
                             >
                                 <div className="flex items-center gap-3">
                                     <CheckCircle className="h-5 w-5 text-green-500" />
-                                    <p className="text-green-700">Your Address Detail has been updated successfully!</p>
+                                    <p className="text-emerald-700">Your Address Detail has been updated successfully!</p>
                                 </div>
                             </motion.div>
                         )}
@@ -112,8 +112,8 @@ const page = () => {
                                         name="firstName"
                                         value={`${formData.firstName} ${formData.lastName}`}
                                         disabled
-                                        className={`w-full p-4  border bg-gray-50  
-                                             border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                        className={`w-full p-4  border bg-zinc-50  
+                                             border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                         placeholder="Your city"
                                     />
                                 </div>
@@ -129,8 +129,8 @@ const page = () => {
                                         name="accountNo"
                                         value={formData?.accountNo}
                                         disabled
-                                        className={`w-full p-4  border bg-gray-50  
-                                             border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                        className={`w-full p-4  border bg-zinc-50  
+                                             border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                         placeholder="Your city"
                                     />
                                 </div>
@@ -147,8 +147,8 @@ const page = () => {
                                         value={formData?.address?.street}
                                         disabled
                                         // rows={4}
-                                        className={`w-full p-4  border bg-gray-50
-                                             border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                        className={`w-full p-4  border bg-zinc-50
+                                             border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                         placeholder="Your full street address"
                                     />
                                 </div>
@@ -164,8 +164,8 @@ const page = () => {
                                         name="address.city"
                                         value={formData?.address?.city}
                                         disabled
-                                        className={`w-full p-4  border bg-gray-50  
-                                             border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                        className={`w-full p-4  border bg-zinc-50  
+                                             border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                         placeholder="Your city"
                                     />
                                 </div>
@@ -198,8 +198,8 @@ const page = () => {
                                         name="address.zipCode"
                                         value={formData?.address?.zipCode}
                                         disabled
-                                        className={`w-full p-4  border bg-gray-50
-                                             border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                        className={`w-full p-4  border bg-zinc-50
+                                             border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                         placeholder="Your zip code"
                                     />
                                 </div>
@@ -221,8 +221,8 @@ const page = () => {
                                     name="note"
                                     // row={4}
                                     value={formData.note}
-                                    className={`w-full p-4  border bg-gray-50  
-                                             border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
+                                    className={`w-full p-4  border bg-zinc-50  
+                                             border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F33E0A] transition-all duration-200`}
                                     placeholder="Your notes"
                                 />
                             </div>
@@ -251,7 +251,7 @@ const page = () => {
                     </form>
 
                     <div className="hidden print:block p-8" ref={printRef}>
-                        <h1 className="text-lg font-bold mb-6">User Account Info</h1>
+                        <h1 className="text-lg font-semibold mb-6">User Account Info</h1>
                         <h2><strong>User Account No. :</strong> {formData.accountNo}</h2>
                         <p ><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
                         <p ><strong>Email:</strong> {formData.email}</p>

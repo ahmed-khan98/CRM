@@ -18,7 +18,7 @@ const LeadSentEmail = ({ id }) => {
   const limit = 6;
   const onPageChange = useCallback((p) => setPage(p), []);
 
-  const { data, error, isLoading, refetch } = useLeadbyEmailQuery({
+  const { data, isLoading } = useLeadbyEmailQuery({
     id,
     page,
     limit,
@@ -26,7 +26,6 @@ const LeadSentEmail = ({ id }) => {
 
   const meta = data?.data?.meta;
 
-  // Data mapping based on your API response structure
   const bulkEmails = useMemo(() => {
     return (
       data?.data?.items?.map((email) => ({
@@ -40,7 +39,6 @@ const LeadSentEmail = ({ id }) => {
         listId: email?.listId,
         senderId: email.senderId,
         brandId: email?.brandId,
-        // Sirf woh data jise aapko card mein chahiye
       })) || []
     );
   }, [data?.data?.items]);
@@ -56,56 +54,53 @@ const LeadSentEmail = ({ id }) => {
   }, []);
 
   return (
-<div className="py-6 px-0 font-sans antialiased">
+    <div className="px-0 py-6 font-sans antialiased">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-7xl mx-auto"
+        transition={{ duration: 0.4 }}
+        className="mx-auto max-w-7xl"
       >
-        {/* Header Section */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b" style={{ borderColor: "rgba(99,102,241,0.15)" }}>
-  <div className="flex items-center gap-3 mb-4 md:mb-0">
-    <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.2)" }}>
-      <Mails className="h-4 w-4" style={{ color: "#818cf8" }} />
-    </div>
-    <div>
-      <p className="text-[10px] font-bold tracking-[0.15em] uppercase mb-0.5" style={{ color: "#818cf8" }}>Emails</p>
-      <h1 className="text-base font-bold text-white">All Email</h1>
-    </div>
-  </div>
-</header>
+        <header className="mb-6 flex flex-col items-start justify-between border-b border-zinc-800 pb-4 md:flex-row md:items-center">
+          <div className="mb-4 flex items-center gap-3 md:mb-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800">
+              <Mails className="h-4 w-4 text-zinc-300" />
+            </div>
+            <div>
+              <p className="mb-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500">
+                Emails
+              </p>
+              <h1 className="text-base font-semibold text-white">All Email</h1>
+            </div>
+          </div>
+        </header>
 
-        {/* Content Section */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl shadow-md p-6 animate-pulse"
+                className="animate-pulse rounded-2xl border border-zinc-800 bg-[#161616] p-5"
               >
-                <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-                <div className="flex items-center gap-4 mt-6">
-                  <div className="h-8 w-20 bg-gray-200 rounded-full"></div>
-                  <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
-                </div>
+                <div className="mb-4 h-5 w-3/4 rounded bg-zinc-800" />
+                <div className="mb-4 h-3 w-1/2 rounded bg-zinc-800" />
+                <div className="h-3 w-full rounded bg-zinc-800" />
               </div>
             ))}
           </div>
         ) : bulkEmails.length === 0 ? (
-          <div className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-md p-12 text-center">
-            <Mails className="h-16 w-16 text-gray-300 mb-6" />
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-zinc-800 bg-[#161616] p-12 text-center">
+            <Mails className="mb-4 h-12 w-12 text-zinc-600" />
+            <h3 className="text-lg font-semibold text-zinc-200">
               No Email found
             </h3>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence>
               {bulkEmails?.map((email, index) => (
                 <Email
+                  key={email.id}
                   email={email}
                   index={index}
                   onOpenDetails={handleOpenDetails}
@@ -117,7 +112,6 @@ const LeadSentEmail = ({ id }) => {
         <MemoPagination meta={meta} onPageChange={onPageChange} />
       </motion.div>
 
-      {/* Modals */}
       <AnimatePresence>
         {isDetailsModalOpen && selectedEmail && (
           <BulkEmailSendModal

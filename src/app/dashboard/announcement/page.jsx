@@ -66,11 +66,10 @@ export default function Announcement() {
   }
 
   return (
-    <div className="mx-1">
-      <div className="w-full mx-auto p-1 flex flex-col space-y-3">
+    <div className="section-stack">
         <PageHeader
           icon={MegaphoneIcon}
-          length={"Management"}
+          length={data?.data?.length ?? 0}
           name="All Announcements"
           btnName="Create Announcement"
           handleEdit={handleEdit}
@@ -83,7 +82,7 @@ export default function Announcement() {
             description="Create your first announcement to share updates with the team."
           />
         ) : (
-          <div className={`-mx-1 md:mx-0 ${tableWrap}`}>
+          <div className={tableWrap}>
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead>
@@ -113,7 +112,7 @@ export default function Announcement() {
                     >
                       {/* Title */}
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <span className="text-[13px] font-semibold text-zinc-800 capitalize">
+                        <span className="text-[13px] font-semibold text-zinc-900 capitalize">
                           {depart?.title}
                         </span>
                       </td>
@@ -134,10 +133,10 @@ export default function Announcement() {
                           onClick={() =>
                             updateAnnouncementStatus({ id: depart?._id })
                           }
-                          className={`relative min-w-[76px] flex items-center justify-center gap-1.5 cursor-pointer px-3 py-1.5 rounded-lg text-[11px] font-black tracking-wide transition-all border ${
+                          className={`relative inline-flex min-w-[88px] items-center justify-center gap-1.5 cursor-pointer rounded-full border px-2 py-1 text-xs font-medium uppercase tracking-wide transition-all ${
                             depart?.isActive
-                              ? "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100"
-                              : "bg-red-50 text-red-500 border-red-200 hover:bg-red-100"
+                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/50 hover:bg-emerald-500/15"
+                              : "bg-rose-500/10 text-rose-400 border-rose-500/50 hover:bg-rose-500/15"
                           } ${isUpdatingStatus && originalArgs?.id === depart?._id ? "opacity-60" : ""}`}
                         >
                           {isUpdatingStatus &&
@@ -167,9 +166,9 @@ export default function Announcement() {
                           ) : (
                             <>
                               <span
-                                className={`w-1.5 h-1.5 rounded-full ${depart?.isActive ? "bg-emerald-500" : "bg-red-400"}`}
+                                className={`h-1.5 w-1.5 rounded-full ${depart?.isActive ? "bg-emerald-400" : "bg-rose-400"}`}
                               />
-                              {depart?.isActive ? "Active" : "Inactive"}
+                              {depart?.isActive ? "ACTIVE" : "DE ACTIVE"}
                             </>
                           )}
                         </button>
@@ -189,7 +188,7 @@ export default function Announcement() {
                             whileHover={{ scale: 1.08 }}
                             whileTap={{ scale: 0.93 }}
                             onClick={() => handleEdit(depart)}
-                            className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                            className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-ink border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
                           >
                             <Edit className="h-3.5 w-3.5" />
                           </motion.button>
@@ -197,7 +196,7 @@ export default function Announcement() {
                             whileHover={{ scale: 1.08 }}
                             whileTap={{ scale: 0.93 }}
                             onClick={() => setConfirmDelete(depart._id)}
-                            className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-all"
+                            className="w-8 h-8 flex items-center justify-center cursor-pointer rounded-lg bg-rose-50 border border-rose-200 text-rose-600 hover:bg-red-100 transition-all"
                           >
                             <DeleteIcon className="h-3.5 w-3.5" />
                           </motion.button>
@@ -210,8 +209,8 @@ export default function Announcement() {
             </div>
 
             {/* Dark Footer */}
-            <div className="bg-zinc-900 border-t border-white/[0.06] px-4 py-2.5 flex items-center justify-between">
-              <p className="text-[11px] text-zinc-600 font-semibold">
+            <div className="bg-ink border-t border-white/[0.06] px-4 py-2.5 flex items-center justify-between">
+              <p className="text-[11px] text-zinc-500 font-semibold">
                 {data?.data?.length} announcement
                 {data?.data?.length !== 1 ? "s" : ""}
               </p>
@@ -219,7 +218,6 @@ export default function Announcement() {
             </div>
           </div>
         )}
-      </div>
 
       {confirmDelete && (
         <WarningModal

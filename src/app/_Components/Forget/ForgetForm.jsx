@@ -4,13 +4,12 @@ import { useState } from "react";
 import { useForgetMutation } from "@/app/_Services/authentication/page";
 import { useFormik } from "formik";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast, Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { AtSign, KeyRound, ArrowLeft } from "lucide-react";
-import Main from "../../../app/Assets/zytronlogo.png";
+import BrandLogo from "@/app/_Components/brand/BrandLogo";
 
 export default function GenZForgetForm() {
   const navigation = useRouter();
@@ -45,7 +44,7 @@ export default function GenZForgetForm() {
   });
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-zinc-900">
+    <div className="flex justify-center items-center min-h-screen bg-ink">
       <Toaster position="top-center" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -62,9 +61,7 @@ export default function GenZForgetForm() {
                 transition={{ duration: 0.5 }}
                 className="w-64 h-24 mx-auto mb-2 rounded-full flex items-center justify-center"
               >
-                <Link href="/login" className="mx-auto">
-                  <Image src={Main} alt="Logo" width={270} height={60} />
-                </Link>
+                <BrandLogo href="/login" width={220} height={56} priority />
               </motion.div>
               {/* <h2 className="text-2xl font-bold mb-1 text-gray-800">
                 Forgot Password?
@@ -83,7 +80,7 @@ export default function GenZForgetForm() {
                       ? "border-zinc-800 "
                       : formik.touched.email && formik.errors.email
                       ? "border-red-700"
-                      : "border-zinc-600"
+                      : "border-zinc-700"
                   }`}
                 >
                   <div className="absolute inset-y-0 left-3 flex items-center">
@@ -107,7 +104,7 @@ export default function GenZForgetForm() {
                   <motion.p
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-red-700 text-[11px] ml-2"
+                    className="text-rose-600 text-[11px] ml-2"
                   >
                     {formik.errors.email}
                   </motion.p>
@@ -118,7 +115,7 @@ export default function GenZForgetForm() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-zinc-800 hover:bg-zinc-900 cursor-pointer text-zinc-400 py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all"
+                className="w-full bg-zinc-800 hover:bg-zinc-800 cursor-pointer text-zinc-400 py-3.5 rounded-xl font-medium flex items-center justify-center disabled:opacity-70 transition-all"
               >
                 {isSubmitting ? (
                   <div className="flex items-center">

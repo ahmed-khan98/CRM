@@ -15,7 +15,7 @@ function ProjectsEmptyState({ onCreate }) {
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={onCreate}
-          className="mt-5 inline-flex items-center gap-1.5 rounded-2xl bg-zinc-900 px-4 py-2.5 text-xs font-black text-white hover:bg-zinc-800 transition-all cursor-pointer"
+          className="mt-5 inline-flex items-center gap-1.5 rounded-2xl bg-ink px-4 py-2.5 text-xs font-medium text-white hover:bg-zinc-800 transition-all cursor-pointer"
         >
           <Plus className="h-3.5 w-3.5" /> Create Project
         </motion.button>

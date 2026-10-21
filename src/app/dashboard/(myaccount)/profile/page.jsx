@@ -89,10 +89,10 @@ const ProfilePage = () => {
       <div className="max-w-7xl mx-auto">
         <Tab tabs={myAccountTabs} />
         <div className="my-4 mx-2">
-          <h1 className="text-lg md:text-lg font-bold text-gray-800">
+          <h1 className="text-lg md:text-lg font-semibold text-gray-800">
             My Account
           </h1>
-          <p className="text-gray-500 text-sm">
+          <p className="text-zinc-500 text-sm">
             Manage your personal information and preferences
           </p>
         </div>
@@ -102,26 +102,26 @@ const ProfilePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mx-2 "
-          // {/* className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700 border border-zinc-700/50 hover:border-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"                        > */}
+          // {/* className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-ink via-zinc-800 to-ink text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700 border border-zinc-700/50 hover:border-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"                        > */}
         >
           <div className="relative overflow-hidden">
-            <div className="h-18 bg-zinc-950 shadow-zinc-900/50"></div>
+            <div className="h-18 bg-ink shadow-zinc-900/50"></div>
 
             <div className="relative px-1 md:px-4  pb-6 -mt-12">
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2">
                 <div className="flex items-end gap-4 mx-4 md:mx-0">
                   <div className="h-18 w-18 rounded-full bg-white/[0.08] shadow-md flex items-center justify-center border border-white/10">
-                    <div className="h-full w-full rounded-full bg-zinc-950 flex items-center justify-center text-zinc-400 text-xl font-bold capitalize">
+                    <div className="h-full w-full rounded-full bg-ink flex items-center justify-center text-zinc-400 text-lg font-semibold capitalize">
                       {name?.map((e) => `${e?.charAt(0)}`) || (
                         <User size={30} />
                       )}
                     </div>
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-zinc-300 capitalize">
+                    <h2 className="text-lg font-semibold text-zinc-300 capitalize">
                       {formData.fullName}
                     </h2>
-                    <p className="text-gray-500">{formData.email}</p>
+                    <p className="text-zinc-500">{formData.email}</p>
                   </div>
                 </div>
 
@@ -130,7 +130,7 @@ const ProfilePage = () => {
                   className={`cursor-pointer flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-150 border ${
                     isEditable
                       ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-800 border-zinc-700"
-                      : "bg-zinc-900 border-white/[0.08] text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                      : "bg-ink border-white/[0.08] text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
                   }`}
                 >
                   {isEditable ? (
@@ -155,11 +155,11 @@ const ProfilePage = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="bg-green-50 border-l-4 border-green-500 p-4 mx-8"
+                className="bg-emerald-50 border-l-4 border-green-500 p-4 mx-8"
               >
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <p className="text-green-700">
+                  <p className="text-emerald-700">
                     Your profile has been updated successfully!
                   </p>
                 </div>
@@ -184,8 +184,8 @@ const ProfilePage = () => {
                     className={`w-full p-4  border ${
                       isEditable
                         ? "bg-white  focus:ring-red-500"
-                        : "bg-gray-50  focus:ring-[#5f2781]"
-                    } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
+                        : "bg-zinc-50  focus:ring-[#5f2781]"
+                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
                     placeholder="Your first name"
                   />
                 </div>
@@ -206,8 +206,8 @@ const ProfilePage = () => {
                     className={`w-full p-4  border ${
                       isEditable
                         ? "bg-white  focus:ring-red-500"
-                        : "bg-gray-50  focus:ring-[#5f2781]"
-                    } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
+                        : "bg-zinc-50  focus:ring-[#5f2781]"
+                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
                     placeholder="Your last name"
                   />
                 </div>
@@ -228,8 +228,8 @@ const ProfilePage = () => {
                     className={`w-full p-4  border ${
                       isEditable
                         ? "bg-white  focus:ring-red-500"
-                        : "bg-gray-50  focus:ring-[#5f2781]"
-                    } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
+                        : "bg-zinc-50  focus:ring-[#5f2781]"
+                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
                     placeholder="Your email address"
                   />
                 </div>
@@ -258,8 +258,8 @@ const ProfilePage = () => {
                     className={`w-full p-4  border ${
                       isEditable
                         ? "bg-white  focus:ring-red-500"
-                        : "bg-gray-50  focus:ring-[#5f2781]"
-                    } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
+                        : "bg-zinc-50  focus:ring-[#5f2781]"
+                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
                     // placeholder="Your phone number"
                   />
                 </div>
@@ -286,8 +286,8 @@ const ProfilePage = () => {
                     className={`w-full p-4  border ${
                       isEditable
                         ? "bg-white  focus:ring-red-500"
-                        : "bg-gray-50  focus:ring-[#5f2781]"
-                    } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
+                        : "bg-zinc-50  focus:ring-[#5f2781]"
+                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
                     // placeholder="Your phone number"
                   />
                 </div>
@@ -313,8 +313,8 @@ const ProfilePage = () => {
                     className={`w-full p-4  border ${
                       isEditable
                         ? "bg-white  focus:ring-red-500"
-                        : "bg-gray-50  focus:ring-[#5f2781]"
-                    } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
+                        : "bg-zinc-50  focus:ring-[#5f2781]"
+                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
                     // placeholder="Your phone number"
                   />
                 </div>
@@ -340,8 +340,8 @@ const ProfilePage = () => {
                     className={`w-full p-4  border ${
                       isEditable
                         ? "bg-white  focus:ring-red-500"
-                        : "bg-gray-50  focus:ring-[#5f2781]"
-                    } border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
+                        : "bg-zinc-50  focus:ring-[#5f2781]"
+                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
                     // placeholder="Your phone number"
                   />
                 </div>
@@ -359,7 +359,7 @@ const ProfilePage = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="group cursor-pointer relative overflow-hidden p-2 bg-zinc-900 text-white font-medium rounded-full hover:shadow-lg hover:bg-zinc-800 hover:text-zinc-400 transition-all duration-300 disabled:opacity-70 min-w-[180px]"
+                    className="group cursor-pointer relative overflow-hidden p-2 bg-ink text-white font-medium rounded-full hover:shadow-lg hover:bg-zinc-800 hover:text-zinc-400 transition-all duration-300 disabled:opacity-70 min-w-[180px]"
                   >
                     <span className="relative flex items-center justify-center gap-2">
                       {isLoading ? (

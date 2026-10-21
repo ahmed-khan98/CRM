@@ -48,9 +48,9 @@ export default function AttendanceModal({ isOpen, onClose, selectedData, onSave,
         {/* Shift Date (Read Only) */}
         <div className="space-y-1">
           <label className={fleet.modalLabel}>Shift Date</label>
-          <div className="flex items-center gap-3 bg-[#161b22] border border-white/10 p-3 rounded-xl">
+          <div className="flex items-center gap-3 bg-zinc-800 border border-white/10 p-3 rounded-xl">
             <Calendar size={18} className="text-zinc-400" />
-            <span className="text-sm font-semibold text-zinc-200">
+            <span className="text-sm font-semibold text-zinc-100">
               {moment(formData.shiftDate).format("DD MMMM, YYYY (dddd)")}
             </span>
           </div>
@@ -111,7 +111,7 @@ export default function AttendanceModal({ isOpen, onClose, selectedData, onSave,
           >
             {isSubmitting ? (
               <svg
-                className="animate-spin h-5 w-5 text-zinc-950"
+                className="animate-spin h-5 w-5 text-zinc-900"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"

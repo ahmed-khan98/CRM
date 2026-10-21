@@ -74,7 +74,7 @@ function MileageHistorySection({ vehicleId, mileageHistory }) {
       {showForm && (
         <form
           onSubmit={submitMileage}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 p-3 rounded-xl bg-zinc-50 border border-zinc-100"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4 p-3 rounded-xl bg-zinc-50 border border-zinc-200"
         >
           <input
             type="date"

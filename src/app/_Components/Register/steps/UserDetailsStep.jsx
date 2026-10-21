@@ -69,9 +69,9 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
   const getStrengthColor = () => {
     if (passwordStrength === 0) return "bg-gray-200"
     if (passwordStrength === 1) return "b-[#5f2781]0"
-    if (passwordStrength === 2) return "bg-orange-500"
-    if (passwordStrength === 3) return "bg-yellow-500"
-    return "bg-green-500"
+    if (passwordStrength === 2) return "bg-amber-500"
+    if (passwordStrength === 3) return "bg-amber-500"
+    return "bg-emerald-500"
   }
 
   return (
@@ -87,7 +87,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
             <Image src={Main} alt="Logo" />
           </Link>        </motion.div>
         <h2 className="text-2xl font-bold mb-1 text-[#FB3B11]">Create your profile</h2>
-        <p className="text-gray-500">Tell us a bit about yourself</p>
+        <p className="text-zinc-500">Tell us a bit about yourself</p>
       </div>
 
       <form onSubmit={formik.handleSubmit} className="space-y-3">
@@ -99,7 +99,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
                   ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                   : formik.touched.firstName && formik.errors.firstName
                     ? "border-red-300"
-                    : "border-gray-200"
+                    : "border-zinc-200"
                 }`}
             >
               <input
@@ -121,7 +121,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-red-500 text-xs ml-2"
+                className="text-rose-600 text-xs ml-2"
               >
                 {formik.errors.firstName}
               </motion.p>
@@ -134,7 +134,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
                   ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                   : formik.touched.lastName && formik.errors.lastName
                     ? "border-red-300"
-                    : "border-gray-200"
+                    : "border-zinc-200"
                 }`}
             >
               <input
@@ -156,7 +156,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-red-500 text-xs ml-2"
+                className="text-rose-600 text-xs ml-2"
               >
                 {formik.errors.lastName}
               </motion.p>
@@ -170,11 +170,11 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
                 ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                 : formik.touched.password && formik.errors.password
                   ? "border-red-300"
-                  : "border-gray-200"
+                  : "border-zinc-200"
               }`}
           >
             <div className="absolute inset-y-0 left-3 flex items-center">
-              <Lock className="h-5 w-5 text-gray-400" />
+              <Lock className="h-5 w-5 text-zinc-400" />
             </div>
             <input
               type={showPassword ? "text" : "password"}
@@ -195,7 +195,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
               className="absolute inset-y-0 right-3 flex items-center"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
+              {showPassword ? <EyeOff className="h-5 w-5 text-zinc-400" /> : <Eye className="h-5 w-5 text-zinc-400" />}
             </button>
           </div>
 
@@ -213,7 +213,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
                     />
                   ))}
                 </div>
-                <span className="text-xs text-gray-500">{getStrengthText()}</span>
+                <span className="text-xs text-zinc-500">{getStrengthText()}</span>
               </div>
             </div>
           )}
@@ -222,7 +222,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
             <motion.p
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-red-500 text-xs ml-2"
+              className="text-rose-600 text-xs ml-2"
             >
               {formik.errors.password}
             </motion.p>
@@ -235,11 +235,11 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
                 ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                 : formik.touched.cpassword && formik.errors.cpassword
                   ? "border-red-300"
-                  : "border-gray-200"
+                  : "border-zinc-200"
               }`}
           >
             <div className="absolute inset-y-0 left-3 flex items-center">
-              <Lock className="h-5 w-5 text-gray-400" />
+              <Lock className="h-5 w-5 text-zinc-400" />
             </div>
             <input
               type={showConfirmPassword ? "text" : "password"}
@@ -261,9 +261,9 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? (
-                <EyeOff className="h-5 w-5 text-gray-400" />
+                <EyeOff className="h-5 w-5 text-zinc-400" />
               ) : (
-                <Eye className="h-5 w-5 text-gray-400" />
+                <Eye className="h-5 w-5 text-zinc-400" />
               )}
             </button>
           </div>
@@ -271,7 +271,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
             <motion.p
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-red-500 text-xs ml-2"
+              className="text-rose-600 text-xs ml-2"
             >
               {formik.errors.cpassword}
             </motion.p>
@@ -283,11 +283,11 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
                 ? "border-[#FB3B11] shadow-sm shadow-orange-100"
                 : formik.touched.referralBy && formik.errors.referralBy
                   ? "border-red-300"
-                  : "border-gray-200"
+                  : "border-zinc-200"
               }`}
           >
             <div className="absolute inset-y-0 left-3 flex items-center">
-              <Hash className="h-5 w-5 text-gray-400" />
+              <Hash className="h-5 w-5 text-zinc-400" />
             </div>
             <input
               type="text"
@@ -325,7 +325,7 @@ export default function GenZUserDetailsStep({ onSubmit, isLoading }) {
             "Continue"
           )}
         </motion.button>
-        <div className="text-center text-sm text-gray-500">
+        <div className="text-center text-sm text-zinc-500">
           Already have an account?{" "}
           <Link href="/login" className="text-[#FB3B11] font-medium hover:underline">
             Sign in

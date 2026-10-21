@@ -68,10 +68,10 @@ export default function page() {
           <div className="bg-white rounded-3xl shadow-md p-6 mt-3">
             <div className="flex items-center gap-4 mb-4 md:mb-0">
               <div className="bg-zinc-200 p-2 rounded-full">
-                <Mails className="h-7 w-7 text-zinc-800" />
+                <Mails className="h-7 w-7 text-zinc-900" />
               </div>
               <div>
-                <h1 className="text-lg md:text-xl font-bold ">
+                <h1 className="text-lg md:text-lg font-semibold ">
                   New Compaign Bulk Email
                 </h1>
               </div>
@@ -174,13 +174,13 @@ export default function page() {
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.compaignName && touched.compaignName
                               ? "border-zinc-500 focus:border-zinc-500"
-                              : "border-gray-200 focus:border-zinc-800"
+                              : "border-zinc-200 focus:border-zinc-400"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
                           name="compaignName"
                           component="div"
-                          className="text-red-500 text-sm mt-1"
+                          className="text-rose-600 text-sm mt-1"
                         />
                       </div>
                       <FormikSelect
@@ -208,13 +208,13 @@ export default function page() {
                           className={`w-full px-4 py-2 text-sm border-1 ${
                             errors.fromemail && touched.fromemail
                               ? "border-zinc-500 focus:border-zinc-500"
-                              : "border-gray-200 focus:border-zinc-800"
+                              : "border-zinc-200 focus:border-zinc-400"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
                           name="fromemail"
                           component="div"
-                          className="text-red-500 text-sm mt-1"
+                          className="text-rose-600 text-sm mt-1"
                         />
                       </div>
                       <FormikSelect
@@ -267,13 +267,13 @@ export default function page() {
                           className={`w-full px-4 py-2 border-1 text-sm ${
                             errors.subject && touched.subject
                               ? "border-zinc-500 focus:border-zinc-500"
-                              : "border-gray-200 focus:border-zinc-800"
+                              : "border-zinc-200 focus:border-zinc-400"
                           } rounded-xl focus:outline-none transition-colors`}
                         ></Field>
                         <ErrorMessage
                           name="subject"
                           component="div"
-                          className="text-red-500 text-sm mt-1"
+                          className="text-rose-600 text-sm mt-1"
                         />
                       </div>
                     </div>
@@ -288,9 +288,9 @@ export default function page() {
                       <ErrorMessage
                         name="body"
                         component="div"
-                        className="text-red-500 text-sm mt-2"
+                        className="text-rose-600 text-sm mt-2"
                       />
-                      {/* <div className="text-xs text-gray-500 mt-2">
+                      {/* <div className="text-xs text-zinc-500 mt-2">
                                             You can use merge tags like <code>{"{{firstName}}"}</code>,{" "}
                                             <code>{"{{lastName}}"}</code>, <code>{"{{email}}"}</code>.
                                           </div> */}
@@ -302,7 +302,7 @@ export default function page() {
                         disabled={isSubmitting}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="flex items-center gap-2 px-2 md:px-4 py-2 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-xl text-sm font-semibold  hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                        className="flex items-center gap-2 px-2 md:px-4 py-2 cursor-pointer bg-gradient-to-r from-ink via-zinc-800 to-ink text-white rounded-xl text-sm font-semibold  hover:from-[#4f1f6d] hover:to-[#5f2781] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center gap-2">

@@ -14,7 +14,7 @@ const TimeOutModal = ({ isDeleting, setConfirmDelete, handleDelete, type = "time
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 8 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="w-full max-w-sm overflow-hidden rounded-[20px] bg-zinc-950 border border-white/[0.08] shadow-2xl"
+        className="w-full max-w-sm overflow-hidden rounded-[20px] bg-ink border border-white/[0.08] shadow-2xl"
       >
         {/* Top accent */}
         <div className={`h-[1.5px] w-full ${isTimeOut ? "bg-gradient-to-r from-transparent via-orange-400/60 to-transparent" : "bg-gradient-to-r from-transparent via-red-400/60 to-transparent"}`} />
@@ -22,22 +22,22 @@ const TimeOutModal = ({ isDeleting, setConfirmDelete, handleDelete, type = "time
         <div className="p-6 text-center">
           {/* Icon */}
           <div className={`h-16 w-16 rounded-2xl mx-auto mb-5 flex items-center justify-center border
-            ${isTimeOut ? "bg-orange-500/10 border-orange-500/20" : "bg-red-500/10 border-red-500/20"}`}
+            ${isTimeOut ? "bg-warning/10 border-orange-500/20" : "bg-danger/10 border-rose-200"}`}
           >
             {isTimeOut
-              ? <Clock size={28} className="text-orange-400 animate-pulse" />
-              : <AlertCircle size={28} className="text-red-400" />
+              ? <Clock size={28} className="text-amber-700 animate-pulse" />
+              : <AlertCircle size={28} className="text-rose-600" />
             }
           </div>
 
-          <h3 className="text-xl font-black mb-2 tracking-tight text-zinc-100">
+          <h3 className="text-lg font-semibold mb-2 tracking-tight text-zinc-100">
             Finish for today?
           </h3>
 
           <p className="text-sm leading-relaxed px-1 mb-7 text-zinc-500">
             You are about to record your Time Out at{" "}
             <span className={`font-bold px-2 py-[3px] rounded-lg text-xs border
-              ${isTimeOut ? "bg-orange-500/12 text-orange-400 border-orange-500/20" : "bg-red-500/12 text-red-400 border-red-500/20"}`}
+              ${isTimeOut ? "bg-warning/12 text-amber-700 border-orange-500/20" : "bg-danger/12 text-rose-600 border-rose-200"}`}
             >
               {currentTime}
             </span>
@@ -49,10 +49,10 @@ const TimeOutModal = ({ isDeleting, setConfirmDelete, handleDelete, type = "time
               whileTap={{ scale: 0.97 }}
               onClick={() => handleDelete()}
               disabled={isDeleting}
-              className={`cursor-pointer w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 border transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed
+              className={`cursor-pointer w-full py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2 border transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed
                 ${isTimeOut
-                  ? "bg-orange-500/15 border-orange-500/30 text-orange-400 hover:bg-orange-500/25"
-                  : "bg-red-500/15 border-red-500/30 text-red-400 hover:bg-red-500/25"
+                  ? "bg-warning/15 border-orange-500/30 text-amber-700 hover:bg-warning/25"
+                  : "bg-danger/15 border-danger/30 text-rose-600 hover:bg-danger/25"
                 }`}
             >
               {isDeleting ? (
@@ -64,7 +64,7 @@ const TimeOutModal = ({ isDeleting, setConfirmDelete, handleDelete, type = "time
 
             <button
               onClick={() => setConfirmDelete(null)}
-              className="cursor-pointer w-full py-2.5 text-xs font-semibold rounded-xl transition-all duration-150 bg-white/[0.03] border border-white/[0.06] text-zinc-600 hover:bg-white/[0.06] hover:text-zinc-400"
+              className="cursor-pointer w-full py-2.5 text-xs font-semibold rounded-xl transition-all duration-150 bg-white/[0.03] border border-white/[0.06] text-zinc-500 hover:bg-white/[0.06] hover:text-zinc-400"
             >
               Wait, Not Yet
             </button>

@@ -1,4 +1,4 @@
-import { LogOut, Trash2, UserMinus } from "lucide-react";
+import { LogOut, Trash2, Unlock, UserMinus } from "lucide-react";
 import React from "react";
 import { motion } from "framer-motion";
 
@@ -6,6 +6,7 @@ const ICONS = {
   delete: Trash2,
   leave: LogOut,
   remove: UserMinus,
+  unlock: Unlock,
 };
 
 const WarningModal = ({
@@ -30,13 +31,13 @@ const WarningModal = ({
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 shadow-2xl"
+        className="w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-ink shadow-2xl"
       >
         <div className="p-6 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-red-400/40 bg-red-500/15 text-red-400">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-red-400/40 bg-danger/15 text-rose-600">
             <Icon size={26} />
           </div>
-          <h3 className="mb-2 text-lg font-bold text-white">{heading}</h3>
+          <h3 className="mb-2 text-lg font-semibold text-white">{heading}</h3>
 
           <p className="mb-6 px-2 text-sm leading-relaxed text-zinc-400">{body}</p>
           <div className="flex justify-center gap-3">
@@ -64,7 +65,7 @@ const WarningModal = ({
               whileTap={{ scale: 0.97 }}
               onClick={() => handleDelete()}
               disabled={isDeleting}
-              className="cursor-pointer w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="cursor-pointer w-full py-3 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
               style={
                 isDeleting
                   ? {

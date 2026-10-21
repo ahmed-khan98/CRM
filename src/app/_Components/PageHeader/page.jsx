@@ -5,31 +5,56 @@ import Header from "./Header/page";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 
-const page = ({ icon, name, length, btnName, handleEdit, children }) => {
+/**
+ * Compact SaaS page header — white bar, ~52–56px tall.
+ * Props: icon, name|title, length|count, metaLabel, btnName, handleEdit, children/actions
+ */
+const PageHeader = ({
+  icon,
+  name,
+  title,
+  length,
+  count,
+  btnName,
+  handleEdit,
+  children,
+  actions,
+  metaLabel,
+}) => {
+  const heading = name ?? title;
+  const recordCount = length ?? count;
+  const right = children ?? actions;
+
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white px-4 py-3.5 shadow-sm shadow-slate-200/60 sm:px-5 sm:py-4">
-      <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-slate-900/[0.04]" />
-      <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="shrink-0">
-          <Header icon={icon} length={length} name={name} />
-        </div>
-
-        {children && <div className="min-w-0 w-full flex-1">{children}</div>}
-
-        {btnName && (
-          <motion.button
-            type="button"
-            whileTap={{ scale: 0.97 }}
-            onClick={() => handleEdit()}
-            className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-2xl bg-slate-950 px-4 text-sm font-semibold text-white shadow-md shadow-slate-900/15 transition hover:bg-slate-800"
-          >
-            <Plus className="h-4 w-4" />
-            <span className="max-w-[9rem] truncate sm:max-w-none">{btnName}</span>
-          </motion.button>
-        )}
+    <div className="header-surface">
+      <div className="min-w-0 shrink-0">
+        <Header
+          icon={icon}
+          length={recordCount}
+          name={heading}
+          metaLabel={metaLabel}
+        />
       </div>
+
+      {right ? (
+        <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2">
+          {right}
+        </div>
+      ) : null}
+
+      {btnName ? (
+        <motion.button
+          type="button"
+          whileTap={{ scale: 0.98 }}
+          onClick={() => handleEdit?.()}
+          className="zyro-accent-btn inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-[10px] bg-ink px-3.5 text-sm font-medium text-white transition hover:bg-zinc-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+        >
+          <Plus className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+          <span className="max-w-[9rem] truncate sm:max-w-none">{btnName}</span>
+        </motion.button>
+      ) : null}
     </div>
   );
 };
 
-export default memo(page);
+export default memo(PageHeader);

@@ -33,7 +33,7 @@ const pickupSchema = Yup.object().shape({
 });
 
 const fieldError = (errors, touched, name) =>
-  errors[name] && touched[name] ? "border-red-500/50" : "";
+  errors[name] && touched[name] ? "border-danger/50" : "";
 
 const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
   const [createEmployee] = useCreateEmployeeMutation();
@@ -105,7 +105,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                   <option value="pickup">Pickup</option>
                   <option value="dropoff">Drop Off</option>
                 </Field>
-                <ErrorMessage name="departmentId" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="departmentId" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
               <div>
                 <label className={fleet.modalLabel}>
@@ -117,7 +117,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                   name="joiningDate"
                   className={`${fleet.modalInput} ${fieldError(errors, touched, "joiningDate")}`}
                 />
-                <ErrorMessage name="joiningDate" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="joiningDate" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
             </div>
 
@@ -129,7 +129,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                   name="firstName"
                   className={`${fleet.modalInput} ${fieldError(errors, touched, "firstName")}`}
                 />
-                <ErrorMessage name="firstName" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="firstName" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
               <div>
                 <label className={fleet.modalLabel}>Last Name</label>
@@ -138,7 +138,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                   name="lastName"
                   className={`${fleet.modalInput} ${fieldError(errors, touched, "lastName")}`}
                 />
-                <ErrorMessage name="lastName" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="lastName" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
             </div>
 
@@ -150,7 +150,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                   name="email"
                   className={`${fleet.modalInput} ${fieldError(errors, touched, "email")}`}
                 />
-                <ErrorMessage name="email" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="email" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
               <div>
                 <label className={fleet.modalLabel}>Designation</label>
@@ -159,7 +159,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                   name="designation"
                   className={`${fleet.modalInput} ${fieldError(errors, touched, "designation")}`}
                 />
-                <ErrorMessage name="designation" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="designation" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
             </div>
 
@@ -172,7 +172,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                   placeholder="40000-1234567-8"
                   className={`${fleet.modalInput} ${fieldError(errors, touched, "CNIC")}`}
                 />
-                <ErrorMessage name="CNIC" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="CNIC" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
               <div>
                 <label className={fleet.modalLabel}>Phone No.</label>
@@ -182,7 +182,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                   placeholder="0300-1234567"
                   className={`${fleet.modalInput} ${fieldError(errors, touched, "phoneNo")}`}
                 />
-                <ErrorMessage name="phoneNo" component="div" className="text-red-400 text-sm mt-1" />
+                <ErrorMessage name="phoneNo" component="div" className="text-rose-600 text-sm mt-1" />
               </div>
             </div>
 
@@ -195,7 +195,7 @@ const PickupDropOffModal = ({ isOpen, closeModal, data, refetch }) => {
                 placeholder="Any special instructions or address..."
                 className={fleet.modalTextarea}
               />
-              <ErrorMessage name="address" component="div" className="text-red-400 text-sm mt-1" />
+              <ErrorMessage name="address" component="div" className="text-rose-600 text-sm mt-1" />
             </div>
 
             <div className="flex justify-end gap-2 pt-3 border-t border-white/[0.06]">

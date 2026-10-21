@@ -196,7 +196,7 @@ export default function FleetVehiclesPage() {
                 </tbody>
               </table>
             </div>
-            <div className="border-t border-zinc-100 px-2">
+            <div className="border-t border-zinc-200 px-2">
               <MemoPagination meta={meta} onPageChange={setPage} />
             </div>
           </div>

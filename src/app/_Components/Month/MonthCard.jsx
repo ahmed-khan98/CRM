@@ -16,7 +16,7 @@ useEffect(() => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, ease: "easeOut" }}
-      className="group relative rounded-2xl border border-white/[0.07] bg-[#0f0f13] p-5 hover:border-white/[0.14] hover:bg-[#13131a] shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.7)] transition-all duration-300 overflow-hidden">
+      className="group relative rounded-2xl border border-white/[0.07] bg-ink p-5 hover:border-white/[0.14] hover:bg-zinc-800 shadow-[0_4px_24px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.7)] transition-all duration-300 overflow-hidden">
       {/* Glow accent */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-violet-600/5 rounded-full blur-2xl pointer-events-none group-hover:bg-violet-600/10 transition-all duration-500" />
 
@@ -33,8 +33,8 @@ useEffect(() => {
         <span
           className={`text-[10px] px-2.5 py-1 rounded-full font-bold tracking-wide border ${
             month?.status === "OPEN"
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 animate-pulse"
-              : "bg-red-500/10 text-red-400 border-red-500/20"
+              ? "bg-success/10 text-emerald-700 border-emerald-500/20 animate-pulse"
+              : "bg-danger/10 text-rose-600 border-rose-200"
           }`}
         >
           {month?.status === "OPEN" ? "● OPEN" : "● CLOSED"}
@@ -54,22 +54,22 @@ useEffect(() => {
           <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider mb-1">
             Sales
           </p>
-          <p className="text-lg font-black text-white leading-none">
+          <p className="text-lg font-semibold text-white leading-none">
             {month?.totalSales}
           </p>
         </div>
-        <div className="rounded-xl bg-emerald-500/[0.06] border border-emerald-500/[0.12] p-3">
+        <div className="rounded-xl bg-success/[0.06] border border-emerald-500/[0.12] p-3">
           <p className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider mb-1">
             Amount
           </p>
-          <p className="text-lg font-black text-emerald-400 leading-none">
+          <p className="text-lg font-semibold text-emerald-700 leading-none">
             ${month?.totalAmount}
           </p>
         </div>
       </div>
 
       {/* Meta */}
-      <div className="text-[10px] text-zinc-600 space-y-1 mb-1 border-t border-white/[0.05] pt-3">
+      <div className="text-[10px] text-zinc-500 space-y-1 mb-1 border-t border-white/[0.05] pt-3">
         <p>
           Created by{" "}
           <span className="text-zinc-400 font-semibold capitalize">
@@ -96,15 +96,15 @@ useEffect(() => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 6 }}
               transition={{ duration: 0.15 }}
-              className="flex-1 flex flex-col gap-1.5 rounded-xl bg-amber-500/[0.07] border border-amber-500/20 px-3 py-2.5"
+              className="flex-1 flex flex-col gap-1.5 rounded-xl bg-warning/[0.07] border border-amber-500/20 px-3 py-2.5"
             >
-              <p className="text-[10px] font-black text-amber-400 uppercase tracking-wider text-center">
+              <p className="text-[10px] font-black text-amber-700 uppercase tracking-wider text-center">
                 Close this month?
               </p>
               <div className="flex gap-2">
                 <button
                   onClick={() => setConfirmClose(false)}
-                  className="flex-1 text-[11px] font-bold py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.08] transition-colors cursor-pointer"
+                  className="flex-1 text-[11px] font-bold py-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.08] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -114,7 +114,7 @@ useEffect(() => {
                     closeMonth(month?._id);
                     // setConfirmClose(false);
                   }}
-                  className="flex-1 text-[11px] font-bold py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-amber-500/30 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="flex-1 text-[11px] font-bold py-1.5 rounded-lg bg-warning/20 border border-amber-500/30 text-amber-700 hover:bg-warning/30 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isClosing ? (
                     <span className="flex items-center justify-center gap-1.5">
@@ -140,7 +140,7 @@ useEffect(() => {
               {month?.status === "OPEN" && (
                 <button
                   onClick={() => setConfirmClose(true)}
-                  className="cursor-pointer flex-1 text-[11px] font-semibold py-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
+                  className="cursor-pointer flex-1 text-[11px] font-semibold py-2 rounded-lg bg-warning/10 text-amber-700 border border-amber-500/20 hover:bg-warning/20 transition-colors"
                 >
                   Close Month
                 </button>
@@ -153,7 +153,7 @@ useEffect(() => {
               </button>
               <button
                 onClick={() => setConfirmDelete(month._id)}
-                className="cursor-pointer flex-1 text-[11px] font-semibold py-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors"
+                className="cursor-pointer flex-1 text-[11px] font-semibold py-2 rounded-lg bg-danger/10 text-rose-600 border border-rose-200 hover:bg-danger/20 transition-colors"
               >
                 Delete
               </button> */}

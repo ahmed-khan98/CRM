@@ -35,9 +35,9 @@ import PageLoader from "@/app/_Components/Loaders/PageLoader";
 function FormSection({ icon: Icon, title, description, children }) {
   return (
     <section className="rounded-3xl border border-zinc-200 bg-white p-4 shadow-sm md:p-5">
-      <div className="mb-4 flex items-start gap-3 border-b border-zinc-100 pb-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-zinc-950 text-white shadow-lg shadow-zinc-200">
-          <Icon className="h-5 w-5" />
+      <div className="mb-4 flex items-start gap-3 border-b border-zinc-200 pb-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-ink text-zinc-200 ">
+          <Icon className="h-5 w-5 text-zinc-100" />
         </div>
         <div>
           <h2 className="text-base font-black text-zinc-900">{title}</h2>
@@ -165,19 +165,19 @@ export default function Page() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
-          className="overflow-hidden rounded-[2rem] border border-zinc-200 bg-white shadow-2xl shadow-zinc-200/70"
+          className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow "
         >
-          <div className="relative overflow-hidden border-b border-zinc-200 bg-zinc-950 px-5 py-4 text-white md:px-7">
+          <div className="relative overflow-hidden border-b border-zinc-200 bg-ink px-5 py-4 text-zinc-200 md:px-7">
             <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full bg-white/10 blur-3xl" />
-            <div className="absolute bottom-0 right-24 h-20 w-20 rounded-full bg-indigo-500/20 blur-2xl" />
+            <div className="absolute bottom-0 right-24 h-20 w-20 rounded-full bg-zinc-500/20 blur-2xl" />
 
             <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex items-start gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/10 shadow-lg">
-                  <BadgeDollarSign className="h-6 w-6 text-emerald-300" />
+                  <BadgeDollarSign className="h-6 w-6 text-emerald-700" />
                 </div>
                 <div>
-                  <h6 className="text-lg font-black tracking-tight md:text-xl">
+                  <h6 className="text-lg font-semibold tracking-tight text-zinc-300 md:text-xl">
                     Create Payment Link
                   </h6>
                   <p className="mt-1 max-w-2xl text-sm leading-6 text-zinc-400">
@@ -190,7 +190,7 @@ export default function Page() {
               <button
                 type="button"
                 onClick={() => router.push("/dashboard/paymentLink")}
-                className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-xs font-bold text-zinc-200 transition hover:bg-white/15"
+                className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-4 py-2 text-xs font-medium text-zinc-100 transition hover:bg-white/15"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to Payment Links
@@ -198,7 +198,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="p-4 md:p-6">
+          <div className="bg-ink p-4 md:p-6">
             <Formik
               initialValues={initialValues}
               validationSchema={createPaymentSchema}
@@ -421,10 +421,10 @@ export default function Page() {
                       />
                     </FormSection>
 
-                    <div className="sticky bottom-3 z-10 rounded-2xl border border-zinc-200 bg-white/90 p-3 shadow-xl shadow-zinc-200/80 backdrop-blur">
+                    <div className="sticky bottom-3 z-10 rounded-2xl border border-zinc-200 bg-ink/90 p-3  backdrop-blur">
                       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="flex items-center gap-2 text-xs text-zinc-500">
-                          <Sparkles className="h-4 w-4 text-emerald-500" />
+                          <Sparkles className="h-4 w-4 text-emerald-700" />
                           Link will be created and sent using the selected
                           merchant settings.
                         </div>
@@ -432,7 +432,7 @@ export default function Page() {
                           <button
                             type="button"
                             onClick={() => router.push("/dashboard/paymentLink")}
-                            className="cursor-pointer rounded-xl border border-zinc-200 px-4 py-2.5 text-sm font-bold text-zinc-700 transition hover:bg-zinc-50"
+                            className="cursor-pointer rounded-xl border border-zinc-200 px-4 py-2.5 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50"
                           >
                             Cancel
                           </button>
@@ -441,7 +441,7 @@ export default function Page() {
                             disabled={isSubmitting}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-800 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-zinc-300 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="flex cursor-pointer items-center justify-center gap-2 border border-zinc-200 rounded-xl bg-gradient-to-r from-ink via-ink to-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-200  shadow-zinc-300 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {isSubmitting ? (
                               <div className="flex items-center justify-center gap-2">

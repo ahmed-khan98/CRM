@@ -45,7 +45,7 @@ export default function GenZSuccessStep({ onLogin }) {
           transition={{ duration: 0.5 }}
           className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center"
         >
-          <CheckCircle className="h-10 w-10 text-green-600" />
+          <CheckCircle className="h-10 w-10 text-emerald-700" />
         </motion.div>
 
         <motion.div
@@ -54,7 +54,7 @@ export default function GenZSuccessStep({ onLogin }) {
           transition={{ delay: 0.3, duration: 0.5 }}
         >
           <h2 className="text-2xl font-bold mb-2 text-[#FB3B11]">You're all set!</h2>
-          <p className="text-gray-500 mb-8">Your account has been created successfully</p>
+          <p className="text-zinc-500 mb-8">Your account has been created successfully</p>
 
           <motion.button
             whileHover={{ scale: 1.03 }}

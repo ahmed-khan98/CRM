@@ -56,7 +56,7 @@ export default function VehicleDetailPage() {
           <button
             type="button"
             onClick={handleBack}
-            className="mt-1 p-2 rounded-xl border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"
+            className="mt-1 p-2 rounded-xl border border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>

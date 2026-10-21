@@ -9,11 +9,11 @@ function ProgressBar({ percent, className = "w-24", label }) {
       {label && (
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-medium text-zinc-400">{label}</span>
-          <span className="text-[10px] font-semibold text-zinc-600">{percent}%</span>
+          <span className="text-[10px] font-semibold text-zinc-500">{percent}%</span>
         </div>
       )}
       <div className="flex items-center gap-2">
-        <div className="flex-1 h-1.5 overflow-hidden rounded-full bg-zinc-100">
+        <div className="flex-1 h-1.5 overflow-hidden rounded-full bg-zinc-50">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${percent}%` }}

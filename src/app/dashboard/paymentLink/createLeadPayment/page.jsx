@@ -150,7 +150,7 @@ function LeadPayment() {
 
   if (error)
     return (
-      <div className="p-10 text-center text-red-600 font-semibold">
+      <div className="p-10 text-center text-rose-600 font-semibold">
         Error fetching data.
       </div>
     );
@@ -171,8 +171,8 @@ function LeadPayment() {
         >
           <div className="bg-white rounded-3xl shadow-md p-6 mt-3">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-700 flex items-center">
-                <Link className="mr-2 h-6 w-6 text-gray-800" />
+              <h2 className="text-lg font-semibold text-zinc-300 flex items-center">
+                <Link className="mr-2 h-6 w-6 " />
                 Create Lead Payment Link
               </h2>
             </div>
@@ -395,16 +395,17 @@ function LeadPayment() {
                         disabled={isSubmitting}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="flex items-center gap-2 px-4 py-2.5 cursor-pointer bg-gradient-to-r from-zinc-900 via-zinc-800 to-zinc-900 text-white rounded-xl text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg"
+                        className="flex cursor-pointer items-center justify-center gap-2 border border-zinc-200 rounded-xl bg-gradient-to-r from-ink via-ink to-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-200  shadow-zinc-300 transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center justify-center gap-2">
-                            <div className="w-5 h-5 border-1 border-white/30 border-t-white rounded-full animate-spin"></div>
-                            Processing...
+                            <div className="h-5 w-5 animate-spin rounded-full border border-white/30 border-t-white" />
+                            Creating...
                           </div>
                         ) : (
                           <>
-                            Submit <SendHorizontal className="h-3 w-3" />
+                            Create Payment Link
+                            <SendHorizontal className="h-4 w-4" />
                           </>
                         )}
                       </motion.button>

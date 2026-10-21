@@ -17,6 +17,7 @@ import MessageMeta from "@/app/_Components/chat/bubble/MessageMeta";
 import QuickReactBar from "@/app/_Components/chat/bubble/QuickReactBar";
 import {
   getCurrentUser,
+  formatDisplayName,
   formatMessageClock,
   sameDay,
   receiptStatus,
@@ -30,6 +31,7 @@ function MessageBubble({
   prevMessage,
   myId,
   theme,
+  dark = false,
   active,
   activeVoiceId,
   onContextMenu,
@@ -70,7 +72,7 @@ function MessageBubble({
           myId={myId}
           theme={theme}
           showSenderName={!mine && active.type === "group"}
-          senderName={m.senderId?.fullName}
+          senderName={formatDisplayName(m.senderId?.fullName)}
           status={status}
         />
       ) : m.type === "system" ? (
@@ -84,15 +86,15 @@ function MessageBubble({
           }}
         >
           <div
-            className={`relative max-w-[85%] sm:max-w-[65%] px-2 pt-1.5 pb-1 shadow-sm ${
+            className={`relative max-w-[85%] sm:max-w-[65%] px-2.5 pt-1.5 pb-1 ${
               mine
                 ? `${theme.bubbleMe} rounded-2xl rounded-br-md`
                 : `${theme.bubbleThem} rounded-2xl rounded-bl-md`
             } ${isVoice ? "min-w-[240px]" : ""} ${isCall ? "min-w-[200px]" : ""}`}
           >
             {!mine && active.type === "group" && (
-              <p className="text-[11px] font-semibold text-sky-600 mb-0.5 px-0.5">
-                {m.senderId?.fullName}
+              <p className="text-[11px] font-semibold text-sky-700 mb-0.5 px-0.5">
+                {formatDisplayName(m.senderId?.fullName)}
               </p>
             )}
             <ReplyQuote mine={mine} replyTo={m.replyTo} />
@@ -113,8 +115,9 @@ function MessageBubble({
                 url={m.attachments[0].url}
                 duration={m.attachments[0].duration}
                 mine={mine}
+                dark={dark}
                 avatarSrc={mine ? getCurrentUser()?.image : m.senderId?.image}
-                avatarName={mine ? getCurrentUser()?.fullName : m.senderId?.fullName}
+                avatarName={formatDisplayName(mine ? getCurrentUser()?.fullName : m.senderId?.fullName)}
                 timeLabel={formatMessageClock(m.createdAt)}
                 receiptStatus={mine ? status : null}
                 activeVoiceId={activeVoiceId}
@@ -133,7 +136,7 @@ function MessageBubble({
               ) &&
               m.type !== "image" &&
               m.type !== "video" && (
-                <ChatFileCard attachment={m.attachments[0]} mine={mine} />
+                <ChatFileCard attachment={m.attachments[0]} mine={mine} dark={dark} />
               )}
             {m.type === "file" &&
               m.attachments?.[0] &&
@@ -141,7 +144,7 @@ function MessageBubble({
                 m.attachments[0].url,
                 m.attachments[0].fileName,
                 m.attachments[0].mimeType
-              ) && <ChatFileCard attachment={m.attachments[0]} mine={mine} />}
+              ) && <ChatFileCard attachment={m.attachments[0]} mine={mine} dark={dark} />}
             {isCall && (
               <CallMessageBubble
                 message={m}
@@ -151,10 +154,12 @@ function MessageBubble({
               />
             )}
             {isText && m.body && (
-              <p className="whitespace-pre-wrap break-words text-[14.2px] leading-[19px] px-0.5">
-                {active?.type === "group"
-                  ? renderMentionBody(m.body, active.participants, mine)
-                  : m.body}
+              <p className="whitespace-pre-wrap break-words text-[14px] leading-[21px] px-0.5">
+                {renderMentionBody(
+                  m.body,
+                  active?.type === "group" ? active.participants : [],
+                  mine
+                )}
               </p>
             )}
             <MessageReactions reactions={m.reactions} mine={mine} />
@@ -172,6 +177,7 @@ function MessageBubble({
 function areEqual(prevProps, nextProps) {
   if (prevProps.message !== nextProps.message) return false;
   if (prevProps.theme !== nextProps.theme) return false;
+  if (prevProps.dark !== nextProps.dark) return false;
   if (prevProps.myId !== nextProps.myId) return false;
   if (prevProps.active !== nextProps.active) return false;
   if (prevProps.onContextMenu !== nextProps.onContextMenu) return false;

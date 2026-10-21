@@ -93,8 +93,8 @@ export function showBrowserNotification(payload = {}, { onClick } = {}) {
   try {
     const n = new Notification(title, {
       body,
-      icon: "/favicon.ico",
-      badge: "/favicon.ico",
+      icon: "/brand/zyro-mark.jpg",
+      badge: "/brand/zyro-mark.jpg",
       tag,
       renotify: Boolean(tag),
       data: payload,

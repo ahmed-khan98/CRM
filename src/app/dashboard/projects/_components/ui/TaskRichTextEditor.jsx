@@ -62,7 +62,7 @@ function TaskRichTextEditor({
     editorProps: {
       attributes: {
         class:
-          "px-3 py-2.5 text-sm text-zinc-200 leading-relaxed focus:outline-none " +
+          "px-3 py-2.5 text-sm text-zinc-100 leading-relaxed focus:outline-none " +
           "[&_p]:mb-2 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 " +
           "[&_blockquote]:border-l-2 [&_blockquote]:border-white/20 [&_blockquote]:pl-3 [&_blockquote]:text-zinc-400 " +
           "[&.is-editor-empty:first-child::before]:text-zinc-500 [&.is-editor-empty:first-child::before]:content-[attr(data-placeholder)] " +
@@ -95,8 +95,8 @@ function TaskRichTextEditor({
   if (!editor) return null;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-white/[0.1] bg-[#161b22] transition focus-within:border-white/20 focus-within:ring-1 focus-within:ring-white/10">
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-white/[0.08] bg-[#12171d] px-2 py-1.5">
+    <div className="overflow-hidden rounded-xl border border-white/[0.1] bg-zinc-800 transition focus-within:border-white/20 focus-within:ring-1 focus-within:ring-white/10">
+      <div className="flex flex-wrap items-center gap-0.5 border-b border-white/[0.08] bg-ink px-2 py-1.5">
         <ToolbarButton title="Bold" active={editor.isActive("bold")} onClick={toggleBold}>
           <Bold className="h-3.5 w-3.5" />
         </ToolbarButton>

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { Plus, Trash2, AlertCircle } from "lucide-react";
+import { Plus, Trash2, AlertCircle, Wallet, ArrowRight } from "lucide-react";
 import {
   useGetEmployeeSalaryHistoryQuery,
   useCreateEmployeeSalaryHistoryMutation,
@@ -275,12 +275,12 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
       {!hasStructure && !editing && (
         <div className={`${hrms.shell} p-5 flex flex-col sm:flex-row sm:items-center gap-4 border-amber-200 bg-amber-50/80`}>
           <div className="flex gap-3 flex-1">
-            <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+            <AlertCircle className="h-5 w-5 text-amber-700 shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-bold text-amber-900">
+              <p className="text-sm font-medium text-amber-900">
                 Salary structure not configured
               </p>
-              <p className="text-xs text-amber-800 mt-1">
+              <p className="text-xs text-amber-700 mt-1">
                 Set Basic Pay and Allowances on one screen with a single
                 effective date.
               </p>
@@ -343,7 +343,7 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
             <div className="overflow-hidden rounded-lg border border-zinc-200 shadow-sm">
               <table className="min-w-full text-sm">
                 <thead className="bg-zinc-50/90">
-                  <tr className="text-left text-[11px] uppercase tracking-[0.06em] text-zinc-500">
+                  <tr className="text-left text-xs uppercase tracking-[0.06em] text-zinc-500">
                     <th className="px-4 py-3 font-semibold">Salary Component</th>
                     <th className="px-4 py-3 font-semibold">Type / Option</th>
                     <th className="px-4 py-3 font-semibold w-40">
@@ -357,7 +357,7 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                   <tr>
                     <td className="px-4 py-3">
                       <p className="font-semibold text-zinc-900">Basic Pay</p>
-                      <p className="text-[11px] text-zinc-500">
+                      <p className="text-xs text-zinc-500">
                         Starting / base salary
                       </p>
                     </td>
@@ -410,10 +410,10 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                                       vehicleId: "",
                                     })
                                   }
-                                  className={`flex-1 rounded-lg px-2 py-2 text-[11px] font-bold border ${
+                                  className={`flex-1 rounded-lg px-2 py-2 text-xs font-medium border ${
                                     row.benefitMode === "cash"
-                                      ? "bg-zinc-900 text-white border-zinc-900"
-                                      : "bg-white text-zinc-600 border-zinc-200"
+                                      ? "bg-ink text-white border-zinc-800"
+                                      : "bg-white text-zinc-500 border-zinc-200"
                                   }`}
                                 >
                                   Cash
@@ -425,10 +425,10 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                                       benefitMode: "company_car",
                                     })
                                   }
-                                  className={`flex-1 rounded-lg px-2 py-2 text-[11px] font-bold border ${
+                                  className={`flex-1 rounded-lg px-2 py-2 text-xs font-medium border ${
                                     row.benefitMode === "company_car"
-                                      ? "bg-zinc-900 text-white border-zinc-900"
-                                      : "bg-white text-zinc-600 border-zinc-200"
+                                      ? "bg-ink text-white border-zinc-800"
+                                      : "bg-white text-zinc-500 border-zinc-200"
                                   }`}
                                 >
                                   Company Car
@@ -522,7 +522,7 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                     <td />
                   </tr>
                   <tr>
-                    <td colSpan={4} className="px-4 pb-3 text-[11px] text-zinc-500">
+                    <td colSpan={4} className="px-4 pb-3 text-xs text-zinc-500">
                       Gross preview = Basic + cash allowances (company car is
                       non-cash benefit)
                     </td>
@@ -573,7 +573,7 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="text-left text-[11px] uppercase tracking-wider text-zinc-500 border-b border-zinc-100">
+                <tr className="text-left text-xs uppercase tracking-wider text-zinc-500 border-b border-zinc-200">
                   <th className="py-2 pr-3 font-semibold">Component</th>
                   <th className="py-2 pr-3 font-semibold">Amount / Benefit</th>
                   <th className="py-2 pr-3 font-semibold">Effective</th>
@@ -607,7 +607,7 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                       <td className="py-3 pr-3 font-medium text-zinc-900">
                         {a.allowanceType}
                       </td>
-                      <td className="py-3 pr-3 text-zinc-700">
+                      <td className="py-3 pr-3 text-zinc-900">
                         {a.benefitMode === "company_car"
                           ? `Company car${
                               a.vehicleId?.vehicleName
@@ -668,6 +668,7 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
       </SectionCard>
 
       <SectionCard
+        icon={Wallet}
         title="Salary Revision History"
         subtitle="Previous basic salary values are kept — never overwritten"
       >
@@ -676,32 +677,40 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
         ) : salaryHistory.length === 0 ? (
           <EmptyState message="No revisions yet." />
         ) : (
-          <ul className="space-y-2">
+          <div className="space-y-2">
             {salaryHistory.map((h) => (
-              <li
+              <div
                 key={h._id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-zinc-100 bg-zinc-50/50 px-4 py-3"
+                className="flex gap-3 rounded-xl border border-zinc-800 bg-[#121212] px-3.5 py-3 transition hover:bg-zinc-900/80"
               >
-                <div>
-                  <p className="text-sm font-medium text-zinc-900">
-                    {formatDate(h.effectiveDate)}
-                  </p>
-                  <p className="text-xs text-zinc-500 mt-0.5">
-                    {h.reason || "—"}
+                <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-100">
+                  <Wallet className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                      <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+                        Salary
+                      </span>
+                      <span className="truncate text-sm font-medium text-zinc-100">
+                        {h.reason || "Salary revision"}
+                      </span>
+                    </div>
+                    <span className="whitespace-nowrap text-xs text-zinc-500">
+                      {formatDate(h.effectiveDate)}
+                    </span>
+                  </div>
+                  <p className="mt-1 inline-flex items-center gap-1.5 text-sm tabular-nums text-zinc-500">
+                    <span>{formatMoney(h.previousSalary)}</span>
+                    <ArrowRight className="h-3 w-3 text-zinc-600" />
+                    <span className="font-bold text-zinc-100">
+                      {formatMoney(h.newSalary)}
+                    </span>
                   </p>
                 </div>
-                <p className="text-sm tabular-nums text-zinc-700">
-                  <span className="text-zinc-400">
-                    {formatMoney(h.previousSalary)}
-                  </span>
-                  {" → "}
-                  <span className="font-bold text-zinc-900">
-                    {formatMoney(h.newSalary)}
-                  </span>
-                </p>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </SectionCard>
     </div>

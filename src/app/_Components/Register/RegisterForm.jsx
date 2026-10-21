@@ -194,7 +194,7 @@ function GenZRegistrationPage() {
           >
             <div className="relative">
               {/* Progress bar */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-zinc-50">
                 <motion.div
                   className="h-full bg-[#FB3B11]"
                   initial={{ width: `${((step - 1) / 7) * 100}%` }}
@@ -232,7 +232,7 @@ function GenZRegistrationPage() {
                   </div>
                 </div>
 
-                <div className="text-xs font-medium text-gray-400">
+                <div className="text-xs font-medium text-zinc-400">
                   Step {step < 8 ? step : 7} of 7
                 </div>
               </div>

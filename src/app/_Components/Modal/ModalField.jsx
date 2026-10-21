@@ -25,7 +25,7 @@ export default function ModalField({
         <ErrorMessage
           name={name}
           component="p"
-          className="text-red-400 text-[11px] mt-1"
+          className="text-rose-600 text-[11px] mt-1"
         />
       ) : null}
     </div>

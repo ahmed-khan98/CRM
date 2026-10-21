@@ -53,7 +53,7 @@ function ChatInfoPanel({
         {active.type === "direct" && peer && (
           <button
             type="button"
-            className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 py-2 text-sm font-semibold text-red-600 hover:bg-red-100"
+            className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-rose-200 bg-rose-50 py-2 text-sm font-semibold text-rose-600 hover:bg-red-100"
             onClick={() => setConfirmDeleteChat(activeId)}
           >
             <Trash2 className="h-4 w-4" /> Delete chat

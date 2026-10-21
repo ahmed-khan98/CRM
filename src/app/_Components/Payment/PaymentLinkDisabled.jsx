@@ -2,16 +2,16 @@ import PaymentPagHeader from "./PaymentPagHeader";
 
 const PaymentLinkDisabled = ({ paymentData }) => {
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans text-slate-900">
+    <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900">
       <PaymentPagHeader image={paymentData?.brandId?.image} />
       <main className="max-w-3xl mx-auto sm:px-2 px-4 py-6">
-        <div className="rounded-3xl border border-red-200 bg-white p-10 shadow-xl">
+        <div className="rounded-3xl border border-rose-200 bg-white p-10 shadow-xl">
           <div className="flex items-center justify-center mb-6">
             <span className="inline-flex items-center justify-center rounded-full bg-red-100 p-3">
               <svg
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className="h-6 w-6 text-red-600"
+                className="h-6 w-6 text-rose-600"
               >
                 <path
                   fillRule="evenodd"
@@ -21,22 +21,22 @@ const PaymentLinkDisabled = ({ paymentData }) => {
               </svg>
             </span>
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 text-center">
+          <h1 className="text-3xl font-bold text-zinc-900 text-center">
             Payment Link Disabled
           </h1>
-          <p className="mt-4 text-sm leading-6 text-slate-600 text-center">
+          <p className="mt-4 text-sm leading-6 text-zinc-500 text-center">
             This payment link is no longer active, so paying with PayPal is disabled.
           </p>
           <div className="mt-8 rounded-2xl bg-zinc-50 p-5 text-sm text-slate-700">
             <p className="font-semibold">Invoice details</p>
-            <div className="mt-3 space-y-3 text-xs text-slate-600">
+            <div className="mt-3 space-y-3 text-xs text-zinc-500">
               <div className="flex justify-between">
                 <span>Customer</span>
-                <span>{paymentData?.name || "N/A"}</span>
+                <span>{paymentData?.clientId?.name || paymentData?.name || "N/A"}</span>
               </div>
               <div className="flex justify-between">
                 <span>Email</span>
-                <span>{paymentData?.email || "N/A"}</span>
+                <span>{paymentData?.clientId?.email ||paymentData?.email || "N/A"}</span>
               </div>
               <div className="flex justify-between">
                 <span>Amount</span>
@@ -44,11 +44,11 @@ const PaymentLinkDisabled = ({ paymentData }) => {
               </div>
               <div className="flex justify-between">
                 <span>Status</span>
-                <span className="font-semibold text-red-600">Disabled</span>
+                <span className="font-semibold text-rose-600">Disabled</span>
               </div>
             </div>
           </div>
-          <p className="mt-6 text-sm text-slate-500 text-center">
+          <p className="mt-6 text-sm text-zinc-500 text-center">
             Contact the sender or support if you think this is an error.
           </p>
         </div>

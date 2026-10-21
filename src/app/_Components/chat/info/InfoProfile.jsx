@@ -13,7 +13,7 @@ function InfoProfile({ active, myId, peer }) {
         name={conversationTitle(active, myId)}
         size="lg"
       />
-      <p className="max-w-full truncate px-2 text-center text-lg font-bold">
+      <p className="max-w-full truncate px-2 text-center text-lg font-semibold">
         {conversationTitle(active, myId)}
       </p>
       {selfChat ? (

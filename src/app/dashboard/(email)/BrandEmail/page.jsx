@@ -76,7 +76,7 @@ export default function Client() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-[12px] font-medium hover:bg-zinc-900 transition-colors"
+              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-[12px] font-medium hover:bg-zinc-800 transition-colors"
             >
               <Plus className="h-4 w-4 text--white" />
               Add Brand Email
@@ -95,21 +95,12 @@ export default function Client() {
             <div className="overflow-hidden rounded-xl">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-zinc-800">
-                    <tr>
-                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
-                        Brand{" "}
-                      </th>
-                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
-                        Name{" "}
-                      </th>
-                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
-                        Email ID{" "}
-                      </th>
-
-                      <th className="p-3 text-zinc-300 text-start text-[13px] font-medium capitalize tracking-wider">
-                        Action
-                      </th>
+                  <thead>
+                    <tr className="table-head-row">
+                      <th className="table-head-cell text-left">Brand</th>
+                      <th className="table-head-cell text-left">Name</th>
+                      <th className="table-head-cell text-left">Email ID</th>
+                      <th className="table-head-cell text-left">Action</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -137,7 +128,7 @@ export default function Client() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleEdit(emp)}
-                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-900 transition-colors"
+                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-800 transition-colors"
                           >
                             <Edit className="h-4 w-4" />
                           </motion.button>
@@ -145,7 +136,7 @@ export default function Client() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setConfirmDelete(emp._id)}
-                            className="inline-flex items-center cursor-pointer p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                            className="inline-flex items-center cursor-pointer p-2 bg-rose-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                           >
                             <DeleteIcon className="h-4 w-4" />
 

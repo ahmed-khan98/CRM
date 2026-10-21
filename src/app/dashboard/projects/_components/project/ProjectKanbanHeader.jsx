@@ -48,7 +48,7 @@ function ProjectKanbanHeader({
       <button
         type="button"
         onClick={onBack}
-        className="flex w-fit items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-700 transition cursor-pointer"
+        className="flex w-fit items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-900 transition cursor-pointer"
       >
         <ArrowLeft className="h-3.5 w-3.5" /> Back to Projects
       </button>
@@ -74,14 +74,14 @@ function ProjectKanbanHeader({
                 </span>
               )}
               {deptName && (
-                <span className="inline-flex items-center gap-1 rounded-full border border-zinc-100 bg-zinc-50 px-2.5 py-0.5 text-[10px] font-medium text-zinc-500">
+                <span className="inline-flex items-center gap-1 rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-[10px] font-medium text-zinc-500">
                   <Building2 className="h-2.5 w-2.5" />
                   {deptName}
                 </span>
               )}
             </div>
 
-            <h1 className="text-lg font-bold text-zinc-900 leading-snug mb-1">{project?.name}</h1>
+            <h1 className="text-lg font-semibold text-zinc-900 leading-snug mb-1">{project?.name}</h1>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500 mb-2">
               {hasClient ? (
@@ -133,7 +133,7 @@ function ProjectKanbanHeader({
                     type="button"
                     aria-label="Edit project"
                     onClick={onEdit}
-                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-700 transition cursor-pointer"
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-900 transition cursor-pointer"
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </button>
@@ -143,7 +143,7 @@ function ProjectKanbanHeader({
                 whileTap={{ scale: 0.97 }}
                 type="button"
                 onClick={onAddTask}
-                className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white hover:bg-zinc-800 transition cursor-pointer"
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-ink px-4 text-xs font-semibold text-white hover:bg-zinc-800 transition cursor-pointer"
               >
                 <Plus className="h-3.5 w-3.5" /> New Task
               </motion.button>

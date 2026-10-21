@@ -18,9 +18,12 @@ const EXTRA_EMOJIS = [
   "🙌",
 ];
 
-function EmojiPicker({ onPick }) {
+function EmojiPicker({ onPick, dark = false, theme }) {
+  const menu = theme?.menu || (dark
+    ? "bg-[#111113] text-zinc-100 border-white/[0.08] shadow-[0_16px_40px_rgba(0,0,0,0.5)]"
+    : "bg-white border-zinc-200 shadow-xl");
   return (
-    <div className="absolute bottom-12 left-0 z-30 grid w-56 grid-cols-8 gap-1 rounded-xl border border-zinc-200 bg-white p-2 shadow-xl">
+    <div className={`absolute bottom-12 left-0 z-30 grid w-56 grid-cols-8 gap-1 rounded-xl border p-2 ${menu}`}>
       {[...QUICK_EMOJIS, ...EXTRA_EMOJIS].map((em) => (
         <button
           key={em}

@@ -19,7 +19,7 @@ const Tab = ({ tabs }) => {
                  className={`relative rounded-full mx-1 px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                    isActive
                      ? "text-white"
-                     : "text-gray-600 hover:bg-zinc-800 hover:bg-gray-100"
+                     : "text-gray-600 hover:bg-zinc-800 hover:bg-zinc-50"
                  }`}
                >
                  {isActive && (

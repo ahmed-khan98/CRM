@@ -285,7 +285,7 @@ export function SocketProvider({ children }) {
               }}
               className={`${
                 t.visible ? "animate-enter" : "animate-leave"
-              } relative max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-[#1a1a1e] py-3 pl-4 pr-10 shadow-xl ${
+              } relative max-w-sm w-full pointer-events-auto rounded-xl border border-white/10 bg-ink py-3 pl-4 pr-10 shadow-xl ${
                 openPath ? "cursor-pointer hover:border-white/20" : ""
               }`}
             >

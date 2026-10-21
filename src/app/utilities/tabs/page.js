@@ -12,6 +12,6 @@ export  const myAccountTabs = [
     // { name: "Print Account Info", path: "/dashboard/printAccountInfo", icon: <Printer className="h-4 w-4" /> },
   ]
 export  const appointmentTabs = [
-    { path: "/dashboard/appointment", name: "Pick Up ", color: "bg-blue-500",icon: <Calendar className="h-4 w-4" /> },
+    { path: "/dashboard/appointment", name: "Pick Up ", color: "bg-sky-500",icon: <Calendar className="h-4 w-4" /> },
     { path: "/dashboard/shippingRequest", name: "Shipping Request", color: "b-[#5f2781]",icon: <Truck className="h-4 w-4" /> },
 ];
