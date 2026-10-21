@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { Clock, PowerOff, LogOut, Coffee } from "lucide-react";
+import { Clock, PowerOff, Coffee } from "lucide-react";
 
 const Spinner = ({ size = "h-3.5 w-3.5" }) => (
   <svg
@@ -35,7 +35,6 @@ const mobileButtonClass = (colorClasses) =>
 const ActionButtons = ({
   mobile = false,
   attendence,
-  token,
   isTimeIn,
   isTimeOut,
   isOnBreak,
@@ -43,7 +42,6 @@ const ActionButtons = ({
   onBreakOpen,
   onBreakOut,
   onConfirmDelete,
-  onLogout,
 }) => {
   if (mobile) {
     return (
@@ -112,18 +110,6 @@ const ActionButtons = ({
             Shift Over
           </div>
         )}
-
-        {token && (
-          <button
-            onClick={onLogout}
-            className={mobileButtonClass(
-              "bg-white/[0.04] border border-white/[0.07] text-zinc-400 hover:bg-white/[0.07] hover:text-zinc-100"
-            )}
-          >
-            <LogOut size={14} />
-            <span>Log Out</span>
-          </button>
-        )}
       </div>
     );
   }
@@ -191,18 +177,6 @@ const ActionButtons = ({
         <span className="px-2.5 py-1 rounded-lg text-xs font-medium uppercase leading-none h-7 inline-flex items-center bg-white/5 border border-white/[0.08] text-zinc-500">
           Shift Over
         </span>
-      )}
-
-      {token && (
-        <button
-          onClick={onLogout}
-          className={buttonClass(
-            "bg-white/5 border border-white/[0.08] text-zinc-400 hover:bg-white/[0.09] hover:text-zinc-100"
-          )}
-        >
-          <LogOut size={12} />
-          <span>Log Out</span>
-        </button>
       )}
     </div>
   );

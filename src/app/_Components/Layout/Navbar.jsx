@@ -10,7 +10,7 @@ import moment from "moment-timezone";
 import BrandLogo from "@/app/_Components/brand/BrandLogo";
 import { X, Menu, Clock, Timer, Activity, CheckCircle } from "lucide-react";
 import LeftNav from "./LeftNav";
-import ActionButtons from "./NavbarActions";
+import NavbarUserMenu from "./NavbarUserMenu";
 import NotificationBell from "./NotificationBell";
 import NavBreadcrumb from "./NavBreadcrumb";
 import {
@@ -286,6 +286,7 @@ const Navbar = () => {
 
   const activeBreak = loggedUser?.data?.activeBreak;
   const isOnBreak = Boolean(activeBreak);
+  const currentUser = loggedUser?.data;
 
   const closeBreakModal = useCallback(() => {
     setIsBreakOpen(false);
@@ -316,18 +317,20 @@ const Navbar = () => {
           </div>
           <div className="hidden lg:flex items-center gap-1.5">
             <NotificationBell />
-            <ActionButtons
-              attendence={attendence}
-              token={token}
-              isTimeIn={isTimeIn}
-              isTimeOut={isTimeOut}
-              isOnBreak={isOnBreak}
-              onTimeIn={handleTimeIn}
-              onBreakOpen={openBreakModal}
-              onBreakOut={handleBreakOut}
-              onConfirmDelete={confirmTimeOut}
-              onLogout={handleLogout}
-            />
+            {token ? (
+              <NavbarUserMenu
+                user={currentUser}
+                onLogout={handleLogout}
+                attendence={attendence}
+                isOnBreak={isOnBreak}
+                isTimeIn={isTimeIn}
+                isTimeOut={isTimeOut}
+                onTimeIn={handleTimeIn}
+                onBreakOpen={openBreakModal}
+                onBreakOut={handleBreakOut}
+                onConfirmDelete={confirmTimeOut}
+              />
+            ) : null}
           </div>
           <button
             className="lg:hidden flex items-center justify-center p-1"
@@ -372,23 +375,25 @@ const Navbar = () => {
           <AttendanceStatus mobile />
         </div>
         <div className="px-3 pt-3 pb-2 shrink-0 flex flex-col gap-2">
+          {token ? (
+            <NavbarUserMenu
+              mobile
+              user={currentUser}
+              onLogout={handleLogout}
+              attendence={attendence}
+              isOnBreak={isOnBreak}
+              isTimeIn={isTimeIn}
+              isTimeOut={isTimeOut}
+              onTimeIn={handleTimeIn}
+              onBreakOpen={openBreakModal}
+              onBreakOut={handleBreakOut}
+              onConfirmDelete={confirmTimeOut}
+            />
+          ) : null}
           <p className="px-1 text-xs font-medium uppercase tracking-wider text-zinc-500">
-            Quick actions
+            Notifications
           </p>
           <NotificationBell mobile />
-          <ActionButtons
-            mobile
-            attendence={attendence}
-            token={token}
-            isTimeIn={isTimeIn}
-            isTimeOut={isTimeOut}
-            isOnBreak={isOnBreak}
-            onTimeIn={handleTimeIn}
-            onBreakOpen={openBreakModal}
-            onBreakOut={handleBreakOut}
-            onConfirmDelete={confirmTimeOut}
-            onLogout={handleLogout}
-          />
         </div>
         <div className="mx-3 shrink-0 h-px bg-white/[0.06]" />
         <div className="flex-1 overflow-y-auto pt-2 overscroll-contain">

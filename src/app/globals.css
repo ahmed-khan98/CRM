@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @import "./styles/tokens.css";
 
+/* Hide number-input spinners app-wide; values change only by typing */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 .crm-field {
   border: 1px solid #e4e4e7 !important;
   background-color: #fff !important;

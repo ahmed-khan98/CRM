@@ -1,6 +1,7 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import ReduxProvider from "./_Services/reduxprovider/reduxprovider";
 import { Toaster } from "react-hot-toast";
+import NumberInputGuard from "./_Components/NumberInputGuard";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -46,6 +47,7 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning
       >
         <ReduxProvider>
+          <NumberInputGuard />
           <Toaster
             position="top-center"
             toastOptions={{

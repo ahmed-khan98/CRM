@@ -364,14 +364,19 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                     <td className="px-4 py-3 text-zinc-500 text-xs">Fixed</td>
                     <td className="px-4 py-3">
                       <input
-                        type="number"
-                        min="0"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         className={inputClass}
                         placeholder="100000"
                         value={form.basicSalary}
                         onChange={(e) =>
-                          setForm({ ...form, basicSalary: e.target.value })
+                          setForm({
+                            ...form,
+                            basicSalary: e.target.value.replace(/[^\d]/g, ""),
+                          })
                         }
+                        onWheel={(e) => e.currentTarget.blur()}
                         required
                       />
                     </td>
@@ -466,14 +471,18 @@ export default function CompensationTab({ employeeId, employee, onSaved }) {
                         <td className="px-4 py-3 align-top">
                           {!(isCar && row.benefitMode === "company_car") ? (
                             <input
-                              type="number"
-                              min="0"
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
                               className={inputClass}
                               placeholder="0"
                               value={row.amount}
                               onChange={(e) =>
-                                updateRow(row.key, { amount: e.target.value })
+                                updateRow(row.key, {
+                                  amount: e.target.value.replace(/[^\d]/g, ""),
+                                })
                               }
+                              onWheel={(e) => e.currentTarget.blur()}
                             />
                           ) : (
                             <span className="text-xs text-zinc-500">

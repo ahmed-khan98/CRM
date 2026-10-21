@@ -1,48 +1,73 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { Download, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
+import DownloadProgressBtn from "@/app/_Components/chat/DownloadProgressBtn";
 import {
-  fetchAttachmentBlob,
+  fetchAttachmentBlobWithProgress,
+  saveBlobAsFile,
   toHttpsUrl,
 } from "@/app/_utils/attachmentUrl";
 
 function ChatImage({ attachment }) {
-  const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState(null);
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [done, setDone] = useState(false);
+  const doneTimer = useRef(null);
+
+  const busy = progress != null || indeterminate;
   const name = attachment.fileName || "image.jpg";
   const src = toHttpsUrl(attachment.url);
 
+  const trackProgress = (p) => {
+    if (p == null) {
+      setIndeterminate(true);
+      setProgress(null);
+    } else {
+      setIndeterminate(false);
+      setProgress(p);
+    }
+  };
+
   const download = async () => {
-    setBusy(true);
+    if (busy) return;
+    setDone(false);
+    setProgress(0);
     try {
       let blob;
       try {
-        blob = await fetchAttachmentBlob(attachment.url, {
-          disposition: "attachment",
-          filename: name,
-          publicId: attachment.publicId,
-        });
+        blob = await fetchAttachmentBlobWithProgress(
+          attachment.url,
+          {
+            disposition: "attachment",
+            filename: name,
+            publicId: attachment.publicId,
+          },
+          trackProgress
+        );
       } catch {
         const res = await fetch(attachment.url);
         if (!res.ok) throw new Error("fetch failed");
+        setIndeterminate(true);
         blob = await res.blob();
       }
-      const href = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = href;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(href);
+      saveBlobAsFile(blob, name);
+      setIndeterminate(false);
+      setProgress(100);
+      setDone(true);
       toast.success("Image downloaded");
+      if (doneTimer.current) clearTimeout(doneTimer.current);
+      doneTimer.current = setTimeout(() => {
+        setDone(false);
+        setProgress(null);
+      }, 1800);
     } catch (err) {
       console.error(err);
+      setProgress(null);
+      setIndeterminate(false);
       toast.error("Download failed");
-    } finally {
-      setBusy(false);
     }
   };
 
@@ -66,17 +91,17 @@ function ChatImage({ attachment }) {
             <ExternalLink className="h-3.5 w-3.5 text-white" stroke="currentColor" />
           </a>
         </ChatTooltip>
-        <ChatTooltip label="Download" side="top">
-          <button
-            type="button"
-            onClick={download}
-            disabled={busy}
-            aria-label="Download image"
-            className="inline-flex items-center justify-center rounded-lg border border-white/20 bg-black/70 p-1.5 text-white shadow-sm backdrop-blur-sm hover:bg-black/90 disabled:opacity-50"
-          >
-            <Download className="h-3.5 w-3.5 text-white" stroke="currentColor" />
-          </button>
-        </ChatTooltip>
+        <DownloadProgressBtn
+          progress={progress}
+          indeterminate={indeterminate}
+          done={done}
+          onClick={download}
+          disabled={busy}
+          size={28}
+          color="#fff"
+          className="border border-white/20 bg-black/70 text-white shadow-sm backdrop-blur-sm hover:bg-black/90"
+          iconClassName="h-3.5 w-3.5 text-white"
+        />
       </div>
     </div>
   );

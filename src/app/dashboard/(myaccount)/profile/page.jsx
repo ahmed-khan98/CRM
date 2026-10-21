@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
-import { useUpdateProfileMutation } from "@/app/_Services/authentication/page";
+import {
+  useUpdateAvatarMutation,
+  useUpdateProfileMutation,
+} from "@/app/_Services/authentication/page";
 import toast, { Toaster } from "react-hot-toast";
 import {
   User,
@@ -17,16 +20,72 @@ import {
   ShieldUser,
   Pencil,
   X,
+  Camera,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Tab from "@/app/_Components/Tab/page";
 import { myAccountTabs } from "@/app/utilities/tabs/page";
 import { formatPhoneNumber } from "@/app/utilities/phoneFormat";
 
+const MAX_AVATAR_MB = 5;
+
+function mergeCurrentUser(updated) {
+  let prev = {};
+  try {
+    prev = JSON.parse(Cookies.get("currentuser") || "{}") || {};
+  } catch {
+    prev = {};
+  }
+  const next = { ...prev, ...updated };
+  Cookies.set("currentuser", JSON.stringify(next), {
+    expires: 7,
+    secure: true,
+  });
+  return next;
+}
+
+function Field({
+  icon: Icon,
+  label,
+  name,
+  value,
+  onChange,
+  disabled,
+  editable,
+  type = "text",
+  placeholder,
+}) {
+  const locked = disabled || !editable;
+  return (
+    <div className="space-y-1.5">
+      <label className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-zinc-500">
+        <Icon size={13} className="text-zinc-500" />
+        {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        disabled={locked}
+        placeholder={placeholder}
+        className={`w-full rounded-xl border px-3.5 py-2.5 text-sm transition-all duration-150 focus:outline-none focus:ring-1 ${
+          locked
+            ? "cursor-default border-[#27272a] bg-[#0c0c0c] text-zinc-400"
+            : "border-[#3f3f46] bg-[#121212] text-zinc-100 placeholder:text-zinc-600 focus:border-zinc-400 focus:ring-zinc-500/30"
+        }`}
+      />
+    </div>
+  );
+}
+
 const ProfilePage = () => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+  const [updateAvatar, { isLoading: uploadingAvatar }] = useUpdateAvatarMutation();
+  const fileInputRef = useRef(null);
   const [isEditable, setIsEditable] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -36,12 +95,15 @@ const ProfilePage = () => {
     designation: "",
     department: "",
     joiningDate: "",
+    image: "",
   });
 
   useEffect(() => {
     const data = Cookies.get("currentuser");
-    if (data) {
+    if (!data) return;
+    try {
       const user = JSON.parse(data);
+      const joinRaw = user?.joiningDate;
       setFormData({
         fullName: user?.fullName || "",
         email: user?.email || "",
@@ -49,18 +111,60 @@ const ProfilePage = () => {
         CNIC: user?.CNIC || "",
         designation: user?.designation || "",
         department: user?.departmentId?.name || "",
-        joiningDate: user?.joiningDate.split("T")[0] || "",
+        joiningDate: joinRaw ? String(joinRaw).split("T")[0] : "",
+        image: user?.image || "",
       });
+    } catch {
+      // corrupt cookie — leave empty form
     }
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleAvatarPick = () => fileInputRef.current?.click();
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > MAX_AVATAR_MB * 1024 * 1024) {
+      toast.error(`Image must be under ${MAX_AVATAR_MB} MB`);
+      return;
+    }
+
+    const localPreview = URL.createObjectURL(file);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(localPreview);
+
+    try {
+      const res = await updateAvatar(file).unwrap();
+      if (res.success) {
+        const user = mergeCurrentUser(res.data);
+        setFormData((prev) => ({
+          ...prev,
+          image: user?.image || res.data?.image || "",
+          department: user?.departmentId?.name || prev.department,
+        }));
+        toast.success("Profile picture updated");
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || "Could not update picture");
+      setPreviewUrl("");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -68,84 +172,140 @@ const ProfilePage = () => {
     try {
       const res = await updateProfile(formData).unwrap();
       if (res.success) {
-        const user = res?.data;
+        const user = mergeCurrentUser(res.data);
+        setFormData((prev) => ({
+          ...prev,
+          fullName: user?.fullName || prev.fullName,
+          phoneNo: user?.phoneNo || prev.phoneNo,
+          CNIC: user?.CNIC || prev.CNIC,
+          image: user?.image || prev.image,
+          department: user?.departmentId?.name || prev.department,
+        }));
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
         setIsEditable(false);
-        Cookies.set("currentuser", JSON.stringify(user), {
-          expires: 7,
-          secure: true,
-        });
       }
     } catch (err) {
       toast.error(err?.data?.message || "Update failed");
     }
   };
 
-  const name = formData?.fullName?.split(" ");
+  const initials = (formData.fullName || "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const avatarSrc = previewUrl || formData.image || "";
+
   return (
-    <div className="min-h-screen  mx-1 ">
+    <div className="min-h-0 flex-1 pb-6">
       <Toaster position="top-center" />
-      <div className="max-w-7xl mx-auto">
-        <Tab tabs={myAccountTabs} />
-        <div className="my-4 mx-2">
-          <h1 className="text-lg md:text-lg font-semibold text-gray-800">
+      <div className="mx-auto max-w-5xl space-y-4 px-1 sm:px-2">
+        <Tab tabs={myAccountTabs} variant="dark" />
+
+        <div className="px-0.5">
+          <h1 className="text-lg font-semibold tracking-tight text-zinc-100">
             My Account
           </h1>
-          <p className="text-zinc-500 text-sm">
-            Manage your personal information and preferences
+          <p className="mt-0.5 text-sm text-zinc-500">
+            Manage your profile photo and personal details
           </p>
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mx-2 "
-          // {/* className="flex-1 px-3 md:px-6 py-4 cursor-pointer bg-gradient-to-r from-ink via-zinc-800 to-ink text-white rounded-2xl font-semibold hover:from-zinc-800 hover:to-zinc-700 border border-zinc-700/50 hover:border-zinc-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-xl hover:shadow-zinc-900/50"                        > */}
+          transition={{ duration: 0.35 }}
+          className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0a0a] shadow-xl"
         >
-          <div className="relative overflow-hidden">
-            <div className="h-18 bg-ink shadow-zinc-900/50"></div>
+          {/* Banner */}
+          <div className="relative h-28 bg-gradient-to-br from-zinc-800 via-zinc-900 to-[#050505] sm:h-32">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.08),transparent_55%)]" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/[0.06]" />
+          </div>
 
-            <div className="relative px-1 md:px-4  pb-6 -mt-12">
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2">
-                <div className="flex items-end gap-4 mx-4 md:mx-0">
-                  <div className="h-18 w-18 rounded-full bg-white/[0.08] shadow-md flex items-center justify-center border border-white/10">
-                    <div className="h-full w-full rounded-full bg-ink flex items-center justify-center text-zinc-400 text-lg font-semibold capitalize">
-                      {name?.map((e) => `${e?.charAt(0)}`) || (
-                        <User size={30} />
-                      )}
-                    </div>
+          {/* Identity row */}
+          <div className="relative px-4 pb-5 sm:px-6">
+            <div className="-mt-12 flex flex-col gap-4 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
+              <div className="flex items-end gap-4">
+                <div className="relative shrink-0">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarChange}
+                  />
+                  <div className="h-[88px] w-[88px] overflow-hidden rounded-2xl border-2 border-[#0a0a0a] bg-[#121212] shadow-lg ring-1 ring-white/10 sm:h-24 sm:w-24">
+                    {avatarSrc ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={avatarSrc}
+                        alt={formData.fullName || "Profile"}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-zinc-900 text-xl font-semibold text-zinc-400">
+                        {initials || <User size={28} />}
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-zinc-300 capitalize">
-                      {formData.fullName}
-                    </h2>
-                    <p className="text-zinc-500">{formData.email}</p>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAvatarPick}
+                    disabled={uploadingAvatar}
+                    aria-label="Update profile picture"
+                    className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-zinc-800 text-zinc-200 shadow-md transition hover:bg-zinc-700 disabled:opacity-60"
+                  >
+                    {uploadingAvatar ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Camera className="h-3.5 w-3.5" />
+                    )}
+                  </button>
                 </div>
 
-                <button
-                  onClick={() => setIsEditable(!isEditable)}
-                  className={`cursor-pointer flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-150 border ${
-                    isEditable
-                      ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-800 border-zinc-700"
-                      : "bg-ink border-white/[0.08] text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
-                  }`}
-                >
-                  {isEditable ? (
-                    <>
-                      <X size={14} />
-                      <span>Cancel Editing</span>
-                    </>
-                  ) : (
-                    <>
-                      <Pencil size={14} />
-                      <span>Edit Profile</span>
-                    </>
+                <div className="min-w-0 pb-1">
+                  <h2 className="truncate text-xl font-semibold capitalize tracking-tight text-zinc-100">
+                    {formData.fullName || "Your name"}
+                  </h2>
+                  <p className="mt-0.5 truncate text-sm text-zinc-500">
+                    {formData.email || "—"}
+                  </p>
+                  {(formData.designation || formData.department) && (
+                    <p className="mt-1.5 truncate text-xs text-zinc-400">
+                      {[formData.designation, formData.department]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
                   )}
-                </button>
+                </div>
               </div>
+
+              <button
+                type="button"
+                onClick={() => setIsEditable(!isEditable)}
+                className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
+                  isEditable
+                    ? "border-zinc-600 bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+                    : "border-white/[0.08] bg-white/[0.06] text-zinc-200 hover:bg-white/[0.1]"
+                }`}
+              >
+                {isEditable ? (
+                  <>
+                    <X size={14} />
+                    Cancel
+                  </>
+                ) : (
+                  <>
+                    <Pencil size={14} />
+                    Edit profile
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
@@ -155,225 +315,141 @@ const ProfilePage = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="bg-emerald-50 border-l-4 border-green-500 p-4 mx-8"
+                className="mx-4 mb-2 overflow-hidden rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 sm:mx-6"
               >
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <p className="text-emerald-700">
-                    Your profile has been updated successfully!
+                <div className="flex items-center gap-2.5">
+                  <CheckCircle className="h-4 w-4 shrink-0 text-emerald-400" />
+                  <p className="text-sm text-emerald-300">
+                    Profile updated successfully
                   </p>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <form onSubmit={handleSubmit} className="p-2 px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <User size={16} className="text-gray-800" />
-                  Full Name
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    disabled={!isEditable}
-                    className={`w-full p-4  border ${
-                      isEditable
-                        ? "bg-white  focus:ring-red-500"
-                        : "bg-zinc-50  focus:ring-[#5f2781]"
-                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
-                    placeholder="Your first name"
-                  />
-                </div>
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6 border-t border-white/[0.06] px-4 py-5 sm:px-6 sm:py-6"
+          >
+            <section>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-4 w-0.5 rounded-full bg-zinc-500" />
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  Personal information
+                </h3>
               </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Field
+                  icon={User}
+                  label="Full name"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  editable={isEditable}
+                  placeholder="Your full name"
+                />
+                <Field
+                  icon={IdCard}
+                  label="CNIC"
+                  name="CNIC"
+                  value={formData.CNIC}
+                  onChange={handleChange}
+                  editable={isEditable}
+                  placeholder="XXXXX-XXXXXXX-X"
+                />
+                <Field
+                  icon={Mail}
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  editable={isEditable}
+                  placeholder="you@company.com"
+                />
+                <Field
+                  icon={Phone}
+                  label="Phone"
+                  name="phoneNo"
+                  value={formData.phoneNo}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      phoneNo: formatPhoneNumber(e.target.value),
+                    }));
+                  }}
+                  editable={isEditable}
+                  placeholder="+92 …"
+                />
+              </div>
+            </section>
 
-              <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <IdCard size={18} className="text-gray-800" />
-                  CNIC
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="CNIC"
-                    value={formData.CNIC}
-                    onChange={handleChange}
-                    disabled={!isEditable}
-                    className={`w-full p-4  border ${
-                      isEditable
-                        ? "bg-white  focus:ring-red-500"
-                        : "bg-zinc-50  focus:ring-[#5f2781]"
-                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
-                    placeholder="Your last name"
-                  />
-                </div>
+            <section>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-4 w-0.5 rounded-full bg-zinc-500" />
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  Work details
+                </h3>
+                <span className="rounded-md border border-white/[0.06] bg-white/[0.03] px-1.5 py-0.5 text-[10px] font-medium text-zinc-500">
+                  Read only
+                </span>
               </div>
-
-              <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <Mail size={16} className="text-gray-800" />
-                  Email Address
-                </label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    disabled={!isEditable}
-                    className={`w-full p-4  border ${
-                      isEditable
-                        ? "bg-white  focus:ring-red-500"
-                        : "bg-zinc-50  focus:ring-[#5f2781]"
-                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
-                    placeholder="Your email address"
-                  />
-                </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <Field
+                  icon={ShieldUser}
+                  label="Designation"
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  editable={false}
+                  disabled
+                />
+                <Field
+                  icon={Building}
+                  label="Department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  editable={false}
+                  disabled
+                />
+                <Field
+                  icon={Calendar}
+                  label="Joining date"
+                  name="joiningDate"
+                  type="date"
+                  value={formData.joiningDate}
+                  onChange={handleChange}
+                  editable={false}
+                  disabled
+                />
               </div>
-
-              <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <Phone size={16} className="text-gray-800" />
-                  Phone Number
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="phoneNo"
-                    value={formData.phoneNo}
-                    // onChange={handleChange}
-                    onChange={(e) => {
-                      const formattedValue = formatPhoneNumber(e.target.value);
-                      setFormData((prev) => ({
-                        ...prev,
-                        phoneNo: formattedValue,
-                      }));
-                    }}
-                    placeholder="+1 (555) 123-4567"
-                    disabled={!isEditable}
-                    className={`w-full p-4  border ${
-                      isEditable
-                        ? "bg-white  focus:ring-red-500"
-                        : "bg-zinc-50  focus:ring-[#5f2781]"
-                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
-                    // placeholder="Your phone number"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <ShieldUser size={16} className="text-gray-800" />
-                  Designation
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="designation"
-                    value={formData.designation}
-                    // onChange={handleChange}
-                    onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        designation: e.target.value,
-                      }));
-                    }}
-                    disabled
-                    className={`w-full p-4  border ${
-                      isEditable
-                        ? "bg-white  focus:ring-red-500"
-                        : "bg-zinc-50  focus:ring-[#5f2781]"
-                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
-                    // placeholder="Your phone number"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <Building size={16} className="text-gray-800" />
-                  Department
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="department"
-                    value={formData.department}
-                    onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        department: e.target.value,
-                      }));
-                    }}
-                    disabled
-                    className={`w-full p-4  border ${
-                      isEditable
-                        ? "bg-white  focus:ring-red-500"
-                        : "bg-zinc-50  focus:ring-[#5f2781]"
-                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
-                    // placeholder="Your phone number"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="flex items-center gap-2 text-gray-700 font-medium pl-4 text-sm">
-                  <Calendar size={16} className="text-gray-800" />
-                  Joining Date
-                </label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    name="joiningDate"
-                    value={formData.joiningDate}
-                    onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        joiningDate: e.target.value,
-                      }));
-                    }}
-                    disabled
-                    className={`w-full p-4  border ${
-                      isEditable
-                        ? "bg-white  focus:ring-red-500"
-                        : "bg-zinc-50  focus:ring-[#5f2781]"
-                    } border-zinc-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#5f2781] transition-all duration-200 p-1`}
-                    // placeholder="Your phone number"
-                  />
-                </div>
-              </div>
-            </div>
+            </section>
 
             <AnimatePresence>
               {isEditable && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  className="mt-4 flex justify-center"
+                  exit={{ opacity: 0, y: 8 }}
+                  className="flex justify-end border-t border-white/[0.06] pt-4"
                 >
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="group cursor-pointer relative overflow-hidden p-2 bg-ink text-white font-medium rounded-full hover:shadow-lg hover:bg-zinc-800 hover:text-zinc-400 transition-all duration-300 disabled:opacity-70 min-w-[180px]"
+                    className="inline-flex min-w-[160px] items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-zinc-100 px-5 py-2.5 text-sm font-semibold text-zinc-900 transition hover:bg-white disabled:opacity-60"
                   >
-                    <span className="relative flex items-center justify-center gap-2">
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                          Updating...
-                        </>
-                      ) : (
-                        <>
-                          Save Changes
-                          <Save className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                        </>
-                      )}
-                    </span>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Saving…
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-4 w-4" />
+                        Save changes
+                      </>
+                    )}
                   </button>
                 </motion.div>
               )}

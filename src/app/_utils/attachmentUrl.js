@@ -98,17 +98,63 @@ export async function fetchAttachmentBlob(
   url,
   { disposition = "inline", filename, publicId } = {}
 ) {
+  return fetchAttachmentBlobWithProgress(url, {
+    disposition,
+    filename,
+    publicId,
+  });
+}
+
+/**
+ * Same as fetchAttachmentBlob but reports download progress (0–100).
+ * onProgress(null) = indeterminate (no Content-Length).
+ */
+export function fetchAttachmentBlobWithProgress(
+  url,
+  { disposition = "inline", filename, publicId } = {},
+  onProgress
+) {
   const token = getAccessToken();
   const proxyUrl = getAttachmentProxyUrl(url, { disposition, filename, publicId });
 
-  const headers = {};
-  if (token) headers.Authorization = `Bearer ${token}`;
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", proxyUrl);
+    xhr.responseType = "blob";
+    xhr.withCredentials = true;
+    if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
-  const res = await fetch(proxyUrl, {
-    credentials: "include",
-    headers,
+    xhr.onprogress = (e) => {
+      if (!onProgress) return;
+      if (e.lengthComputable && e.total > 0) {
+        onProgress(Math.min(100, Math.round((e.loaded / e.total) * 100)));
+      } else {
+        onProgress(null);
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        onProgress?.(100);
+        resolve(xhr.response);
+      } else {
+        reject(new Error("Failed to fetch attachment"));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Failed to fetch attachment"));
+    xhr.onabort = () => reject(new Error("Download cancelled"));
+    xhr.send();
   });
+}
 
-  if (!res.ok) throw new Error("Failed to fetch attachment");
-  return res.blob();
+/** Trigger browser save-as from a Blob */
+export function saveBlobAsFile(blob, filename = "file") {
+  const href = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = href;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 60_000);
 }

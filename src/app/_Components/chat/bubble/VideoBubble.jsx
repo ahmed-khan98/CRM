@@ -1,41 +1,81 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { Download } from "lucide-react";
 import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
-import { fetchAttachmentBlob } from "@/app/_utils/attachmentUrl";
+import DownloadProgressBtn from "@/app/_Components/chat/DownloadProgressBtn";
+import {
+  fetchAttachmentBlobWithProgress,
+  saveBlobAsFile,
+} from "@/app/_utils/attachmentUrl";
 
 function VideoBubble({ attachment }) {
+  const [progress, setProgress] = useState(null);
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [done, setDone] = useState(false);
+  const doneTimer = useRef(null);
+
   if (!attachment?.url) return null;
+
+  const busy = progress != null || indeterminate;
+  const name = attachment.fileName || "video.mp4";
+
+  const download = async () => {
+    if (busy) return;
+    setDone(false);
+    setProgress(0);
+    try {
+      const blob = await fetchAttachmentBlobWithProgress(
+        attachment.url,
+        {
+          disposition: "attachment",
+          filename: name,
+          publicId: attachment.publicId,
+        },
+        (p) => {
+          if (p == null) {
+            setIndeterminate(true);
+            setProgress(null);
+          } else {
+            setIndeterminate(false);
+            setProgress(p);
+          }
+        }
+      );
+      saveBlobAsFile(blob, name);
+      setIndeterminate(false);
+      setProgress(100);
+      setDone(true);
+      toast.success("Video downloaded");
+      if (doneTimer.current) clearTimeout(doneTimer.current);
+      doneTimer.current = setTimeout(() => {
+        setDone(false);
+        setProgress(null);
+      }, 1800);
+    } catch {
+      setProgress(null);
+      setIndeterminate(false);
+      toast.error("Video download failed");
+    }
+  };
+
   return (
     <div className="relative mb-1 -mx-0.5">
       <video src={attachment.url} controls className="max-h-64 rounded-lg" />
-      <ChatTooltip label="Download video" side="top">
-        <button
-          type="button"
-          className="absolute bottom-2 right-2 rounded-full bg-black/70 p-1.5 text-white hover:bg-black/90"
-          onClick={async () => {
-            try {
-              const blob = await fetchAttachmentBlob(attachment.url, {
-                disposition: "attachment",
-                filename: attachment.fileName || "video.mp4",
-                publicId: attachment.publicId,
-              });
-              const href = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = href;
-              a.download = attachment.fileName || "video.mp4";
-              a.click();
-              URL.revokeObjectURL(href);
-            } catch {
-              toast.error("Video download failed");
-            }
-          }}
-        >
-          <Download className="h-3.5 w-3.5" />
-        </button>
-      </ChatTooltip>
+      <div className="absolute bottom-2 right-2">
+        <DownloadProgressBtn
+          progress={progress}
+          indeterminate={indeterminate}
+          done={done}
+          onClick={download}
+          disabled={busy}
+          label="Download video"
+          size={28}
+          color="#fff"
+          className="bg-black/70 text-white hover:bg-black/90"
+          iconClassName="h-3.5 w-3.5"
+        />
+      </div>
     </div>
   );
 }

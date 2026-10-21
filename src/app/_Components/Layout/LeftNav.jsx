@@ -33,6 +33,7 @@ import {
   Truck,
   MessageCircle,
   Briefcase,
+  IdCard,
 } from "lucide-react";
 import Tooltip from "@/app/_Components/ui/Tooltip";
 import BrandLogo from "@/app/_Components/brand/BrandLogo";
@@ -42,6 +43,20 @@ import { removeAttendence, resumeWork } from "@/redux/filterSlice";
 import { useDispatch } from "react-redux";
 import { effectiveRole } from "@/app/config/permissions";
 
+/** Flat top-level HR items — hidden for ADMIN / SUBADMIN / HR_ADMIN (shown under HRMS). */
+const HRMS_FLAT_NAMES = new Set([
+  "Department",
+  "Brand",
+  "Announcement",
+  "Employee",
+  "Attendance",
+  "Leave",
+  "Payroll",
+  "Recruitment",
+]);
+
+const HRMS_ROLES = new Set(["ADMIN", "SUBADMIN", "HR_ADMIN"]);
+
 const LeftNav = ({ set }) => {
   const pathname = usePathname();
   const dispatch = useDispatch();
@@ -49,6 +64,7 @@ const LeftNav = ({ set }) => {
   const sidebars = [];
   const isMobileDrawer = Boolean(set);
   const [expandedMenus, setExpandedMenus] = useState({});
+  const [expandedNested, setExpandedNested] = useState({});
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [logout] = useLogoutMutation();
 
@@ -56,6 +72,121 @@ const LeftNav = ({ set }) => {
   const user = userCookie ? JSON.parse(userCookie) : null;
   // HR department staff see HRMS menus like HR_ADMIN
   const navRole = effectiveRole(user) || user?.role;
+  const isHrmsNavRole = HRMS_ROLES.has(navRole);
+
+  const attendanceSubmenu = [
+    {
+      name: "Attendance",
+      path: "/dashboard/attendance",
+      roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <CalendarDays className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Team Attendance",
+      path: "/dashboard/attendance/teamAttendence",
+      roles: ["HR_ADMIN", "DEP_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <CalendarDays className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Break",
+      path: "/dashboard/attendance/break",
+      roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <Coffee className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Team Break",
+      path: "/dashboard/attendance/teamBreak",
+      roles: ["HR_ADMIN", "DEP_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <Coffee className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Leave",
+      path: "/dashboard/leave",
+      roles: ["USER"],
+      icon: <CalendarCheck className="w-3.5 h-3.5" />,
+    },
+  ];
+
+  const leaveSubmenu = [
+    {
+      name: "Leave",
+      path: "/dashboard/leave",
+      roles: ["HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <CalendarCheck className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Team Leave",
+      path: "/dashboard/leave/team",
+      roles: ["HR_ADMIN", "DEP_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <Users className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Leave Settings",
+      path: "/dashboard/leave/settings",
+      roles: ["HR_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <CalendarDays className="w-3.5 h-3.5" />,
+    },
+  ];
+
+  const payrollSubmenu = [
+    {
+      name: "Run Payroll",
+      path: "/dashboard/payroll/run",
+      roles: ["HR_ADMIN", "FINANCE_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <Wallet className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Payslips",
+      path: "/dashboard/payroll",
+      roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <Wallet className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Payroll Settings",
+      path: "/dashboard/payroll/settings",
+      roles: ["HR_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <CalendarDays className="w-3.5 h-3.5" />,
+    },
+  ];
+
+  const recruitmentSubmenu = [
+    {
+      name: "Dashboard",
+      path: "/dashboard/recruitment",
+      roles: ["HR_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <LayoutDashboard className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Jobs",
+      path: "/dashboard/recruitment/jobs",
+      roles: ["HR_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <Briefcase className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Interviews",
+      path: "/dashboard/recruitment/interviews",
+      roles: ["HR_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <CalendarDays className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Offers",
+      path: "/dashboard/recruitment/offers",
+      roles: ["HR_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <Mail className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Reports",
+      path: "/dashboard/recruitment/reports",
+      roles: ["HR_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <ChartBar className="w-3.5 h-3.5" />,
+    },
+    {
+      name: "Settings",
+      path: "/dashboard/recruitment/settings",
+      roles: ["HR_ADMIN", "ADMIN", "SUBADMIN"],
+      icon: <CalendarDays className="w-3.5 h-3.5" />,
+    },
+  ];
 
   const menuItems = [
     {
@@ -64,6 +195,82 @@ const LeftNav = ({ set }) => {
       path: ["/dashboard/statistics"],
       roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
       section: "Overview",
+    },
+    {
+      name: "HRMS",
+      icon: <IdCard className="w-4 h-4" />,
+      path: [
+        "/dashboard/department",
+        "/dashboard/brand",
+        "/dashboard/announcement",
+        "/dashboard/employee",
+        "/dashboard/attendance",
+        "/dashboard/leave",
+        "/dashboard/payroll",
+        "/dashboard/recruitment",
+      ],
+      roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+      section: "HRMS",
+      submenu: [
+        {
+          name: "Department",
+          path: "/dashboard/department",
+          icon: <Building className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+        },
+        {
+          name: "Brand",
+          path: "/dashboard/brand",
+          icon: <Home className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+        },
+        {
+          name: "Announcement",
+          path: "/dashboard/announcement",
+          icon: <MegaphoneIcon className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+        },
+        {
+          name: "Employee",
+          path: "/dashboard/employee",
+          icon: <Users className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+        },
+        {
+          name: "Attendance",
+          path: "/dashboard/attendance",
+          icon: <CalendarDays className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+          submenu: attendanceSubmenu.filter((s) =>
+            ["ADMIN", "SUBADMIN", "HR_ADMIN"].some((r) => s.roles.includes(r))
+          ),
+        },
+        {
+          name: "Leave",
+          path: "/dashboard/leave",
+          icon: <CalendarCheck className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+          submenu: leaveSubmenu.filter((s) =>
+            ["ADMIN", "SUBADMIN", "HR_ADMIN"].some((r) => s.roles.includes(r))
+          ),
+        },
+        {
+          name: "Payroll",
+          path: "/dashboard/payroll",
+          icon: <Wallet className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+          submenu: payrollSubmenu.filter((s) =>
+            ["ADMIN", "SUBADMIN", "HR_ADMIN"].some((r) => s.roles.includes(r))
+          ),
+        },
+        {
+          name: "Recruitment",
+          path: "/dashboard/recruitment",
+          icon: <Briefcase className="w-3.5 h-3.5" />,
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN"],
+          submenu: recruitmentSubmenu,
+        },
+      ],
     },
     {
       name: "Department",
@@ -100,7 +307,7 @@ const LeftNav = ({ set }) => {
       roles: ["USER", "DEP_ADMIN"],
       section: "CRM",
     },
-      {
+    {
       name: "Leads",
       icon: <ChartBar className="w-4 h-4" />,
       path: ["/dashboard/lead"],
@@ -118,7 +325,7 @@ const LeftNav = ({ set }) => {
       roles: ["USER", "FINANCE_ADMIN", "DEP_ADMIN"],
       section: "CRM",
     },
-       {
+    {
       name: "Sales",
       icon: <BadgeDollarSign className="w-4 h-4" />,
       path: ["/dashboard/sale"],
@@ -153,7 +360,6 @@ const LeftNav = ({ set }) => {
       roles: ["USER", "DEP_ADMIN"],
       section: "CRM",
     },
-    
     {
       name: "Fleet",
       icon: <Truck className="w-4 h-4" />,
@@ -175,60 +381,6 @@ const LeftNav = ({ set }) => {
         },
       ],
     },
-  
-    // {
-    //   name: "Email",
-    //   icon: <Mail className="w-4 h-4" />,
-    //   path: [
-    //     "/dashboard/EmailTemplate",
-    //     "/dashboard/BrandEmail",
-    //     "/dashboard/SendEmail",
-    //     "/dashboard/EmailList",
-    //     "/dashboard/TmEmailList",
-    //     "/dashboard/BulkEmail",
-    //     "/dashboard/SentBulkEmail",
-    //     "/dashboard/SentTMBulkEmail",
-    //   ],
-    //   roles: ["USER", "DEP_ADMIN"],
-    //   submenu: [
-    //     {
-    //       name: "Brand Email",
-    //       path: "/dashboard/BrandEmail",
-    //       icon: <AtSign className="w-3.5 h-3.5" />,
-    //       roles: ["USER", "DEP_ADMIN"],
-    //     },
-    //     {
-    //       name: "Email Template",
-    //       path: "/dashboard/EmailTemplate",
-    //       icon: <LayoutPanelTop className="w-3.5 h-3.5" />,
-    //       roles: ["USER", "DEP_ADMIN"],
-    //     },
-    //     {
-    //       name: "Email List",
-    //       path: "/dashboard/EmailList",
-    //       icon: <List className="w-3.5 h-3.5" />,
-    //       roles: ["USER", "DEP_ADMIN"],
-    //     },
-    //     {
-    //       name: "TM Email List",
-    //       path: "/dashboard/TmEmailList",
-    //       icon: <List className="w-3.5 h-3.5" />,
-    //       roles: ["USER", "DEP_ADMIN"],
-    //     },
-    //     {
-    //       name: "Bulk Email",
-    //       path: "/dashboard/BulkEmail",
-    //       icon: <Mails className="w-3.5 h-3.5" />,
-    //       roles: ["USER", "DEP_ADMIN"],
-    //     },
-    //     {
-    //       name: "TM Bulk Email",
-    //       path: "/dashboard/TmBulkEmail",
-    //       icon: <Mails className="w-3.5 h-3.5" />,
-    //       roles: ["USER", "DEP_ADMIN"],
-    //     },
-    //   ],
-    // },
     {
       name: "All Months",
       icon: <Calendar className="w-4 h-4" />,
@@ -236,7 +388,6 @@ const LeftNav = ({ set }) => {
       roles: ["DEP_ADMIN", "HR_ADMIN", "FINANCE_ADMIN"],
       section: "CRM",
     },
- 
     {
       name: "My Account",
       icon: <User className="w-4 h-4" />,
@@ -256,39 +407,7 @@ const LeftNav = ({ set }) => {
       ],
       roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
       section: "Operations",
-      submenu: [
-        {
-          name: "Attendance",
-          path: "/dashboard/attendance",
-          roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
-          icon: <CalendarDays className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Team Attendance",
-          path: "/dashboard/attendance/teamAttendence",
-          roles: ["HR_ADMIN", "DEP_ADMIN"],
-          icon: <CalendarDays className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Break",
-          path: "/dashboard/attendance/break",
-          roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
-          icon: <Coffee className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Team Break",
-          path: "/dashboard/attendance/teamBreak",
-          roles: ["HR_ADMIN", "DEP_ADMIN"],
-          icon: <Coffee className="w-3.5 h-3.5" />,
-        },
-        // USER: Leave lives under Attendance (no separate Leave menu)
-        {
-          name: "Leave",
-          path: "/dashboard/leave",
-          roles: ["USER"],
-          icon: <CalendarCheck className="w-3.5 h-3.5" />,
-        },
-      ],
+      submenu: attendanceSubmenu,
     },
     {
       name: "Leave",
@@ -296,26 +415,7 @@ const LeftNav = ({ set }) => {
       path: ["/dashboard/leave", "/dashboard/leave/team", "/dashboard/leave/settings"],
       roles: ["HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
       section: "Operations",
-      submenu: [
-        {
-          name: "Leave",
-          path: "/dashboard/leave",
-          roles: ["HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
-          icon: <CalendarCheck className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Team Leave",
-          path: "/dashboard/leave/team",
-          roles: ["HR_ADMIN", "DEP_ADMIN"],
-          icon: <Users className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Leave Settings",
-          path: "/dashboard/leave/settings",
-          roles: ["HR_ADMIN"],
-          icon: <CalendarDays className="w-3.5 h-3.5" />,
-        },
-      ],
+      submenu: leaveSubmenu,
     },
     {
       name: "Payroll",
@@ -323,26 +423,7 @@ const LeftNav = ({ set }) => {
       path: ["/dashboard/payroll", "/dashboard/payroll/run", "/dashboard/payroll/settings"],
       roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
       section: "Operations",
-      submenu: [
-        {
-          name: "Run Payroll",
-          path: "/dashboard/payroll/run",
-          roles: ["HR_ADMIN",, "FINANCE_ADMIN"],
-          icon: <Wallet className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Payslips",
-          path: "/dashboard/payroll",
-          roles: ["USER", "HR_ADMIN", "FINANCE_ADMIN", "DEP_ADMIN"],
-          icon: <Wallet className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Payroll Settings",
-          path: "/dashboard/payroll/settings",
-          roles: ["HR_ADMIN"],
-          icon: <CalendarDays className="w-3.5 h-3.5" />,
-        },
-      ],
+      submenu: payrollSubmenu,
     },
     {
       name: "Recruitment",
@@ -357,62 +438,35 @@ const LeftNav = ({ set }) => {
       ],
       roles: ["HR_ADMIN"],
       section: "Operations",
-      submenu: [
-        {
-          name: "Dashboard",
-          path: "/dashboard/recruitment",
-          roles: ["HR_ADMIN"],
-          icon: <LayoutDashboard className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Jobs",
-          path: "/dashboard/recruitment/jobs",
-          roles: ["HR_ADMIN"],
-          icon: <Briefcase className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Interviews",
-          path: "/dashboard/recruitment/interviews",
-          roles: ["HR_ADMIN"],
-          icon: <CalendarDays className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Offers",
-          path: "/dashboard/recruitment/offers",
-          roles: ["HR_ADMIN"],
-          icon: <Mail className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Reports",
-          path: "/dashboard/recruitment/reports",
-          roles: ["HR_ADMIN"],
-          icon: <ChartBar className="w-3.5 h-3.5" />,
-        },
-        {
-          name: "Settings",
-          path: "/dashboard/recruitment/settings",
-          roles: ["HR_ADMIN"],
-          icon: <CalendarDays className="w-3.5 h-3.5" />,
-        },
-      ],
+      submenu: recruitmentSubmenu,
     },
   ];
 
+  const roleSees = (roles) => {
+    if (!roles?.length) return true;
+    if (navRole === "ADMIN" || navRole === "SUBADMIN") return true;
+    return roles.includes(navRole);
+  };
+
+  const filterSubTree = (items) =>
+    (items || [])
+      .filter((sub) => roleSees(sub.roles))
+      .map((sub) =>
+        sub.submenu
+          ? { ...sub, submenu: filterSubTree(sub.submenu) }
+          : sub
+      );
+
   const filteredMenuItems = menuItems
     .filter((item) => {
+      if (item.name === "HRMS") return isHrmsNavRole;
+      if (isHrmsNavRole && HRMS_FLAT_NAMES.has(item.name)) return false;
       if (navRole === "ADMIN" || navRole === "SUBADMIN") return true;
       return item.roles?.includes(navRole);
     })
     .map((item) => {
-      if (item.submenu) {
-        const filteredSub = item.submenu.filter((sub) => {
-          if (navRole === "ADMIN" || navRole === "SUBADMIN") return true;
-          return sub.roles?.includes(navRole);
-        });
-
-        return { ...item, submenu: filteredSub };
-      }
-      return item;
+      if (!item.submenu) return item;
+      return { ...item, submenu: filterSubTree(item.submenu) };
     });
 
   const clearExtensionAndRedirect = () => {
@@ -449,9 +503,19 @@ const LeftNav = ({ set }) => {
 
   const toggleSubmenu = (index) =>
     setExpandedMenus((prev) => ({ ...prev, [index]: !prev[index] }));
+  const toggleNested = (key) =>
+    setExpandedNested((prev) => ({ ...prev, [key]: !prev[key] }));
   const isMenuActive = (paths) =>
     paths.some((path) => pathname.startsWith(path));
   const isSubmenuActive = (path) => pathname === path;
+  const isNestedGroupActive = (subItem) => {
+    if (subItem.submenu?.length) {
+      return subItem.submenu.some(
+        (n) => pathname === n.path || pathname.startsWith(`${n.path}/`)
+      );
+    }
+    return pathname === subItem.path || pathname.startsWith(`${subItem.path}/`);
+  };
 
   return (
     /* ── Outer wrapper: width transitions here ── */
@@ -608,36 +672,85 @@ const LeftNav = ({ set }) => {
                     className={`${isMobileDrawer ? "ml-5 mb-2 mt-1" : "ml-3 mb-1"} pl-2 py-1 space-y-[1px] border-l border-white/[0.07]`}
                   >
                     {item.submenu.map((subItem, subIndex) => {
-                      const subActive = isSubmenuActive(subItem.path);
+                      const nestedKey = `${index}-${subIndex}`;
+                      const hasNested = subItem.submenu?.length > 0;
+                      const nestedActive = isNestedGroupActive(subItem);
+                      const nestedOpen =
+                        expandedNested[nestedKey] || nestedActive;
+                      const subActive = !hasNested && isSubmenuActive(subItem.path);
+
                       return (
-                        <div
-                          key={subIndex}
-                          onClick={() => {
-                            if (set) set();
-                            router.push(subItem.path);
-                          }}
-                          className={`flex items-center gap-2 ${isMobileDrawer ? "py-2 px-3" : "py-1.5 px-3"} rounded-lg cursor-pointer transition-all duration-150 
-                            ${
-                              subActive
-                                ? "bg-white/[0.08]  text-zinc-300 border border-zinc-200"
-                                : "border-transparent text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300"
-                            }`}
-                        >
-                          
-                          <span
-                            className={
-                              subActive
-                                ? "text-zinc-300"
-                                : "text-zinc-500 group-hover:text-zinc-300"
-                            }
+                        <div key={subIndex}>
+                          <div
+                            onClick={() => {
+                              if (hasNested) {
+                                toggleNested(nestedKey);
+                                return;
+                              }
+                              if (set) set();
+                              router.push(subItem.path);
+                            }}
+                            className={`flex items-center gap-2 ${isMobileDrawer ? "py-2 px-3" : "py-1.5 px-3"} rounded-lg cursor-pointer transition-all duration-150 
+                              ${
+                                subActive || nestedActive
+                                  ? "bg-white/[0.08]  text-zinc-300 border border-zinc-200"
+                                  : "border-transparent text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300"
+                              }`}
                           >
-                            {subItem.icon}
-                          </span>
-                          <span className="text-xs font-normal tracking-wide">
-                            {subItem.name}
-                          </span>
-                          {subActive && (
-                            <span className="ml-auto w-1 h-1 rounded-full bg-zinc-400 flex-shrink-0" />
+                            <span
+                              className={
+                                subActive || nestedActive
+                                  ? "text-zinc-300"
+                                  : "text-zinc-500 group-hover:text-zinc-300"
+                              }
+                            >
+                              {subItem.icon}
+                            </span>
+                            <span className="text-xs font-normal tracking-wide flex-1">
+                              {subItem.name}
+                            </span>
+                            {hasNested ? (
+                              nestedOpen ? (
+                                <ChevronDown size={12} className="flex-shrink-0 opacity-70" />
+                              ) : (
+                                <ChevronRight size={12} className="flex-shrink-0 opacity-70" />
+                              )
+                            ) : subActive ? (
+                              <span className="ml-auto w-1 h-1 rounded-full bg-zinc-400 flex-shrink-0" />
+                            ) : null}
+                          </div>
+
+                          {hasNested && nestedOpen && (
+                            <div className="ml-3 mt-0.5 mb-1 space-y-[1px] border-l border-white/[0.06] pl-2">
+                              {subItem.submenu.map((nested, nIdx) => {
+                                const nActive = isSubmenuActive(nested.path);
+                                return (
+                                  <div
+                                    key={nIdx}
+                                    onClick={() => {
+                                      if (set) set();
+                                      router.push(nested.path);
+                                    }}
+                                    className={`flex items-center gap-2 ${isMobileDrawer ? "py-1.5 px-2.5" : "py-1 px-2.5"} rounded-lg cursor-pointer transition-all duration-150
+                                      ${
+                                        nActive
+                                          ? "bg-white/[0.08] text-zinc-300 border border-zinc-200"
+                                          : "border-transparent text-zinc-500 hover:bg-white/[0.04] hover:text-zinc-300"
+                                      }`}
+                                  >
+                                    <span className={nActive ? "text-zinc-300" : "text-zinc-500"}>
+                                      {nested.icon}
+                                    </span>
+                                    <span className="text-[11px] font-normal tracking-wide">
+                                      {nested.name}
+                                    </span>
+                                    {nActive && (
+                                      <span className="ml-auto w-1 h-1 rounded-full bg-zinc-400 flex-shrink-0" />
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           )}
                         </div>
                       );

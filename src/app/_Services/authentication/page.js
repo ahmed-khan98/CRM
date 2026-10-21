@@ -74,6 +74,18 @@ const authenticationsApi = createApiAuction.injectEndpoints({
         body: formData,
       }),
     }),
+    updateAvatar: builder.mutation({
+      query: (file) => {
+        const body = new FormData();
+        body.append("avatar", file);
+        return {
+          url: "/avatar",
+          method: "PATCH",
+          body,
+        };
+      },
+      invalidatesTags: ["loggedUser"],
+    }),
     changePassword: builder.mutation({
       query: (formData) => ({
         url: "/change-password",
@@ -108,6 +120,7 @@ export const {
   useForgetMutation,
   useResetMutation,
   useUpdateProfileMutation,
+  useUpdateAvatarMutation,
   useChangePasswordMutation,
   useGetLoggedUserQuery,
 } = authenticationsApi;

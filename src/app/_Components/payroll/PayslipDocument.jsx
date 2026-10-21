@@ -44,6 +44,7 @@ export function resolvePayslipRun(entry, period) {
 
 function buildRows(entry) {
   const absentCount = Number(entry.absentDays || 0);
+  const halfCount = Number(entry.halfDays || 0);
   const lateCount = Number(entry.lateDays || 0);
   const earnings = [];
   if (Number(entry.basicSalary) > 0) {
@@ -63,6 +64,12 @@ function buildRows(entry) {
     deductions.push([
       `Absent Deduction (${absentCount} absent${absentCount === 1 ? "" : "s"})`,
       money(entry.absentDeduction),
+    ]);
+  }
+  if (Number(entry.halfDayDeduction) > 0 || halfCount > 0) {
+    deductions.push([
+      `Half-day Deduction (${halfCount} half-day${halfCount === 1 ? "" : "s"})`,
+      money(entry.halfDayDeduction),
     ]);
   }
   if (Number(entry.lateDeduction) > 0 || lateCount > 0) {

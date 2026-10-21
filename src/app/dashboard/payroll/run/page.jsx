@@ -28,10 +28,45 @@ import {
   useFinalizePayrollMutation,
   useGeneratePayrollMutation,
   useGetPayrollRunQuery,
+  useGetPayrollSettingsQuery,
   useMarkPayrollPaidMutation,
   useUnlockPayrollMutation,
 } from "@/app/_Services/payroll/page";
 import { exportPayrollToExcel } from "@/app/utilities/exportPayrollToExcel";
+
+const CALENDAR_DAYS = 30;
+
+/** Infer 1-day pay used for attendance cuts (matches generate: full gross ÷ 30). */
+function inferDailyRate(row, latesPerDay = 2) {
+  const abs = Number(row.absentDays) || 0;
+  const absAmt = Number(row.absentDeduction) || 0;
+  if (abs > 0 && absAmt > 0) return absAmt / abs;
+
+  const half = Number(row.halfDays) || 0;
+  const halfAmt = Number(row.halfDayDeduction) || 0;
+  if (half > 0 && halfAmt > 0) return halfAmt / (half * 0.5);
+
+  const late = Number(row.lateDays) || 0;
+  const lateAmt = Number(row.lateDeduction) || 0;
+  const units = Math.floor(late / Math.max(1, latesPerDay));
+  if (units > 0 && lateAmt > 0) return lateAmt / units;
+
+  const gross = Number(row.grossPay) || 0;
+  return gross > 0 ? gross / CALENDAR_DAYS : 0;
+}
+
+function amountsFromCounts({ lateDays, absentDays, halfDays, dailyRate, latesPerDay }) {
+  const daily = Number(dailyRate) || 0;
+  const per = Math.max(1, Number(latesPerDay) || 2);
+  const late = Math.max(0, Math.floor(Number(lateDays) || 0));
+  const absent = Math.max(0, Math.floor(Number(absentDays) || 0));
+  const half = Math.max(0, Math.floor(Number(halfDays) || 0));
+  return {
+    lateDeduction: Math.round(Math.floor(late / per) * daily),
+    absentDeduction: Math.round(absent * daily),
+    halfDayDeduction: Math.round(half * 0.5 * daily),
+  };
+}
 
 export default function RunPayrollPage() {
   let role = "";
@@ -51,16 +86,28 @@ export default function RunPayrollPage() {
   const [deductForm, setDeductForm] = useState({ name: "", amount: "", note: "" });
   const [editFor, setEditFor] = useState(null);
   const [editForm, setEditForm] = useState({
+    lateDays: "",
+    absentDays: "",
+    halfDays: "",
     lateDeduction: "",
     absentDeduction: "",
+    halfDayDeduction: "",
+    dailyRate: 0,
     extraDeductions: [],
   });
   const [confirmUnlock, setConfirmUnlock] = useState(false);
+  const [filterEmployee, setFilterEmployee] = useState("");
+  const [filterDepartment, setFilterDepartment] = useState("");
 
   const { data, isFetching } = useGetPayrollRunQuery({
     month: selected?.month,
     year: selected?.year,
   });
+  const { data: settingsData } = useGetPayrollSettingsQuery();
+  const latesPerDay = Math.max(
+    1,
+    Number(settingsData?.data?.settings?.lateLatesPerDay) || 2
+  );
   const [generate, { isLoading: generating }] = useGeneratePayrollMutation();
   const [finalize, { isLoading: finalizing }] = useFinalizePayrollMutation();
   const [markPaid, { isLoading: paying }] = useMarkPayrollPaidMutation();
@@ -71,6 +118,86 @@ export default function RunPayrollPage() {
   const run = data?.data?.run;
   const entries = data?.data?.entries || [];
   const stats = run?.totals || {};
+
+  const departmentOptions = useMemo(() => {
+    const names = [
+      ...new Set(
+        entries
+          .map((e) => (e.departmentName || "").trim())
+          .filter(Boolean)
+      ),
+    ].sort((a, b) => a.localeCompare(b));
+    return [
+      { value: "", label: "All departments" },
+      ...names.map((name) => ({ value: name, label: name })),
+    ];
+  }, [entries]);
+
+  const employeeOptions = useMemo(() => {
+    const list = (
+      filterDepartment
+        ? entries.filter(
+            (e) => (e.departmentName || "").trim() === filterDepartment
+          )
+        : entries
+    )
+      .slice()
+      .sort((a, b) =>
+        String(a.employeeName || "").localeCompare(String(b.employeeName || ""))
+      );
+    return [
+      { value: "", label: "All employees" },
+      ...list.map((e) => ({
+        value: String(e._id),
+        label: e.employeeName || "Employee",
+      })),
+    ];
+  }, [entries, filterDepartment]);
+
+  const filteredEntries = useMemo(() => {
+    return entries.filter((e) => {
+      if (filterDepartment && (e.departmentName || "").trim() !== filterDepartment) {
+        return false;
+      }
+      if (filterEmployee && String(e._id) !== String(filterEmployee)) {
+        return false;
+      }
+      return true;
+    });
+  }, [entries, filterDepartment, filterEmployee]);
+
+  const displayStats = useMemo(() => {
+    const filtered = Boolean(filterDepartment || filterEmployee);
+    if (!filtered) {
+      return {
+        employees: stats.employees || 0,
+        gross: stats.gross || 0,
+        deductions: stats.deductions || 0,
+        net: stats.net || 0,
+      };
+    }
+    return {
+      employees: filteredEntries.length,
+      gross: filteredEntries.reduce((s, e) => s + Number(e.grossPay || 0), 0),
+      deductions: filteredEntries.reduce(
+        (s, e) => s + Number(e.deductionsTotal || 0),
+        0
+      ),
+      net: filteredEntries.reduce((s, e) => s + Number(e.netPay || 0), 0),
+    };
+  }, [filterDepartment, filterEmployee, filteredEntries, stats]);
+
+  const onDepartmentFilter = (value) => {
+    setFilterDepartment(value || "");
+    if (value && filterEmployee) {
+      const stillVisible = entries.some(
+        (e) =>
+          String(e._id) === String(filterEmployee) &&
+          (e.departmentName || "").trim() === value
+      );
+      if (!stillVisible) setFilterEmployee("");
+    }
+  };
 
   const toggle = (id) =>
     setChecked((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -125,13 +252,33 @@ export default function RunPayrollPage() {
   const openEditAmounts = (row) => {
     setEditFor(row);
     setEditForm({
+      lateDays: row.lateDays ?? 0,
+      absentDays: row.absentDays ?? 0,
+      halfDays: row.halfDays ?? 0,
       lateDeduction: row.lateDeduction ?? 0,
       absentDeduction: row.absentDeduction ?? 0,
+      halfDayDeduction: row.halfDayDeduction ?? 0,
+      dailyRate: inferDailyRate(row, latesPerDay),
       extraDeductions: (row.extraDeductions || []).map((d) => ({
         name: d.name || "",
         amount: d.amount ?? 0,
         note: d.note || "",
       })),
+    });
+  };
+
+  const onCountChange = (field, raw) => {
+    const nextCount = raw === "" ? "" : Math.max(0, Math.floor(Number(raw) || 0));
+    setEditForm((s) => {
+      const next = { ...s, [field]: nextCount };
+      const calc = amountsFromCounts({
+        lateDays: field === "lateDays" ? nextCount : next.lateDays,
+        absentDays: field === "absentDays" ? nextCount : next.absentDays,
+        halfDays: field === "halfDays" ? nextCount : next.halfDays,
+        dailyRate: next.dailyRate,
+        latesPerDay,
+      });
+      return { ...next, ...calc };
     });
   };
 
@@ -141,8 +288,12 @@ export default function RunPayrollPage() {
       await updateAmounts({
         id: editFor._id,
         body: {
+          lateDays: Number(editForm.lateDays) || 0,
+          absentDays: Number(editForm.absentDays) || 0,
+          halfDays: Number(editForm.halfDays) || 0,
           lateDeduction: Number(editForm.lateDeduction) || 0,
           absentDeduction: Number(editForm.absentDeduction) || 0,
+          halfDayDeduction: Number(editForm.halfDayDeduction) || 0,
           extraDeductions: editForm.extraDeductions,
         },
       }).unwrap();
@@ -169,7 +320,7 @@ export default function RunPayrollPage() {
 
   const onExportAll = () => {
     try {
-      exportPayrollToExcel(entries, "payroll");
+      exportPayrollToExcel(filteredEntries, "payroll");
       toast.success("Exported");
     } catch (err) {
       toast.error(err.message);
@@ -217,7 +368,7 @@ export default function RunPayrollPage() {
           ) : null}
         </>
       )}
-      {entries.length > 0 && (
+      {filteredEntries.length > 0 && (
         <button type="button" className={secondaryAction} onClick={onExportAll}>
           <Download className="h-3.5 w-3.5" /> Export
         </button>
@@ -227,11 +378,19 @@ export default function RunPayrollPage() {
 
   return (
     <div className="pb-5  section-stack min-h-0 flex-1  md:overflow-hidden md:pb-5">
-      <AttendenceHeader icon={Wallet} length={entries.length} name="Run Payroll">
+      <AttendenceHeader icon={Wallet} length={filteredEntries.length} name="Run Payroll">
         <div className="hidden min-w-0 flex-1 flex-wrap items-center justify-end gap-2 md:flex">
           {run?.status ? <PayrollStatusBadge status={run.status} /> : null}
           <div className="w-56 lg:w-72">
-            <CrmSelect options={options} value={period} onChange={setPeriod} />
+            <CrmSelect
+              options={options}
+              value={period}
+              onChange={(v) => {
+                setPeriod(v);
+                setFilterEmployee("");
+                setFilterDepartment("");
+              }}
+            />
           </div>
           {actionButtons}
         </div>
@@ -241,7 +400,15 @@ export default function RunPayrollPage() {
         <div className="flex items-center gap-2">
           {run?.status ? <PayrollStatusBadge status={run.status} /> : null}
           <div className="min-w-0 flex-1">
-            <CrmSelect options={options} value={period} onChange={setPeriod} />
+            <CrmSelect
+              options={options}
+              value={period}
+              onChange={(v) => {
+                setPeriod(v);
+                setFilterEmployee("");
+                setFilterDepartment("");
+              }}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2">{actionButtons}</div>
@@ -251,31 +418,45 @@ export default function RunPayrollPage() {
         Attendance: {cycleLabel(selected?.month, selected?.year, run?.cycleEndDay || 25, run)}
       </p>
 
-      <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:max-w-xl">
+        <CrmSelect
+          options={departmentOptions}
+          value={filterDepartment}
+          onChange={onDepartmentFilter}
+          isSearchable
+          isClearable
+          placeholder="All departments"
+        />
+        <CrmSelect
+          options={employeeOptions}
+          value={filterEmployee}
+          onChange={(v) => setFilterEmployee(v || "")}
+          isSearchable
+          isClearable
+          placeholder="All employees"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-2.5 xl:grid-cols-4">
         <StatCard
           label="Total Employees"
-          value={stats.employees || 0}
+          value={displayStats.employees}
           className="border-violet-500/40 bg-violet-950/70"
         />
         <StatCard
           label="Total Gross Payroll"
-          value={money(stats.gross)}
+          value={money(displayStats.gross)}
           className="border-emerald-500/40 bg-emerald-950/70"
         />
         <StatCard
           label="Total Deductions"
-          value={money(stats.deductions)}
+          value={money(displayStats.deductions)}
           className="border-rose-500/40 bg-rose-950/70"
         />
         <StatCard
           label="Total Net Payable"
-          value={money(stats.net)}
+          value={money(displayStats.net)}
           className="border-sky-500/40 bg-sky-950/70"
-        />
-        <StatCard
-          label="Pending Approvals"
-          value={stats.pendingReview || 0}
-          className="col-span-2 border-amber-500/40 bg-amber-950/70 xl:col-span-1"
         />
       </div>
 
@@ -364,8 +545,14 @@ export default function RunPayrollPage() {
                     No payroll generated for this month
                   </td>
                 </tr>
+              ) : filteredEntries.length === 0 ? (
+                <tr>
+                  <td colSpan={12} className="px-4 py-10 text-center text-sm text-zinc-400">
+                    No employees match these filters
+                  </td>
+                </tr>
               ) : (
-                entries.map((row) => (
+                filteredEntries.map((row) => (
                   <tr key={row._id} className="group">
                     <td className="px-1 py-3">
                       <input
@@ -400,7 +587,10 @@ export default function RunPayrollPage() {
                       {money(row.lateDeduction)}
                     </td>
                     <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-rose-500">
-                      {money(row.absentDeduction)}
+                      {money(
+                        Number(row.absentDeduction || 0) +
+                          Number(row.halfDayDeduction || 0)
+                      )}
                     </td>
                     <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-zinc-500">
                       {money(
@@ -527,33 +717,96 @@ export default function RunPayrollPage() {
         {editFor && (
           <form onSubmit={onSaveAmounts} className="space-y-3">
             <p className="text-xs text-zinc-500">
-              Attendance this cycle: {editFor.lateDays || 0} late, {editFor.absentDays || 0} absent,{" "}
-              {editFor.halfDays || 0} half-day. These two amounts are part of total deductions
-              (tax / PF stay separate).
+              Change count to auto-update amount (daily ≈{" "}
+              {money(Math.round(editForm.dailyRate || 0))}). Tax / PF stay separate. Late:
+              every {latesPerDay} lates = 1 day pay cut.
             </p>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-zinc-500">
-                Late amount (PKR)
-              </label>
-              <input
-                type="number"
-                min="0"
-                className={fleet.input}
-                value={editForm.lateDeduction}
-                onChange={(e) => setEditForm((s) => ({ ...s, lateDeduction: e.target.value }))}
-              />
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-zinc-500">
+                  Late count
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  className={fleet.input}
+                  value={editForm.lateDays}
+                  onChange={(e) => onCountChange("lateDays", e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-zinc-500">
+                  Late amount (PKR)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  className={fleet.input}
+                  value={editForm.lateDeduction}
+                  onChange={(e) =>
+                    setEditForm((s) => ({ ...s, lateDeduction: e.target.value }))
+                  }
+                />
+              </div>
             </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-zinc-500">
-                Absent amount (PKR)
-              </label>
-              <input
-                type="number"
-                min="0"
-                className={fleet.input}
-                value={editForm.absentDeduction}
-                onChange={(e) => setEditForm((s) => ({ ...s, absentDeduction: e.target.value }))}
-              />
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-zinc-500">
+                  Absent count
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  className={fleet.input}
+                  value={editForm.absentDays}
+                  onChange={(e) => onCountChange("absentDays", e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-zinc-500">
+                  Absent amount (PKR)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  className={fleet.input}
+                  value={editForm.absentDeduction}
+                  onChange={(e) =>
+                    setEditForm((s) => ({ ...s, absentDeduction: e.target.value }))
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-zinc-500">
+                  Half-day count
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  className={fleet.input}
+                  value={editForm.halfDays}
+                  onChange={(e) => onCountChange("halfDays", e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-zinc-500">
+                  Half-day amount (PKR)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  className={fleet.input}
+                  value={editForm.halfDayDeduction}
+                  onChange={(e) =>
+                    setEditForm((s) => ({ ...s, halfDayDeduction: e.target.value }))
+                  }
+                />
+              </div>
             </div>
             {editForm.extraDeductions.map((d, i) => (
               <div key={`${d.name}-${i}`}>

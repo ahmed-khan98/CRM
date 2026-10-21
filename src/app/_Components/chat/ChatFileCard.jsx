@@ -1,17 +1,24 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { Download, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import ChatTooltip from "@/app/_Components/chat/ChatTooltip";
+import DownloadProgressBtn from "@/app/_Components/chat/DownloadProgressBtn";
 import {
   getAttachmentProxyUrl,
   isDownloadOnlyFile,
-  fetchAttachmentBlob,
+  fetchAttachmentBlobWithProgress,
+  saveBlobAsFile,
 } from "@/app/_utils/attachmentUrl";
 
 function ChatFileCard({ attachment, mine = false, dark = false }) {
-  const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState(null);
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [done, setDone] = useState(false);
+  const doneTimer = useRef(null);
+
+  const busy = progress != null || indeterminate;
   const name =
     attachment.fileName ||
     decodeURIComponent(
@@ -27,44 +34,66 @@ function ChatFileCard({ attachment, mine = false, dark = false }) {
     mime === "application/pdf" ||
     /\/raw\/upload\/.*\.pdf/i.test(attachment.url || "");
 
+  const markDone = () => {
+    setIndeterminate(false);
+    setProgress(100);
+    setDone(true);
+    if (doneTimer.current) clearTimeout(doneTimer.current);
+    doneTimer.current = setTimeout(() => {
+      setDone(false);
+      setProgress(null);
+    }, 1800);
+  };
+
+  const trackProgress = (p) => {
+    if (p == null) {
+      setIndeterminate(true);
+      setProgress(null);
+    } else {
+      setIndeterminate(false);
+      setProgress(p);
+    }
+  };
+
   const openViaProxy = async () => {
-    setBusy(true);
+    if (busy) return;
+    setDone(false);
+    setProgress(0);
     try {
-      const blob = await fetchAttachmentBlob(attachment.url, {
-        disposition: downloadOnly ? "attachment" : "inline",
-        filename: name,
-        publicId: attachment.publicId,
-      });
+      const blob = await fetchAttachmentBlobWithProgress(
+        attachment.url,
+        {
+          disposition: downloadOnly ? "attachment" : "inline",
+          filename: name,
+          publicId: attachment.publicId,
+        },
+        trackProgress
+      );
 
       if (blob.type?.includes("text/html") || blob.size < 20) {
         throw new Error("Invalid file from storage");
       }
 
-      const href = URL.createObjectURL(blob);
       if (downloadOnly) {
-        const a = document.createElement("a");
-        a.href = href;
-        a.download = name;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        setTimeout(() => URL.revokeObjectURL(href), 60_000);
-        toast.success("Download started");
+        saveBlobAsFile(blob, name);
+        markDone();
+        toast.success("Downloaded");
       } else {
+        const href = URL.createObjectURL(blob);
         const win = window.open(href, "_blank", "noopener,noreferrer");
         if (!win) {
-          const a = document.createElement("a");
-          a.href = href;
-          a.download = name;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          toast.success("Download started (popup blocked)");
+          saveBlobAsFile(blob, name);
+          toast.success("Downloaded (popup blocked)");
+        } else {
+          setTimeout(() => URL.revokeObjectURL(href), 120_000);
+          toast.success("Opened");
         }
-        setTimeout(() => URL.revokeObjectURL(href), 120_000);
+        markDone();
       }
     } catch (err) {
       console.error("[chat] open file failed", err);
+      setProgress(null);
+      setIndeterminate(false);
       const fallback = getAttachmentProxyUrl(attachment.url, {
         disposition: downloadOnly ? "attachment" : "inline",
         filename: name,
@@ -72,43 +101,42 @@ function ChatFileCard({ attachment, mine = false, dark = false }) {
       });
       window.open(fallback, "_blank", "noopener,noreferrer");
       toast.error(err?.message || "Could not open file — try Download");
-    } finally {
-      setBusy(false);
     }
   };
 
   const download = async (e) => {
     e?.preventDefault?.();
     e?.stopPropagation?.();
-    setBusy(true);
+    if (busy) return;
+    setDone(false);
+    setProgress(0);
     try {
-      const blob = await fetchAttachmentBlob(attachment.url, {
-        disposition: "attachment",
-        filename: name,
-        publicId: attachment.publicId,
-      });
+      const blob = await fetchAttachmentBlobWithProgress(
+        attachment.url,
+        {
+          disposition: "attachment",
+          filename: name,
+          publicId: attachment.publicId,
+        },
+        trackProgress
+      );
       if (blob.type?.includes("text/html") || blob.size < 20) {
         throw new Error("Invalid file");
       }
-      const href = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = href;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(href);
+      saveBlobAsFile(blob, name);
+      markDone();
       toast.success("Downloaded");
     } catch (err) {
       console.error(err);
+      setProgress(null);
+      setIndeterminate(false);
       const fallback = getAttachmentProxyUrl(attachment.url, {
         disposition: "attachment",
         filename: name,
         publicId: attachment.publicId,
       });
       window.location.href = fallback;
-    } finally {
-      setBusy(false);
+      toast.error("Download failed — opening fallback");
     }
   };
 
@@ -122,7 +150,14 @@ function ChatFileCard({ attachment, mine = false, dark = false }) {
     ? `${Math.max(1, Math.round(attachment.size / 1024))} KB`
     : "";
 
-  // Light mode: own bubbles are dark (bg-ink). Dark mode: both sides render dark.
+  const statusLabel = done
+    ? "Downloaded"
+    : indeterminate
+      ? "Downloading…"
+      : typeof progress === "number"
+        ? `Downloading ${progress}%`
+        : null;
+
   const onDarkBubble = dark || mine;
   const stripBg = onDarkBubble ? "rgba(255,255,255,0.10)" : "rgba(24,24,27,0.06)";
   const titleColor = onDarkBubble ? "#fafafa" : "#18181b";
@@ -160,23 +195,23 @@ function ChatFileCard({ attachment, mine = false, dark = false }) {
             {name}
           </p>
           <p className="mt-0.5 truncate text-[11px] leading-none" style={{ color: metaColor }}>
-            {extLabel}
-            {sizeLabel ? ` · ${sizeLabel}` : ""}
+            {statusLabel
+              ? statusLabel
+              : `${extLabel}${sizeLabel ? ` · ${sizeLabel}` : ""}`}
           </p>
         </button>
       </ChatTooltip>
-      <ChatTooltip label="Download" side="top">
-        <button
-          type="button"
-          onClick={download}
-          disabled={busy}
-          aria-label="Download file"
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg hover:bg-white/10 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-          style={{ color: iconBtn }}
-        >
-          <Download className="h-4 w-4" stroke="currentColor" />
-        </button>
-      </ChatTooltip>
+      <DownloadProgressBtn
+        progress={progress}
+        indeterminate={indeterminate}
+        done={done}
+        onClick={download}
+        disabled={busy}
+        size={32}
+        color={iconBtn}
+        className="hover:bg-white/10 rounded-lg"
+        iconClassName="h-4 w-4"
+      />
     </div>
   );
 }
