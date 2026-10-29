@@ -48,9 +48,17 @@ const TeamAttendanceTableBody = ({
           const recordDateStr = moment(record?.shiftDate).format("YYYY-MM-DD");
           const isToday = recordDateStr === shiftEffectiveDate;
 
-          const isDiscrepancy = isDiscrepancyRecord(record);
+          const isHoliday =
+            item?.isHoliday ||
+            record?.status === "holiday";
+          const holidayName =
+            item?.holidayName ||
+            record?.holidayName ||
+            "Holiday";
+          const hasPunch = !!record?.timeIn;
+          const isDiscrepancy = !isHoliday && isDiscrepancyRecord(record);
           const isActive =
-            record?.timeIn &&
+            hasPunch &&
             !record?.timeOut &&
             isToday &&
             !isDiscrepancy;
@@ -61,6 +69,8 @@ const TeamAttendanceTableBody = ({
           const cfg = getStatusConfig(
             isWeekend
               ? "weekend"
+              : isHoliday
+              ? "holiday"
               : record?.status || (isAbsent ? "absent" : "upcoming")
           );
 
@@ -70,6 +80,8 @@ const TeamAttendanceTableBody = ({
               className={`border-b border-zinc-800 transition-colors duration-100 ${
                 isWeekend
                   ? "bg-violet-500/10"
+                  : isHoliday
+                  ? "bg-teal-500/10"
                   : isAbsent
                   ? "bg-rose-500/10"
                   : "hover:bg-zinc-800/50"
@@ -110,17 +122,17 @@ const TeamAttendanceTableBody = ({
                 </div>
               </td>
 
-              {/* In/Out */}
+              {/* In/Out — keep punch times even on holiday */}
               <td className="px-3 py-0.2">
-                {isWeekend ? (
+                {isWeekend && !hasPunch ? (
                   <span className="text-zinc-300 font-medium text-[10px]">
                     -- : --
                   </span>
-                ) : isAbsent ? (
+                ) : isAbsent && !isHoliday && !hasPunch ? (
                   <span className="text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded-md text-[10px] font-medium">
                     ABSENT
                   </span>
-                ) : (
+                ) : hasPunch ? (
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5  rounded-md text-[10px] font-medium tabular-nums">
                       {formatTimeOnly(record?.timeIn)}
@@ -146,12 +158,20 @@ const TeamAttendanceTableBody = ({
                       </span>
                     )}
                   </div>
+                ) : isHoliday ? (
+                  <span className="text-zinc-300 text-[10px] font-medium">
+                    --:--
+                  </span>
+                ) : (
+                  <span className="text-zinc-300 text-[10px] font-medium">
+                    --:--
+                  </span>
                 )}
               </td>
 
               {/* Work Hours */}
               <td className="px-3 py-0.2">
-                {isWeekend || isAbsent ? (
+                {(isWeekend || isAbsent || isHoliday) && !hasPunch ? (
                   <span className="text-zinc-300 text-[10px] font-medium">
                     — : —
                   </span>
@@ -199,13 +219,15 @@ const TeamAttendanceTableBody = ({
                   <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
                   {isWeekend
                     ? "Off"
+                    : isHoliday
+                    ? holidayName
                     : cfg.label || record?.status || "absent"}
                 </span>
               </td>
 
               {/* Action */}
               <td className="px-3 py-0.2">
-                {isWeekend ? (
+                {isWeekend || isHoliday ? (
                   <span className="text-zinc-300 text-xs font-medium">—</span>
                 ) : isAbsent ? (
                   <button

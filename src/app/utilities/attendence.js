@@ -3,6 +3,7 @@ import {
   BedDouble,
   Clock,
   Coffee,
+  PartyPopper,
   UserCheck,
   UserX,
   Cigarette,
@@ -15,6 +16,50 @@ import moment from "moment-timezone";
 import Tooltip from "@/app/_Components/ui/Tooltip";
 
 export { Tooltip };
+
+/** Holiday applies if company-wide (no dept) or matches employee department. */
+export function holidayAppliesToDept(holiday, departmentId) {
+  if (!holiday) return false;
+  const raw = holiday.departmentId;
+  if (raw == null || raw === "") return true;
+  const hid =
+    typeof raw === "object" && raw !== null ? raw._id || raw.id : raw;
+  if (!hid) return true;
+  if (!departmentId) return false;
+  return String(hid) === String(departmentId);
+}
+
+/** date (YYYY-MM-DD) → holiday name for that employee/dept */
+export function buildHolidayMap(holidays = [], departmentId) {
+  const map = new Map();
+  (holidays || []).forEach((h) => {
+    if (!holidayAppliesToDept(h, departmentId)) return;
+    const d = String(h?.date || "").trim().slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
+    const name = String(h?.name || "").trim() || "Holiday";
+    // Dept-specific holiday name overrides company-wide if both exist
+    if (!map.has(d) || h.departmentId) map.set(d, name);
+  });
+  return map;
+}
+
+export function buildHolidayDateSet(holidays = [], departmentId) {
+  return new Set(buildHolidayMap(holidays, departmentId).keys());
+}
+
+export function isHolidayDate(holidayMapOrSet, dateStr) {
+  if (!holidayMapOrSet || !dateStr) return false;
+  if (holidayMapOrSet instanceof Map) return holidayMapOrSet.has(dateStr);
+  if (holidayMapOrSet instanceof Set) return holidayMapOrSet.has(dateStr);
+  if (Array.isArray(holidayMapOrSet)) return holidayMapOrSet.includes(dateStr);
+  return false;
+}
+
+export function getHolidayName(holidayMapOrSet, dateStr) {
+  if (!holidayMapOrSet || !dateStr) return "";
+  if (holidayMapOrSet instanceof Map) return holidayMapOrSet.get(dateStr) || "";
+  return "";
+}
 
 export const calculateDuration = (inTime, outTime) => {
   if (!inTime || !outTime) return "-";
@@ -171,10 +216,10 @@ const STATUS_CONFIG = {
   },
   holiday: {
     label: "Holiday",
-    bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-    border: "border-emerald-500/50",
-    dot: "bg-emerald-400",
+    bg: "bg-teal-500/10",
+    text: "text-teal-300",
+    border: "border-teal-500/50",
+    dot: "bg-teal-400",
   },
   "break-in": {
     label: "On Break",
@@ -259,9 +304,100 @@ const STATUS_CONFIG = {
 export const getStatusConfig = (s) =>
   STATUS_CONFIG[s] ?? STATUS_CONFIG.upcoming;
 
-export const getAllTableData = (isFetching, data, viewType, customRange) => {
+/** Payroll / attendance cycle end day (same as payroll: 26 → 25). */
+export const PAY_CYCLE_END_DAY = 25;
+
+/**
+ * Active pay cycle containing `ref` (Karachi): e.g. after 25th → 26th–25th next month.
+ * Matches payroll `currentAttendanceCycle` / `payCycleRange`.
+ */
+export function getCurrentPayCycleRange(
+  ref = moment().tz("Asia/Karachi"),
+  cycleEndDay = PAY_CYCLE_END_DAY,
+) {
+  const now = moment(ref).tz("Asia/Karachi");
+  const endDay = Math.min(28, Math.max(1, Number(cycleEndDay) || 25));
+  let endYear = now.year();
+  let endMonth = now.month() + 1;
+  if (now.date() > endDay) {
+    const next = now.clone().add(1, "month");
+    endYear = next.year();
+    endMonth = next.month() + 1;
+  }
+  const end = moment({ year: endYear, month: endMonth - 1, day: endDay });
+  const start = end.clone().subtract(1, "month").add(1, "day");
+  return {
+    start: start.format("YYYY-MM-DD"),
+    end: end.format("YYYY-MM-DD"),
+  };
+}
+
+/** Payroll-labeled month: e.g. Oct 2026 → 26 Sep – 25 Oct. */
+export function getPayCycleRangeForMonth(
+  year,
+  month,
+  cycleEndDay = PAY_CYCLE_END_DAY,
+) {
+  const endDay = Math.min(28, Math.max(1, Number(cycleEndDay) || 25));
+  const end = moment({
+    year: Number(year),
+    month: Number(month) - 1,
+    day: endDay,
+  });
+  const start = end.clone().subtract(1, "month").add(1, "day");
+  return {
+    start: start.format("YYYY-MM-DD"),
+    end: end.format("YYYY-MM-DD"),
+  };
+}
+
+/** Default period value (`YYYY-M`) for the active 26→25 cycle. */
+export function getDefaultPayPeriodValue(ref = moment().tz("Asia/Karachi")) {
+  const cycle = getCurrentPayCycleRange(ref);
+  const end = moment(cycle.end);
+  return `${end.year()}-${end.month() + 1}`;
+}
+
+/**
+ * Same dropdown shape as payroll `monthOptions`:
+ * "October 2026 · 26 Sept 2026 – 25 Oct 2026"
+ * Starts from the active pay cycle (after 25th → next labeled month).
+ */
+export function attendancePeriodOptions(
+  count = 18,
+  cycleEndDay = PAY_CYCLE_END_DAY,
+) {
+  const cycle = getCurrentPayCycleRange();
+  const end = moment(cycle.end);
+  return Array.from({ length: count }, (_, i) => {
+    const d = end.clone().startOf("month").subtract(i, "month");
+    const month = d.month() + 1;
+    const year = d.year();
+    const range = getPayCycleRangeForMonth(year, month, cycleEndDay);
+    const name = d.format("MMMM YYYY");
+    const startLabel = moment(range.start).format("D MMM YYYY");
+    const endLabel = moment(range.end).format("D MMM YYYY");
+    return {
+      value: `${year}-${month}`,
+      label: `${name} · ${startLabel} – ${endLabel}`,
+      month,
+      year,
+      start: range.start,
+      end: range.end,
+    };
+  });
+}
+
+export const getAllTableData = (
+  isFetching,
+  data,
+  viewType,
+  customRange,
+  cycleRange,
+  holidayDateSet,
+) => {
   if (isFetching || !data?.data) return [];
-  const now = moment();
+  const now = moment().tz("Asia/Karachi");
   let start, end;
 
   if (viewType === "custom_range" && customRange.start) {
@@ -271,8 +407,14 @@ export const getAllTableData = (isFetching, data, viewType, customRange) => {
       : moment(customRange.start).endOf("day");
     end = selectedEnd.isAfter(now) ? now.clone().endOf("day") : selectedEnd;
   } else {
-    start = moment().startOf("month");
-    end = now.clone().endOf("day");
+    // Month / current_month → selected payroll cycle 26 → 25
+    const cycle =
+      cycleRange?.start && cycleRange?.end
+        ? cycleRange
+        : getCurrentPayCycleRange(now);
+    start = moment(cycle.start).startOf("day");
+    const cycleEnd = moment(cycle.end).endOf("day");
+    end = cycleEnd.isAfter(now) ? now.clone().endOf("day") : cycleEnd;
   }
 
   const recordMap = {};
@@ -286,6 +428,8 @@ export const getAllTableData = (isFetching, data, viewType, customRange) => {
     const dateStr = current.format("YYYY-MM-DD");
     const dayName = current.format("dddd");
     const isWeekend = dayName === "Saturday" || dayName === "Sunday";
+    const holidayName = getHolidayName(holidayDateSet, dateStr);
+    const isHoliday = !isWeekend && isHolidayDate(holidayDateSet, dateStr);
 
     const record = recordMap[dateStr] || null;
     const now2 = moment().tz("Asia/Karachi");
@@ -306,9 +450,10 @@ export const getAllTableData = (isFetching, data, viewType, customRange) => {
       !record?.timeOut &&
       (hoursSinceIn > 18 || isPastShift);
 
-    // computedStatus: API record.status handles "half-day" directly
+    // Company holiday wins over punch (present / half-day / late / absent)
     let computedStatus = "upcoming";
     if (isWeekend) computedStatus = "weekend";
+    else if (isHoliday) computedStatus = "holiday";
     else if (isDiscrepancy) computedStatus = "discrepancy";
     else if (record)
       computedStatus = record.status; // "present" | "absent" | "late" | "half-day"
@@ -318,9 +463,18 @@ export const getAllTableData = (isFetching, data, viewType, customRange) => {
       date: dateStr,
       dayName,
       isWeekend,
+      isHoliday: computedStatus === "holiday",
+      holidayName: computedStatus === "holiday" ? holidayName || "Holiday" : "",
       isPastOrToday: current.isSameOrBefore(now, "day"),
       isToday: current.isSame(now, "day"),
-      record,
+      record: computedStatus === "holiday"
+        ? {
+            ...(record || {}),
+            shiftDate: dateStr,
+            status: "holiday",
+            holidayName: holidayName || "Holiday",
+          }
+        : record,
       computedStatus,
     });
     current.add(1, "day");
@@ -528,6 +682,10 @@ export const calculateAttendanceStats = (data, options = {}) => {
       }
 
       const status = getStatus(item);
+      if (status === "holiday" || item?.isHoliday) {
+        acc.holiday++;
+        return acc;
+      }
       if (isAbsent(item) || status === "absent") acc.absent++;
       if (isDiscrepancy(item)) acc.discrepancy++;
       if (status === "late") acc.late++;
@@ -555,6 +713,7 @@ export const calculateAttendanceStats = (data, options = {}) => {
       halfday: 0,
       discrepancy: 0,
       weekend: 0,
+      holiday: 0,
     },
   );
 };
@@ -566,6 +725,7 @@ const DEFAULT_CARD_CONFIG = {
   "half-day": { label: "Half Day", icon: Coffee },
   discrepancy: { label: "Discrepancy", icon: AlertCircle },
   weekend: { label: "Weekends", icon: BedDouble },
+  holiday: { label: "Holidays", icon: PartyPopper },
 };
 
 export const PALETTES_DARK = {
@@ -640,6 +800,18 @@ export const PALETTES_DARK = {
     valueText: "text-violet-300",
     ghost: "text-violet-500",
     badge: "bg-violet-500/15 text-violet-300",
+  },
+  holiday: {
+    bg: "bg-teal-950/70",
+    border: "border-teal-500/40",
+    activeBorder: "border-teal-400/60",
+    ring: "ring-teal-500/20",
+    iconBg: "bg-teal-500/20",
+    iconText: "text-teal-400",
+    labelText: "text-teal-400",
+    valueText: "text-teal-300",
+    ghost: "text-teal-500",
+    badge: "bg-teal-500/15 text-teal-300",
   },
   total: {
     bg: "bg-[#121212]",

@@ -1,5 +1,4 @@
 import Select from "react-select";
-import { XCircle } from "lucide-react";
 
 export const AttendanceFilters = ({ 
   viewType, setViewType, 
@@ -47,8 +46,12 @@ export const AttendanceFilters = ({
       )}
 
       {(viewType !== "today" || selectedEmployee) && (
-        <button onClick={onClear} className="h-[38px] px-3 flex items-center gap-1 text-rose-600 text-xs font-medium border border-rose-100 rounded-xl hover:bg-rose-50">
-          <XCircle size={14} /> CLEAR
+        <button
+          type="button"
+          onClick={onClear}
+          className="flex h-[38px] cursor-pointer items-center justify-center rounded-xl border border-rose-800/70 bg-[#3a1518] px-3 text-xs font-medium tracking-wide text-rose-300 transition-all hover:border-rose-700 hover:bg-[#4a1c20] hover:text-rose-200"
+        >
+          CLEAR
         </button>
       )}
     </div>

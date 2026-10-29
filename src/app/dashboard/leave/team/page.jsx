@@ -23,15 +23,26 @@ import ApplyLeaveForm from "@/app/_Components/leave/ApplyLeaveForm";
 import { LEAVE_PALETTES } from "@/app/_Components/leave/leaveUi";
 import { exportLeaveToExcel } from "@/app/utilities/exportLeaveToExcel";
 import { fleet } from "@/app/_Components/fleet/fleetTheme";
+import {
+  attendancePeriodOptions,
+  getDefaultPayPeriodValue,
+} from "@/app/utilities/attendence";
 
 export default function TeamLeavePage() {
+  const periodOptions = useMemo(() => attendancePeriodOptions(), []);
   const [viewType, setViewType] = useState("month");
+  const [period, setPeriod] = useState(
+    () => getDefaultPayPeriodValue() || periodOptions[0]?.value || "",
+  );
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [leaveTypeId, setLeaveTypeId] = useState("");
   const [customRange, setCustomRange] = useState({ start: "", end: "" });
   const [activeFilter, setActiveFilter] = useState(null);
   const [selected, setSelected] = useState(null);
   const [applyOpen, setApplyOpen] = useState(false);
+
+  const selectedPeriod =
+    periodOptions.find((o) => o.value === period) || periodOptions[0];
 
   const queryParams = useMemo(() => {
     const params = {
@@ -42,15 +53,16 @@ export default function TeamLeavePage() {
     if (viewType === "today") {
       params.startDate = now.format("YYYY-MM-DD");
       params.endDate = now.format("YYYY-MM-DD");
-    } else if (viewType === "month") {
-      params.month = now.format("MM");
-      params.year = now.format("YYYY");
+    } else if (viewType === "month" && selectedPeriod) {
+      // Same pay cycle as payroll / attendance: 26 → 25
+      params.startDate = selectedPeriod.start;
+      params.endDate = selectedPeriod.end;
     } else if (viewType === "custom" && customRange.start) {
       params.startDate = customRange.start;
       params.endDate = customRange.end || customRange.start;
     }
     return params;
-  }, [viewType, selectedEmployee, leaveTypeId, customRange]);
+  }, [viewType, selectedEmployee, leaveTypeId, customRange, selectedPeriod]);
 
   const { data: employees } = useAllEmployeesQuery();
   const { data: typesData } = useGetLeaveTypesQuery();
@@ -92,11 +104,12 @@ export default function TeamLeavePage() {
 
   const handleClearFilters = useCallback(() => {
     setViewType("month");
+    setPeriod(getDefaultPayPeriodValue() || periodOptions[0]?.value || "");
     setCustomRange({ start: "", end: "" });
     setSelectedEmployee("");
     setLeaveTypeId("");
     setActiveFilter(null);
-  }, []);
+  }, [periodOptions]);
 
   const statCards = useMemo(
     () => [
@@ -142,7 +155,11 @@ export default function TeamLeavePage() {
   };
 
   const showClearBtn =
-    viewType !== "month" || customRange.start || selectedEmployee || leaveTypeId;
+    viewType !== "month" ||
+    customRange.start ||
+    selectedEmployee ||
+    leaveTypeId ||
+    (period && periodOptions[0] && period !== periodOptions[0].value);
 
   return (
     <div className="section-stack h-screen overflow-hidden">
@@ -194,6 +211,9 @@ export default function TeamLeavePage() {
           leaveTypeOptions={typeOptions}
           leaveTypeId={leaveTypeId}
           setLeaveTypeId={setLeaveTypeId}
+          period={period}
+          setPeriod={setPeriod}
+          periodOptions={periodOptions}
         />
 
       <div className="min-h-0 flex-1">

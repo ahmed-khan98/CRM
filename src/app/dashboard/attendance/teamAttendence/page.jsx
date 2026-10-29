@@ -701,9 +701,12 @@ import {
 import { exportAttendanceToExcel } from "@/app/utilities/exportToExcel";
 import moment from "moment-timezone";
 import { useAllEmployeesQuery } from "@/app/_Services/employee/page";
+import { useGetHolidaysQuery } from "@/app/_Services/leave/page";
 import {
   PALETTES_DARK,
+  attendancePeriodOptions,
   calculateAttendanceStats,
+  getDefaultPayPeriodValue,
   getStatCards,
   isDiscrepancyRecord,
 } from "@/app/utilities/attendence";
@@ -718,12 +721,19 @@ import { useAttendanceData } from "@/app/_Components/attendence/TeamAttendance/u
 import Tooltip from "@/app/_Components/ui/Tooltip";
 
 const TeamAttendence = () => {
+  const periodOptions = useMemo(() => attendancePeriodOptions(), []);
   const [viewType, setViewType] = useState("today");
+  const [period, setPeriod] = useState(
+    () => getDefaultPayPeriodValue() || periodOptions[0]?.value || "",
+  );
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [customRange, setCustomRange] = useState({ start: "", end: "" });
   const [modalConfig, setModalConfig] = useState({ isOpen: false, data: null });
   const [activeFilter, setActiveFilter] = useState(null);
   console.log("activeFilter:", activeFilter);
+
+  const selectedPeriod =
+    periodOptions.find((o) => o.value === period) || periodOptions[0];
 
   const toggleFilter = useCallback(
     (key) => setActiveFilter((prev) => (prev === key ? null : key)),
@@ -736,25 +746,27 @@ const TeamAttendence = () => {
     if (viewType === "today") {
       const shiftDate =
         now.hour() < 8
-          ? now.subtract(1, "days").format("YYYY-MM-DD")
+          ? now.clone().subtract(1, "days").format("YYYY-MM-DD")
           : now.format("YYYY-MM-DD");
       params.startDate = shiftDate;
       params.endDate = shiftDate;
-    } else if (viewType === "month") {
-      params.month = now.format("MM");
-      params.year = now.format("YYYY");
+    } else if (viewType === "month" && selectedPeriod) {
+      params.startDate = selectedPeriod.start;
+      params.endDate = selectedPeriod.end;
     } else if (viewType === "custom" && customRange.start) {
       params.startDate = customRange.start;
       params.endDate = customRange.end || customRange.start;
     }
     return params;
-  }, [viewType, selectedEmployee, customRange]);
+  }, [viewType, selectedEmployee, customRange, selectedPeriod]);
 
   const [updateTeamAttendence, { isLoading }] =
     useUpdateTeamAttendenceMutation();
   const { data: employees, isFetching } = useAllEmployeesQuery();
   const { data: attendanceData, refetch } =
     useGetDepartEmployeeAttendanceQuery(queryParams);
+  const { data: holidayData } = useGetHolidaysQuery();
+  const holidays = holidayData?.data || [];
 
   const employeeOptions = useMemo(() => {
     const options =
@@ -762,16 +774,18 @@ const TeamAttendence = () => {
         value: emp._id,
         label: emp.fullName,
         designation: emp.designation,
+        departmentId: emp.departmentId?._id || emp.departmentId || null,
       })) || [];
     return [{ value: "", label: "All Employees (Department)" }, ...options];
   }, [employees]);
 
   const handleClearFilters = useCallback(() => {
     setViewType("today");
+    setPeriod(getDefaultPayPeriodValue() || periodOptions[0]?.value || "");
     setCustomRange({ start: "", end: "" });
     setSelectedEmployee("");
     setActiveFilter(null);
-  }, []);
+  }, [periodOptions]);
 
   const finalDisplayData = useAttendanceData({
     attendanceData,
@@ -779,13 +793,17 @@ const TeamAttendence = () => {
     viewType,
     queryParams,
     employeeOptions,
+    holidays,
   });
 
   const stats = useMemo(() => {
     return calculateAttendanceStats(finalDisplayData, {
       getStatus: (item) => item.record?.status,
-      isWeekend: (item) => item.isWeekend || item.record?.status === "weekend",
-      isAbsent: (item) => item.isAbsent,
+      isWeekend: (item) =>
+        item.isWeekend ||
+        item.record?.status === "weekend" ||
+        item.record?.status === "off",
+      isAbsent: (item) => item.isAbsent && item.record?.status !== "holiday",
       isDiscrepancy: (item) => isDiscrepancyRecord(item.record),
     });
   }, [finalDisplayData]);
@@ -808,9 +826,15 @@ const TeamAttendence = () => {
     if (!activeFilter) return finalDisplayData;
 
     return finalDisplayData.filter((item) => {
-      const isWeekend = item.isWeekend || item.record?.status === "weekend";
+      const isWeekend =
+        item.isWeekend ||
+        item.record?.status === "weekend" ||
+        item.record?.status === "off";
+      const isHoliday =
+        item.isHoliday || item.record?.status === "holiday";
       if (activeFilter === "weekend") return isWeekend;
-      if (isWeekend) return false;
+      if (activeFilter === "holiday") return isHoliday;
+      if (isWeekend || isHoliday) return false;
       const status = item.record?.status;
 
       const now = moment().tz("Asia/Karachi");
@@ -872,19 +896,23 @@ const TeamAttendence = () => {
       exportAttendanceToExcel(finalDisplayData, startDate, endDate, {
         selectedEmployee,
         employeeList: employees?.data || [],
+        holidays,
       });
       toast.success("Attendance report exported successfully!");
     } catch (error) {
       toast.error(error.message || "Failed to export attendance report");
       console.error("Export error:", error);
     }
-  }, [finalDisplayData, queryParams, selectedEmployee, employees?.data]);
+  }, [finalDisplayData, queryParams, selectedEmployee, employees?.data, holidays]);
 
   const showClearBtn =
     viewType !== "today" || customRange.start || selectedEmployee;
 
   return (
-    <div className="section-stack h-screen min-w-0 overflow-x-hidden overflow-y-hidden -mx-1 rounded-2xl px-1 py-1 sm:px-2 sm:py-2">
+    <div
+      className="section-stack min-w-0 -mx-1 rounded-2xl px-1 py-1 sm:px-2 sm:py-2"
+      style={{ gap: "0.625rem" }}
+    >
       <AttendenceHeader
         icon={Users}
         length={finalDisplayData?.length}
@@ -903,14 +931,13 @@ const TeamAttendence = () => {
           </button>
         </Tooltip>
       </AttendenceHeader>
-      {/* ── Stat Cards ── */}
+
       <StatsSection
         statCards={statCards}
         activeFilter={activeFilter}
         toggleFilter={toggleFilter}
       />
 
-      {/* ── Active filter banner ── */}
       {activeFilter && (
         <ActiveFilterShowing
           activeFilter={activeFilter}
@@ -930,18 +957,24 @@ const TeamAttendence = () => {
         setCustomRange={setCustomRange}
         showClearBtn={showClearBtn}
         onClear={handleClearFilters}
+        period={period}
+        setPeriod={setPeriod}
+        periodOptions={periodOptions}
       />
 
-      {/* ── Table ── */}
-      <div className="min-h-0 flex-1 overflow-hidden rounded-3xl bg-white shadow-none">
+      {/* Fixed height so at least ~5 rows always show (flex was collapsing). */}
+      <div
+        className="overflow-hidden rounded-3xl bg-white shadow-none"
+        style={{ height: "30rem", minHeight: "30rem" }}
+      >
         <div
-          className="overflow-auto h-full scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent"
+          className="h-full overflow-auto scrollbar-thin scrollbar-thumb-zinc-200 scrollbar-track-transparent"
           style={{
             scrollbarWidth: "thin",
             scrollbarColor: "#52525b transparent",
           }}
         >
-          <table className="crm-table w-full text-left border-collapse min-w-[700px]">
+          <table className="crm-table w-full min-w-[700px] border-collapse text-left [&_tbody_td]:!py-1.5 [&_tbody_td]:!px-2 [&_thead_th]:!py-2">
             <thead className="sticky top-0 z-20">
               <tr className="table-head-row">
                 {[

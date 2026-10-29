@@ -1,9 +1,9 @@
 "use client";
 
-import { XCircle } from "lucide-react";
 import React, { memo } from "react";
 import Select from "react-select";
 import LeaveDateField from "@/app/_Components/leave/LeaveDateField";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
 
   const customSelectStyles = {
     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
@@ -72,89 +72,127 @@ const FiltersBar = memo(({
   leaveTypeOptions,
   leaveTypeId,
   setLeaveTypeId,
+  period,
+  setPeriod,
+  periodOptions = [],
   variant = "dark",
 }) => {
   const dark = variant !== "light";
   const selectStyles = dark ? darkSelectStyles : customSelectStyles;
   return (
-<div className={`rounded-2xl p-2.5 flex flex-wrap items-end gap-2.5 shrink-0 border ${dark ? "bg-zinc-900 border-zinc-800 shadow-none" : "bg-white border-zinc-200 shadow-[0_2px_12px_rgba(0,0,0,0.05)]"}`}>
-       <div className="flex flex-col gap-1 grow min-w-[200px]">
-          <label className="type-label ml-1">Employee</label>
+    <div
+      className={`flex w-full min-w-0 shrink-0 flex-nowrap items-end gap-2 overflow-x-auto rounded-2xl border p-2.5 ${
+        dark
+          ? "border-zinc-800 bg-zinc-900 shadow-none"
+          : "border-zinc-200 bg-white shadow-[0_2px_12px_rgba(0,0,0,0.05)]"
+      }`}
+    >
+      <div className="flex min-w-[140px] flex-1 basis-0 flex-col gap-1">
+        <label className="type-label ml-1">Employee</label>
+        <Select
+          options={employeeOptions}
+          styles={selectStyles}
+          menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+          placeholder="All Employees..."
+          value={employeeOptions.find((opt) => opt.value === selectedEmployee)}
+          onChange={(selected) => setSelectedEmployee(selected?.value || "")}
+          isSearchable
+          isClearable
+        />
+      </div>
+
+      {leaveTypeOptions ? (
+        <div className="flex min-w-[130px] flex-1 basis-0 flex-col gap-1">
+          <label className="type-label ml-1">Leave Type</label>
           <Select
-            options={employeeOptions}
+            options={leaveTypeOptions}
             styles={selectStyles}
             menuPortalTarget={typeof window !== "undefined" ? document.body : null}
-            placeholder="All Employees..."
-            value={employeeOptions.find((opt) => opt.value === selectedEmployee)}
-            onChange={(selected) => setSelectedEmployee(selected?.value || "")}
+            placeholder="All leave types"
+            value={
+              leaveTypeOptions.find((opt) => opt.value === leaveTypeId) ||
+              leaveTypeOptions[0]
+            }
+            onChange={(selected) => setLeaveTypeId?.(selected?.value || "")}
             isSearchable
             isClearable
           />
         </div>
+      ) : null}
 
-        {leaveTypeOptions ? (
-          <div className="flex flex-col gap-1 grow min-w-[200px]">
-            <label className="type-label ml-1">Leave Type</label>
-            <Select
-              options={leaveTypeOptions}
-              styles={selectStyles}
-              menuPortalTarget={typeof window !== "undefined" ? document.body : null}
-              placeholder="All leave types"
-              value={leaveTypeOptions.find((opt) => opt.value === leaveTypeId) || leaveTypeOptions[0]}
-              onChange={(selected) => setLeaveTypeId?.(selected?.value || "")}
-              isSearchable
-              isClearable
-            />
-          </div>
-        ) : null}
-
-
-       <div className="flex flex-col gap-1">
-          <label className="type-label ml-1">Period</label>
-          <div className={`flex p-1 rounded-xl h-[38px] items-center ${dark ? "bg-zinc-800" : "bg-zinc-50"}`}>
-            {["today", "month", "custom"].map((type) => (
-              <button
-                key={type}
-                onClick={() => setViewType(type)}
-                className={`cursor-pointer px-3 py-1.5 h-full text-xs font-medium rounded-lg capitalize transition-all
-                  ${viewType === type ? (dark ? "zyro-accent-btn shadow-sm" : "bg-zinc-800 text-white shadow-sm") : (dark ? "text-zinc-400 hover:text-zinc-200" : "text-zinc-400 hover:text-zinc-500")}`}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
+      <div className="flex shrink-0 flex-col gap-1">
+        <label className="type-label ml-1">Period</label>
+        <div
+          className={`flex h-[38px] items-center rounded-xl p-1 ${
+            dark ? "bg-zinc-800" : "bg-zinc-50"
+          }`}
+        >
+          {["today", "month", "custom"].map((type) => (
+            <button
+              key={type}
+              type="button"
+              onClick={() => setViewType(type)}
+              className={`h-full cursor-pointer rounded-lg px-2.5 py-1.5 text-xs font-medium capitalize transition-all
+                  ${
+                    viewType === type
+                      ? dark
+                        ? "zyro-accent-btn shadow-sm"
+                        : "bg-zinc-800 text-white shadow-sm"
+                      : dark
+                        ? "text-zinc-400 hover:text-zinc-200"
+                        : "text-zinc-400 hover:text-zinc-500"
+                  }`}
+            >
+              {type}
+            </button>
+          ))}
         </div>
+      </div>
 
-      {viewType === "custom" && (
-
-        <div className="flex flex-col gap-1">
-            <label className="type-label ml-1">Date Range</label>
-            <div className="flex items-center gap-1.5">
-              <div className="w-[148px]">
-                <LeaveDateField
-                  compact
-                  placeholder="Start"
-                  value={customRange.start}
-                  onChange={(start) => setCustomRange({ ...customRange, start })}
-                />
-              </div>
-              <div className="w-[148px]">
-                <LeaveDateField
-                  compact
-                  placeholder="End"
-                  value={customRange.end}
-                  onChange={(end) => setCustomRange({ ...customRange, end })}
-                />
-              </div>
-            </div>
-          </div>
+      {viewType === "month" && periodOptions.length > 0 && (
+        <div className="flex min-w-[200px] flex-[1.3] basis-0 flex-col gap-1">
+          <label className="type-label ml-1">Pay Cycle</label>
+          <CrmSelect
+            options={periodOptions}
+            value={period}
+            onChange={(v) => setPeriod?.(v)}
+          />
+        </div>
       )}
 
-      {showClearBtn && <button
-            onClick={onClear}
-        className={`cursor-pointer h-[38px] px-3 flex items-center gap-1.5 text-zinc-400 hover:text-rose-400 rounded-xl border transition-all text-xs font-medium ${dark ? "border-zinc-700 hover:bg-rose-500/10" : "border-zinc-200 hover:bg-rose-50 hover:text-rose-600"}`}>
-            <XCircle size={14} /> CLEAR
-          </button>}
+      {viewType === "custom" && (
+        <div className="flex shrink-0 flex-col gap-1">
+          <label className="type-label ml-1">Date Range</label>
+          <div className="flex items-center gap-1.5">
+            <div className="w-[132px]">
+              <LeaveDateField
+                compact
+                placeholder="Start"
+                value={customRange.start}
+                onChange={(start) => setCustomRange({ ...customRange, start })}
+              />
+            </div>
+            <div className="w-[132px]">
+              <LeaveDateField
+                compact
+                placeholder="End"
+                value={customRange.end}
+                onChange={(end) => setCustomRange({ ...customRange, end })}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showClearBtn && (
+        <button
+          type="button"
+          onClick={onClear}
+          className="mb-0 flex h-[38px] shrink-0 cursor-pointer items-center justify-center self-end rounded-xl border border-rose-800/70 bg-[#3a1518] px-3 text-xs font-medium tracking-wide text-rose-300 transition-all hover:border-rose-700 hover:bg-[#4a1c20] hover:text-rose-200"
+        >
+          CLEAR
+        </button>
+      )}
     </div>
   );
 });

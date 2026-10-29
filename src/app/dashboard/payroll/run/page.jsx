@@ -489,20 +489,23 @@ export default function RunPayrollPage() {
       )}
 
       {/*
-        crm-table-wrap uses overflow:hidden (border radius). Scroll must live on an
-        inner wrapper — same pattern as SaleTable / DataTable.
-        Mobile: page scrolls; Desktop: flex-1 + overflow inside locked viewport.
+        crm-table-wrap clips for radius; horizontal scroll MUST stay on the inner
+        div (bounded width via min-w-0/w-full). Table minWidth forces overflow so
+        Gross / Net Pay / Status / Action are reachable by scrolling right.
       */}
-      <div className="crm-table-wrap min-w-0 md:flex md:min-h-0 md:flex-1 md:flex-col">
+      <div className="crm-table-wrap min-w-0 w-full max-w-full overflow-hidden md:flex md:min-h-0 md:flex-1 md:flex-col">
         <div
-          className="min-w-0 overflow-x-auto overflow-y-auto overscroll-x-contain md:min-h-0 md:flex-1"
+          className="w-full min-w-0 max-w-full overflow-x-scroll overflow-y-auto overscroll-x-contain md:min-h-0 md:flex-1"
           style={{
             WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "thin",
-            scrollbarColor: "#52525b transparent",
+            scrollbarWidth: "auto",
+            scrollbarColor: "#a1a1aa #27272a",
           }}
         >
-          <table className="crm-table w-full min-w-[1200px] border-collapse text-left">
+          <table
+            className="crm-table border-collapse text-left"
+            style={{ minWidth: "1500px", width: "100%" }}
+          >
             <thead className="sticky top-0 z-20">
               <tr className="table-head-row">
                 {[
@@ -513,6 +516,7 @@ export default function RunPayrollPage() {
                   "Allowances",
                   "Late",
                   "Absent",
+                  "Half Day",
                   "Other",
                   "Gross",
                   "Net Pay",
@@ -535,19 +539,19 @@ export default function RunPayrollPage() {
             <tbody>
               {isFetching ? (
                 <tr>
-                  <td colSpan={12} className="px-4 py-10 text-center text-sm text-zinc-400">
+                  <td colSpan={13} className="px-4 py-10 text-center text-sm text-zinc-400">
                     Loading payroll…
                   </td>
                 </tr>
               ) : entries.length === 0 ? (
                 <tr>
-                  <td colSpan={12} className="px-4 py-10 text-center text-sm text-zinc-400">
+                  <td colSpan={13} className="px-4 py-10 text-center text-sm text-zinc-400">
                     No payroll generated for this month
                   </td>
                 </tr>
               ) : filteredEntries.length === 0 ? (
                 <tr>
-                  <td colSpan={12} className="px-4 py-10 text-center text-sm text-zinc-400">
+                  <td colSpan={13} className="px-4 py-10 text-center text-sm text-zinc-400">
                     No employees match these filters
                   </td>
                 </tr>
@@ -562,13 +566,13 @@ export default function RunPayrollPage() {
                       />
                     </td>
                     <td className="px-1 py-3">
-                      <div className="flex max-w-[220px] items-center gap-2">
+                      <div className="flex max-w-[180px] items-center gap-2">
                         <Avatar name={row.employeeName} />
                         <div className="min-w-0">
                           <p className="truncate text-sm font-semibold capitalize text-zinc-100">
                             {row.employeeName}
                           </p>
-                          <p className="line-clamp-2 text-xs leading-snug text-zinc-400">
+                          <p className="truncate text-xs leading-snug text-zinc-400">
                             {row.designation}
                           </p>
                         </div>
@@ -587,10 +591,10 @@ export default function RunPayrollPage() {
                       {money(row.lateDeduction)}
                     </td>
                     <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-rose-500">
-                      {money(
-                        Number(row.absentDeduction || 0) +
-                          Number(row.halfDayDeduction || 0)
-                      )}
+                      {money(row.absentDeduction)}
+                    </td>
+                    <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-rose-500">
+                      {money(row.halfDayDeduction)}
                     </td>
                     <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-zinc-500">
                       {money(
@@ -611,7 +615,7 @@ export default function RunPayrollPage() {
                     <td className="whitespace-nowrap px-1 py-3">
                       <PayrollStatusBadge status={row.status} />
                     </td>
-                    <td className="sticky right-0 z-10 bg-[#121212] px-1 py-3 group-hover:bg-zinc-800 md:border-l md:border-zinc-800">
+                    <td className="sticky right-0 z-10 whitespace-nowrap bg-[#121212] px-1 py-3 group-hover:bg-zinc-800 md:border-l md:border-zinc-800">
                       <div className="flex gap-1">
                         <Tooltip label="View payslip">
                           <button

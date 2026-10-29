@@ -175,7 +175,8 @@ function AttendanceRow({ row }) {
   const isActive = hasTimeIn && !hasTimeOut && isShiftToday && !isDiscrepancy;
 
   let currentStatus = "upcoming";
-  if (isWeekend) currentStatus = "weekend";
+  if (row.computedStatus === "holiday" || row.isHoliday) currentStatus = "holiday";
+  else if (isWeekend) currentStatus = "weekend";
   else if (isDiscrepancy) currentStatus = "discrepancy";
   else if (record) currentStatus = record.status;
   else if (isPastOrToday) currentStatus = "absent";
@@ -238,35 +239,45 @@ ${isToday ? "bg-zinc-800/60 md:border-l-2 md:border-l-zinc-500" : isWeekend ? "b
         </div>
       </td>
 
-      {/* In/Out */}
+      {/* In/Out — keep punch times even on holiday */}
       <td className="px-3 py-1">
-        <div className="flex items-center gap-1 flex-wrap">
-          <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5  rounded-md text-[10px] font-medium tabular-nums">
-            {formatTimeOnly(record?.timeIn)}
+        {hasTimeIn || currentStatus !== "holiday" ? (
+          <div className="flex items-center gap-1 flex-wrap">
+            <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5  rounded-md text-[10px] font-medium tabular-nums">
+              {formatTimeOnly(record?.timeIn)}
+            </span>
+            <span className="text-zinc-300 text-[10px]">→</span>
+            {renderTimeOut()}
+          </div>
+        ) : (
+          <span className="text-zinc-300 text-[10px] font-medium tabular-nums">
+            --:--
           </span>
-          <span className="text-zinc-300 text-[10px]">→</span>
-          {renderTimeOut()}
-        </div>
+        )}
       </td>
 
       {/* Total Hours */}
       <td className="px-3 py-1 text-[10px] font-medium text-zinc-500 tabular-nums">
-        {calculateDuration(record?.timeIn, record?.timeOut)}
+        {hasTimeIn
+          ? calculateDuration(record?.timeIn, record?.timeOut)
+          : "—"}
       </td>
 
       {/* Working Hours */}
       <td className="px-3 py-1 text-[10px] font-medium text-zinc-500 tabular-nums">
-        {onlyWorkingHours(
-          record?.timeIn,
-          record?.timeOut,
-          record?.totalBreakMinutes,
-        )}
+        {hasTimeIn
+          ? onlyWorkingHours(
+              record?.timeIn,
+              record?.timeOut,
+              record?.totalBreakMinutes,
+            )
+          : "—"}
       </td>
 
       {/* Break */}
       <td className="px-3 py-1">
         <span className="text-[10px] font-medium text-zinc-500 tabular-nums flex items-center gap-1">
-          {record?.totalBreakMinutes >= 0 ? (
+          {hasTimeIn && record?.totalBreakMinutes >= 0 ? (
             <>
               <Coffee size={9} className="text-zinc-400" />
               {formatBreakMinutes(record.totalBreakMinutes)}
@@ -283,7 +294,11 @@ ${isToday ? "bg-zinc-800/60 md:border-l-2 md:border-l-zinc-500" : isWeekend ? "b
           className={`inline-flex items-center gap-1 px-1.5 rounded-full text-[10px] font-medium uppercase tracking-wider border ${cfg.bg} ${cfg.text} ${cfg.border}`}
         >
           <span className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-          {isWeekend ? "Off" : cfg.label || currentStatus}
+          {isWeekend
+            ? "Off"
+            : currentStatus === "holiday"
+              ? row.holidayName || record?.holidayName || "Holiday"
+              : cfg.label || currentStatus}
         </span>
       </td>
     </tr>

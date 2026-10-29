@@ -3,14 +3,19 @@ import { money } from "@/app/_Components/payroll/payrollUi";
 
 export function exportPayrollToExcel(rows = [], filename = "payroll") {
   if (!rows.length) throw new Error("No payroll rows to export");
-  const data = rows.map((r) => ({
+  const data = rows.map((r, i) => ({
+    "#": i + 1,
     Employee: r.employeeName,
     Department: r.departmentName,
     "Basic Salary": r.basicSalary,
     Allowances: r.allowancesTotal,
-    Deductions: r.deductionsTotal,
-    "Absent Deduction": r.absentDeduction,
-    "Late Deduction": r.lateDeduction,
+    "Absent Count": Number(r.absentDays) || 0,
+    "Absent Deduction": Number(r.absentDeduction) || 0,
+    "Half Day Count": Number(r.halfDays) || 0,
+    "Half Day Deduction": Number(r.halfDayDeduction) || 0,
+    "Late Count": Number(r.lateDays) || 0,
+    "Late Deduction": Number(r.lateDeduction) || 0,
+    "Total Deduction": r.deductionsTotal,
     Gross: r.grossPay,
     "Net Pay": r.netPay,
     Status: r.status,

@@ -383,14 +383,18 @@
 // }
 
 import { useCallback, useMemo, useState } from "react";
-import moment from "moment-timezone";
 import {  TrendingUp,
   CalendarSearch,
 } from "lucide-react";
 import { useGetAttendanceQuery } from "@/app/_Services/attendence/page";
+import { useGetLoggedUserQuery } from "@/app/_Services/authentication/page";
+import { useGetHolidaysQuery } from "@/app/_Services/leave/page";
 import {
+  attendancePeriodOptions,
+  buildHolidayMap,
   calculateAttendanceStats,
   getAllTableData,
+  getDefaultPayPeriodValue,
   getStatCards,
   PALETTES_DARK,
   isDiscrepancyRecord,
@@ -403,13 +407,23 @@ import AttendanceTable from "@/app/_Components/attendence/MyAttendance/Attendanc
 
 
 export default function AttendancePage() {
+  const periodOptions = useMemo(() => attendancePeriodOptions(), []);
   const [viewType, setViewType] = useState("current_month");
+  const [period, setPeriod] = useState(
+    () => getDefaultPayPeriodValue() || periodOptions[0]?.value || "",
+  );
   const [customRange, setCustomRange] = useState({ start: "", end: "" });
   const [activeFilter, setActiveFilter] = useState(null);
 
+  const selectedPeriod =
+    periodOptions.find((o) => o.value === period) || periodOptions[0];
+
   const queryParams = useMemo(() => {
-    if (viewType === "current_month") {
-      return { month: moment().format("MM"), year: moment().year() };
+    if (viewType === "current_month" && selectedPeriod) {
+      return {
+        startDate: selectedPeriod.start,
+        endDate: selectedPeriod.end,
+      };
     }
     if (viewType === "custom_range" && customRange.start) {
       return {
@@ -418,13 +432,38 @@ export default function AttendancePage() {
       };
     }
     return {};
-  }, [viewType, customRange]);
+  }, [viewType, customRange, selectedPeriod]);
 
   const { data, isFetching } = useGetAttendanceQuery(queryParams);
+  const { data: loggedUser } = useGetLoggedUserQuery();
+  const { data: holidayData } = useGetHolidaysQuery();
+
+  const holidayMap = useMemo(() => {
+    const user = loggedUser?.data || loggedUser;
+    const deptId = user?.departmentId?._id || user?.departmentId || null;
+    return buildHolidayMap(holidayData?.data || [], deptId);
+  }, [holidayData, loggedUser]);
 
   const allData = useMemo(() => {
-    return getAllTableData(isFetching, data, viewType, customRange);
-  }, [isFetching, data, viewType, customRange]);
+    return getAllTableData(
+      isFetching,
+      data,
+      viewType,
+      customRange,
+      {
+        start: selectedPeriod?.start,
+        end: selectedPeriod?.end,
+      },
+      holidayMap,
+    );
+  }, [
+    isFetching,
+    data,
+    viewType,
+    customRange,
+    selectedPeriod,
+    holidayMap,
+  ]);
 
 const stats = useMemo(() => {
   return calculateAttendanceStats(allData, {
@@ -441,7 +480,9 @@ const statCards = useMemo(() => {
       label: "Working Days",
       icon: TrendingUp,
       palette: PALETTES_DARK.total,
-      getValue: (data) => data.filter((r) => !r.isWeekend).length,
+      getValue: (data) =>
+        data.filter((r) => !r.isWeekend && r.computedStatus !== "holiday")
+          .length,
     },
   });
 }, [stats, allData]);
@@ -450,6 +491,11 @@ const statCards = useMemo(() => {
     if (!activeFilter) return allData;
     if (activeFilter === "discrepancy") {
       return allData.filter((row) => isDiscrepancyRecord(row.record));
+    }
+    if (activeFilter === "holiday") {
+      return allData.filter(
+        (row) => row.computedStatus === "holiday" || row.isHoliday,
+      );
     }
     return allData.filter((row) => row.computedStatus === activeFilter);
   }, [activeFilter, allData]);
@@ -460,8 +506,9 @@ const statCards = useMemo(() => {
 
   const clearFilters = useCallback(() => {
     setViewType("current_month");
+    setPeriod(getDefaultPayPeriodValue() || periodOptions[0]?.value || "");
     setCustomRange({ start: "", end: "" });
-  }, []);
+  }, [periodOptions]);
   
   return (
     <div className=" section-stack min-h-screen  text-zinc-100 -mx-1 rounded-2xl px-1 py-1 sm:px-2 sm:py-2">
@@ -477,6 +524,9 @@ const statCards = useMemo(() => {
           customRange={customRange}
           setCustomRange={setCustomRange}
           clearFilters={clearFilters}
+          period={period}
+          setPeriod={setPeriod}
+          periodOptions={periodOptions}
         />
       </AttendenceHeader>
 

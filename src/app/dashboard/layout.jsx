@@ -3,7 +3,7 @@
 export const metadata = {
   title: {
     default: "Dashboard",
-    template: "%s | zyro",
+    template: "%s | Zyro",
   },
   robots: { index: false, follow: false },
 };
