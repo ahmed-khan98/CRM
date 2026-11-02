@@ -1,11 +1,23 @@
 "use client";
 
+import { useMemo } from "react";
+
 export default function MailboxSwitcher({
   grouped = [],
   value,
   onChange,
   disabled,
 }) {
+  const mailboxes = useMemo(() => {
+    const list = [];
+    for (const g of grouped) {
+      for (const m of g.mailboxes || []) {
+        list.push(m);
+      }
+    }
+    return list;
+  }, [grouped]);
+
   return (
     <select
       className="min-w-[220px] max-w-full rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-zinc-400"
@@ -14,18 +26,10 @@ export default function MailboxSwitcher({
       onChange={(e) => onChange(e.target.value)}
     >
       <option value="">Select mailbox…</option>
-      {grouped.map((g) => (
-        <optgroup
-          key={g.brandId}
-          label={`${g.brandName}${g.departmentName ? ` · ${g.departmentName}` : ""}`}
-        >
-          {(g.mailboxes || []).map((m) => (
-            <option key={m._id} value={m._id}>
-              {m.emailAddress}
-              {m.displayName ? ` (${m.displayName})` : ""}
-            </option>
-          ))}
-        </optgroup>
+      {mailboxes.map((m) => (
+        <option key={m._id} value={m._id}>
+          {m.emailAddress}
+        </option>
       ))}
     </select>
   );

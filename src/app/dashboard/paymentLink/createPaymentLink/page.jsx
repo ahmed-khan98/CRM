@@ -21,7 +21,7 @@ import { useCreatePaymentLinkMutation } from "@/app/_Services/paymentLink/page";
 import FormikCreateableSelect from "@/app/_Components/Modal/CreateableSelect";
 import {
   currencyOptions,
-  merchantOptions,
+  getMerchantOptionsForDepartment,
   sale_Options,
   serviceOptions,
 } from "@/app/utilities/paymentLink";
@@ -216,8 +216,14 @@ export default function Page() {
                 const handleDepartChange = (newDeptId) => {
                   setFieldValue("departmentId", newDeptId);
                   setFieldValue("brandId", "");
+                  setFieldValue("merchantType", "");
                   setActiveDeptId(newDeptId);
                 };
+
+                const filteredMerchantOptions = getMerchantOptionsForDepartment(
+                  values.departmentId || activeDeptId || userDepartmentId,
+                  departData?.data || [],
+                );
 
                 return (
                   <Form className="space-y-5">
@@ -372,7 +378,7 @@ export default function Page() {
                         <FormikSelect
                           name="merchantType"
                           label="Select Merchant Type"
-                          options={merchantOptions}
+                          options={filteredMerchantOptions}
                           value={values.merchantType}
                           setFieldValue={setFieldValue}
                           setFieldTouched={setFieldTouched}

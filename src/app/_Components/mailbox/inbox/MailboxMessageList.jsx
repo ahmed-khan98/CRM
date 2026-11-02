@@ -43,7 +43,7 @@ export default function MailboxMessageList({
         />
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto">
+      <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar-dark">
         {loading && (
           <div className="p-4 space-y-3">
             {[1, 2, 3, 4, 5].map((i) => (

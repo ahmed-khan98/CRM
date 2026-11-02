@@ -1,11 +1,17 @@
+/** Design department — Skyliner merchant only */
+export const DESIGN_DEPARTMENT_ID = "68bf117e7bee051de66530e3";
+
 const merchant = [
+  {
+    id: "Skyliner Trading LLC",
+    name: "Skyliner Trading LLC",
+  },
   {
     id: "Kinatech Business Solutions LLC",
     name: "Kinatech Business Solutions LLC",
   },
   // { id: "Augmentus", name: "Augmentus" },
 ];
-
 
 const services = [
   "Seo Services",
@@ -29,14 +35,14 @@ const services = [
 ];
 
 const merchantType = [
+  "Skyliner Trading LLC",
   "Kinatech Business Solutions LLC",
-        // "Augmentus",
-        "Zelle",
-        "Bank Transfer",
-        "Stripe",
-        "Paypal",
-        "Square",
-        "Other",
+  "Zelle",
+  "Bank Transfer",
+  "Stripe",
+  "Paypal",
+  "Square",
+  "Other",
 ];
 
 const currencyType = [
@@ -63,6 +69,39 @@ const merchantOptions =
     label: b?.name,
   })) ?? [];
 
+/**
+ * Merchant dropdown by department:
+ * - Design → only Skyliner Trading LLC
+ * - All other depts → everyone except Skyliner
+ *
+ * @param {string|null|undefined} departmentId
+ * @param {Array<{_id?:string,id?:string,name?:string}>} [departments]
+ */
+export function getMerchantOptionsForDepartment(
+  departmentId,
+  departments = [],
+) {
+  const deptId = String(
+    departmentId?._id || departmentId || "",
+  ).trim();
+  const dept = (departments || []).find(
+    (d) => String(d?._id || d?.id) === deptId,
+  );
+  const deptName = String(dept?.name || "").toLowerCase();
+  const isDesign =
+    deptId === DESIGN_DEPARTMENT_ID ||
+    /\bdesigns?\b/i.test(deptName);
+
+  const list = isDesign
+    ? merchant.filter((m) => m.id === "Skyliner Trading LLC")
+    : merchant.filter((m) => m.id !== "Skyliner Trading LLC");
+
+  return list.map((b) => ({
+    value: b.id,
+    label: b.name,
+  }));
+}
+
 const serviceOptions =
   services?.map((b) => ({
     value: b,
@@ -81,4 +120,10 @@ const currencyOptions =
     label: b?.name,
   })) ?? [];
 
-export { merchantOptions, serviceOptions, currencyOptions,sale_Options,merchantTypeOptions };
+export {
+  merchantOptions,
+  serviceOptions,
+  currencyOptions,
+  sale_Options,
+  merchantTypeOptions,
+};

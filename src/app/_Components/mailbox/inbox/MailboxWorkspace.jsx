@@ -173,7 +173,9 @@ export default function MailboxWorkspace({
 
   const messages = messagesData?.data?.messages || [];
   const total = messagesData?.data?.total || 0;
-  const message = messageData?.data || null;
+  // When no selection (e.g. switched folder), ignore RTK cached message from previous folder
+  const message =
+    selectedUid && !isScheduledFolder ? messageData?.data || null : null;
   const connError =
     foldersError?.data?.message ||
     (!isScheduledFolder && messagesError?.data?.message) ||
@@ -192,6 +194,7 @@ export default function MailboxWorkspace({
     setFolder(path);
     setPage(1);
     setSelectedUid(null);
+    setLoadImages(false);
     setMobilePane("list");
   };
 
@@ -354,9 +357,9 @@ export default function MailboxWorkspace({
         ))}
       </div>
 
-      <div className="flex-1 min-h-0 grid md:grid-cols-[200px_minmax(260px,340px)_1fr]">
+      <div className="flex-1 min-h-0 grid md:grid-cols-[148px_minmax(240px,320px)_1fr]">
         <aside
-          className={`border-r border-zinc-800 overflow-y-auto ${
+          className={`border-r border-zinc-800 overflow-y-auto custom-scrollbar-dark ${
             mobilePane === "folders" ? "block" : "hidden md:block"
           }`}
         >

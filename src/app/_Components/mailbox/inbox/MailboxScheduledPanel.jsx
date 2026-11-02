@@ -72,7 +72,7 @@ export default function MailboxScheduledPanel({ mailboxId, canSend }) {
           <Clock className="h-3.5 w-3.5" />
           Scheduled ({rows.length})
         </div>
-        <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar-dark">
           {isFetching && !rows.length && (
             <div className="p-4 flex items-center gap-2 text-xs text-zinc-500">
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -181,7 +181,7 @@ export default function MailboxScheduledPanel({ mailboxId, canSend }) {
               </div>
             )}
 
-            <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">
+            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar-dark px-4 py-3">
               <div
                 className="mailbox-html prose prose-invert max-w-none text-sm text-zinc-200 break-words"
                 dangerouslySetInnerHTML={{

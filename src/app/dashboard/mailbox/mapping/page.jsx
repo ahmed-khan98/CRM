@@ -174,7 +174,6 @@ export default function MailboxMappingPage() {
                         <thead>
                           <tr className="table-head-row">
                             <th className="table-head-cell text-left">Mailbox</th>
-                            <th className="table-head-cell text-left">Login</th>
                             <th className="table-head-cell text-left">Status</th>
                             <th className="table-head-cell text-left">Users</th>
                             <th className="table-head-cell text-left">Actions</th>
@@ -188,14 +187,6 @@ export default function MailboxMappingPage() {
                             >
                               <td className="px-4 py-3 text-sm text-zinc-100">
                                 {m.emailAddress}
-                                {m.displayName ? (
-                                  <div className="text-[11px] text-zinc-500">
-                                    {m.displayName}
-                                  </div>
-                                ) : null}
-                              </td>
-                              <td className="px-4 py-3 text-sm text-zinc-400">
-                                {m.loginUsername}
                               </td>
                               <td className="px-4 py-3 text-sm">
                                 <StatusPill status={m.status} error={m.lastError} />

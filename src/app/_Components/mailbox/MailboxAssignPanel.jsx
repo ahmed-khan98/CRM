@@ -146,7 +146,7 @@ export default function MailboxAssignPanel({
                 <option value="">Select…</option>
                 {available.map((u) => (
                   <option key={u._id} value={u._id}>
-                    {u.fullName} ({u.email})
+                    {u.fullName}
                   </option>
                 ))}
               </select>

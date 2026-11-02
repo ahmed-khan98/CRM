@@ -12,7 +12,7 @@ import { useGetLeadByIdQuery } from "@/app/_Services/lead/page";
 import { useCreatePaymentLinkMutation } from "@/app/_Services/paymentLink/page";
 import {
   currencyOptions,
-  merchantOptions,
+  getMerchantOptionsForDepartment,
   sale_Options,
   serviceOptions,
 } from "@/app/utilities/paymentLink";
@@ -196,8 +196,14 @@ function LeadPayment() {
                   setFieldValue("brandId", "");
                   setFieldValue("agent", "");
                   setFieldValue("fronter", "");
+                  setFieldValue("merchantType", "");
                   setActiveDeptId(newDeptId); // Trigger dynamic APIs recalculation
                 };
+
+                const filteredMerchantOptions = getMerchantOptionsForDepartment(
+                  values.departmentId || activeDeptId || userDepartmentId,
+                  departData?.data || [],
+                );
 
                 return (
                   <Form className="space-y-3">
@@ -293,7 +299,7 @@ function LeadPayment() {
                       <FormikSelect
                         name="merchantType"
                         label="Select Merchant Type"
-                        options={merchantOptions}
+                        options={filteredMerchantOptions}
                         value={values.merchantType}
                         setFieldValue={setFieldValue}
                         setFieldTouched={setFieldTouched}

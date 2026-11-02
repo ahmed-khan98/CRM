@@ -184,7 +184,9 @@ export default function MailboxMessageReader({
         direction={crmDirection}
       />
 
-      {(message.imagesBlocked || !loadImages) && (
+      {!loadImages &&
+        (message.imagesBlocked ||
+          /data-blocked-src/i.test(message.html || "")) && (
         <div className="px-4 py-2 border-b border-zinc-800 shrink-0 flex items-center justify-between gap-2 bg-zinc-900/50">
           <span className="text-[11px] text-zinc-500">
             Remote images are blocked for safety.
@@ -199,7 +201,7 @@ export default function MailboxMessageReader({
         </div>
       )}
 
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">
+      <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar-dark px-4 py-3">
         <div
           className="mailbox-html prose prose-invert max-w-none text-sm text-zinc-200 break-words"
           dangerouslySetInnerHTML={{ __html: safeHtml }}
