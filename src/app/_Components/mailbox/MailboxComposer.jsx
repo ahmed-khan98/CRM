@@ -86,7 +86,7 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
   const [scheduleMode, setScheduleMode] = useState(false);
   const [sendAtLocal, setSendAtLocal] = useState(toLocalInputValue());
   const [minimized, setMinimized] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   const [sendMail, { isLoading: sending }] = useSendMailboxMailMutation();
   const [saveDraft, { isLoading: saving }] = useSaveMailboxDraftMutation();
@@ -199,9 +199,9 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
           bottom: 0,
           right: 16,
           left: "auto",
-          width: "min(560px, 100vw)",
+          width: "min(720px, calc(100vw - 16px))",
           maxHeight: "calc(100vh - 8px)",
-          height: "min(520px, calc(100vh - 8px))",
+          height: "min(620px, calc(100vh - 8px))",
         };
 
   const panel = (
@@ -359,15 +359,14 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
                 </div>
               </div>
 
-              <div className="flex-1 min-h-0 flex flex-col overflow-hidden overflow-x-hidden px-2 py-1.5 gap-1.5">
-                <div className="flex-1 min-h-0 overflow-hidden">
+              <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-2 py-1.5 gap-1.5">
+                <div className="flex-1 min-h-[180px] min-w-0 overflow-hidden">
                   <TinyEditor
                     value={bodyHtml}
                     onChange={setBodyHtml}
                     dark
                     fill
-                    showMenubar={false}
-                    height={expanded ? 360 : 200}
+                    showMenubar
                   />
                 </div>
 

@@ -12,9 +12,7 @@ import SystemMessageChip from "@/app/_Components/chat/bubble/SystemMessageChip";
 import DeletedMessageBubble from "@/app/_Components/chat/bubble/DeletedMessageBubble";
 import ReplyQuote from "@/app/_Components/chat/bubble/ReplyQuote";
 import VideoBubble from "@/app/_Components/chat/bubble/VideoBubble";
-import MessageReactions from "@/app/_Components/chat/bubble/MessageReactions";
 import MessageMeta from "@/app/_Components/chat/bubble/MessageMeta";
-import QuickReactBar from "@/app/_Components/chat/bubble/QuickReactBar";
 import {
   getCurrentUser,
   formatDisplayName,
@@ -35,7 +33,6 @@ function MessageBubble({
   active,
   activeVoiceId,
   onContextMenu,
-  onReact,
   onRequestPlay,
   onStopChain,
   onEnded,
@@ -86,7 +83,7 @@ function MessageBubble({
           }}
         >
           <div
-            className={`relative max-w-[85%] sm:max-w-[65%] px-2.5 pt-1.5 pb-1 ${
+            className={`relative max-w-[85%] sm:max-w-[65%] min-w-0 px-2.5 pt-1.5 pb-1 ${
               mine
                 ? `${theme.bubbleMe} rounded-2xl rounded-br-md`
                 : `${theme.bubbleThem} rounded-2xl rounded-bl-md`
@@ -162,11 +159,9 @@ function MessageBubble({
                 )}
               </p>
             )}
-            <MessageReactions reactions={m.reactions} mine={mine} />
             {!isCall && !isVoice && (
               <MessageMeta message={m} myId={myId} mine={mine} status={status} />
             )}
-            <QuickReactBar messageId={m._id} onReact={onReact} />
           </div>
         </div>
       )}
@@ -181,7 +176,6 @@ function areEqual(prevProps, nextProps) {
   if (prevProps.myId !== nextProps.myId) return false;
   if (prevProps.active !== nextProps.active) return false;
   if (prevProps.onContextMenu !== nextProps.onContextMenu) return false;
-  if (prevProps.onReact !== nextProps.onReact) return false;
   if (prevProps.onRequestPlay !== nextProps.onRequestPlay) return false;
   if (prevProps.onStopChain !== nextProps.onStopChain) return false;
   if (prevProps.onEnded !== nextProps.onEnded) return false;

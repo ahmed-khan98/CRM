@@ -90,7 +90,7 @@ export default function Tooltip({
   return (
     <span
       ref={triggerRef}
-      className={`relative inline-flex shrink-0 ${className}`}
+      className={`relative inline-flex ${className || "shrink-0"}`}
       onMouseEnter={show}
       onMouseLeave={hide}
       onFocus={show}

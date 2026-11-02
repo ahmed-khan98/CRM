@@ -11,7 +11,6 @@ import {
   useMarkConversationReadMutation,
   useEditMessageMutation,
   useDeleteMessageMutation,
-  useReactMessageMutation,
   useStarMessageMutation,
   useForwardMessageMutation,
   useLazySearchChatUsersQuery,
@@ -111,7 +110,6 @@ export default function ChatApp() {
   const [markRead] = useMarkConversationReadMutation();
   const [editMsg] = useEditMessageMutation();
   const [delMsg] = useDeleteMessageMutation();
-  const [reactMsg] = useReactMessageMutation();
   const [starMsg] = useStarMessageMutation();
   const [fwdMsg] = useForwardMessageMutation();
   const [uploadFile] = useUploadChatFileMutation();
@@ -270,12 +268,6 @@ export default function ChatApp() {
     },
     [searchMsgs]
   );
-  const onReact = useCallback(
-    (messageId, emoji) => {
-      reactMsg({ messageId, emoji });
-    },
-    [reactMsg]
-  );
   const handleVoiceRequestPlay = useCallback((id) => setActiveVoiceId(id), []);
   const handleVoiceStopChain = useCallback(() => setActiveVoiceId(null), []);
   const handleVoiceEnded = useCallback((id) => {
@@ -381,7 +373,6 @@ export default function ChatApp() {
               activeVoiceId={activeVoiceId}
               loadMessages={loadMessages}
               onContextMenu={setMenuMsg}
-              onReact={onReact}
               onRequestPlay={handleVoiceRequestPlay}
               onStopChain={handleVoiceStopChain}
               onEnded={handleVoiceEnded}

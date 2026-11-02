@@ -166,7 +166,7 @@ function ChatFileCard({ attachment, mine = false, dark = false }) {
 
   return (
     <div
-      className="mb-1 flex w-full min-w-0 max-w-full items-center gap-2 overflow-hidden rounded-xl px-2 py-2"
+      className="mb-1 grid w-full min-w-0 max-w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 overflow-hidden rounded-xl px-2 py-2"
       style={{ background: stripBg, color: titleColor }}
     >
       <div
@@ -181,10 +181,10 @@ function ChatFileCard({ attachment, mine = false, dark = false }) {
           </span>
         )}
       </div>
-      <ChatTooltip label={name} side="top">
+      <ChatTooltip label={name} side="top" className="min-w-0 w-full max-w-full">
         <button
           type="button"
-          className="min-w-0 flex-1 overflow-hidden text-left cursor-pointer disabled:cursor-not-allowed"
+          className="block w-full min-w-0 max-w-full overflow-hidden text-left cursor-pointer disabled:cursor-not-allowed"
           onClick={downloadOnly ? download : openViaProxy}
           disabled={busy}
         >
@@ -201,17 +201,19 @@ function ChatFileCard({ attachment, mine = false, dark = false }) {
           </p>
         </button>
       </ChatTooltip>
-      <DownloadProgressBtn
-        progress={progress}
-        indeterminate={indeterminate}
-        done={done}
-        onClick={download}
-        disabled={busy}
-        size={32}
-        color={iconBtn}
-        className="hover:bg-white/10 rounded-lg"
-        iconClassName="h-4 w-4"
-      />
+      <div className="shrink-0 justify-self-end">
+        <DownloadProgressBtn
+          progress={progress}
+          indeterminate={indeterminate}
+          done={done}
+          onClick={download}
+          disabled={busy}
+          size={32}
+          color={iconBtn}
+          className="hover:bg-white/10 rounded-lg"
+          iconClassName="h-4 w-4"
+        />
+      </div>
     </div>
   );
 }

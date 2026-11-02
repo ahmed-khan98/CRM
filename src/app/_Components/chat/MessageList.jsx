@@ -19,7 +19,6 @@ function MessageList({
   activeVoiceId,
   loadMessages,
   onContextMenu,
-  onReact,
   onRequestPlay,
   onStopChain,
   onEnded,
@@ -66,7 +65,6 @@ function MessageList({
           active={active}
           activeVoiceId={activeVoiceId}
           onContextMenu={onContextMenu}
-          onReact={onReact}
           onRequestPlay={onRequestPlay}
           onStopChain={onStopChain}
           onEnded={onEnded}
