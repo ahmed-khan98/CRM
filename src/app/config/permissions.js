@@ -90,6 +90,11 @@ export const ROUTE_PERMISSIONS = [
   { prefix: "/dashboard/recruitment/jobs", roles: ["HR_ADMIN"] },
   { prefix: "/dashboard/recruitment/interviews", roles: ["HR_ADMIN", "DEP_ADMIN"] },
   { prefix: "/dashboard/recruitment", roles: ["HR_ADMIN"] },
+  { prefix: "/dashboard/mailbox/mapping", roles: ["DEP_ADMIN"] },
+  {
+    prefix: "/dashboard/mailbox",
+    roles: ["USER", "DEP_ADMIN", "HR_ADMIN", "FINANCE_ADMIN"],
+  },
 ];
 
 export function canAccessRoute(pathname, userOrRole) {
