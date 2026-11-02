@@ -87,7 +87,6 @@ export default function TinyEditor({
   fill = false,
   /** Keep full toolbar but hide File/Edit menubar (saves vertical space in compose) */
   showMenubar = true,
-  apiKey = "9yca5hup4vjnbwcfc9rojo6s3yos6euv28zvh3nec9h04s89",
 }) {
   const editorHeight = height ?? (compact ? 180 : 420);
 
@@ -109,6 +108,9 @@ export default function TinyEditor({
         menubar: false,
         branding: false,
         statusbar: false,
+        license_key: "gpl",
+        base_url: "/tinymce",
+        suffix: ".min",
         plugins: "lists link autolink",
         toolbar: "bold italic underline | bullist numlist | removeformat",
         content_style: dark ? darkContentStyle : lightContentStyle,
@@ -119,6 +121,9 @@ export default function TinyEditor({
         menubar: showMenubar,
         branding: false,
         statusbar: true,
+        license_key: "gpl",
+        base_url: "/tinymce",
+        suffix: ".min",
         plugins:
           "advlist autolink lists link image charmap preview anchor " +
           "searchreplace visualblocks code fullscreen insertdatetime media table " +
@@ -150,7 +155,8 @@ export default function TinyEditor({
         } ${fill ? "tiny-editor-fill flex flex-col min-h-0 h-full" : ""}`}
       >
         <Editor
-          apiKey={apiKey}
+          tinymceScriptSrc="/tinymce/tinymce.min.js"
+          licenseKey="gpl"
           value={value}
           onEditorChange={(content) => onChange?.(content)}
           init={init}

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "postinstall": "node -e \"const fs=require('fs');const p=require('path');const src=p.join('node_modules','tinymce');const dest=p.join('public','tinymce');fs.rmSync(dest,{recursive:true,force:true});fs.cpSync(src,dest,{recursive:true});\"",
+    "build": "npm run postinstall && next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",

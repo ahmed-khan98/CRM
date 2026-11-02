@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# TinyMCE self-hosted (copied from node_modules on postinstall/build)
+/public/tinymce/
+
 .next.zip
 *.zip
 
