@@ -79,8 +79,17 @@ export default function MailboxWorkspace({
     setPage(1);
   }, [defaultFolder]);
 
+  // Debounce folder search — wait until typing pauses (avoid per-keystroke API)
   useEffect(() => {
-    const t = setTimeout(() => setSearchDebounced(search.trim()), 400);
+    const trimmed = search.trim();
+    // Empty = clear immediately; skip 1-char; 2+ chars after pause
+    if (trimmed.length === 1) return undefined;
+    const delayMs = trimmed === "" ? 0 : 700;
+    const t = setTimeout(() => {
+      setSearchDebounced(trimmed);
+      setPage(1);
+      setSelectedUid(null);
+    }, delayMs);
     return () => clearTimeout(t);
   }, [search]);
 
@@ -292,7 +301,7 @@ export default function MailboxWorkspace({
         <EmptyState
           icon={Icon}
           title="No mailbox assigned"
-          description="Contact your admin to get access to a mailbox."
+          description="Ask your admin to add your company email or assign a brand mailbox."
         />
       </div>
     );
@@ -390,14 +399,12 @@ export default function MailboxWorkspace({
                 onSelect={onSelectMessage}
                 loading={fetchingMessages && !messages.length}
                 search={search}
-                onSearchChange={(v) => {
-                  setSearch(v);
-                  setPage(1);
-                }}
+                onSearchChange={setSearch}
                 page={page}
                 total={total}
                 pageSize={25}
                 onPageChange={setPage}
+                folder={folder}
               />
             </section>
 
@@ -531,6 +538,7 @@ export default function MailboxWorkspace({
           }}
         />
       )}
+
     </div>
   );
 }

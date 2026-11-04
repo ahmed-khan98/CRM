@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 import { fleet } from "@/app/_Components/fleet/fleetTheme";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
 import {
   useCreateMailboxMutation,
   useGetMailboxBrandEmailsQuery,
@@ -11,6 +13,15 @@ import {
   useTestMailboxConnectionMutation,
   useUpdateMailboxMutation,
 } from "@/app/_Services/mailbox/page";
+
+function capitalizeName(name) {
+  return String(name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
 
 export default function MailboxAddModal({ onClose, editMailbox = null }) {
   const isEdit = Boolean(editMailbox?._id);
@@ -28,8 +39,30 @@ export default function MailboxAddModal({ onClose, editMailbox = null }) {
   const brands = brandsData?.data || [];
   const defaults = defaultsData?.data || [];
 
+  const brandOptions = useMemo(
+    () =>
+      brands.map((b) => {
+        const name = capitalizeName(b.name || "Brand");
+        const dept = b.departmentId?.name
+          ? ` (${capitalizeName(b.departmentId.name)})`
+          : "";
+        return { value: String(b._id), label: `${name}${dept}` };
+      }),
+    [brands],
+  );
+
+  const brandEmailOptions = useMemo(
+    () =>
+      brandEmails.map((r) => ({
+        value: String(r._id),
+        label: String(r.email || "") + (r.departmentMismatch ? " ⚠" : ""),
+      })),
+    [brandEmails],
+  );
+
   const [mode, setMode] = useState("brandEmail");
   const [brandEmailId, setBrandEmailId] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     brandId: editMailbox?.brandId?._id || editMailbox?.brandId || "",
     emailAddress: editMailbox?.emailAddress || "",
@@ -116,11 +149,8 @@ export default function MailboxAddModal({ onClose, editMailbox = null }) {
   };
 
   return (
-    <div className={fleet.modalOverlay} onClick={() => onClose(false)}>
-      <div
-        className={`${fleet.modalPanel} max-w-lg`}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className={fleet.modalOverlay}>
+      <div className={`${fleet.modalPanel} max-w-lg`}>
         <div className="px-6 py-4 border-b border-white/[0.06]">
           <h3 className={fleet.modalTitle}>
             {isEdit ? "Edit mailbox" : "Add mailbox"}
@@ -159,19 +189,15 @@ export default function MailboxAddModal({ onClose, editMailbox = null }) {
               {mode === "brandEmail" && (
                 <div>
                   <label className={fleet.modalLabel}>Brand Email row</label>
-                  <select
-                    className={fleet.modalSelect}
+                  <CrmSelect
+                    variant="dark"
+                    isSearchable
+                    isClearable
+                    options={brandEmailOptions}
                     value={brandEmailId}
-                    onChange={(e) => onPickBrandEmail(e.target.value)}
-                  >
-                    <option value="">Select…</option>
-                    {brandEmails.map((r) => (
-                      <option key={r._id} value={r._id}>
-                        {r.brandName} / {r.name} / {r.email}
-                        {r.departmentMismatch ? " ⚠ dept mismatch" : ""}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={onPickBrandEmail}
+                    placeholder="Select…"
+                  />
                   {selectedBe?.departmentMismatch && (
                     <p className="text-[11px] text-amber-400 mt-1">
                       brandEmail.departmentId differs from Brand.departmentId —
@@ -185,21 +211,16 @@ export default function MailboxAddModal({ onClose, editMailbox = null }) {
 
           <div>
             <label className={fleet.modalLabel}>Brand</label>
-            <select
-              className={fleet.modalSelect}
-              value={form.brandId}
-              onChange={(e) => set("brandId", e.target.value)}
-              disabled={isEdit || mode === "brandEmail"}
-              required
-            >
-              <option value="">Select brand…</option>
-              {brands.map((b) => (
-                <option key={b._id} value={b._id}>
-                  {b.name}
-                  {b.departmentId?.name ? ` (${b.departmentId.name})` : ""}
-                </option>
-              ))}
-            </select>
+            <CrmSelect
+              variant="dark"
+              isSearchable
+              isClearable={!isEdit && mode !== "brandEmail"}
+              options={brandOptions}
+              value={form.brandId ? String(form.brandId) : ""}
+              onChange={(v) => set("brandId", v)}
+              isDisabled={isEdit || mode === "brandEmail"}
+              placeholder="Select brand…"
+            />
           </div>
 
           <div>
@@ -259,15 +280,30 @@ export default function MailboxAddModal({ onClose, editMailbox = null }) {
             <label className={fleet.modalLabel}>
               {isEdit ? "New password (leave blank to keep)" : "Password"}
             </label>
-            <input
-              className={fleet.modalInput}
-              type="password"
-              autoComplete="new-password"
-              value={form.password}
-              onChange={(e) => set("password", e.target.value)}
-              required={!isEdit}
-              placeholder={isEdit ? "••••••••" : ""}
-            />
+            <div className="relative">
+              <input
+                className={`${fleet.modalInput} pr-10`}
+                type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
+                value={form.password}
+                onChange={(e) => set("password", e.target.value)}
+                required={!isEdit}
+                placeholder={isEdit ? "••••••••" : ""}
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-zinc-400 hover:text-zinc-200"
+                onClick={() => setShowPassword((v) => !v)}
+                title={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </div>
 
           {isEdit && (

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { fleet } from "@/app/_Components/fleet/fleetTheme";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
 import {
   useAssignMailboxUsersMutation,
   useGetMailboxAssignableUsersQuery,
@@ -17,6 +18,15 @@ const PERMS = [
   { value: "manage", label: "Manage" },
 ];
 
+function capitalizeName(name) {
+  return String(name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
 export default function MailboxAssignPanel({
   mailbox,
   canFilterDept,
@@ -28,16 +38,14 @@ export default function MailboxAssignPanel({
     skip: !mailboxId,
   });
   const [deptFilter, setDeptFilter] = useState("");
-  const [search, setSearch] = useState("");
   const [pickUserId, setPickUserId] = useState("");
   const [pickPerm, setPickPerm] = useState("read");
 
   const userParams = useMemo(
     () => ({
       ...(canFilterDept && deptFilter ? { departmentId: deptFilter } : {}),
-      ...(search.trim() ? { search: search.trim() } : {}),
     }),
-    [canFilterDept, deptFilter, search],
+    [canFilterDept, deptFilter],
   );
 
   const { data: usersData, refetch: refetchUsers } =
@@ -57,6 +65,15 @@ export default function MailboxAssignPanel({
     assignments.map((a) => String(a.userId?._id || a.userId)),
   );
   const available = users.filter((u) => !assignedIds.has(String(u._id)));
+
+  const userOptions = useMemo(
+    () =>
+      available.map((u) => ({
+        value: String(u._id),
+        label: capitalizeName(u.fullName || "User"),
+      })),
+    [available],
+  );
 
   const add = async () => {
     if (!pickUserId) return toast.error("Select a user");
@@ -94,11 +111,8 @@ export default function MailboxAssignPanel({
   };
 
   return (
-    <div className={fleet.modalOverlay} onClick={onClose}>
-      <div
-        className={`${fleet.modalPanel} max-w-2xl`}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className={fleet.modalOverlay}>
+      <div className={`${fleet.modalPanel} max-w-2xl`}>
         <div className="px-6 py-4 border-b border-white/[0.06]">
           <h3 className={fleet.modalTitle}>Assign users</h3>
           <p className="text-xs text-zinc-400 mt-1">
@@ -106,50 +120,39 @@ export default function MailboxAssignPanel({
           </p>
         </div>
         <div className={fleet.modalBody}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {canFilterDept && (
-              <div>
-                <label className={fleet.modalLabel}>Department filter</label>
-                <select
-                  className={fleet.modalSelect}
-                  value={deptFilter}
-                  onChange={(e) => setDeptFilter(e.target.value)}
-                >
-                  <option value="">All (in scope)</option>
-                  {departments.map((d) => (
-                    <option key={d._id} value={d._id}>
-                      {d.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+          {canFilterDept && (
             <div>
-              <label className={fleet.modalLabel}>Search users</label>
-              <input
-                className={fleet.modalInput}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Name or email"
+              <label className={fleet.modalLabel}>Department filter</label>
+              <CrmSelect
+                variant="dark"
+                isSearchable
+                isClearable
+                options={[
+                  { value: "", label: "All (in scope)" },
+                  ...departments.map((d) => ({
+                    value: String(d._id),
+                    label: d.name,
+                  })),
+                ]}
+                value={deptFilter}
+                onChange={setDeptFilter}
+                placeholder="All (in scope)"
               />
             </div>
-          </div>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-2 items-end">
-            <div className="flex-1 w-full">
+            <div className="flex-1 w-full min-w-0">
               <label className={fleet.modalLabel}>Add user</label>
-              <select
-                className={fleet.modalSelect}
+              <CrmSelect
+                variant="dark"
+                isSearchable
+                isClearable
+                options={userOptions}
                 value={pickUserId}
-                onChange={(e) => setPickUserId(e.target.value)}
-              >
-                <option value="">Select…</option>
-                {available.map((u) => (
-                  <option key={u._id} value={u._id}>
-                    {u.fullName}
-                  </option>
-                ))}
-              </select>
+                onChange={setPickUserId}
+                placeholder="Type to search name…"
+              />
             </div>
             <div className="w-full sm:w-40">
               <label className={fleet.modalLabel}>Permission</label>

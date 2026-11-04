@@ -373,7 +373,7 @@ const LeftNav = ({ set }) => {
           roles: ["ADMIN", "SUBADMIN", "DEP_ADMIN"],
         },
         {
-          name: "Inbox",
+          name: "Mailbox",
           path: "/dashboard/mailbox/inbox",
           icon: <Mails className="w-3.5 h-3.5" />,
           roles: [
@@ -384,51 +384,6 @@ const LeftNav = ({ set }) => {
             "HR_ADMIN",
             "FINANCE_ADMIN",
           ],
-        },
-        {
-          name: "Sent",
-          path: "/dashboard/mailbox/sent",
-          icon: <Mails className="w-3.5 h-3.5" />,
-          roles: [
-            "USER",
-            "DEP_ADMIN",
-            "ADMIN",
-            "SUBADMIN",
-            "HR_ADMIN",
-            "FINANCE_ADMIN",
-          ],
-        },
-        {
-          name: "Draft",
-          path: "/dashboard/mailbox/draft",
-          icon: <Mails className="w-3.5 h-3.5" />,
-          roles: [
-            "USER",
-            "DEP_ADMIN",
-            "ADMIN",
-            "SUBADMIN",
-            "HR_ADMIN",
-            "FINANCE_ADMIN",
-          ],
-        },
-        {
-          name: "Scheduled",
-          path: "/dashboard/mailbox/scheduled",
-          icon: <Mails className="w-3.5 h-3.5" />,
-          roles: [
-            "USER",
-            "DEP_ADMIN",
-            "ADMIN",
-            "SUBADMIN",
-            "HR_ADMIN",
-            "FINANCE_ADMIN",
-          ],
-        },
-        {
-          name: "Email Template",
-          path: "/dashboard/EmailTemplate",
-          icon: <LayoutPanelTop className="w-3.5 h-3.5" />,
-          roles: ["USER", "DEP_ADMIN"],
         },
         // {
         //   name: "Email List",

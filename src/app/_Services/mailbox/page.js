@@ -16,6 +16,12 @@ const MailboxApi = createApiAuction.injectEndpoints({
         body,
       }),
     }),
+    deleteMailboxServerDefaults: builder.mutation({
+      query: (id) => ({
+        url: `mailbox/server-defaults/id/${id}`,
+        method: "DELETE",
+      }),
+    }),
     getMailboxMapping: builder.query({
       query: () => ({ url: "mailbox/mailboxes" }),
     }),
@@ -46,6 +52,12 @@ const MailboxApi = createApiAuction.injectEndpoints({
         url: "mailbox/mailboxes",
         method: "POST",
         body,
+      }),
+    }),
+    deleteMailbox: builder.mutation({
+      query: (id) => ({
+        url: `mailbox/mailboxes/${id}`,
+        method: "DELETE",
       }),
     }),
     updateMailbox: builder.mutation({
@@ -90,6 +102,31 @@ const MailboxApi = createApiAuction.injectEndpoints({
         url: `mailbox/users/${userId}/assignments`,
         method: "POST",
         body: { assignments },
+      }),
+    }),
+
+    // Personal / company email (admin creates for users)
+    getPersonalMailboxes: builder.query({
+      query: () => ({ url: "mailbox/personal/all" }),
+    }),
+    getMyPersonalMailbox: builder.query({
+      query: () => ({ url: "mailbox/personal" }),
+    }),
+    upsertMyPersonalMailbox: builder.mutation({
+      query: (body) => ({
+        url: "mailbox/personal",
+        method: "PUT",
+        body,
+      }),
+    }),
+    deleteMyPersonalMailbox: builder.mutation({
+      query: ({ id, userId } = {}) => ({
+        url: "mailbox/personal",
+        method: "DELETE",
+        params: {
+          ...(id ? { id } : {}),
+          ...(userId ? { userId } : {}),
+        },
       }),
     }),
 
@@ -225,6 +262,7 @@ const MailboxApi = createApiAuction.injectEndpoints({
 export const {
   useGetMailboxServerDefaultsQuery,
   useUpsertMailboxServerDefaultsMutation,
+  useDeleteMailboxServerDefaultsMutation,
   useGetMailboxMappingQuery,
   useGetMailboxBrandEmailsQuery,
   useGetMailboxBrandsQuery,
@@ -234,6 +272,7 @@ export const {
   useTestMailboxConnectionMutation,
   useCreateMailboxMutation,
   useUpdateMailboxMutation,
+  useDeleteMailboxMutation,
   useGetMailboxAssignmentsQuery,
   useLazyGetMailboxAssignmentsQuery,
   useAssignMailboxUsersMutation,
@@ -242,6 +281,10 @@ export const {
   useGetMailboxAssignmentsByUserQuery,
   useLazyGetMailboxAssignmentsByUserQuery,
   useSetMailboxAssignmentsByUserMutation,
+  useGetPersonalMailboxesQuery,
+  useGetMyPersonalMailboxQuery,
+  useUpsertMyPersonalMailboxMutation,
+  useDeleteMyPersonalMailboxMutation,
   useGetMyMailboxesQuery,
   useGetMailboxFoldersQuery,
   useGetMailboxMessagesQuery,

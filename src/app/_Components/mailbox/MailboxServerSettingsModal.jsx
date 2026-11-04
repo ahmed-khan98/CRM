@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { fleet } from "@/app/_Components/fleet/fleetTheme";
+import WarningModal from "@/app/_Components/Modal/WarningModal";
 import {
+  useDeleteMailboxServerDefaultsMutation,
   useGetMailboxServerDefaultsQuery,
   useUpsertMailboxServerDefaultsMutation,
 } from "@/app/_Services/mailbox/page";
@@ -44,10 +46,13 @@ function rowToForm(row) {
 export default function MailboxServerSettingsModal({ onClose }) {
   const { data, refetch } = useGetMailboxServerDefaultsQuery();
   const [upsert, { isLoading }] = useUpsertMailboxServerDefaultsMutation();
+  const [removeDomain, { isLoading: deleting }] =
+    useDeleteMailboxServerDefaultsMutation();
   const rows = data?.data || [];
 
   const [selectedDomain, setSelectedDomain] = useState("");
   const [isNew, setIsNew] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const [form, setForm] = useState(PRESET);
 
   useEffect(() => {
@@ -82,6 +87,21 @@ export default function MailboxServerSettingsModal({ onClose }) {
     if (match) setForm(rowToForm(match));
   };
 
+  const handleDeleteDomain = async () => {
+    const row = confirmDelete;
+    if (!row?._id) return;
+    try {
+      await removeDomain(row._id).unwrap();
+      toast.success(`Domain "${row.domain}" deleted`);
+      setConfirmDelete(null);
+      setIsNew(false);
+      setSelectedDomain("");
+      refetch();
+    } catch (err) {
+      toast.error(err?.data?.message || "Delete failed");
+    }
+  };
+
   const save = async (e) => {
     e.preventDefault();
     const domain = String(form.domain || "")
@@ -112,11 +132,8 @@ export default function MailboxServerSettingsModal({ onClose }) {
   };
 
   return (
-    <div className={fleet.modalOverlay} onClick={onClose}>
-      <div
-        className={`${fleet.modalPanel} max-w-lg`}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className={fleet.modalOverlay}>
+      <div className={`${fleet.modalPanel} max-w-lg`}>
         <div className="px-6 py-4 border-b border-white/[0.06]">
           <h3 className={fleet.modalTitle}>Server settings</h3>
           <p className="text-xs text-zinc-400 mt-1">
@@ -204,6 +221,24 @@ export default function MailboxServerSettingsModal({ onClose }) {
             >
               Cancel
             </button>
+            {!isNew && selectedDomain && (
+              <button
+                type="button"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs font-medium text-rose-300 hover:bg-rose-500/20 disabled:opacity-50"
+                onClick={() => {
+                  const row = rows.find((r) => r.domain === selectedDomain);
+                  if (!row?._id) {
+                    toast.error("Domain record not found — refresh and try again");
+                    return;
+                  }
+                  setConfirmDelete(row);
+                }}
+                disabled={deleting || isLoading}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Delete domain
+              </button>
+            )}
             <button
               type="submit"
               className={fleet.modalPrimaryBtn}
@@ -213,7 +248,20 @@ export default function MailboxServerSettingsModal({ onClose }) {
             </button>
           </div>
         </form>
+
       </div>
+
+      {confirmDelete && (
+        <WarningModal
+          message={`domain "${confirmDelete.domain}"`}
+          title="Delete domain?"
+          description={`Delete server settings for "${confirmDelete.domain}"? Mailboxes using this domain must be removed or reassigned first. This cannot be undone.`}
+          confirmLabel="Yes, Delete"
+          setConfirmDelete={setConfirmDelete}
+          isDeleting={deleting}
+          handleDelete={handleDeleteDomain}
+        />
+      )}
     </div>
   );
 }

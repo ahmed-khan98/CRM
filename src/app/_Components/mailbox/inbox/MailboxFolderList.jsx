@@ -1,11 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Archive,
   Clock,
   FileEdit,
   Flag,
   Inbox,
+  LayoutPanelTop,
   MailWarning,
   Send,
   Trash2,
@@ -14,6 +16,7 @@ import {
 
 /** Virtual folder path — Mongo scheduled queue, not IMAP */
 export const MAILBOX_SCHEDULED_PATH = "__scheduled__";
+export const MAILBOX_EMAIL_TEMPLATE_HREF = "/dashboard/EmailTemplate";
 
 const ROLE_META = {
   inbox: { label: "Inbox", Icon: Inbox },
@@ -54,6 +57,7 @@ export default function MailboxFolderList({
   activePath,
   onSelect,
 }) {
+  const router = useRouter();
   const primaryRoles = [
     "inbox",
     "important",
@@ -137,6 +141,14 @@ export default function MailboxFolderList({
           ))}
         </>
       )}
+      <div className="pt-2 mt-1 border-t border-zinc-800/80">
+        <FolderBtn
+          active={false}
+          label="Email Template"
+          Icon={LayoutPanelTop}
+          onClick={() => router.push(MAILBOX_EMAIL_TEMPLATE_HREF)}
+        />
+      </div>
     </div>
   );
 }

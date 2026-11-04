@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AtSign, Edit, Plus, DeleteIcon } from "lucide-react";
+import { AtSign, Pencil, Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import WarningModal from "@/app/_Components/Modal/WarningModal";
 import BrandEmailModal from "@/app/_Components/Modal/BrandEmailModal";
@@ -12,27 +12,21 @@ import {
 import toast from "react-hot-toast";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import EmptyState from "@/app/_Components/ui/saas/EmptyState";
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5 },
-  },
-};
+import { fleet } from "@/app/_Components/fleet/fleetTheme";
 
 export default function Client() {
   const [editingAppointment, setEditingAppointment] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const { data, error: isError, isLoading, refetch } = useAllBrandEmailsQuery();
+  const { data, isLoading, refetch } = useAllBrandEmailsQuery();
   const [deleteBrandEmail, { isLoading: isDeleting }] =
     useDeleteBrandEmailMutation();
 
+  const rows = data?.data || [];
+
   const handleEdit = (emp) => {
-    setEditingAppointment(emp);
+    setEditingAppointment(emp || null);
     setIsModalOpen(true);
   };
 
@@ -45,10 +39,10 @@ export default function Client() {
     try {
       await deleteBrandEmail(confirmDelete).unwrap();
       setConfirmDelete(null);
-      toast.success("domain deleted successfully");
+      toast.success("Brand email deleted successfully");
       refetch();
     } catch (error) {
-      toast.error(error.data?.message || "Failed to delete domain");
+      toast.error(error.data?.message || "Failed to delete brand email");
     }
   };
 
@@ -62,98 +56,93 @@ export default function Client() {
   }
 
   return (
-    <div className="min-h-screen  py-1 mx-1">
-      <div className="w-full mx-auto p-1 flex flex-col space-y-2">
-        <div className="flex flex-col gap-2 pb-2 justify-between items-center md:flex-row">
+    <div className="min-h-screen py-1 mx-1">
+      <div className="w-full mx-auto p-1 flex flex-col space-y-3">
+        <div className="flex flex-col gap-2 pb-2 justify-between items-start md:flex-row md:items-center">
           <div className="flex items-center gap-2">
-            <AtSign className="h-5 w-5 text-gray-800" />
-            <h3 className="text-[#242424] text-xl font-medium">
+            <AtSign className="h-5 w-5 text-zinc-200" />
+            <h3 className="text-zinc-100 text-xl font-medium">
               All Brand Email
             </h3>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleEdit()}
-              className="flex items-center gap-2 cursor-pointer bg-zinc-800 text-white px-4 py-2 rounded-full text-[12px] font-medium hover:bg-zinc-800 transition-colors"
-            >
-              <Plus className="h-4 w-4 text--white" />
-              Add Brand Email
-            </motion.button>
-          </div>
+          <button
+            type="button"
+            onClick={() => handleEdit()}
+            className={fleet.primaryBtn}
+          >
+            <Plus className="h-4 w-4" />
+            Add Brand Email
+          </button>
         </div>
 
-        <motion.div variants={itemVariants} className="shadow-lg rounded-2xl">
-          {data?.data?.length === 0 ? (
-            <EmptyState
-              icon={AtSign}
-              title="No brand emails yet"
-              description="Add a sending address for each brand."
-            />
-          ) : (
-            <div className="overflow-hidden rounded-xl">
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead>
-                    <tr className="table-head-row">
-                      <th className="table-head-cell text-left">Brand</th>
-                      <th className="table-head-cell text-left">Name</th>
-                      <th className="table-head-cell text-left">Email ID</th>
-                      <th className="table-head-cell text-left">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {data?.data?.map((emp, index) => (
-                      <motion.tr
-                        key={emp?._id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="hover:bg-zinc-50 transition-colors"
-                      >
-                        <td className="px-2 py-3 whitespace-nowrap text-[14px] font-medium text-gray-800 capitalize">
-                          {emp?.brandId ? `${emp.brandId?.name}` : "-"}
-                        </td>
-                        <td className="px-2 py-3 whitespace-nowrap text-[14px] font-medium text-gray-800 capitalize">
-                          {emp?.name ? `${emp.name}` : "-"}
-                        </td>
-
-                        <td className="px-2 py-3 whitespace-nowrap text-[12px] text-gray-800">
-                          {emp?.email ? `${emp.email}` : "-"}
-                        </td>
-
-                        <td className="pl-2 py-3 whitespace-nowrap">
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+        {rows.length === 0 ? (
+          <EmptyState
+            icon={AtSign}
+            title="No brand emails yet"
+            description="Add a sending address for each brand."
+          />
+        ) : (
+          <div className="overflow-hidden rounded-2xl border border-zinc-800">
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead>
+                  <tr className="bg-zinc-900/80 text-zinc-400 text-left text-xs uppercase tracking-wider">
+                    <th className="px-4 py-3 font-medium">Brand</th>
+                    <th className="px-4 py-3 font-medium">Name</th>
+                    <th className="px-4 py-3 font-medium">Email ID</th>
+                    <th className="px-4 py-3 font-medium text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((emp, index) => (
+                    <motion.tr
+                      key={emp?._id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: Math.min(index * 0.03, 0.3) }}
+                      className="border-t border-zinc-800/80 hover:bg-zinc-900/50 transition-colors"
+                    >
+                      <td className="px-4 py-3 text-sm font-medium text-zinc-100 capitalize whitespace-nowrap">
+                        {emp?.brandId?.name || "—"}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-zinc-200 capitalize whitespace-nowrap">
+                        {emp?.name || "—"}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-zinc-300 whitespace-nowrap">
+                        {emp?.email || "—"}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            type="button"
                             onClick={() => handleEdit(emp)}
-                            className="inline-flex items-center cursor-pointer mx-1 p-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-800 transition-colors"
+                            className="inline-flex items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors"
+                            title="Edit"
                           >
-                            <Edit className="h-4 w-4" />
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => setConfirmDelete(emp._id)}
-                            className="inline-flex items-center cursor-pointer p-2 bg-rose-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                            className="inline-flex items-center justify-center rounded-lg border border-rose-500/40 bg-rose-500/10 p-2 text-rose-300 hover:bg-rose-500/20 transition-colors"
+                            title="Delete"
                           >
-                            <DeleteIcon className="h-4 w-4" />
-
-                            {/* Edit */}
-                          </motion.button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
-        </motion.div>
+          </div>
+        )}
+
         {confirmDelete && (
           <WarningModal
-            message="Domain"
+            message="Brand Email"
             setConfirmDelete={setConfirmDelete}
             isDeleting={isDeleting}
             handleDelete={handleDelete}

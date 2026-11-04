@@ -2,15 +2,19 @@
 
 import { useMemo, useState } from "react";
 import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 import { Mail, Plus, Settings2, Users } from "lucide-react";
 import PageLoader from "@/app/_Components/Loaders/PageLoader";
 import EmptyState from "@/app/_Components/ui/saas/EmptyState";
 import { fleet } from "@/app/_Components/fleet/fleetTheme";
+import WarningModal from "@/app/_Components/Modal/WarningModal";
 import MailboxAddModal from "@/app/_Components/mailbox/MailboxAddModal";
 import MailboxAssignPanel from "@/app/_Components/mailbox/MailboxAssignPanel";
 import MailboxByUserPanel from "@/app/_Components/mailbox/MailboxByUserPanel";
+import MailboxCompanyEmailsPanel from "@/app/_Components/mailbox/MailboxCompanyEmailsPanel";
 import MailboxServerSettingsModal from "@/app/_Components/mailbox/MailboxServerSettingsModal";
 import {
+  useDeleteMailboxMutation,
   useGetMailboxDepartmentsQuery,
   useGetMailboxMappingQuery,
 } from "@/app/_Services/mailbox/page";
@@ -22,16 +26,20 @@ export default function MailboxMappingPage() {
   const role = effectiveRole(user) || user?.role;
   const isAdmin = role === "ADMIN";
   const canFilterDept = role === "ADMIN" || role === "SUBADMIN";
+  /** Add / edit mailbox — same as ADMIN mapping rights (backend already allows SUBADMIN) */
+  const canManageMailboxes = role === "ADMIN" || role === "SUBADMIN";
 
   const { data, isLoading, isError, error, refetch } =
     useGetMailboxMappingQuery();
   const { data: deptData } = useGetMailboxDepartmentsQuery();
+  const [deleteMailbox, { isLoading: isDeleting }] = useDeleteMailboxMutation();
 
   const [view, setView] = useState("mailboxes");
   const [showSettings, setShowSettings] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [editMailbox, setEditMailbox] = useState(null);
   const [assignMailbox, setAssignMailbox] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   const grouped = data?.data?.grouped || [];
   const mismatches = data?.data?.brandEmailDeptMismatches || [];
@@ -47,6 +55,18 @@ export default function MailboxMappingPage() {
       ),
     [grouped],
   );
+
+  const handleDeleteMailbox = async () => {
+    if (!confirmDelete?._id) return;
+    try {
+      await deleteMailbox(confirmDelete._id).unwrap();
+      toast.success(`Deleted ${confirmDelete.emailAddress || "mailbox"}`);
+      setConfirmDelete(null);
+      refetch();
+    } catch (err) {
+      toast.error(err?.data?.message || "Delete failed");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -78,12 +98,7 @@ export default function MailboxMappingPage() {
         <div className="flex flex-col gap-2 pb-2 justify-between items-start md:flex-row md:items-center">
           <div className="flex items-center gap-2">
             <Mail className="h-5 w-5 text-zinc-200" />
-            <div>
-              <h3 className="text-zinc-100 text-xl font-medium">Email Mapping</h3>
-              <p className="text-xs text-zinc-500">
-                {flatCount} mailbox{flatCount === 1 ? "" : "es"} in scope
-              </p>
-            </div>
+            <h3 className="text-zinc-100 text-xl font-medium">Email Mapping</h3>
           </div>
           <div className="flex flex-wrap gap-2">
             <div className="inline-flex rounded-xl border border-zinc-700 overflow-hidden text-xs">
@@ -107,29 +122,42 @@ export default function MailboxMappingPage() {
               >
                 By user
               </button>
+              {canManageMailboxes && (
+                <button
+                  type="button"
+                  className={`px-3 py-2 ${
+                    view === "company"
+                      ? "bg-zinc-800 text-white"
+                      : "text-zinc-400"
+                  }`}
+                  onClick={() => setView("company")}
+                >
+                  Company emails
+                </button>
+              )}
             </div>
             {isAdmin && (
-              <>
-                <button
-                  type="button"
-                  className={fleet.secondaryBtn}
-                  onClick={() => setShowSettings(true)}
-                >
-                  <Settings2 className="h-4 w-4" />
-                  Server settings
-                </button>
-                <button
-                  type="button"
-                  className={fleet.primaryBtn}
-                  onClick={() => {
-                    setEditMailbox(null);
-                    setShowAdd(true);
-                  }}
-                >
-                  <Plus className="h-4 w-4" />
-                  Add mailbox
-                </button>
-              </>
+              <button
+                type="button"
+                className={fleet.secondaryBtn}
+                onClick={() => setShowSettings(true)}
+              >
+                <Settings2 className="h-4 w-4" />
+                Server settings
+              </button>
+            )}
+            {canManageMailboxes && (
+              <button
+                type="button"
+                className={fleet.primaryBtn}
+                onClick={() => {
+                  setEditMailbox(null);
+                  setShowAdd(true);
+                }}
+              >
+                <Plus className="h-4 w-4" />
+                Add mailbox
+              </button>
             )}
           </div>
         </div>
@@ -142,15 +170,17 @@ export default function MailboxMappingPage() {
           </div>
         )}
 
-        {view === "user" ? (
+        {view === "company" ? (
+          <MailboxCompanyEmailsPanel canManage={canManageMailboxes} />
+        ) : view === "user" ? (
           <MailboxByUserPanel />
         ) : flatCount === 0 ? (
           <EmptyState
             icon={Mail}
             title="No mailboxes yet"
             description={
-              isAdmin
-                ? "Save server settings, then add a mailbox."
+              canManageMailboxes
+                ? "Add a mailbox to get started."
                 : "No mailboxes in your department scope yet."
             }
           />
@@ -218,17 +248,26 @@ export default function MailboxMappingPage() {
                                     <Users className="h-3.5 w-3.5" />
                                     Assign
                                   </button>
-                                  {isAdmin && (
-                                    <button
-                                      type="button"
-                                      className="text-xs text-zinc-400 hover:text-white"
-                                      onClick={() => {
-                                        setEditMailbox(m);
-                                        setShowAdd(true);
-                                      }}
-                                    >
-                                      Edit
-                                    </button>
+                                  {canManageMailboxes && (
+                                    <>
+                                      <button
+                                        type="button"
+                                        className="text-xs text-zinc-400 hover:text-white"
+                                        onClick={() => {
+                                          setEditMailbox(m);
+                                          setShowAdd(true);
+                                        }}
+                                      >
+                                        Edit
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="text-xs text-rose-400 hover:text-rose-300"
+                                        onClick={() => setConfirmDelete(m)}
+                                      >
+                                        Delete
+                                      </button>
+                                    </>
                                   )}
                                 </div>
                               </td>
@@ -267,6 +306,18 @@ export default function MailboxMappingPage() {
             setAssignMailbox(null);
             refetch();
           }}
+        />
+      )}
+
+      {confirmDelete && (
+        <WarningModal
+          message={`mailbox "${confirmDelete.emailAddress}"`}
+          title="Delete mailbox?"
+          description={`Delete "${confirmDelete.emailAddress}"? Assignments and related mailbox data will be removed. This cannot be undone.`}
+          confirmLabel="Yes, Delete"
+          setConfirmDelete={setConfirmDelete}
+          isDeleting={isDeleting}
+          handleDelete={handleDeleteMailbox}
         />
       )}
     </div>

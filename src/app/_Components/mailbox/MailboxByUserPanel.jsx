@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { fleet } from "@/app/_Components/fleet/fleetTheme";
+import CrmSelect from "@/app/_Components/ui/CrmSelect";
 import {
   useGetMailboxAssignableUsersQuery,
   useGetMailboxAssignmentsByUserQuery,
@@ -17,15 +18,21 @@ const PERMS = [
   { value: "manage", label: "Manage" },
 ];
 
+function capitalizeName(name) {
+  return String(name || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
 export default function MailboxByUserPanel() {
   const [userId, setUserId] = useState("");
-  const [search, setSearch] = useState("");
   const [pickMailboxId, setPickMailboxId] = useState("");
   const [pickPerm, setPickPerm] = useState("read");
 
-  const { data: usersData } = useGetMailboxAssignableUsersQuery({
-    ...(search.trim() ? { search: search.trim() } : {}),
-  });
+  const { data: usersData } = useGetMailboxAssignableUsersQuery({});
   const { data: mappingData, refetch: refetchMapping } =
     useGetMailboxMappingQuery();
   const { data: byUser, refetch, isFetching } =
@@ -35,6 +42,14 @@ export default function MailboxByUserPanel() {
   const [removeAssignment] = useRemoveMailboxAssignmentMutation();
 
   const users = usersData?.data || [];
+  const userOptions = useMemo(
+    () =>
+      users.map((u) => ({
+        value: String(u._id),
+        label: capitalizeName(u.fullName || "User"),
+      })),
+    [users],
+  );
   const assignments = byUser?.data?.assignments || [];
   const assignedMailboxIds = new Set(
     assignments.map((a) => String(a.mailboxId?._id || a.mailboxId)),
@@ -89,32 +104,17 @@ export default function MailboxByUserPanel() {
 
   return (
     <div className="rounded-3xl border border-zinc-800 p-4 space-y-4">
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex-1">
-          <label className="type-label block mb-2">Search user</label>
-          <input
-            className={fleet.modalInput}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Filter list…"
-          />
-        </div>
-        <div className="flex-[2]">
-          <label className="type-label block mb-2">User</label>
-          <select
-            className={fleet.modalSelect}
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          >
-            <option value="">Select user…</option>
-            {users.map((u) => (
-              <option key={u._id} value={u._id}>
-                {u.fullName} — {u.email}
-                {u.departmentId?.name ? ` (${u.departmentId.name})` : ""}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div>
+        <label className="type-label block mb-2">User</label>
+        <CrmSelect
+          variant="dark"
+          isSearchable
+          isClearable
+          options={userOptions}
+          value={userId}
+          onChange={setUserId}
+          placeholder="Type to search name…"
+        />
       </div>
 
       {userId && (

@@ -3,10 +3,16 @@
 import moment from "moment-timezone";
 import { Paperclip, Star } from "lucide-react";
 
-function formatAddr(list) {
+function formatAddr(list, { preferAddress = false } = {}) {
   if (!list?.length) return "—";
   const a = list[0];
+  if (preferAddress) return a.address || a.name || "—";
   return a.name || a.address || "—";
+}
+
+function isSentFolder(folder) {
+  const f = String(folder || "").toLowerCase();
+  return f === "sent" || f.includes("sent");
 }
 
 function formatWhen(date) {
@@ -29,8 +35,10 @@ export default function MailboxMessageList({
   total,
   pageSize,
   onPageChange,
+  folder,
 }) {
   const totalPages = Math.max(1, Math.ceil((total || 0) / (pageSize || 25)));
+  const showRecipient = isSentFolder(folder);
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -81,7 +89,9 @@ export default function MailboxMessageList({
                             : "text-zinc-50 font-semibold"
                         }`}
                       >
-                        {formatAddr(m.from)}
+                        {showRecipient
+                          ? formatAddr(m.to, { preferAddress: true })
+                          : formatAddr(m.from)}
                       </span>
                       {m.flagged && (
                         <Star className="h-3 w-3 text-amber-400 fill-amber-400 shrink-0" />

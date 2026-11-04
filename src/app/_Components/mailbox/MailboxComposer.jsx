@@ -30,6 +30,24 @@ function parseAddresses(raw) {
     .filter(Boolean);
 }
 
+function emailDomain(addr) {
+  const s = String(addr || "")
+    .trim()
+    .toLowerCase();
+  const m = s.match(/@([^>\s]+)/);
+  return m ? m[1].replace(/>$/, "") : "";
+}
+
+/** Company mail: only same-domain recipients (internal). */
+function assertInternalOnly(mailbox, addresses) {
+  if (!mailbox || mailbox.kind !== "personal") return null;
+  const allowed = emailDomain(mailbox.emailAddress);
+  if (!allowed) return "Company mailbox address is invalid";
+  const external = addresses.filter((a) => emailDomain(a) !== allowed);
+  if (!external.length) return null;
+  return `Company email is internal only (@${allowed}). Remove: ${external.slice(0, 3).join(", ")}${external.length > 3 ? "…" : ""}`;
+}
+
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -59,13 +77,16 @@ function titleForMode(mode) {
  * }} props
  */
 export default function MailboxComposer({ mailboxes = [], initial = {}, onClose }) {
-  const sendable = useMemo(
-    () =>
-      mailboxes.filter((m) =>
-        ["read_send", "manage"].includes(m.permission),
-      ),
-    [mailboxes],
-  );
+  const sendable = useMemo(() => {
+    const allowed = mailboxes.filter((m) =>
+      ["read_send", "manage"].includes(m.permission),
+    );
+    // Brand first, company (personal) last
+    return [
+      ...allowed.filter((m) => m.kind !== "personal"),
+      ...allowed.filter((m) => m.kind === "personal"),
+    ];
+  }, [mailboxes]);
 
   const [mailboxId, setMailboxId] = useState(
     initial.mailboxId || sendable[0]?._id || "",
@@ -93,6 +114,12 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
   const [createScheduled, { isLoading: scheduling }] =
     useCreateMailboxScheduledMutation();
 
+  const selectedMailbox = useMemo(
+    () => sendable.find((m) => String(m._id) === String(mailboxId)),
+    [sendable, mailboxId],
+  );
+  const isCompanyFrom = selectedMailbox?.kind === "personal";
+
   const buildPayload = async () => {
     const attPayload = [];
     for (const f of attachments) {
@@ -119,6 +146,12 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
 
   const onSend = async () => {
     if (!parseAddresses(to).length) return toast.error("Add at least one To address");
+    const block = assertInternalOnly(selectedMailbox, [
+      ...parseAddresses(to),
+      ...parseAddresses(cc),
+      ...parseAddresses(bcc),
+    ]);
+    if (block) return toast.error(block);
     try {
       const payload = await buildPayload();
       const res = await sendMail(payload).unwrap();
@@ -148,6 +181,12 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
     if (Number.isNaN(sendAt.getTime()) || sendAt.getTime() <= Date.now()) {
       return toast.error("Send time must be in the future");
     }
+    const block = assertInternalOnly(selectedMailbox, [
+      ...parseAddresses(to),
+      ...parseAddresses(cc),
+      ...parseAddresses(bcc),
+    ]);
+    if (block) return toast.error(block);
     try {
       const payload = await buildPayload();
       await createScheduled({
@@ -281,6 +320,12 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
           ) : (
             <>
               <div className="shrink-0 border-b border-zinc-800 bg-zinc-900 overflow-x-hidden">
+                {isCompanyFrom && (
+                  <div className="px-3 py-1.5 text-[11px] text-amber-200 bg-amber-500/10 border-b border-amber-500/20">
+                    Company email — internal only. Client mail must use a brand
+                    mailbox.
+                  </div>
+                )}
                 <div className="flex items-center gap-2 px-3 py-1 border-b border-zinc-800/80 min-w-0">
                   <span className="text-xs text-zinc-500 w-12 shrink-0">From</span>
                   <select
@@ -290,7 +335,9 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
                   >
                     {sendable.map((m) => (
                       <option key={m._id} value={m._id} className="bg-zinc-900">
-                        {m.emailAddress}
+                        {m.kind === "personal"
+                          ? `Company (internal) · ${m.emailAddress}`
+                          : m.emailAddress}
                       </option>
                     ))}
                   </select>
@@ -364,7 +411,6 @@ export default function MailboxComposer({ mailboxes = [], initial = {}, onClose 
                   <TinyEditor
                     value={bodyHtml}
                     onChange={setBodyHtml}
-                    dark
                     fill
                     showMenubar
                   />
