@@ -56,6 +56,7 @@ export function exportPayrollToExcel(rows = [], filename = "payroll") {
     "Late Deduction": Number(r.lateDeduction) || 0,
     "Total Deduction": r.deductionsTotal,
     Gross: r.grossPay,
+    Incentive: Number(r.incentive) || 0,
     "Net Pay": r.netPay,
     Status: r.status,
   }));
@@ -75,6 +76,7 @@ export function exportPayrollToExcel(rows = [], filename = "payroll") {
     "Late Deduction": 9,
     "Total Deduction": 9,
     Gross: 8,
+    Incentive: 8,
     "Net Pay": 8,
     Status: 8,
   };

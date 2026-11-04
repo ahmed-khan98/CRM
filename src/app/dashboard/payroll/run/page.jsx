@@ -83,7 +83,13 @@ export default function RunPayrollPage() {
   const [checked, setChecked] = useState([]);
   const [detail, setDetail] = useState(null);
   const [deductFor, setDeductFor] = useState(null);
-  const [deductForm, setDeductForm] = useState({ name: "", amount: "", note: "" });
+  const [deductForm, setDeductForm] = useState({
+    name: "",
+    amount: "",
+    netPay: "",
+    incentive: "",
+    incentiveName: "",
+  });
   const [editFor, setEditFor] = useState(null);
   const [editForm, setEditForm] = useState({
     lateDays: "",
@@ -304,15 +310,60 @@ export default function RunPayrollPage() {
     }
   };
 
+  const openAdjustModal = (row) => {
+    setDeductFor(row);
+    const net = String(row.netPay ?? "");
+    const inc = String(row.incentive ?? 0);
+    setDeductForm({
+      name: "",
+      amount: "",
+      netPay: net,
+      incentive: inc,
+      incentiveName: row.incentiveNote || "",
+      _origNetPay: net,
+      _origIncentive: inc,
+      _origIncentiveName: row.incentiveNote || "",
+    });
+  };
+
   const onAddDeduction = async (e) => {
     e.preventDefault();
+    const body = {};
+    if (deductForm.name?.trim() && deductForm.amount !== "") {
+      body.name = deductForm.name.trim();
+      body.amount = Number(deductForm.amount) || 0;
+    }
+    const incentiveChanged =
+      String(deductForm.incentive) !== String(deductForm._origIncentive) ||
+      String(deductForm.incentiveName || "") !==
+        String(deductForm._origIncentiveName || "");
+    if (incentiveChanged) {
+      body.incentive = Number(deductForm.incentive) || 0;
+      body.incentiveNote = (deductForm.incentiveName || "").trim();
+    }
+    // Only override net if user edited it (so incentive alone can update net via formula)
+    if (
+      deductForm.netPay !== "" &&
+      String(deductForm.netPay) !== String(deductForm._origNetPay)
+    ) {
+      body.netPay = Number(deductForm.netPay) || 0;
+    }
+    if (!body.name && body.netPay === undefined && body.incentive === undefined) {
+      return toast.error("Add a deduction, change net pay, or set incentive");
+    }
     try {
-      await addDeduction({ id: deductFor._id, body: deductForm }).unwrap();
-      toast.success("Deduction added");
+      await addDeduction({ id: deductFor._id, body }).unwrap();
+      toast.success("Payroll entry updated (this run only)");
       setDeductFor(null);
-      setDeductForm({ name: "", amount: "", note: "" });
+      setDeductForm({
+        name: "",
+        amount: "",
+        netPay: "",
+        incentive: "",
+        incentiveName: "",
+      });
     } catch (err) {
-      toast.error(err?.data?.message || "Could not add deduction");
+      toast.error(err?.data?.message || "Could not save");
     }
   };
 
@@ -504,7 +555,7 @@ export default function RunPayrollPage() {
         >
           <table
             className="crm-table border-collapse text-left"
-            style={{ minWidth: "1500px", width: "100%" }}
+            style={{ minWidth: "1600px", width: "100%" }}
           >
             <thead className="sticky top-0 z-20">
               <tr className="table-head-row">
@@ -519,6 +570,7 @@ export default function RunPayrollPage() {
                   "Half Day",
                   "Other",
                   "Gross",
+                  "Incentive",
                   "Net Pay",
                   "Status",
                   "Action",
@@ -539,19 +591,19 @@ export default function RunPayrollPage() {
             <tbody>
               {isFetching ? (
                 <tr>
-                  <td colSpan={13} className="px-4 py-10 text-center text-sm text-zinc-400">
+                  <td colSpan={14} className="px-4 py-10 text-center text-sm text-zinc-400">
                     Loading payroll…
                   </td>
                 </tr>
               ) : entries.length === 0 ? (
                 <tr>
-                  <td colSpan={13} className="px-4 py-10 text-center text-sm text-zinc-400">
+                  <td colSpan={14} className="px-4 py-10 text-center text-sm text-zinc-400">
                     No payroll generated for this month
                   </td>
                 </tr>
               ) : filteredEntries.length === 0 ? (
                 <tr>
-                  <td colSpan={13} className="px-4 py-10 text-center text-sm text-zinc-400">
+                  <td colSpan={14} className="px-4 py-10 text-center text-sm text-zinc-400">
                     No employees match these filters
                   </td>
                 </tr>
@@ -609,6 +661,9 @@ export default function RunPayrollPage() {
                     <td className="whitespace-nowrap px-1 py-3 text-[10px] ">
                       {money(row.grossPay)}
                     </td>
+                    <td className="whitespace-nowrap px-1 py-3 text-[10px] text-sky-400">
+                      {money(row.incentive)}
+                    </td>
                     <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-emerald-500">
                       {money(row.netPay)}
                     </td>
@@ -637,11 +692,11 @@ export default function RunPayrollPage() {
                                 <Pencil className="h-3.5 w-3.5" />
                               </button>
                             </Tooltip>
-                            <Tooltip label="Add deduction">
+                            <Tooltip label="Deduction / gross / incentive">
                               <button
                                 type="button"
                                 className="crm-action-btn"
-                                onClick={() => setDeductFor(row)}
+                                onClick={() => openAdjustModal(row)}
                               >
                                 <Plus className="h-3.5 w-3.5" />
                               </button>
@@ -681,33 +736,84 @@ export default function RunPayrollPage() {
 
       <LeaveSlideOver
         open={Boolean(deductFor)}
-        title="Add deduction"
+        title="Adjust this payroll"
         subtitle={deductFor?.employeeName}
         onClose={() => setDeductFor(null)}
       >
-        <form onSubmit={onAddDeduction} className="space-y-3">
-          <input
-            className={fleet.input}
-            placeholder="Name (Loan, Advance…)"
-            value={deductForm.name}
-            onChange={(e) => setDeductForm((s) => ({ ...s, name: e.target.value }))}
-          />
-          <input
-            type="number"
-            min="0"
-            className={fleet.input}
-            placeholder="Amount"
-            value={deductForm.amount}
-            onChange={(e) => setDeductForm((s) => ({ ...s, amount: e.target.value }))}
-          />
-          <input
-            className={fleet.input}
-            placeholder="Note"
-            value={deductForm.note}
-            onChange={(e) => setDeductForm((s) => ({ ...s, note: e.target.value }))}
-          />
-          <button type="submit" disabled={adding} className={`${fleet.primaryBtn} w-full justify-center`}>
-            Save deduction
+        <form onSubmit={onAddDeduction} className="space-y-4">
+          <p className="text-[11px] text-zinc-500">
+            Changes apply only to this payroll run — employee profile salary is
+            not updated.
+          </p>
+
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-zinc-300">Net pay (this run)</p>
+            <input
+              type="number"
+              min="0"
+              className={fleet.input}
+              placeholder="Net pay"
+              value={deductForm.netPay}
+              onChange={(e) =>
+                setDeductForm((s) => ({ ...s, netPay: e.target.value }))
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-zinc-300">
+              Incentive (added to net pay)
+            </p>
+            <input
+              className={fleet.input}
+              placeholder="Name (e.g. Performance, Project bonus…)"
+              value={deductForm.incentiveName}
+              onChange={(e) =>
+                setDeductForm((s) => ({ ...s, incentiveName: e.target.value }))
+              }
+            />
+            <input
+              type="number"
+              min="0"
+              className={fleet.input}
+              placeholder="Incentive amount"
+              value={deductForm.incentive}
+              onChange={(e) =>
+                setDeductForm((s) => ({ ...s, incentive: e.target.value }))
+              }
+            />
+          </div>
+
+          <div className="space-y-2 border-t border-zinc-800 pt-3">
+            <p className="text-xs font-medium text-zinc-300">
+              Extra deduction (optional)
+            </p>
+            <input
+              className={fleet.input}
+              placeholder="Name (Loan, Advance…)"
+              value={deductForm.name}
+              onChange={(e) =>
+                setDeductForm((s) => ({ ...s, name: e.target.value }))
+              }
+            />
+            <input
+              type="number"
+              min="0"
+              className={fleet.input}
+              placeholder="Amount"
+              value={deductForm.amount}
+              onChange={(e) =>
+                setDeductForm((s) => ({ ...s, amount: e.target.value }))
+              }
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={adding}
+            className={`${fleet.primaryBtn} w-full justify-center`}
+          >
+            Save
           </button>
         </form>
       </LeaveSlideOver>

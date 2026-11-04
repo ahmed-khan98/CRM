@@ -13,10 +13,15 @@ function display(value) {
   return s;
 }
 
+/** Always use stored payroll-entry netPay (supports manual override). */
 function payslipNet(entry) {
+  if (entry?.netPay != null && entry.netPay !== "") {
+    return Math.max(0, Math.round(Number(entry.netPay) || 0));
+  }
   const gross = Number(entry?.grossPay || 0);
   const deductions = Number(entry?.deductionsTotal || 0);
-  return Math.max(0, Math.round(gross - deductions));
+  const incentive = Number(entry?.incentive || 0);
+  return Math.max(0, Math.round(gross - deductions + incentive));
 }
 
 /** Prefer period month/year; ignore bare ObjectId on payrollRunId. */
@@ -54,6 +59,14 @@ function buildRows(entry) {
     if (Number(a.amount) > 0) earnings.push([a.name, money(a.amount)]);
   }
   earnings.push(["Gross Total", money(entry.grossPay)]);
+  if (Number(entry.incentive) > 0) {
+    earnings.push([
+      entry.incentiveNote
+        ? `Incentive (${entry.incentiveNote})`
+        : "Incentive",
+      money(entry.incentive),
+    ]);
+  }
 
   const deductions = [];
   if (Number(entry.tax) > 0) deductions.push(["Income Tax", money(entry.tax)]);
@@ -152,9 +165,6 @@ export default function PayslipDocument({
       <div className="mt-5 rounded-xl bg-zinc-900 px-4 py-3 text-white">
         <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-zinc-400">
           Net Pay
-        </p>
-        <p className="text-[11px] text-zinc-500">
-          Gross {money(entry.grossPay)} − Deductions {money(entry.deductionsTotal)}
         </p>
         <p className="text-2xl font-semibold tabular-nums">{money(netPay)}</p>
       </div>
@@ -356,10 +366,7 @@ function buildPrintHtml(entry, period, companyName) {
     </div>
 
     <div class="net">
-      <div class="net-label">Net Pay (Gross − Total Deductions)</div>
-      <div class="net-calc">${escapeHtml(money(entry.grossPay))} − ${escapeHtml(
-    money(entry.deductionsTotal)
-  )}</div>
+      <div class="net-label">Net Pay</div>
       <div class="net-amt">${escapeHtml(money(netPay))}</div>
     </div>
 
