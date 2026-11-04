@@ -86,6 +86,7 @@ export default function RunPayrollPage() {
   const [deductForm, setDeductForm] = useState({
     name: "",
     amount: "",
+    basicSalary: "",
     netPay: "",
     incentive: "",
     incentiveName: "",
@@ -312,14 +313,17 @@ export default function RunPayrollPage() {
 
   const openAdjustModal = (row) => {
     setDeductFor(row);
+    const basic = String(row.basicSalary ?? "");
     const net = String(row.netPay ?? "");
     const inc = String(row.incentive ?? 0);
     setDeductForm({
       name: "",
       amount: "",
+      basicSalary: basic,
       netPay: net,
       incentive: inc,
       incentiveName: row.incentiveNote || "",
+      _origBasicSalary: basic,
       _origNetPay: net,
       _origIncentive: inc,
       _origIncentiveName: row.incentiveNote || "",
@@ -333,6 +337,12 @@ export default function RunPayrollPage() {
       body.name = deductForm.name.trim();
       body.amount = Number(deductForm.amount) || 0;
     }
+    const basicChanged =
+      deductForm.basicSalary !== "" &&
+      String(deductForm.basicSalary) !== String(deductForm._origBasicSalary);
+    if (basicChanged) {
+      body.basicSalary = Number(deductForm.basicSalary) || 0;
+    }
     const incentiveChanged =
       String(deductForm.incentive) !== String(deductForm._origIncentive) ||
       String(deductForm.incentiveName || "") !==
@@ -341,23 +351,35 @@ export default function RunPayrollPage() {
       body.incentive = Number(deductForm.incentive) || 0;
       body.incentiveNote = (deductForm.incentiveName || "").trim();
     }
-    // Only override net if user edited it (so incentive alone can update net via formula)
+    // Only override net if user edited it (basic/incentive alone recalc net)
     if (
       deductForm.netPay !== "" &&
       String(deductForm.netPay) !== String(deductForm._origNetPay)
     ) {
       body.netPay = Number(deductForm.netPay) || 0;
     }
-    if (!body.name && body.netPay === undefined && body.incentive === undefined) {
-      return toast.error("Add a deduction, change net pay, or set incentive");
+    if (
+      !body.name &&
+      body.basicSalary === undefined &&
+      body.netPay === undefined &&
+      body.incentive === undefined
+    ) {
+      return toast.error(
+        "Change basic, net pay, incentive, or add a deduction",
+      );
     }
     try {
       await addDeduction({ id: deductFor._id, body }).unwrap();
-      toast.success("Payroll entry updated (this run only)");
+      toast.success(
+        basicChanged
+          ? "Basic updated — gross & deductions recalculated for this run"
+          : "Payroll entry updated (this run only)",
+      );
       setDeductFor(null);
       setDeductForm({
         name: "",
         amount: "",
+        basicSalary: "",
         netPay: "",
         incentive: "",
         incentiveName: "",
@@ -745,6 +767,26 @@ export default function RunPayrollPage() {
             Changes apply only to this payroll run — employee profile salary is
             not updated.
           </p>
+
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-zinc-300">
+              Basic salary (this run)
+            </p>
+            <input
+              type="number"
+              min="0"
+              className={fleet.input}
+              placeholder="Basic salary"
+              value={deductForm.basicSalary}
+              onChange={(e) =>
+                setDeductForm((s) => ({ ...s, basicSalary: e.target.value }))
+              }
+            />
+            <p className="text-[10px] text-zinc-500">
+              Updates gross (basic + allowances) and recalculates late / absent /
+              half-day (daily = gross ÷ 30). Profile salary stays unchanged.
+            </p>
+          </div>
 
           <div className="space-y-2">
             <p className="text-xs font-medium text-zinc-300">Net pay (this run)</p>
