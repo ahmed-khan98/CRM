@@ -1,4 +1,4 @@
-/** Design department — Skyliner merchant only */
+/** @deprecated kept for any old imports — Skyliner is available to all departments */
 export const DESIGN_DEPARTMENT_ID = "68bf117e7bee051de66530e3";
 
 const merchant = [
@@ -6,10 +6,10 @@ const merchant = [
     id: "Skyliner Trading LLC",
     name: "Skyliner Trading LLC",
   },
-  {
-    id: "Kinatech Business Solutions LLC",
-    name: "Kinatech Business Solutions LLC",
-  },
+  // {
+  //   id: "Kinatech Business Solutions LLC",
+  //   name: "Kinatech Business Solutions LLC",
+  // },
   // { id: "Augmentus", name: "Augmentus" },
 ];
 
@@ -70,33 +70,16 @@ const merchantOptions =
   })) ?? [];
 
 /**
- * Merchant dropdown by department:
- * - Design → only Skyliner Trading LLC
- * - All other depts → everyone except Skyliner
+ * Merchant dropdown — Skyliner + others for every department.
  *
- * @param {string|null|undefined} departmentId
- * @param {Array<{_id?:string,id?:string,name?:string}>} [departments]
+ * @param {string|null|undefined} _departmentId
+ * @param {Array<{_id?:string,id?:string,name?:string}>} [_departments]
  */
 export function getMerchantOptionsForDepartment(
-  departmentId,
-  departments = [],
+  _departmentId,
+  _departments = [],
 ) {
-  const deptId = String(
-    departmentId?._id || departmentId || "",
-  ).trim();
-  const dept = (departments || []).find(
-    (d) => String(d?._id || d?.id) === deptId,
-  );
-  const deptName = String(dept?.name || "").toLowerCase();
-  const isDesign =
-    deptId === DESIGN_DEPARTMENT_ID ||
-    /\bdesigns?\b/i.test(deptName);
-
-  const list = isDesign
-    ? merchant.filter((m) => m.id === "Skyliner Trading LLC")
-    : merchant.filter((m) => m.id !== "Skyliner Trading LLC");
-
-  return list.map((b) => ({
+  return merchant.map((b) => ({
     value: b.id,
     label: b.name,
   }));
