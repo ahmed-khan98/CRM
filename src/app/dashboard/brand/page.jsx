@@ -123,9 +123,15 @@ export default function AppointmentBooking() {
                             {br?.name}
                           </span>
                         </td>
-                        <td className="px-4 py-2.5 whitespace-nowrap text-sm text-gray-600 capitalize">
+                        <td className="px-4 py-2.5 text-sm text-gray-600 capitalize">
                           <span className="text-[12px] font-semibold text-zinc-500 capitalize">
-                            {br?.departmentId?.name}
+                            {Array.isArray(br?.departmentIds) &&
+                            br.departmentIds.length
+                              ? br.departmentIds
+                                  .map((d) => d?.name)
+                                  .filter(Boolean)
+                                  .join(", ")
+                              : br?.departmentId?.name}
                           </span>
                         </td>
                         <td className="px-4 py-2.5 whitespace-nowrap">

@@ -41,13 +41,10 @@ export default function MailboxAddModal({ onClose, editMailbox = null }) {
 
   const brandOptions = useMemo(
     () =>
-      brands.map((b) => {
-        const name = capitalizeName(b.name || "Brand");
-        const dept = b.departmentId?.name
-          ? ` (${capitalizeName(b.departmentId.name)})`
-          : "";
-        return { value: String(b._id), label: `${name}${dept}` };
-      }),
+      brands.map((b) => ({
+        value: String(b._id),
+        label: capitalizeName(b.name || "Brand"),
+      })),
     [brands],
   );
 

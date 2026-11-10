@@ -95,6 +95,11 @@ export const ROUTE_PERMISSIONS = [
     prefix: "/dashboard/mailbox",
     roles: ["USER", "DEP_ADMIN", "HR_ADMIN", "FINANCE_ADMIN"],
   },
+  // Brand Email management — not for DEP_ADMIN (admin/subadmin always allowed)
+  {
+    prefix: "/dashboard/BrandEmail",
+    roles: ["HR_ADMIN", "FINANCE_ADMIN"],
+  },
 ];
 
 export function canAccessRoute(pathname, userOrRole) {

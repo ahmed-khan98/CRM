@@ -32,7 +32,9 @@ function MessageBubble({
   dark = false,
   active,
   activeVoiceId,
+  highlighted,
   onContextMenu,
+  onJumpToReply,
   onRequestPlay,
   onStopChain,
   onEnded,
@@ -59,8 +61,10 @@ function MessageBubble({
     (m.type === "video" || m.attachments?.[0]?.mimeType?.startsWith("video/"));
   const isText = m.type === "text" || (!m.type && m.body);
 
+  const msgDomId = `chat-msg-${messageKey(m)}`;
+
   return (
-    <div>
+    <div id={msgDomId} data-message-id={messageKey(m)}>
       {showDay && <DaySeparator theme={theme} date={m.createdAt} />}
       {m.deletedForEveryone || m.deletedForMe ? (
         <DeletedMessageBubble
@@ -83,18 +87,22 @@ function MessageBubble({
           }}
         >
           <div
-            className={`relative max-w-[85%] sm:max-w-[65%] min-w-0 px-2.5 pt-1.5 pb-1 ${
+            className={`relative max-w-[85%] sm:max-w-[65%] min-w-0 px-2.5 pt-1.5 pb-1 transition-[box-shadow,background-color] duration-500 ${
               mine
                 ? `${theme.bubbleMe} rounded-2xl rounded-br-md`
                 : `${theme.bubbleThem} rounded-2xl rounded-bl-md`
-            } ${isVoice ? "min-w-[240px]" : ""} ${isCall ? "min-w-[200px]" : ""}`}
+            } ${isVoice ? "min-w-[240px]" : ""} ${isCall ? "min-w-[200px]" : ""} ${
+              highlighted
+                ? "ring-2 ring-amber-400/90 shadow-[0_0_0_4px_rgba(251,191,36,0.25)]"
+                : ""
+            }`}
           >
             {!mine && active.type === "group" && (
               <p className="text-[11px] font-semibold text-sky-700 mb-0.5 px-0.5">
                 {formatDisplayName(m.senderId?.fullName)}
               </p>
             )}
-            <ReplyQuote mine={mine} replyTo={m.replyTo} />
+            <ReplyQuote mine={mine} replyTo={m.replyTo} onJump={onJumpToReply} />
             {m.forwardedFrom && (
               <p className="mb-1 flex items-center gap-1 text-[10px] italic opacity-70 px-0.5">
                 <Forward className="h-3 w-3" /> Forwarded
@@ -175,7 +183,9 @@ function areEqual(prevProps, nextProps) {
   if (prevProps.dark !== nextProps.dark) return false;
   if (prevProps.myId !== nextProps.myId) return false;
   if (prevProps.active !== nextProps.active) return false;
+  if (prevProps.highlighted !== nextProps.highlighted) return false;
   if (prevProps.onContextMenu !== nextProps.onContextMenu) return false;
+  if (prevProps.onJumpToReply !== nextProps.onJumpToReply) return false;
   if (prevProps.onRequestPlay !== nextProps.onRequestPlay) return false;
   if (prevProps.onStopChain !== nextProps.onStopChain) return false;
   if (prevProps.onEnded !== nextProps.onEnded) return false;

@@ -75,15 +75,13 @@ const getStatusStyle = (status) => {
 };
 
 const HEADERS = [
-  { key: "client", label: "Client", w: "min-w-[100px]" },
-  { key: "dept_brand", label: "Dept / Brand", w: "min-w-[120px]" },
-  { key: "type", label: "Type", w: "min-w-[60px]" },
-  { key: "seller", label: "Seller / Agent", w: "min-w-[130px]" },
-  { key: "amount", label: "Amount", w: "min-w-[80px]" },
-  { key: "status", label: "Status", w: "min-w-[60px]" },
-  { key: "merchant", label: "Merchant", w: "min-w-[180px]" },
-  // { key: "month", label: "Month", w: "min-w-[100px]" },
-  // { key: "saleDate", label: "Sale Date", w: "min-w-[80px]" },
+  { key: "client", label: "Client", w: "whitespace-nowrap" },
+  { key: "dept_brand", label: "Dept / Brand", w: "whitespace-nowrap" },
+  { key: "type", label: "Type", w: "whitespace-nowrap" },
+  { key: "seller", label: "Seller / Agent",  },
+  { key: "amount", label: "Amount", w: "whitespace-nowrap" },
+  { key: "status", label: "Status", w: "whitespace-nowrap" },
+  { key: "merchant", label: "Merchant", w: "whitespace-nowrap" },
   { key: "actions", label: "", w: "w-10" },
 ];
 
@@ -201,16 +199,16 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
       className="group border-b border-zinc-700/60 hover:bg-zinc-800/30 transition-colors"
     >
       {/* Client */}
-      <td className="px-4 py-2 min-w-[100px]">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[12px] font-semibold text-zinc-100 capitalize truncate max-w-[135px]">
+      <td className="whitespace-nowrap">
+        <div className="flex flex-col gap-px">
+          <span className="text-[12px] font-semibold text-zinc-100 capitalize truncate max-w-[150px]">
             {emp?.clientId?.name || "—"}
           </span>
-          <span className="text-[10px] text-zinc-500 truncate max-w-[135px]">
+          <span className="text-[10px] text-zinc-500 truncate max-w-[150px]">
             {emp?.clientId?.email || "—"}
           </span>
           {emp?.clientId?.companyName && (
-            <span className="text-[10px] text-zinc-500 truncate max-w-[135px]">
+            <span className="text-[10px] text-zinc-500 truncate max-w-[150px]">
               {emp.clientId.companyName}
             </span>
           )}
@@ -218,17 +216,17 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
       </td>
 
       {/* Dept / Brand */}
-      <td className="px-1 py-2 min-w-[120px]">
-        <div className="flex flex-col gap-1">
+      <td className="whitespace-nowrap">
+        <div className="flex flex-col gap-0.5 leading-tight">
           {emp?.departmentId?.name ? (
-            <span className="inline-flex items-center rounded-full border border-zinc-600/40 bg-zinc-800/60 px-3 py-1 text-xs font-normal capitalize text-zinc-300 w-fit">
+            <span className="inline-flex w-fit items-center rounded-full border border-zinc-600/40 bg-zinc-800/60 px-2 py-0.5 text-[10px] font-normal capitalize text-zinc-300">
               {emp.departmentId.name}
             </span>
           ) : (
-            <span className="text-[10px] text-zinc-500">No dept</span>
+            <span className="text-[10px] leading-tight text-zinc-500">No dept</span>
           )}
           {emp?.brandId?.name ? (
-            <span className="inline-flex items-center rounded-full border border-zinc-600/40 bg-zinc-800/60 px-3 py-1 text-xs font-normal capitalize text-zinc-300 w-fit">
+            <span className="inline-flex w-fit max-w-[140px] truncate items-center rounded-full border border-zinc-600/40 bg-zinc-800/60 px-2 py-0.5 text-[10px] font-normal capitalize text-zinc-300">
               {emp.brandId.name}
             </span>
           ) : null}
@@ -236,10 +234,10 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
       </td>
 
       {/* Type */}
-      <td className="px-2 py-2 min-w-[60px]">
+      <td className="whitespace-nowrap">
         {emp?.type ? (
           <span
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-normal whitespace-nowrap ${typeStyle.pill}`}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-normal whitespace-nowrap ${typeStyle.pill}`}
           >
             <span className={`w-1.5 h-1.5 rounded-full ${typeStyle.dot}`} />
             {emp.type}
@@ -250,8 +248,8 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
       </td>
 
       {/* Seller / Agent */}
-      <td className="px-4 py-2 min-w-[160px]">
-        <div className="flex flex-col gap-0.5">
+      <td className="whitespace-nowrap">
+        <div className="flex flex-col gap-px">
           {emp?.seller?.fullName ? (
             <div className="flex items-center gap-1.5">
               <span className="text-[9px] text-zinc-500 uppercase tracking-wider font-bold">
@@ -279,8 +277,8 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
       </td>
 
       {/* Amount — same chrome as payment-link LinkRow */}
-      <td className="px-2 py-2 min-w-[60px]">
-        <span className="inline-flex items-center rounded-full border border-zinc-600 bg-zinc-800 px-2 py-1 text-xs font-medium whitespace-nowrap text-zinc-100">
+      <td className="whitespace-nowrap">
+        <span className="inline-flex items-center rounded-full border border-zinc-600 bg-zinc-800 px-2 py-0.5 text-[10px] font-medium whitespace-nowrap text-zinc-100">
           {getCurrencySymbol(emp?.currency)}
           {Number(emp?.amount || 0).toLocaleString("en-US", {
             maximumFractionDigits: 2,
@@ -288,11 +286,11 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
         </span>
       </td>
 
-      <td className="px-2 py-2 min-w-[60px]">
-        <div className="flex flex-col items-start gap-0.5">
+      <td className="whitespace-nowrap">
+        <div className="flex flex-col items-start gap-px">
           {emp?.status ? (
             <span
-              className={`inline-flex w-fit items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-medium whitespace-nowrap ${statusStyle.pill}`}
+              className={`inline-flex w-fit items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-normal whitespace-nowrap ${statusStyle.pill}`}
             >
               <span className={`h-1.5 w-1.5 rounded-full ${statusStyle.dot}`} />
               {emp.status.charAt(0).toUpperCase() + emp.status.slice(1)}
@@ -307,9 +305,9 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
       </td>
 
       {/* Merchant */}
-      <td className="px-2 py-2 min-w-[180px]">
+      <td className="whitespace-nowrap">
         {emp?.merchantType ? (
-          <span className="inline-flex items-center rounded-full border border-zinc-700/30 bg-zinc-800/40 px-2 py-1 text-xs font-medium text-zinc-300">
+          <span className="inline-flex max-w-[140px] truncate items-center rounded-full border border-zinc-700/30 bg-zinc-800/40 px-2 py-0.5 text-[10px] font-medium text-zinc-300">
             {emp.merchantType}
           </span>
         ) : (
@@ -334,7 +332,7 @@ function SaleRow({ emp, index, onEdit, onDelete }) {
    
 
       {/* Actions */}
-      <td className="px-2 py-2 sticky right-0 bg-ink md:border-l md:border-zinc-700/60  group-hover:bg-zinc-800/80 transition-colors">
+      <td className="sticky right-0 whitespace-nowrap bg-ink md:border-l md:border-zinc-700/60 group-hover:bg-zinc-800/80 transition-colors">
         <div className="flex items-center gap-1">
           <motion.button
             whileHover={{ scale: 1.08 }}
@@ -420,20 +418,21 @@ export default function SalesTable({ data = [], onEdit, onDelete, isLoading }) {
       <div
         className="overflow-x-auto overflow-y-auto"
         style={{
-          maxHeight: "calc(100vh - 220px)",
+          maxHeight: "calc(100vh)",
           scrollbarWidth: "thin",
           scrollbarColor: "#52525b transparent",
         }}
       >
-        <table className="crm-table text-left border-collapse"
-          style={{ minWidth: "1100px", width: "100%" }}
+        <table
+          className="crm-table w-full text-left border-collapse"
+          style={{ minWidth: "980px" }}
         >
           <thead className="sticky top-0 z-20">
             <tr className="bg-ink backdrop-blur-sm border-b border-zinc-700/80">
               {HEADERS.map((h) => (
                 <th
                   key={h.key}
-                  className={`px-3 py-2.5 text-[9px] font-black text-zinc-400 uppercase tracking-[0.12em] whitespace-nowrap ${h.w} ${
+                  className={`text-[9px] font-black text-zinc-400 uppercase tracking-[0.12em] ${h.w} ${
                     h.key === "actions"
                       ? "sticky right-0 bg-ink md:border-l md:border-zinc-700/60"
                       : ""

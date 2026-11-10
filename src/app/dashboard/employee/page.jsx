@@ -428,7 +428,7 @@ export default function AppointmentBooking() {
       {
         key: "sr",
         label: "Sr",
-        width: 48,
+        width: 20,
         render: (_row, index) => (
           <span className="text-xs text-gray-600">{index + 1}</span>
         ),
@@ -436,6 +436,7 @@ export default function AppointmentBooking() {
       {
         key: "employee",
         label: "Employee Info",
+        width: 250,
         render: (emp) => (
           <EntityCell
             image={emp?.image}
@@ -447,16 +448,17 @@ export default function AppointmentBooking() {
       {
         key: "designation",
         label: "Designation",
-        width: 200,
+        width: 140,
         wrap: true,
         render: (emp) => (
-          <span className="block max-w-[200px] whitespace-normal break-words text-xs font-semibold text-zinc-900">
+          <span className="block max-w-[140px] whitespace-normal break-words text-xs font-semibold text-zinc-900">
             {emp?.designation || "-"}
           </span>
         ),
       },
       {
         key: "cnic",
+        width: 120,
         label: "CNIC",
         render: (emp) => (
           <span className="text-xs text-gray-600">{emp?.CNIC || "-"}</span>
@@ -464,6 +466,7 @@ export default function AppointmentBooking() {
       },
       {
         key: "phone",
+        width: 100,
         label: "Phone No.",
         render: (emp) => (
           <span className="text-xs text-gray-600">
@@ -473,19 +476,20 @@ export default function AppointmentBooking() {
       },
       {
         key: "department",
-        label: "Department / Role",
+        label: "Dep / Role",
+        width: 140,
         wrap: true,
         render: (emp) => (
           <div className="flex flex-wrap items-center gap-1">
             <span
-              className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium uppercase ${getStatusColor(
+              className={`inline-flex items-center rounded-full px-1.5 py-[0.5px] text-[10px] font-normal uppercase ${getStatusColor(
                 emp?.departmentId?.name
               )}`}
             >
               {formatBadgeLabel(emp?.departmentId?.name)}
             </span>
             <span
-              className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium uppercase ${getActionStatusColor(
+              className={`inline-flex items-center rounded-full px-1.5 py-[0.5px] text-[10px] font-normal uppercase ${getActionStatusColor(
                 emp?.role
               )}`}
             >
@@ -497,15 +501,15 @@ export default function AppointmentBooking() {
       {
         key: "status",
         label: "Status",
+        width: 60,
         align: "center",
         render: (emp) => {
           const cfg = getStatusConfig(emp?.status);
           return (
             <span
               onClick={() => handleStatus(emp?._id)}
-              className={`cursor-pointer inline-flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs font-medium uppercase tracking-wider ${cfg.bg} ${cfg.text} ${cfg.border}`}
+              className={`cursor-pointer inline-flex items-center gap-1 rounded-full border px-1.5 py-[0.5px] text-[10px] font-normal uppercase tracking-wider ${cfg.bg} ${cfg.text} ${cfg.border}`}
             >
-              <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
               {statusLoading && statusArgs?.id === emp?._id ? (
                 <span className="flex items-center gap-1">
                   <svg
@@ -539,6 +543,7 @@ export default function AppointmentBooking() {
       {
         key: "joining",
         label: "Joining",
+        width: 80,
         render: (emp) => (
           <span className="text-xs text-gray-600">
             {emp?.joiningDate ? formatDate(emp.joiningDate) : "-"}

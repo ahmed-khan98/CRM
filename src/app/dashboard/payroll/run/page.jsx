@@ -435,7 +435,7 @@ export default function RunPayrollPage() {
               onClick={() => setConfirmUnlock(true)}
               className={secondaryAction}
             >
-              <Unlock className="h-3.5 w-3.5" />
+              <Unlock className="h-3 w-3" />
               Unlock Payroll
             </button>
           ) : null}
@@ -443,7 +443,7 @@ export default function RunPayrollPage() {
       )}
       {filteredEntries.length > 0 && (
         <button type="button" className={secondaryAction} onClick={onExportAll}>
-          <Download className="h-3.5 w-3.5" /> Export
+          <Download className="h-3 w-3" /> Export
         </button>
       )}
     </>
@@ -487,7 +487,7 @@ export default function RunPayrollPage() {
         <div className="grid grid-cols-2 gap-2">{actionButtons}</div>
       </div>
 
-      <p className="px-0.5 text-xs font-medium text-zinc-500">
+      <p className="text-xs font-medium text-zinc-500">
         Attendance: {cycleLabel(selected?.month, selected?.year, run?.cycleEndDay || 25, run)}
       </p>
 
@@ -556,7 +556,7 @@ export default function RunPayrollPage() {
               }
             }}
           >
-            <Download className="h-3.5 w-3.5" /> Export Selected
+            <Download className="h-3 w-3" /> Export Selected
           </button>
         </div>
       )}
@@ -576,8 +576,8 @@ export default function RunPayrollPage() {
           }}
         >
           <table
-            className="crm-table border-collapse text-left"
-            style={{ minWidth: "1600px", width: "100%" }}
+            className="crm-table w-full border-collapse text-left"
+            style={{ minWidth: "1180px" }}
           >
             <thead className="sticky top-0 z-20">
               <tr className="table-head-row">
@@ -596,18 +596,29 @@ export default function RunPayrollPage() {
                   "Net Pay",
                   "Status",
                   "Action",
-                ].map((h) => (
-                  <th
-                    key={h || "check"}
-                    className={`table-head-cell whitespace-nowrap px-3 ${
-                      h === "Action"
-                        ? "sticky right-0 z-30 bg-[#0a0a0a] md:border-l md:border-zinc-800"
-                        : ""
-                    }`}
-                  >
-                    {h}
-                  </th>
-                ))}
+                ].map((h) => {
+                  const compactHead = [
+                    "Allowances",
+                    "Late",
+                    "Absent",
+                    "Half Day",
+                    "Other",
+                  ].includes(h);
+                  return (
+                    <th
+                      key={h || "check"}
+                      className={`table-head-cell whitespace-nowrap ${
+                        compactHead ? "!text-[10px] !tracking-wide" : ""
+                      } ${
+                        h === "Action"
+                          ? "sticky right-0 z-30 bg-[#0a0a0a] md:border-l md:border-zinc-800"
+                          : ""
+                      }`}
+                    >
+                      {h}
+                    </th>
+                  );
+                })}
               </tr>
             </thead>
             <tbody>
@@ -631,16 +642,16 @@ export default function RunPayrollPage() {
                 </tr>
               ) : (
                 filteredEntries.map((row) => (
-                  <tr key={row._id} className="group">
-                    <td className="px-1 py-3">
+                  <tr key={row._id}>
+                    <td className="w-8 whitespace-nowrap">
                       <input
                         type="checkbox"
                         checked={checked.includes(row._id)}
                         onChange={() => toggle(row._id)}
                       />
                     </td>
-                    <td className="px-1 py-3">
-                      <div className="flex max-w-[180px] items-center gap-2">
+                    <td className="whitespace-nowrap">
+                      <div className="flex max-w-[200px] items-center gap-2">
                         <Avatar name={row.employeeName} />
                         <div className="min-w-0">
                           <p className="truncate text-sm font-semibold capitalize text-zinc-100">
@@ -652,25 +663,25 @@ export default function RunPayrollPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[11px] font-medium text-zinc-500">
+                    <td className="whitespace-nowrap text-xs font-normal text-zinc-500">
                       {row.departmentName || "—"}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px] ">
+                    <td className="whitespace-nowrap text-xs tabular-nums">
                       {money(row.basicSalary)}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px] ">
+                    <td className="whitespace-nowrap !text-[10px] tabular-nums font-normal">
                       {money(row.allowancesTotal)}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-rose-500">
+                    <td className="whitespace-nowrap !text-[10px] tabular-nums text-rose-500">
                       {money(row.lateDeduction)}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-rose-500">
+                    <td className="whitespace-nowrap !text-[10px] tabular-nums text-rose-500">
                       {money(row.absentDeduction)}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-rose-500">
+                    <td className="whitespace-nowrap !text-[10px] tabular-nums text-rose-500">
                       {money(row.halfDayDeduction)}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-zinc-500">
+                    <td className="whitespace-nowrap !text-[10px] tabular-nums text-zinc-500">
                       {money(
                         (row.tax || 0) +
                           (row.pf || 0) +
@@ -680,27 +691,27 @@ export default function RunPayrollPage() {
                           )
                       )}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px] ">
+                    <td className="whitespace-nowrap text-xs tabular-nums">
                       {money(row.grossPay)}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px] text-sky-400">
+                    <td className="whitespace-nowrap text-xs tabular-nums text-sky-400">
                       {money(row.incentive)}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3 text-[10px]  text-emerald-500">
+                    <td className="whitespace-nowrap text-xs tabular-nums text-emerald-500">
                       {money(row.netPay)}
                     </td>
-                    <td className="whitespace-nowrap px-1 py-3">
+                    <td className="whitespace-nowrap">
                       <PayrollStatusBadge status={row.status} />
                     </td>
-                    <td className="sticky right-0 z-10 whitespace-nowrap bg-[#121212] px-1 py-3 group-hover:bg-zinc-800 md:border-l md:border-zinc-800">
-                      <div className="flex gap-1">
+                    <td className="sticky right-0 z-10 whitespace-nowrap bg-[#121212] group-hover:bg-zinc-800 md:border-l md:border-zinc-800">
+                      <div className="flex gap-0.5">
                         <Tooltip label="View payslip">
                           <button
                             type="button"
                             className="crm-action-btn"
                             onClick={() => setDetail(row)}
                           >
-                            <Eye className="h-3.5 w-3.5" />
+                            <Eye className="h-3 w-3" />
                           </button>
                         </Tooltip>
                         {manage && !locked && (
@@ -711,7 +722,7 @@ export default function RunPayrollPage() {
                                 className="crm-action-btn"
                                 onClick={() => openEditAmounts(row)}
                               >
-                                <Pencil className="h-3.5 w-3.5" />
+                                <Pencil className="h-3 w-3" />
                               </button>
                             </Tooltip>
                             <Tooltip label="Deduction / gross / incentive">
@@ -720,7 +731,7 @@ export default function RunPayrollPage() {
                                 className="crm-action-btn"
                                 onClick={() => openAdjustModal(row)}
                               >
-                                <Plus className="h-3.5 w-3.5" />
+                                <Plus className="h-3 w-3" />
                               </button>
                             </Tooltip>
                           </>

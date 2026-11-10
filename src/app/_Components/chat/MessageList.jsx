@@ -17,8 +17,10 @@ function MessageList({
   myId,
   active,
   activeVoiceId,
+  highlightMsgId,
   loadMessages,
   onContextMenu,
+  onJumpToReply,
   onRequestPlay,
   onStopChain,
   onEnded,
@@ -54,22 +56,27 @@ function MessageList({
           </button>
         </div>
       )}
-      {messages.map((m, idx) => (
-        <MessageBubble
-          key={m._id || m.clientId}
-          message={m}
-          prevMessage={messages[idx - 1]}
-          myId={myId}
-          theme={theme}
-          dark={dark}
-          active={active}
-          activeVoiceId={activeVoiceId}
-          onContextMenu={onContextMenu}
-          onRequestPlay={onRequestPlay}
-          onStopChain={onStopChain}
-          onEnded={onEnded}
-        />
-      ))}
+      {messages.map((m, idx) => {
+        const id = String(m._id || m.clientId || "");
+        return (
+          <MessageBubble
+            key={m._id || m.clientId}
+            message={m}
+            prevMessage={messages[idx - 1]}
+            myId={myId}
+            theme={theme}
+            dark={dark}
+            active={active}
+            activeVoiceId={activeVoiceId}
+            highlighted={Boolean(highlightMsgId && highlightMsgId === id)}
+            onContextMenu={onContextMenu}
+            onJumpToReply={onJumpToReply}
+            onRequestPlay={onRequestPlay}
+            onStopChain={onStopChain}
+            onEnded={onEnded}
+          />
+        );
+      })}
       <div ref={bottomRef} />
     </div>
   );

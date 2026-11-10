@@ -91,6 +91,8 @@ export default function ChatApp() {
   const [listMenuConv, setListMenuConv] = useState(null);
   const [showAddMembers, setShowAddMembers] = useState(false);
   const [mediaTab, setMediaTab] = useState("media");
+  const [highlightMsgId, setHighlightMsgId] = useState(null);
+  const highlightTimerRef = useRef(null);
 
   const headerMenuRef = useRef(null);
   const composerRef = useRef(null);
@@ -154,6 +156,7 @@ export default function ChatApp() {
     hasMore,
     loadingMsgs,
     loadMessages,
+    jumpToMessage,
     sendPayload,
     bottomRef,
     listRef,
@@ -170,6 +173,32 @@ export default function ChatApp() {
     refetchConvs,
     onConversationRemoved: closeChatView,
   });
+
+  const handleJumpToReply = useCallback(
+    async (messageId) => {
+      const ok = await jumpToMessage(messageId);
+      if (!ok) return;
+      const id = String(messageId);
+      setHighlightMsgId(id);
+      if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+      highlightTimerRef.current = setTimeout(() => {
+        setHighlightMsgId((cur) => (cur === id ? null : cur));
+      }, 1800);
+    },
+    [jumpToMessage],
+  );
+
+  useEffect(() => {
+    setHighlightMsgId(null);
+    if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+  }, [activeId]);
+
+  useEffect(
+    () => () => {
+      if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+    },
+    [],
+  );
 
   const { onlineOf, presenceOf, peerOnline, peerPresence } = useChatPresence({
     conversations,
@@ -371,8 +400,10 @@ export default function ChatApp() {
               myId={myId}
               active={active}
               activeVoiceId={activeVoiceId}
+              highlightMsgId={highlightMsgId}
               loadMessages={loadMessages}
               onContextMenu={setMenuMsg}
+              onJumpToReply={handleJumpToReply}
               onRequestPlay={handleVoiceRequestPlay}
               onStopChain={handleVoiceStopChain}
               onEnded={handleVoiceEnded}

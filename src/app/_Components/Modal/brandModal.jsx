@@ -10,38 +10,49 @@ import {
 import { useAllDepartmentsQuery } from "@/app/_Services/department/page";
 import FormikSelect from "./formikSelect";
 import { brandSchema } from "@/app/schema/brand";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import ModalShell from "./ModalShell";
 import InputField from "../Form/InputField";
 import { fleet } from "../fleet/fleetTheme";
 
+function resolveInitialDepartmentIds(data) {
+  if (Array.isArray(data?.departmentIds) && data.departmentIds.length) {
+    return data.departmentIds.map((d) => d?._id || d).filter(Boolean);
+  }
+  if (data?.departmentId?._id || data?.departmentId) {
+    return [data.departmentId?._id || data.departmentId];
+  }
+  return [];
+}
+
 const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
   const [createBrand] = useCreateBrandMutation();
   const [updateBrand] = useUpdateBrandMutation();
-  const {
-    data: departments,
-    error: isError,
-    isLoading,
-  } = useAllDepartmentsQuery();
+  const { data: departments, isLoading } = useAllDepartmentsQuery();
   const isEdit = !!data;
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    console.log(values, "values");
     try {
+      const departmentIdsJson = JSON.stringify(values?.departmentIds || []);
       const payload = new FormData();
       payload.append("id", data?._id);
       payload.append("image", values?.image);
       payload.append("name", values?.name);
-      payload.append("departmentId", values?.departmentId);
+      payload.append("departmentIds", departmentIdsJson);
+      // legacy single field (primary) for older parsers
+      payload.append("departmentId", values?.departmentIds?.[0] || "");
+
+      const jsonBody = {
+        name: values?.name,
+        departmentIds: values?.departmentIds,
+        departmentId: values?.departmentIds?.[0] || "",
+      };
 
       const response = await (isEdit
         ? updateBrand(
             typeof values?.image === "string"
               ? {
-                  body: {
-                    name: values?.name,
-                    departmentId: values?.departmentId,
-                  },
+                  body: jsonBody,
                   id: data?._id,
                 }
               : {
@@ -71,7 +82,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
 
   const initialValues = {
     name: data?.name || "",
-    departmentId: data?.departmentId?._id || "",
+    departmentIds: resolveInitialDepartmentIds(data),
     image: data?.image || "",
   };
 
@@ -87,6 +98,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
         validationSchema={brandSchema}
         onSubmit={handleSubmit}
         enableReinitialize
+        context={{ isEdit }}
       >
         {({
           errors,
@@ -119,68 +131,63 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
               ? URL.createObjectURL(values.image)
               : values.image || null;
 
-          useEffect(() => {
-            return () => {
-              if (values?.image instanceof File && previewSrc) {
-                URL.revokeObjectURL(previewSrc);
-              }
-            };
-          }, [previewSrc, values?.image]);
-
           return (
             <Form className="space-y-4">
-              <input
-                type="file"
-                ref={fileInputRef1}
-                onChange={handleMainImageUpload}
-                className="hidden"
-                accept="image/*"
-              />
-
-              <div className="flex justify-center items-center">
-                <div className="relative w-24 h-24">
+              <div>
+                <label className="mb-1.5 block text-[12px] font-medium text-zinc-300">
+                  Brand Logo
+                </label>
+                <div className="flex items-center gap-3">
                   <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => fileInputRef1.current?.click()}
-                    className={`w-24 h-24 rounded-full border
-                      ${
-                        previewSrc
-                          ? "overflow-hidden border-white/10"
-                          : "border-dashed border-white/15 bg-[#1c2330] cursor-pointer flex flex-col items-center justify-center text-center p-2"
-                      }
-                    `}
+                    className={`relative flex h-20 w-28 items-center justify-center overflow-hidden rounded-xl border border-dashed ${
+                      previewSrc
+                        ? "border-zinc-700 bg-zinc-900"
+                        : "border-zinc-700 bg-zinc-950/60"
+                    }`}
                   >
                     {previewSrc ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={previewSrc}
-                        alt="Client"
-                        className="w-full h-full rounded-full object-cover"
+                        alt="brand"
+                        className="h-full w-full object-contain p-2"
                       />
                     ) : (
-                      <>
-                        <Upload className="w-4 h-4 text-zinc-400 mb-1" />
-                        <span className="text-[11px] text-zinc-400 leading-tight">
-                          Upload Client Image
-                        </span>
-                      </>
+                      <Upload className="h-5 w-5 text-zinc-500" />
                     )}
                   </div>
-                  <ErrorMessage
-                    name="image"
-                    component="div"
-                    className="text-rose-600 text-[11px] mt-1"
-                  />
-                  {previewSrc && (
+                  <div className="flex flex-col gap-2">
                     <button
                       type="button"
-                      onClick={handleDeleteMainImage}
-                      className="absolute -top-2 -right-2 bg-[#1c2330] border border-white/10 rounded-full p-1 shadow hover:bg-[#232b3a]"
+                      onClick={() => fileInputRef1.current?.click()}
+                      className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-[12px] text-zinc-200 hover:bg-zinc-800"
                     >
-                      <Trash2 className="w-4 h-4 text-rose-600" />
+                      Upload
                     </button>
-                  )}
+                    <input
+                      ref={fileInputRef1}
+                      type="file"
+                      accept="image/png,image/jpeg"
+                      className="hidden"
+                      onChange={handleMainImageUpload}
+                    />
+                    {values.image ? (
+                      <button
+                        type="button"
+                        onClick={handleDeleteMainImage}
+                        className="inline-flex items-center gap-1 rounded-lg border border-rose-900/50 px-3 py-1.5 text-[12px] text-rose-400 hover:bg-rose-950/40"
+                      >
+                        <Trash2 className="w-4 h-4 text-rose-600" />
+                        Remove
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
+                <ErrorMessage
+                  name="image"
+                  component="div"
+                  className="mt-1 text-[11px] text-rose-400"
+                />
               </div>
 
               <InputField
@@ -192,17 +199,19 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
               />
 
               <FormikSelect
-                name="departmentId"
-                label="Select Department"
+                name="departmentIds"
+                label="Select Departments"
                 options={deptOptions}
-                value={values.departmentId}
+                value={values.departmentIds}
                 setFieldValue={setFieldValue}
                 setFieldTouched={setFieldTouched}
-                error={errors.departmentId}
-                touched={touched.departmentId}
-                placeholder="Select Department"
+                error={errors.departmentIds}
+                touched={touched.departmentIds}
+                placeholder="Select one or more departments"
                 variant="dark"
-                //   onChangeExtra={handleDepartmentChange}
+                isMulti
+                isLoading={isLoading}
+                required
               />
 
               <div className="flex justify-end gap-2 pt-3 border-t border-white/[0.06]">
@@ -219,13 +228,7 @@ const BrandModal = ({ isOpen, closeModal, data, refetch }) => {
                   disabled={isSubmitting}
                   className={fleet.modalPrimaryBtn}
                 >
-                  {isSubmitting
-                    ? "Processing..."
-                    : values?.type === "pickup"
-                      ? "Submit Pickup"
-                      : values?.type === "drop off"
-                        ? "Schedule Drop Off"
-                        : "Continue"}
+                  {isSubmitting ? "Processing..." : "Continue"}
                 </button>
               </div>
             </Form>

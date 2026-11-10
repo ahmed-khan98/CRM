@@ -220,14 +220,14 @@ export default function Paymentlink() {
               <div
                 className="overflow-x-auto overflow-y-auto"
                 style={{
-                  maxHeight: "calc(100vh - 220px)",
+                  maxHeight: "calc(100vh)",
                   scrollbarWidth: "thin",
                   scrollbarColor: "#52525b transparent",
                 }}
               >
                 <table
-                  className="text-left border-collapse"
-                  style={{ minWidth: "1100px", width: "100%" }}
+                  className="crm-table w-full text-left border-collapse"
+                  style={{ minWidth: "1100px" }}
                 >
                   <thead className={`sticky top-0 z-20 ${theadRow}`}>
                     <tr>

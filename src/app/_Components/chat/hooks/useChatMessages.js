@@ -32,7 +32,7 @@ export default function useChatMessages({
 
   const loadMessages = useCallback(
     async (conversationId, before) => {
-      if (!conversationId) return;
+      if (!conversationId) return { items: [], hasMore: false };
       setLoadingMsgs(true);
       try {
         const res = await fetchMessages({
@@ -42,25 +42,81 @@ export default function useChatMessages({
         }).unwrap();
         const payload = res?.data?.items ? res.data : res?.data?.data || res?.data || res;
         const items = payload?.items || (Array.isArray(payload) ? payload : []);
-        setHasMore(Boolean(payload?.hasMore));
+        const more = Boolean(payload?.hasMore);
+        setHasMore(more);
         if (before) {
           setMessages((prev) => {
             const ids = new Set(prev.map((m) => m._id));
             const unique = items.filter((m) => !ids.has(m._id));
-            return [...unique, ...prev];
+            const next = [...unique, ...prev];
+            messagesRef.current = next;
+            return next;
           });
         } else {
+          messagesRef.current = items;
           setMessages(items);
           setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "auto" }), 50);
         }
+        return { items, hasMore: more };
       } catch (err) {
         console.error("[chat] loadMessages failed", err);
         toast.error(err?.data?.message || err?.error || "Failed to load messages");
+        return { items: [], hasMore: false };
       } finally {
         setLoadingMsgs(false);
       }
     },
     [fetchMessages]
+  );
+
+  const jumpToMessage = useCallback(
+    async (messageId) => {
+      const id = String(messageId || "").trim();
+      if (!id || !activeId) return false;
+
+      const scrollToEl = () => {
+        const el = document.getElementById(`chat-msg-${id}`);
+        if (!el) return false;
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        return true;
+      };
+
+      if (scrollToEl()) return true;
+
+      let attempts = 0;
+      while (attempts < 20) {
+        attempts += 1;
+        if (messagesRef.current.some((m) => String(m._id) === id)) {
+          await new Promise((r) =>
+            requestAnimationFrame(() => requestAnimationFrame(r)),
+          );
+          if (scrollToEl()) return true;
+          break;
+        }
+        const first = messagesRef.current[0];
+        if (!first?._id) break;
+        const { items, hasMore: more } = await loadMessages(
+          activeId,
+          first._id,
+        );
+        const foundInBatch = (items || []).some((m) => String(m._id) === id);
+        if (foundInBatch) {
+          await new Promise((r) => setTimeout(r, 40));
+          await new Promise((r) =>
+            requestAnimationFrame(() => requestAnimationFrame(r)),
+          );
+          if (scrollToEl()) return true;
+        }
+        if (!more) break;
+      }
+
+      if (!scrollToEl()) {
+        toast.error("Original message not loaded");
+        return false;
+      }
+      return true;
+    },
+    [activeId, loadMessages],
   );
 
   useEffect(() => {
@@ -264,6 +320,7 @@ export default function useChatMessages({
     hasMore,
     loadingMsgs,
     loadMessages,
+    jumpToMessage,
     sendPayload,
     bottomRef,
     listRef,

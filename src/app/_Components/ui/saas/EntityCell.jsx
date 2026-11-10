@@ -66,7 +66,7 @@ export default function EntityCell({
         </div>
       ) : (
         <div
-          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-medium ${color}`}
+          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-medium ${color}`}
         >
           {initials}
         </div>

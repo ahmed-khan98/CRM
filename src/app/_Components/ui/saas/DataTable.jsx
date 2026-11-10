@@ -73,7 +73,7 @@ export default function DataTable({
   getRowId = defaultGetRowId,
   getRowClassName,
   minWidth,
-  maxHeight = "calc(100vh - 220px)",
+  maxHeight = "calc(100vh)",
   className = "",
   skeletonRows = 8,
 }) {
@@ -124,7 +124,7 @@ export default function DataTable({
     <thead className="sticky top-0 z-20">
       <tr className="table-head-row">
         {rowSelection ? (
-          <th className="w-10 px-3 py-3">
+          <th className="w-10">
             <input
               ref={selectAllRef}
               type="checkbox"
@@ -179,12 +179,12 @@ export default function DataTable({
     Array.from({ length: skeletonRows }).map((_, rowIndex) => (
       <tr key={`sk-${rowIndex}`} className="border-b border-zinc-800">
         {rowSelection ? (
-          <td className="px-3 py-4">
+          <td>
             <div className="h-3.5 w-3.5 animate-pulse rounded bg-zinc-700" />
           </td>
         ) : null}
         {visibleColumns.map((column, colIndex) => (
-          <td key={column.key || colIndex} className="px-4 py-4">
+          <td key={column.key || colIndex}>
             <div
               className="h-3 animate-pulse rounded-full bg-zinc-700"
               style={{ width: `${40 + ((rowIndex + colIndex) % 4) * 14}%` }}
@@ -207,10 +207,7 @@ export default function DataTable({
           } ${onRowClick ? "cursor-pointer" : ""} ${extraClass}`}
         >
           {rowSelection ? (
-            <td
-              className="px-3 py-3"
-              onClick={(event) => event.stopPropagation()}
-            >
+            <td onClick={(event) => event.stopPropagation()}>
               <input
                 type="checkbox"
                 checked={selectedSet.has(id)}
@@ -237,7 +234,7 @@ export default function DataTable({
                     }
                   : undefined
               }
-              className={`px-3 py-3 text-[13px] text-zinc-100 ${
+              className={`text-[13px] text-zinc-100 ${
                 column.wrap ? "whitespace-normal break-words" : "whitespace-nowrap"
               } ${alignClass(column.align)} ${column.className || ""}`}
             >

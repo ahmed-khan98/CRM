@@ -358,13 +358,7 @@ const LeftNav = ({ set }) => {
           name: "Brand Email",
           path: "/dashboard/BrandEmail",
           icon: <AtSign className="w-3.5 h-3.5" />,
-          roles: [
-            "DEP_ADMIN",
-            "ADMIN",
-            "SUBADMIN",
-            "HR_ADMIN",
-            "FINANCE_ADMIN",
-          ],
+          roles: ["ADMIN", "SUBADMIN", "HR_ADMIN", "FINANCE_ADMIN"],
         },
         {
           name: "Email Mapping",
