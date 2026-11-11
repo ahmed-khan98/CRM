@@ -115,14 +115,8 @@ const Footer = () => {
       }} 
       className="0f0f11 w-full text-center py-3 ">
         {" "}
-        <p className=" text-sm text-white">
-          © Copyright 2026{" "}
-          <a
-            href="https://zytronworld.com/"
-            className="text-blue-300 hover:underline"
-          >
-            zyro
-          </a>
+        <p className="text-sm text-white">
+          © Copyright 2026 zyro
         </p>
       </div>
     </>
