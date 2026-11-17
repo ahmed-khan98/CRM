@@ -38,18 +38,16 @@ const PaymentOrderSummary = ({
 
         <div className="space-y-1">
           {!isMasterPayemntLink && (
-            <div className=" p-4 grid grid-cols-1 sm:grid-cols-2 gap-y-3 border-b border-zinc-200">
+            <div className="p-4 grid grid-cols-1 sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.35fr)] gap-y-3 gap-x-3 border-b border-zinc-200 overflow-visible">
               {/* Agar name or email null/falsy hain to component hide ho jaye ga */}
               {name && <DetailRow label="Customer" value={name} />}
-
               {email && (
                 <DetailRow
                   label="Email"
                   value={email}
-                  className="lowercase break-all"
+                  className="lowercase normal-case whitespace-nowrap text-[12px] tracking-tight"
                 />
               )}
-
               {brand && <DetailRow label="Brand" value={brand} />}
               {currency && <DetailRow label="Currency" value={currency} />}
             </div>

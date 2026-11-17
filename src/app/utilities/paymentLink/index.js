@@ -4,7 +4,11 @@ export const DESIGN_DEPARTMENT_ID = "68bf117e7bee051de66530e3";
 const merchant = [
   {
     id: "Skyliner Trading LLC",
-    name: "Skyliner Trading LLC",
+    name: "Skyliner Trading LLC (PayPal)",
+  },
+  {
+    id: "Stripe",
+    name: "Stripe",
   },
   // {
   //   id: "Kinatech Business Solutions LLC",
